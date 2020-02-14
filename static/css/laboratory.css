@@ -1,0 +1,81 @@
+
+
+
+.form-control {
+    font-size: 12px;
+    padding: 3px 12px;
+    height: 30px;
+}
+
+.laboratory_grid {
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 77%;
+}
+
+.partition {
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: rgba(180, 180, 180, 0.15);
+    border: 3.7px solid white;
+    height: 100%;
+    overflow: auto;
+}
+
+.laboratory_list {
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+
+.laboratory_list_table_wrap {
+    overflow: auto;
+    height: 620px;
+}
+
+.laboratory_list_table > tbody > tr {
+    cursor: pointer;
+}
+
+.laboratory_control {
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+
+
+.lab_manage_title {
+    font-weight: bold;
+    width: 125px;
+    text-align: left;
+}
+
+.lab_control_input-group{
+    width:100%;
+}
+
+.laboratory_list_calendar{
+    width:100px;
+    display:inline-block;
+}
+
+.laboratory_search_select {
+    width: 100px;
+    display: inline-block;
+}
+
+.laboratory_search_input {
+    width: 140px;
+    display: inline-block;
+}
+
+@media ( min-width: 1900px ) {
+
+    .laboratory_list_table_wrap {
+        height: 800px;
+    }
+
+}

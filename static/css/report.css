@@ -1,0 +1,471 @@
+body {
+    height: auto;
+    min-width: 1500px;
+    max-width: 1980px;
+    min-height: 750px;
+    max-height: 1080px;
+    overflow:hidden;
+}
+
+    body:before {
+        overflow: hidden;
+        height: auto;
+        display: block;
+        padding-top: 100%;
+    }
+
+.report_grid {
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 37% 26%;
+}
+
+.partition {
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: rgba(180, 180, 180, 0.15);
+    border: 3.7px solid white;
+    overflow: auto;
+}
+
+.search_part{
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+.input_part {
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+.print_preview_part {
+    grid-column-start: 3;
+    grid-column-end: 4;
+}
+
+.input_part_contorl{
+    margin-top:7.5px;
+}
+
+    .input_part_contorl > div {
+        padding-bottom: 8px;
+        width: 100%;
+    }
+
+        .input_part_contorl > div > span {
+            width: 100px;
+        }
+
+
+
+.search_select {
+    display: inline-table;
+    width: 75px;
+}
+
+.search_input {
+    display: inline-block;
+    width: 75px;
+}
+
+.search_table_contents tr td{
+    height: 30px
+}
+
+.search_wrap {
+    text-align: center;
+    height: 550px;
+    overflow: auto;
+}
+
+
+.report_view_wrap {
+    height: 635px;
+    width: 500px;
+}
+
+.report_view {
+    height: 100%;
+    padding-top: 20px;
+    background: white;
+    border: 2px solid black;
+    margin: 0 auto;
+}
+
+
+.status_table_title span {
+    font-size: 15px;
+    height: 22.5px;
+    padding-top: 1px;
+    color:white;
+    background: rgb(20,135,130);
+    border-color: rgb(20,135,130);
+}
+status_table_title span:hover {
+    background: rgb(20,135,130);
+    border-color: rgb(20,135,130);
+    color: white;
+}
+
+
+
+.page {
+    width: 75%;
+    height: 100%;
+    margin: 0 auto;
+}
+     
+    .page .title {
+        width: 100%;
+        text-align: center;
+        margin-top: 0px;
+        margin-bottom: 5px;
+        font-size: 22px;
+        font-weight: bold;
+        top: 0px;
+    }
+
+    .page .chart {
+        margin-bottom: 2.5mm;
+        height: 53px;
+    }
+
+    .page .tr_small {
+        height: 22px;
+    }
+    .page th, .page td{
+        font-size:9px;
+    }
+
+    .page .middle {
+        width:100%;
+    }
+
+    .page .last {
+        vertical-align: baseline;
+        text-align: left;
+        padding: 10px;
+    }
+
+    .page .last_contents {
+        margin-left: 20px;
+        margin-bottom: 10px;
+    }
+
+    .page table {
+        border-collapse: collapse;
+        vertical-align: middle;
+        display: inline-block;
+    }
+
+    .page tbody tr td:first-child {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .page tr {
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .page td {
+        border: 1px solid black;
+        padding-left: 5px;
+    }
+
+.contents_name {
+    width: 100%;
+    text-align: justify;
+}
+
+.patient_searach_wrap {
+    height: 250px;
+}
+
+
+.patient_search{
+    text-align:right;
+    padding-right:20px;
+}
+
+.patient_search_select {
+    display: inline;
+    width: 100px;
+}
+.patient_search_input {
+    display: inline;
+    width: 200px;
+}
+.patient_search_btn {
+}
+
+.page_print{
+    display:none;
+}
+
+.chart_table tbody tr td:first-child {
+    width: 70px;
+}
+.chart_table tbody tr td:nth-child(2) {
+    width: 77px;
+}
+
+.middle table tbody tr td:first-child{
+    width:90px;
+}
+
+.middle table tbody tr td:nth-child(2) {
+    width: 153px;
+}
+
+.middle table tbody tr td:nth-child(3) {
+    text-align: center;
+    width: 61.5px;
+}
+.middle table tbody tr td:nth-child(4) {
+    text-align: center;
+    width: 46px;
+}
+.middle table tbody tr td:nth-child(5) {
+    text-align: center;
+    width: 61.5px;
+}
+.middle table tbody tr td:nth-child(6) {
+    text-align: center;
+    width: 46px;
+}
+
+
+
+@media ( min-width: 1900px ) {
+    .search_wrap {
+        height: 720px;
+    }
+
+    .input_part_contorl > div > span {
+        width: 120px;
+    }
+
+    .page {
+        width: 80%;
+    }
+    .report_view_wrap{
+        height:95%;
+    }
+    .report_view_wrap {
+        height: 840px;
+        width: 670px;
+    }
+
+    .page th, .page td {
+        font-size: 12px;
+    }
+
+    .page .title {
+        font-size: 26px;
+        margin-bottom: 10px;
+    }
+
+    .page .chart {
+        height: 70px;
+    }
+
+    .page .tr_small {
+        height: 30px;
+    }
+
+
+    .chart_table tbody tr td:first-child {
+        width: 90px;
+    }
+
+    .chart_table tbody tr td:nth-child(2) {
+        width: 120px;
+    }
+
+    .middle table tbody tr td:first-child {
+        width: 90px;
+    }
+
+    .middle table tbody tr td:nth-child(2) {
+        width: 153px;
+    }
+
+    .middle table tbody tr td:nth-child(3) {
+        text-align: center;
+        width: 61.5px;
+    }
+
+    .middle table tbody tr td:nth-child(4) {
+        text-align: center;
+        width: 65px;
+    }
+
+    .middle table tbody tr td:nth-child(5) {
+        text-align: center;
+        width: 61.5px;
+    }
+
+    .middle table tbody tr td:nth-child(6) {
+        text-align: center;
+        width: 65px;
+    }
+}
+
+    @page {
+        size: A4;
+        margin: 0 auto;
+    }
+
+@media print {
+
+    html, body {
+        min-width: 169mm;
+        max-width: 169mm;
+        max-height: 253mm;
+        min-height: 253mm;
+        margin: 0 auto;
+    }
+
+
+
+    .page_print {
+        width: 169mm;
+        height: 253mm;
+        display: block;
+    }
+
+        .page_print .title {
+            width: 100%;
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 10px;
+            font-size: 30px;
+            font-weight: 500;
+            top: 0px;
+        }
+
+        .page_print .chart {
+            margin-bottom: 2.5mm;
+            height: 22mm;
+        }
+
+        .page_print .tr_small {
+            height: 10mm;
+        }
+
+        .page_print th, .page_print td {
+            font-size: 14px;
+        }
+
+        .page_print .middle {
+            height: 216mm;
+        }
+
+        .page_print .last {
+            height: 79.5mm;
+            vertical-align: baseline;
+            text-align: left;
+            padding: 10px;
+        }
+
+        .page_print .last_contents {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .page_print table {
+            border-collapse: collapse;
+            font-size: 15px;
+            vertical-align: middle;
+            display: inline-block;
+        }
+
+        .page_print tbody tr td:first-child {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .page_print tr {
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .page_print td {
+            border: 1px solid black;
+            padding-left: 5px;
+        }
+
+
+    .page_print_eng {
+        width: 169mm;
+        height: 253mm;
+        display: block;
+    }
+
+        .page_print_eng .title {
+            width: 100%;
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 10px;
+            font-size: 30px;
+            font-weight: 500;
+            top: 0px;
+        }
+
+        .page_print_eng .chart {
+            margin-bottom: 2.5mm;
+            height: 22mm;
+        }
+
+        .page_print_eng .tr_small {
+            height: 10mm;
+        }
+
+        .page_print_eng th, .page_print_eng td {
+            font-size: 14px;
+        }
+
+        .page_print_eng .middle {
+            height: 216mm;
+        }
+
+        .page_print_eng .last {
+            height: 79.5mm;
+            vertical-align: baseline;
+            text-align: left;
+            padding: 10px;
+        }
+
+        .page_print_eng .last_contents {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .page_print_eng table {
+            border-collapse: collapse;
+            font-size: 15px;
+            vertical-align: middle;
+            display: inline-block;
+        }
+
+        .page_print_eng tbody tr td:first-child {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .page_print_eng tr {
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .page_print_eng td {
+            border: 1px solid black;
+            padding-left: 5px;
+        }
+
+}
+

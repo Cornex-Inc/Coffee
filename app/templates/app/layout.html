@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+{% load i18n %}
+<html >
+<head>
+    {% load staticfiles %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hanoi Sun Medical Center </title>
+    <link rel="Shortcut Icon" href="{% static 'favicon.ico'%}" type="image/x-icon" />
+    <link rel="icon" href="{% static 'favicon.ico'%}" type="image/x-icon" />
+
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/wrapper.css' %}" />
+    <script src="{% static 'app/scripts/modernizr-2.6.2.js' %}"></script>
+ 
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" /> 
+    {% block style %}{% endblock %}
+       
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script
+  src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+  integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
+  crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/printThis/1.15.0/printThis.min.js"></script>
+    
+    <script src="{% static 'app/scripts/bootstrap.js' %}"></script>
+    <script src="{% static 'app/scripts/respond.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block scripts %}{% endblock %}
+
+    <script>
+        window.onbeforeunload = function (e) {
+            //return confirm();
+        }
+
+
+        function set_lang(lang) {
+            if (lang == 'en') {
+                str_url = '/TranslateEN/';
+            } else if (lang == 'ko') {
+                str_url = '/TranslateKO/';
+            } else if (lang == 'vie') {
+                str_url = '/TranslateVIE/';
+            }
+            $.ajax({
+                type: 'POST',
+                url: str_url,
+                data: {
+                    'csrfmiddlewaretoken': $('#csrf').val(),
+                },
+                dataType: 'Json',
+                success: function (response) {
+                    location.reload();
+                },
+                error: function (request, status, error) {
+                    alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                },
+            })
+
+        }
+    </script>
+</head>
+
+<body>
+    <input id="csrf" type="hidden" value="{{ csrf_token }}" />
+    <div class="navbar navbar-inverse navbar-fixed-top" style=" margin:0px; position:inherit; background:rgb(255, 255, 255); border-bottom:4px solid rgba(206, 17, 39, 1);border-color:rgba(206, 17, 39, 1);">
+        <div class="">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+                <a href="{% url 'index' %}" class="navbar-brand" style="padding-top:7.5px; padding-left:15px; padding-right:15px; color:rgba(0,0,0, 1); font-size:20px; ">
+                <img src="{% static 'img/Sun_Hanoi_icon.png' %}" style="height:47px;"/>&nbsp;&nbsp;&nbsp;Hanoi Sun Medical Center</a>
+            </div>
+            <div class="navbar-collapse collapse top_menu" >
+                <ul class="nav menu_contents_ul" style="display:inline-block">
+                    {% with url_name=request.resolver_match.url_name %}
+                    {% if user.is_receptionist %}
+                        <li {% if url_name == 'reception_index' %}class="active"{% endif %}><a href="{% url 'Receptionist:reception_index' %}" >{{ _('Registration') }}</a></li>
+                        <li {% if url_name == 'storage_page' %}class="active"{% endif %}><a href="{% url 'Receptionist:storage_page'%}">{{ _('Payment') }}</a></li>
+                        <li {% if url_name == 'reservation' %}class="active"{% endif %}><a href="{% url 'Receptionist:reservation'%}">{{ _('Reservation') }}</a></li>
+                    {% elif user.is_doctor %}
+                        <!--<li {% if url_name == 'index' %}class="active"{% endif %}><a href="{% url 'Doctor:index'%}">{{ _("Doctor's Clinic") }}</a></li>-->
+                        <li {% if url_name == 'index' %}class="active"{% endif %}><a href="{% url 'Doctor:index'%}">
+                            <span style="margin-right:5px;color:blue;">{{ user.doctor.depart.name }} </span> Dr.{{user.doctor.name_short }}</a>
+                        </li>
+                        <li {% if url_name == 'laboratory_index' %}class="active"{% endif %}><a href="{% url 'Laboratory:laboratory_index'%}">{{ _('Laboratory') }}</a></li>
+                        <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Radiation:radiation_index'%}">{{ _('Radiology') }}</a></li>
+                        <li {% if url_name == 'report' %}class="active"{% endif %}><a href="{% url 'Doctor:report'%}">{{ _('Medical Report') }}</a></li>    
+                        <li {% if url_name == 'reservation' %}class="active"{% endif %}><a href="{% url 'Receptionist:reservation'%}">{{ _('Reservation') }}</a></li>
+                        <li {% if url_name == 'audit' %}class="active"{% endif %}><a href="{% url 'Doctor:audit'%}">{{ _('Audit') }}</a></li>
+                    {% elif user.is_pharmacy %}
+                        <li {% if url_name == 'pharmacy_index' %}class="active"{% endif %}><a href="{% url 'Pharmacy:pharmacy_index'%}">{{ _('Pharmacy') }}</a></li>
+                    {% elif user.is_laboratory %}
+                        <li {% if url_name == 'laboratory_index' %}class="active"{% endif %}><a href="{% url 'Laboratory:laboratory_index'%}">{{ _('Laboratory') }}</a></li>
+                    {% elif user.is_radiation %}
+                        <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Radiation:radiation_index'%}">{{ _('Radiology') }}</a></li>
+                    {% elif user.is_admin %}
+                        <li><a href="#REVENUE_TOTAL">REVENUE TOTAL</a></li>
+                        <li><a href="#DOCTOR_PROFIT">DOCTORS PROFIT</a></li>
+                        <li><a href="#MEDICINE_TOTAL">MEDICINE</a></li>
+                    {% endif %}
+                    {% endwith %}
+                </ul>
+                
+                {% include 'app/loginpartial.html' %}
+                <ul class="language_ul nav navbar-nav navbar-right" style="margin-right:30px;">
+                    <li><a href="" onclick="set_lang('vie')"><image src="{% static 'img/vie.png' %}" style='height:30px;' /></a></li>
+                    <li><a href="" onclick="set_lang('ko')"><image src="{% static 'img/ko.png' %} " style='height:26px;'/></a></li>
+                    <li><a href="" onclick="set_lang('en')"><image src="{% static 'img/en.png' %} " style='height:26px;'/></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="sub_title"></div>
+    <div class="body-content">
+{% block content %}{% endblock %}
+    </div>
+
+
+
+
+</body>
+</html>

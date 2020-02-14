@@ -1,0 +1,20 @@
+{% if user.is_authenticated %}
+<form id="logoutForm" action="/logout/" method="post" class="navbar-right">
+    {% csrf_token %}
+    <ul class="nav navbar-nav navbar-right logout_ul">
+        <!--
+        <li>
+            <div style="border:none; width:200px; height:50px; line-height:50px; color:#dedede;font-size:20px; text-align:center;" id="clock"></div>
+        </li>
+            -->
+        <li><a href="javascript:document.getElementById('logoutForm').submit()" style="color:rgba(0,0,0, 1); margin-top:6vh;">{{ _('Log out') }}</a></li>
+    </ul>
+</form>
+
+{% else %}
+
+<ul class="nav navbar-nav navbar-right logout_ul">
+    <li><a href="{% url 'login' %}" style="color:rgba(0,0,0, 1); margin-top:6vh;">{{ _('Log in') }}</a></li>
+</ul>
+
+{% endif %}

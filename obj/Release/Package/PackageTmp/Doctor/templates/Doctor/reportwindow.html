@@ -1,0 +1,275 @@
+﻿
+{% load i18n %}
+{% load staticfiles %}
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Report</title>
+    <style type="text/css">
+
+    
+    </style>
+
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" /> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.min.css' %}" />
+    <script src="{% static 'app/scripts/modernizr-2.6.2.js' %}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/printThis/1.15.0/printThis.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/report_window.css' %}" />
+    <script src="{% static 'js/report_window.js' %}" type="text/javascript"></script>
+</head>
+<body>
+    <input type="hidden" id="csrf" value="{{csrf}}"/>
+    <div class="Report_wrap">
+        <div class="Report_search">
+            <div class="status_table_title">
+            <span class="btn btn-success" style="margin-bottom:5px; font-size: 15px;height: 25px;padding-top: 0.1vh; background:rgb(20,135,130); border-color:rgb(20,135,130);">{{ _('Report List') }}</span>
+        </div>
+            <div class="Report_search_control">
+                {{report_search.date}}
+                {{report_search.filter}}
+                {{report_search.search_input}}
+                <input type="button" id="search_report" value="Search" onclick="search_report()" />
+            </div>
+            <div class="Report_search_table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Chart No.</th>
+                            <th>Serial Number</th>
+                            <th>Patient</th>
+                            <th>주민번호</th>
+                            <th>Doctor</th>
+                            <th>Publication Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="Report_search_table_tbody">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="Report_info">
+            <input type="hidden" id="selected_report" value="{{selected_report}}"/> 
+            <table class="table Report_info_table">
+                <tr>
+                    <td>
+                        <div class="input-group" style="width:200px;">
+                            <span class="input-group-addon report_table_title"  id="basic-addon1">{{ _('Chart No') }}</span>
+                            <input type="text" class="form-control" aria-describedby="basic-addon1" id="patient_chart"  value="{{patient_chart}}"/>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group ">
+                            <span class="input-group-addon report_table_title"  id="basic-addon1">{{ _('Name') }}</span>
+                            <input type="text" class="form-control" aria-describedby="basic-addon1" id="patient_name" value="{{patient_name_eng}} {{patient_name}}"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group " style="width:200px;">
+                            <span class="input-group-addon report_table_title"  id="basic-addon1">{{ _('Gender') }}</span>
+                            <input type="text" class="form-control" aria-describedby="basic-addon1" id="patient_gender" value="{{patient_gender}}"/>
+                            
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group " >
+                            <span class="input-group-addon report_table_title"  id="basic-addon1">{{ _('Date Of Birth') }}</span>
+                            <input type="text" class="form-control" aria-describedby="basic-addon1" id="patient_date_of_birth" value="{{patient_date_of_birth}}"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group " style="width:200px;">
+                            <span class="input-group-addon report_table_title"  id="basic-addon1">{{ _('Phone') }}</span>
+                            <input type="text" class="form-control" aria-describedby="basic-addon1" id="patient_phone"  value="{{patient_phone}}"/>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-addon report_table_title"  id="basic-addon1">{{ _('ID Number') }}</span>
+                            <input type="text" class="form-control" aria-describedby="basic-addon1" id="patient_ID" value="{{patient_ID}}"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="input-group" style="width:513px;">
+                            <span class="input-group-addon report_table_title" id="basic-addon1">{{ _('Address') }}</span>
+                            <input type="text" class="form-control" aria-describedby="basic-addon1" id="patient_address" value="{{patient_address}}"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="input-group" style="width:513px;">
+                            <span class="input-group-addon report_table_title"  id="basic-addon1">{{ _('Outbreak Date') }}</span>
+                            <input type="text" class="form-control" aria-describedby="basic-addon1" id="date_of_hospitalization" value="{{date_of_hospitalization}}"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="input-group" style="width:513px; height:130px;">
+                            <span class="input-group-addon report_table_title"  id="basic-addon1">{{ _('Medical Opinion') }}</span>
+                            <textarea type="text" style="resize:none; height:130px;"" class="form-control" aria-describedby="basic-addon1" id="reception_report"></textarea>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="input-group" style="width:513px;">
+                            <span class="input-group-addon report_table_title" id="basic-addon1">{{ _('Purpose') }}</span>
+                            <input type="text" class="form-control" aria-describedby="basic-addon1" id="reception_usage" />
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="input-group" >
+                            <span class="input-group-addon report_table_title"  id="basic-addon1">{{ _('발행일자') }}</span>
+                            <input type="text" class="form-control" aria-describedby="basic-addon1" id="publication_date" value="{{publication_date}}"/>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div style="float:right; margin-bottom:5px;">
+                <input type="button" value="Save + Print" id="btnPrint"  class="btn btn-default"/>
+            </div>
+            <input type="hidden" id="patient_datenumber" value="{{patient_datenumber}}"/>
+            
+
+            <input type="hidden" id="patient_age" value="{{patient_age}}" />
+            
+            <input type="hidden" id="selected_reception_id" value="{{reception_id}}"/>
+        </div>
+
+    </div>
+    <div style="height:5000px;"></div>
+    <div class="page">
+        <div class="title">진&nbsp;료&nbsp;확&nbsp;인&nbsp;서</div>
+        <div class="chart">
+            <table class="chart_table" style="empty-cells: hide;">
+                <tbody>
+                    <tr class="tr_small">
+                        <td style="width:28mm">병록번호</td>
+                        <td style="width:36mm" id="patient_chart_print"></td>
+                    </tr>
+                    <tr class="tr_small">
+                        <td style="width:28mm">연 번 호</td>
+                        <td style="width:36mm" id="patient_serial_print"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="middle">
+            <table>
+                <tbody>
+                    <tr class="tr_small">
+                        <td style="width:28mm;">환자의 성명</td>
+                        <td style="width:57mm;" id="patient_name_print"></td>
+                        <td style="text-align:center; width:18.5mm;">성별</td>
+                        <td style="text-align:center; width:20.5mm;" id="patient_gender_print"></td>
+                        <td style="text-align:center; width:14mm;">연령</td>
+                        <td style="text-align:center; width:29.5mm;" id="patient_age_print"></td>
+                    </tr>
+                    <tr class="tr_small">
+                        <td>주민등록번호</td>
+                        <td id="patient_ID_print"></td>
+                        <td style="text-align:center;">생년월일</td>
+                        <td colspan="3" id="patient_date_of_birth_print"> </td>
+                    </tr>
+                    <tr class="tr_small">
+                        <td>주&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;소</td>
+                        <td colspan="5" id="patient_address_print"> </td>
+                    </tr>
+                    <!--
+                    <tr class="tr_small">
+                        <td>입&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;원</td>
+                        <td colspan="5"></td>
+                    </tr>
+                        -->
+                    <tr class="tr_small">
+                        <td>통&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;원</td>
+                        <td colspan="5" id="date_of_hospitalization_print"></td>
+                    </tr>
+                    <!--
+            <tr>
+                <td style="height:49mm">실 통원 일자</td>
+                <td colspan="5"></td>
+            </tr>
+                -->
+                    <tr>
+                        <td style="height:78mm">의사소견</td>
+                        <td colspan="5" id="reception_report_print"></td>
+                    </tr>
+                    <tr>
+                        <td class="tr_small">용&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;도</td>
+                        <td colspan="5" id="reception_usage_print"></td>
+                    </tr>
+                    <tr>
+                        <td style="display:none;"></td>
+                        <td colspan="6" class="last">
+                            <div style=" text-align:center; font-size:12px">상기와 같이 진료 받았음을 확인 합니다.</div>
+                            <br />
+                            <br />
+                            <div class="last_contents" style="letter-spacing:-0.2px;">발&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;행&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;일&nbsp;:&nbsp; <span id="publication_date_print"></span></div>
+                            <div class="last_contents">의료기관 명칭 : &nbsp;SUN MEDICAL CENTER VIETNAM</div>
+                            <div class="last_contents">의료기관 주소 : &nbsp;Times Tower Building, No 35</div>
+                            <div class="last_contents">대표 전화번호 : &nbsp;011</div>
+                            <br />
+                            <div style="margin-left:230px; line-height:200%;">면허번호 : &nbsp;&nbsp; 제 호</div>
+                            <div style="margin-left:230px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;성명 : &nbsp;&nbsp;<span id="doctor_name_print"></span>(서명 또는 인)</div>
+                            <br />
+                            <div style="text-align:center; font-weight:bold;">SUN MEDICAL CENTER VIETNAM</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        
+    $('#date_of_hospitalization').daterangepicker({
+        "autoApply": false,
+        "singleDatePicker": true,
+        locale: {
+            format: 'YYYY-MM-DD',
+        },
+    });
+        $('#date_of_hospitalization').on('apply.daterangepicker', function (ev, picker) {
+        
+            if ('{{lang}}' == 'ko'){
+            $('#date_of_hospitalization').val(picker.startDate.format('YYYY년 MM월 DD일'));
+        }else{
+            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+            var selected = parseInt(picker.startDate.format('MM')) - 1;
+            $('#date_of_hospitalization').val(picker.startDate.format(months[selected] + ' - DD' + ' - YY' ));
+        }
+    });
+
+    $('#publication_date').daterangepicker({
+        "autoApply": false,
+        "singleDatePicker": true,
+        locale: {
+            format: 'YYYY-MM-DD',
+        },
+    });
+    $('#publication_date').on('apply.daterangepicker', function (ev, picker) {
+
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+        var selected = parseInt(picker.startDate.format('MM')) - 1;
+        $('#publication_date').val(picker.startDate.format(months[selected] + ' - DD' + ' - YY'));
+    });
+    </script>
+</body>
+</html>

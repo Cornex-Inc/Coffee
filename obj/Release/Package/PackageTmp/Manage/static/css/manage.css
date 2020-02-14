@@ -1,0 +1,174 @@
+th{
+    
+}
+
+
+.contents_wrap {
+    width: 95%;
+    margin: 0 auto;
+    margin-top: 40px;
+    overflow:auto;
+}
+
+.contents_Title {
+    margin-bottom:2vh;
+    background: rgb(237,237,237);
+    width: 12vw;
+    height: 5vh;
+    
+    display: table;
+}
+
+    .contents_Title > div {
+        text-align: center;
+        display: table-cell;
+        vertical-align: middle;
+        font-size: 2.7vh;
+    }
+
+.search_table_No {
+    width: 3vw;
+}
+
+.search_table_Date {
+    width: 5vw;
+}
+.search_table_Patient {
+    width: 7vw;
+}
+.search_table_Date_of_Birth {
+    width: 7vw;
+}
+.search_table_Address {
+    width: 8vw;
+}
+.search_table_Depart {
+    width: 4vw;
+}
+.search_table_Doctor {
+    width: 7vw;
+}
+.search_table_Order{
+    width:10vw;
+}
+
+.search_table_PaidBy{
+
+}
+
+.search_table_Payment {
+}
+.search_table_Unpaid {
+
+}
+.search_table_Total{
+
+}
+
+
+
+.payment_table_result > tr {
+    height: 4vh;
+}
+
+
+
+.payment_graph{
+    margin-bottom:9.6vh;
+}
+
+.payment_graph_wrap {
+    margin-left:5vw;
+    width: 40vw;
+    height: 40vh;
+    display:inline-block;
+}
+
+.payment_pie_wrap {
+    margin-left:10vw;
+    display: inline-block;
+}
+
+.payment_total {
+    float: right;
+    width: 50%;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: right;
+}
+
+.payment_total div{
+}
+
+.payment_search_table_filter{
+}
+
+.payment_search_table{
+    width:100%;
+}
+
+
+.payment_search_date {
+    display: inline;
+    width: 9vw;
+}
+
+.payment_search_depart {
+    display: inline;
+    width: 5vw;
+}
+
+.payment_search_doctor {
+    display: inline;
+    width: 5vw;
+}
+
+.payment_search_general, .payment_search_medicine, .payment_search_lab, .payment_search_scaling, .payment_search_panorama {
+    display: inline;
+    width: 10vw;
+}
+
+.payment_search_check_paid, .payment_search_paid_by {
+    display: inline;
+    width: 5vw;
+}
+
+    .payment_search_input {
+        display: inline;
+        width: 8vw;
+        margin-left: 3.4vw;
+    }
+
+.doctor_search_date {
+    display: inline;
+    width: 9vw;
+}
+
+.doctors_search_depart {
+    width: 4vw;
+    display: inline;
+}
+.doctors_search_doctor {
+    width: 4vw;
+    display: inline;
+}
+.doctors_search_general {
+    width: 6vw;
+    display: inline;
+}
+.doctors_search_medicine {
+    width: 6vw;
+    display: inline;
+}
+.doctors_search_lab {
+    width: 6vw;
+    display: inline;
+}
+.doctors_search_scaling {
+    width: 6vw;
+    display: inline;
+}
+.doctors_search_panorama {
+    width: 6vw;
+    display: inline;
+}

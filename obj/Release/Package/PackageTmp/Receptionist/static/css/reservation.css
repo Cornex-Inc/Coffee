@@ -1,0 +1,32 @@
+body{
+    overflow:hidden;
+}
+.reservation_wrap {
+    padding-left: 30px;
+    padding-right: 30px;
+    background: rgba(180, 180, 180, 0.1);
+    border: 5px solid white;
+    overflow-y: hidden;
+    width:100vw;
+    height:85vh;
+}
+
+
+.reservation_title {
+    width: 100%;
+    display: inline;
+}
+
+    .reservation_title span {
+        text-align: left;
+    }
+
+.reservation_input {
+    width: 8vw;
+    display: inline;
+}
+
+.reservation_select {
+    width: 4vw;
+    display: inline;
+}

@@ -1,0 +1,154 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+
+    {% csrf_token %}
+    <div class="laboratory_grid">
+        <div class="laboratory_list partition">
+             <div class="status_table_title">
+                <span class="btn btn-warning" style=" margin-bottom:7.5px;  font-size: 14px;height: 23px;padding-top: 1px; color:rgb(80,80,80);">{{ _('Lab Finding') }}</span>
+                <div style="float:right;">
+                    {{ _('Date') }}
+                    <input id="laboratory_list_calendar" class="form-control laboratory_list_calendar"/>
+                    {{waiting_search.filter}}
+                    {{waiting_search.search_input}}
+                    <input type="button" id="laboratory_list_search" class="btn btn-default" value="Search" onclick="waiting_list()"/>
+                 </div>
+             </div>
+            <div class="laboratory_list_table_wrap">
+                <table class="table table-hover laboratory_list_table" id="laboratory_list_table">
+                    <thead>
+                        <tr>
+                            <th>{{ _('No.') }}</th>
+                            <th>{{ _('Chart No.') }}</th>
+                            <th>{{ _('Name') }}</th>
+                            <th>{{ _('Date of Birth') }}</th><!--성별 /나이)-->
+                            <th>{{ _('Depart') }}</th> <!--과(의사)-->
+                            <th>{{ _('Request') }}</th>
+                            <th>{{ _('Date Ordered') }}</th>
+                            <th>{{ _('Reference Interval') }}</th>
+                            <th>{{ _('Result') }}</th>
+                            <th>{{ _('Date Expected') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="laboratory_control partition">
+            <div class="status_table_title">
+                <span class="btn btn-warning" style="margin-bottom:7.5px; font-size: 14px;height: 23px;padding-top: 1px; color:rgb(80,80,80);">{{ _('Result Report') }}</span>
+            </div>
+            <input type="hidden" id="selected_test_manage" />
+            <table class="table">
+                <tr>
+                    <td>
+                        <div class="input-group lab_control_input-group">
+                            <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Chart No.') }}</span>
+                            <input type="text" class="form-control" aria-describedby="sizing-addon1" id="lab_control_chart"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group lab_control_input-group">
+                            <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Name') }}</span>
+                            <input type="text" class="form-control" aria-describedby="sizing-addon1" id="lab_control_name"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group lab_control_input-group">
+                            <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Date of Birth') }}</span>
+                            <input type="text" class="form-control" aria-describedby="sizing-addon1" id="lab_control_date_of_birth"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group lab_control_input-group">
+                            <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Request') }}</span>
+                            <input type="text" class="form-control" aria-describedby="sizing-addon1" id="lab_control_labname"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group lab_control_input-group">
+                            <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Date Ordered') }}</span>
+                            <input type="text" class="form-control" aria-describedby="sizing-addon1" id="date_ordered" autocomplete="off"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group lab_control_input-group">
+                            <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Date of Examination') }}</span>
+                            <input type="text" class="form-control" aria-describedby="sizing-addon1" id="date_examination" autocomplete="off"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group lab_control_input-group">
+                            <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Result') }}<span id="unit"></span></span>
+                            <input type="text" class="form-control" aria-describedby="sizing-addon1" id="lab_control_result" autocomplete="off"/>
+                            
+                        </div>
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group lab_control_input-group">
+                            <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Date Expected') }}</span>
+                            <input type="text" class="form-control" aria-describedby="sizing-addon1" id="date_expected" autocomplete="off"/>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div style="width:100%; text-align:center;">
+            <input type="button" class="btn btn-dark"  id="laboratory_control_cancel" value="{{ _('Cancel') }}"/>
+            <input type="button" class="btn btn-danger" value="{{ _('Save') }}" onclick="laboratory_control_save(true)"/>
+                </div>
+        </div>
+        
+    </div>
+
+
+    <script>
+        w = undefined
+        function worker_on(is_run) {
+            if (is_run) {
+                if (window.Worker) {
+                    w = new Worker('{% static 'js/event_listener.js' %}');
+                    w.onmessage = function (event) {
+                        waiting_list(true);
+                    };
+                }
+            } else {
+                if( w != undefined){
+                    w.terminate();
+                    w = undefined;
+                }
+            }
+        }
+    </script>
+{% endblock %}
+
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/laboratory.css' %}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<script src="{% static 'js/laboratory.js' %}" type="text/javascript"></script>
+{% endblock %}

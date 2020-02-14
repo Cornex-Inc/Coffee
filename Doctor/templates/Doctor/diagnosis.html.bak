@@ -1,0 +1,251 @@
+﻿{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+<form id="signup" class="form-horizontal" method="post" action="{% url 'Doctor:diagnosis' %}{{reception_num}}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="input-group input-group-lg">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-lg">Chart No.</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" readonly name="chart_no" value="{{ chart_no }}"/>
+    </div>
+
+    <table class="table table-bordered">
+        <tr>
+            <td rowspan="2">이름</td>
+            <td>
+                <div class="input-group input-group-lg">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-lg">한글(Kor)</span>
+                    </div>
+                    {{ patient.name_kor }}
+                </div>
+            </td>
+            
+            <td>
+                <div class="input-group input-group-lg">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-lg">생년월일</span>
+                    </div>
+                    {{ patient.date_of_birth }}
+                </div>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                <div class="input-group input-group-lg">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-lg">영어(Eng)</span>
+                    </div>
+                    {{ patient.name_eng }}
+                </div>
+            </td>
+            
+            <td>
+                <div class="input-group input-group-lg">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-lg">성별</span>
+                    </div>
+                    {{ patient.gender }}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="input-group input-group-lg">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-lg">전화번호</span>
+                    </div>
+                    {{ patient.phone }}
+                </div>
+            </td>
+
+            <td>
+                <div class="input-group input-group-lg">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-lg">Etc..</span>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" />
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <table class="table table-bordered">
+        <tr>
+            <td rowspan="2">주호소</td>
+            <td>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Depart</label>
+                    </div>
+                    {{ reception.depart }}
+                </div>
+            </td>
+            <td>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Doctor</label>
+                    </div>
+                    {{ reception.doctor }}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="input-group">
+                    {{ reception.main_complaint }}
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    {% if visit_history %}
+    <p>과거 방문 이력</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Depart</th>
+                <th>Doctor</th>
+                <th>Etc.</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in visit_history %}
+            <tr>
+                <td>{{ data.recorded_date.date }}</td>
+                <td>{{ data.depart }}</td>
+                <td>{{ data.doctor }}</td>
+                <td>-</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% endif%}
+
+
+    <table class="table table-bordered">
+        <tr>
+            <td>
+                <div class="input-group input-group-lg">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-lg">과거력</span>
+                    </div>
+                    {{ history.past_history }}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="input-group input-group-lg">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-lg">가족력</span>
+                    </div>
+                    {{ history.family_history }}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="input-group input-group-lg">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-lg">Etc...</span>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" />
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    
+    
+    <!--문진-->
+    <table class="table">
+        <tr>
+            <td>문진<br /></td>
+            <td>{{diagnosis.history_taking}}</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+
+
+    <!--처치-->
+    <table class="table">
+        <tr>
+            <td>검사</td>
+            <td>
+                <div class="show_list_list"></div>
+                <div class="show_list_btn" style="display:none;"><input type="button" value="test"/></div>
+                <div class="show_list_contents">
+                    {% for data in test_list%}
+                    {{data}}
+                    {% endfor %}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>처치</td>
+            <td>
+                <div class="show_list_list"></div>
+                <div class="show_list_btn" style="display:none;"><input type="button" value="test"/></div>
+                <div class="show_list_contents">
+                    {% for data in precedure_list%}
+                    {{data}}
+                    {% endfor %}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>투약</td>
+            <td>
+                <div class="show_list_list"></div>
+                <div class="show_list_btn" style="display:none;"><input type="button" value="test"/></div>
+                <div class="show_list_contents">
+                    {% for data in madicine_list%}
+                    {{data}}
+                    {% endfor %}
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <!--소견서-->
+    <table class="table">
+        <tr>
+            <td>소견서</td>
+            <td>{{diagnosis.medical_report}}</td>
+        </tr>
+    </table>
+
+
+    <!--F/U-->
+    <table class="table">
+        <tr>
+            <td>{{ reservation_form.date }}</td>
+            <td></td>
+        </tr>
+    </table>
+    {{ reservation_form.time }}
+
+    <input type="hidden" name="is_revisit" value="{{is_revisit}}" />
+    <input type="submit" name="Cancle" value="Cancle" class="btn btn-default" />
+    <input type="submit" name="save" value="Save" class="btn btn-default" />
+</form>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/doctor.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/reception.js' %}" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.min.js" type="text/javascript"></script>
+{% endblock%}
+
+{% block style %}
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.min.css" />
+{% endblock %}

@@ -1,0 +1,237 @@
+body {
+    padding-top: 10vh;
+    min-width: 800px;
+    min-height: 600px;
+    width: 100%;
+    height: 800px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    font:0.9vh;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    min-height: 95%;
+    min-width: 100%;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    font: 400 1.6vh Arial;
+}
+
+
+th ,td{
+    font-size: 1.7vh;
+}
+
+label {
+    font-size: 1.8vh;
+    margin-bottom: 0.8vh;
+}
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+.container {
+    width: 100%;
+}
+
+.sub_title {
+    width: 100%;
+}
+
+
+.index_wrap {
+    width: 100%;
+}
+
+.menu_contents_ul {
+    margin-top: 2vh;
+    display: inline-block;
+    vertical-align: bottom;
+    list-style: none;
+    float: left;
+    padding-left: 0px;
+}
+
+    .menu_contents_ul li {
+        font-size: 2vh;
+        font-weight: bold;
+        /* height: 35px; */
+        border-left: 0.1vw solid gray;
+        list-style: none;
+        float: left;
+        padding-left: 0.5vw;
+        padding-right: 0.5vw;
+    }
+
+        .menu_contents_ul li:first-child {
+            margin-left: 3vw;
+        }
+
+        .menu_contents_ul li a {
+            color: red;
+            padding:1vh 1vw;
+        }
+
+
+
+
+
+.index_top {
+    padding: 20px;
+    float: left;
+    display: block;
+}
+
+    .index_top img {
+        display: inline-block;
+        margin-right: 20px;
+        margin-left: 20px;
+    }
+
+
+.index_middle {
+    margin-top:1vh;
+    height: 50vh;
+    background: linear-gradient( to right, white, rgb(200, 130, 55),white);
+    display: block;
+    clear: both;
+}
+
+    .index_middle img {
+        display: block;
+        margin: 0 auto;
+        height: 100%;
+    }
+
+.index_bottom {
+    width: 100%;
+    clear: both;
+}
+
+    .index_bottom ul {
+
+        margin: 0 auto;
+        display: block;
+        padding-top: 20px;
+        display: inline-block;
+        vertical-align: bottom;
+    }
+
+        .index_bottom ul li {
+            list-style: none;
+            float: left;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+.index_bottom_contents {
+}
+
+.index_bottom_contents_text {
+    text-align: right;
+}
+
+.language_ul{
+    list-style:none;
+}
+
+.language_ul li a{
+    padding:0px;
+    margin-top:5vh;
+    margin-right:1vw;
+}
+
+.logout_ul li a {
+    padding: 0px;
+    margin-top: 2.7vh;
+    margin-right: 2vw;
+    font-size: 1.5vw;
+    margin-right: 5vw;
+}
+
+.top_menu{
+    padding:0px;
+    max-height:10vh;
+}
+
+.active a{
+    background:rgb(238,238,238);
+}
+
+.input-group-addon {
+    padding: 0.5vh 0.5vw;
+    font-size: 1.4vh;
+    border:0.1vh solid #ccc;
+    height:3.4vh;
+    
+}
+
+.table {
+    margin-bottom:2vh;
+}
+
+    .table thead > tr > th, .table tbody > tr > th, .table tfoot > tr > th, .table thead > tr > td, .table tbody > tr > td, .table tfoot > tr > td {
+        padding: 0.7vh;
+        border-top: 0.1vh solid #ddd;
+    }
+    .table thead > tr > th {
+        border-bottom: 0.4vh solid #ddd;
+    }
+
+.btn {
+    padding: 0.5vh 0.5vw;
+    font-size: 1.6vh;
+}
+
+.form-control {
+    height: 3.4vh;
+    padding: 0.5vh 0.5vw;
+    font-size: 1.4vh;
+    border-right: 0.06vw solid #ccc;
+    border-left: 0.06vw solid #ccc;
+    border-top: 0.13vh solid #ccc;
+    border-bottom: 0.13vh solid #ccc;
+}
+
+.input[type="radio"], input[type="checkbox"] {
+    margin: 0.4vh 0 0;
+    font-size:0.4vh;
+}
+
+div.ui-datepicker {
+    font-size: 10px;
+}
+
+
+.form-horizontal .control-label{
+    padding:0px;
+}

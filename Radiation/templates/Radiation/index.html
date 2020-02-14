@@ -1,0 +1,156 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+
+
+<form id="signup" class="form-horizontal " method="post"  enctype="multipart/form-data" action="{% url 'Radiation:radiation_index' %}">
+{% csrf_token %}
+    <div class="radiation_grid">
+        <div class="radiation_waiting partition">
+            <div class="status_table_title">
+                <span class="btn btn-success status_table_title_label" style="float:left;">{{ _('Patient List') }}</span>
+
+                <!--<input type="checkbox" id="work_on" onclick="worker_on('{% static 'js/event_listener.js' %}')" />-->    
+            </div>
+            <div class="radiation_waiting_control">
+                <input type="text" id="patient_date" class="form-control radiation_input" aria-describedby="sizing-addon1" style="width:100px;">
+
+                {{ search.filter }}
+                <input type="text" id="patient_search" class="form-control" style="width:140px; display:inline;"/>
+                <input type="button" id="patient_search_btn" class="btn" value="{{ _('Search') }}" style="display:inline;"/>
+            </div>
+            <div class="radiation_list_table_wrap">
+                <table class="table table-hover radiation_list_table" id="radiation_list_table">
+                    <thead>
+                        <tr>
+                            <th>{{ _('No') }}</th>
+                            <th>{{ _('Chart') }}</th>
+                            <th style="width:150px;">{{ _('Name') }}</th>
+                            <th>{{ _('Date of Birth') }}</th>
+                            <th>{{ _('Depart') }}</th>
+                            <th style="width:150px;">{{ _('Request')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="radiation_patient_info partition">
+           
+            <div class="status_table_title">
+                <span class="btn btn-success status_table_title_label" >{{ _('Patient Information') }}</span>
+                <input type="submit" style="float:right;" class="btn btn-danger radiation_save" id="save" name="save" value="{{ _('Save') }}" />   
+            </div>
+                <input type="hidden" id="selected_test_manage" name="selected_test_manage"/>
+                <input type="hidden" id="selected_image" name="selected_image" />
+                <div class="input-group radiation_patient_info_iniput">
+                  <span class="input-group-addon" id="basic-addon1">{{ _('Patient Name') }}</span>
+                  <input type="text" class="form-control"  autocomplete='off' aria-describedby="basic-addon1" id="radi_control_name">
+                </div>
+                <div class="input-group radiation_patient_info_iniput" >
+                  <span class="input-group-addon" id="basic-addon1">{{ _('Date of Birth') }}</span>
+                  <input type="text" class="form-control" autocomplete='off' aria-describedby="basic-addon1" id="Date_of_birth">
+                </div>
+
+
+                <div class="input-group radiation_patient_info_iniput" >
+                  <span class="input-group-addon" id="basic-addon1">{{ _('Depart') }}</span>
+                  <input type="text" class="form-control"  autocomplete='off' aria-describedby="basic-addon1" id="radi_control_depart">
+                </div>
+                <div class="input-group radiation_patient_info_iniput" >
+                  <span class="input-group-addon" id="basic-addon1">{{ _('Request') }}</span>
+                  <input type="text" class="form-control" autocomplete='off' aria-describedby="basic-addon1" id="radi_control_service">
+                </div>
+
+        <!--</div>-->
+        
+        <!--<div class="radiation_image partition">-->
+            <div class="status_table_title">
+                <!--<span class="btn btn-success status_table_title_label">{{ _('Image') }}</span>-->
+                
+                <!--<input type="button" id="zoom" class="btn" value="{{ _('Viewer') }}" />-->
+            </div>
+
+            <div class="radiation_image_wrap">
+                <div class="radiation_image_list">
+                    
+                    <ul class="radiation_image_ul">
+                        <li  onclick="upload_new()">
+                            <label for='img_input' style="cursor:pointer;" onchange='LoadImg(this)'><img style="width:30%; " src="{% static 'img/plus-icon-4.png'%}"/></label>
+                        </li>
+                    </ul>
+                    <ul class="radiation_image_ul" id="radiation_image_list_ul">
+                    </ul>
+                </div>
+                <div class="radiation_image">
+                    <img id="load_img" class="load_img" onerror="this.style.visibility='hidden'"/>
+                </div>
+            </div>
+            <div id ="selected_test_manage" data-id="" style="display:none;"></div>
+            
+                {{ form.id }}
+                {{ form.image }}
+                <div class="input-group remark_wrap" >
+                    <span class="input-group-addon doctor_patient_table_title" id="basic-addon1">{{ _('Remark') }}</span>
+                {{ form.remark }}
+                    </div>
+            
+            
+
+        </div>
+
+    </div>
+ 
+
+
+</form>
+
+<script>
+    function LoadImg(value) {
+    if (value.files && value.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#load_img').attr('src', e.target.result);
+    $('#load_img').attr('style','');
+        }
+        reader.readAsDataURL(value.files[0]);
+    }
+    }
+
+    w = undefined
+    function worker_on(is_run) {
+        if (is_run) {
+            if (window.Worker) {
+                w = new Worker('{% static 'js/event_listener.js' %}');
+                w.onmessage = function (event) {
+                    waiting_list(true);
+                };
+            }
+        } else {
+            if( w != undefined){
+                w.terminate();
+                w = undefined;
+            }
+        }
+    }
+
+    
+  
+</script>
+{% endblock %}
+
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/radiation.css' %}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<script src="{% static 'js/radiation.js' %}" type="text/javascript"></script>
+{% endblock %}

@@ -1,0 +1,94 @@
+body {
+    overflow: hidden;
+}
+
+.storage_grid {
+    min-height: 880px;
+    height: 95%;
+    min-width: 1600px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 25vw 35vw;
+    grid-template-rows: 90vh;
+}
+
+
+.partition {
+    padding: 0.7vh;
+    padding-left: 1.3vw;
+    padding-right: 1.3vw;
+    background: rgba(180, 180, 180, 0.1);
+    border: 0.5vh solid white;
+    overflow: auto;
+}
+
+.storage_list {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    overflow: auto;
+}
+
+.storage_contents {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    overflow: auto;
+}
+.storage_paid_list {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    overflow: auto;
+}
+
+.storage_item_table {
+    height: 400px;
+    overflow: auto;
+}
+
+.storage_list_title {
+    width: 100%;
+    display: inline;
+}
+
+    .storage_list_title > span {
+        text-align: left;
+        background: #d2322d;
+        font-size: 2.1vh;
+        height: 3.5vh;
+        padding-top: 0.2vh;
+    }
+
+
+
+.storage_contents_table_title {
+    width:6vw;
+    text-align:left;
+    font-weight:bold;
+}
+
+.storage_item_table_control{
+    width:100%;
+}
+
+    .storage_item_table_control tr, .storage_item_table_control td {
+        vertical-align: middle;
+    }
+
+
+    .storage_pay {
+        display: inline-block;
+    }
+
+.storage_list_calendar{
+    width:9vw;
+    display:inline;
+}
+
+.storage_search_select {
+    width: 5vw;
+    display: inline;
+}
+
+.storage_search_input {
+    width: 8vw;
+    display: inline;
+}

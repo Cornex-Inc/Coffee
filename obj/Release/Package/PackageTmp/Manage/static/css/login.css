@@ -1,0 +1,32 @@
+body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height:auto;
+}
+
+
+
+.login_wrap {
+    display: table;
+    width: 100vw;
+    height: 30vh;
+}
+
+.login_contents {
+    display: table-cell;
+    text-align: center;
+    width: 30vw;
+    height: 30vh;
+}
+
+.login_wrap input {
+    width: 19vw;
+}
+
+.doctor_depart_select{
+
+}
+
+.register_doctor{
+
+}

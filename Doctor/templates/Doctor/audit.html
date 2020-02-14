@@ -1,0 +1,169 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+<div class="contents_wrap">
+    <div id="DOCTORS">
+        
+        <div>
+            <div class="contents_Title_wrap">
+                <span class="contents_Title">{{ _('AUDIT') }}</span>
+            </div>
+
+            <div class="contents_filter_top" id="doctor_filter_top">
+
+            </div>
+        </div>
+
+
+        <div>
+            <div class="doctor_search_table_filter">
+                <div id="doctor_search" class="doctor_search_table_filter">
+                Date:
+                <input type="text" id="doctor_search_date" class="form-control costom-select doctor_search_date" aria-describedby="basic-addon1"/>
+                <!--
+                {{doctor_search.depart_filter.label}}
+                {{doctor_search.depart_filter}} -->
+                {{doctor_search.doctor_filter.label}}
+                {{doctor_search.doctor_filter}}
+                   
+                General:
+                <select id="doctor_search_general" class="form-control costom-select doctor_search_general">
+                    <option value="" selected >---------</option>
+                    {% for general in general_list  %}
+                        <option value="{{ general.code }}">{{ general.value }}</option>
+                    {% endfor %}
+                </select>
+                Medicine:
+                <select id="doctor_search_medicine" class="form-control costom-select doctor_search_medicine">
+                    <option value="" selected>---------</option>
+                    {% for medicine in medi_list %}
+                        <option value="{{ medicine.code }}">{{ medicine.value }}</option>
+                    {% endfor %}
+                </select>
+                Lab:
+                <select id="doctor_search_lab" class="form-control costom-select doctor_search_lab">
+                    <option value="" selected>---------</option>
+                    {% for lab in lab_list %}
+                        <option value="{{ lab.code }}">{{ lab.value }}</option>
+                    {% endfor %}
+                </select>
+                    <!--
+                Scaling:
+                <select id="doctor_search_scaling" class="form-control costom-select doctor_search_scaling">
+                    <option value="" selected>---------</option>
+                    {% for scaling in scaling_list %}
+                    {% for key,val in scaling.items %}
+                        <option value="{{ key }}">{{ val }}</option>
+                    {% endfor %}
+                    {% endfor %}
+                </select>
+                Panorama:
+                <select id="doctor_search_panorama" class="form-control costom-select doctor_search_panorama">
+                    <option value="" selected>---------</option>
+                    {% for panorama in panorama_list %}
+                    {% for key,val in panorama.items %}
+                        <option value="{{ key }}">{{ val }}</option>
+                    {% endfor %}
+                    {% endfor %}
+                </select>
+                        -->
+
+
+            </div>
+            </div>
+            <div class="payment_search_table">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>{{ _('No.') }}</th>
+                        <th>{{ _('Date') }}</th>
+                        <th>{{ _('Patient') }}</th>
+                        <th>{{ _('Depart') }}</th>
+                        <th>{{ _('Doctor') }}</th>
+                        <th>{{ _('General') }}</th>
+                        <th>{{ _('Medicine') }}</th>
+                        <th>{{ _('Lab') }}</th>
+                        <th>{{ _('Scaling') }}</th>
+                        <th>{{ _('Panorama') }}</th>
+                    </tr>
+                </thead>
+                <tbody  id="doctors_table_result" class="payment_table_result">
+
+                </tbody>
+                <tbody id="doctors_table_profit" class="doctors_table_profit">
+                    <tr>
+                        <td colspan="4">
+                        </td>
+                        <td>
+                            <span style="font-weight:bold;">Subtotal</span>
+                        </td>
+                        <td id="subtotal_general"></td>
+                        <td id="subtotal_medicine"></td>
+                        <td id="subtotal_lab"></td>
+                        <td id="subtotal_scaling"></td>
+                        <td id="subtotal_panorama"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                        </td>
+                        <td>
+                            <span style="font-weight:bold;">Profit</span>
+                        </td>
+                        <td><input type="text" class="form-control doctor_profit_control" id="profit_general" /><span style="font-weight:bold;">%</span></td>
+                        <td><input type="text" class="form-control doctor_profit_control" id="profit_medicine" />%</td>
+                        <td><input type="text" class="form-control doctor_profit_control" id="profit_lab" />%</td>
+                        <td><input type="text" class="form-control doctor_profit_control" id="profit_scaling" />%</td>
+                        <td><input type="text" class="form-control doctor_profit_control" id="profit_panorama" />%</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                        </td>
+                        <td>
+                            <span style="font-weight:bold;">Profit Total</span>
+                        </td>
+                        <td id="profit_total_general"></td>
+                        <td id="profit_total_medicine"></td>
+                        <td id="profit_total_lab"></td>
+                        <td id="profit_total_scaling"></td>
+                        <td id="profit_total_panorama"></td>
+                    </tr>
+                    <tr style="font-weight:bold;">
+                        <td colspan="7"></td>
+                        <td style="font-size:20px;">Total</td>
+                        <td colspan="2" style="font-size:20px;" id="profit_total_total"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="pagination" id="doctors_pagnation">
+
+            </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#doctors_search_doctor').hide();
+    $('#doctors_search_doctor').empty();
+    $('#doctors_search_doctor').append('<option value = "{{user.doctor.id}}" selected>{{user.doctor.id}} </option>');
+    
+   
+</script>
+{% endblock %}
+
+
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/audit.css' %}" />
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/printThis/1.15.0/printThis.min.js"></script>
+
+<script src="{% static 'js/audit.js' %}" type="text/javascript"></script>
+{% endblock %}

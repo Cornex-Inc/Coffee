@@ -1,0 +1,116 @@
+body{
+   
+}
+
+.contents_wrap {
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 40px;
+    height:92vh;
+
+}
+
+.contents_Title {
+    margin-left: 5vw;
+    margin-bottom: 2vh;
+    background: rgb(237,237,237);
+    width: 12vw;
+    height: 5vh;
+    display: table;
+}
+
+    .contents_Title > div {
+        text-align: center;
+        display: table-cell;
+        vertical-align: middle;
+        font-size: 2.7vh;
+    }
+
+.search_table_No {
+    width: 2.2vw;
+}
+
+.search_table_Date {
+    width: 4.8vw;
+}
+
+.search_table_Patient {
+    
+}
+
+.search_table_Date_of_Birth {
+    width: 5.8vw;
+}
+
+.search_table_Address {
+}
+
+.search_table_Depart {
+    width: 3.5vw;
+}
+
+
+
+.search_table_Doctor {
+    width: 4.5px;
+}
+
+.search_table_Order {
+    width: 11vw;
+}
+
+.search_table_Paidby {
+    width: 4vw;
+}
+
+.search_table_Paid {
+    width: 5.8vw;
+}
+
+.search_table_Unpaid {
+    width: 5.8vw;
+}
+
+.search_table_Total {
+    width: 5.8vw;
+}
+
+.payment_table_result > tr {
+    height: 4vh;
+}
+
+
+.payment_search_table {
+    width: 90vw;
+}
+
+
+.payment_search_date {
+    display: inline;
+    width: 9vw;
+}
+
+.payment_search_depart {
+    display: inline;
+    width: 5vw;
+}
+
+.payment_search_doctor {
+    display: inline;
+    width: 5vw;
+}
+
+.payment_search_test, .payment_search_precedure, .payment_search_medicine {
+    display: inline;
+    width: 10vw;
+}
+
+.payment_search_input {
+    display: inline;
+    width: 8vw;
+    margin-left: 3.4vw;
+}
+
+.payment_search_table_filter{
+    font-size:1.7vh;
+}

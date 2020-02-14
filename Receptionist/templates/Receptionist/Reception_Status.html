@@ -1,0 +1,78 @@
+﻿{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+
+<form id="signup" class="form-horizontal" method="post" action="{% url 'Receptionist:reception_status' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table class="table table-bordered">
+        <tr>
+            <td>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">진료 일자</span>
+                    </div>
+                    {{ form.date }}
+                </div>
+            </td>
+            <td>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">진료 과</span>
+                    </div>
+                    {{ form.depart }}
+                </div>
+            </td>
+            <td>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">의사</span>
+                    </div>
+                    {{ form.doctor }}
+                </div>
+            </td>
+            <td>
+                <input type="submit" value="검색" name="search" />
+            </td>
+        </tr>
+    </table>
+    
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>진료 일자</th>
+                <th>Chart No.</th>
+                <th>Name</th>
+                <th>Date of Birth</th>
+                <th>진료 유/무</th>
+                <th>Gender</th>
+                <th>다음 진료일<br /> F/U</th>
+                <th>tmp - 결재</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in datas%}
+            <tr>
+                <td>순번</td>
+                <td>{{data.recorded_date.date}}</td>
+                <td>{{ data.patient_id | stringformat:"06d"}}</td>
+                <td>{{ data.patient.name_kor }} <br /> {{ data.patient.name_eng }} </td>
+                <td>{{ data.patient.date_of_birth }}</td>
+                <td>무 / Progress?</td>
+                <td>{{ data.patient.gender }}</td>
+                <td>{{ data.follow_update }}</td>
+                <td><a href="{% url 'Receptionist:storage' reception_num=data.id%}">결재</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</form>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{% static 'js/reception.js' %}" type="text/javascript"></script>
+{% endblock %}

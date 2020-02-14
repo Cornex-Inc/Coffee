@@ -1,0 +1,151 @@
+﻿{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+
+{% block content %}
+
+
+    <form id="signup" class="form-horizontal" method="post" action="{% url 'Receptionist:storage' reception_num=reception.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table class="table table-bordered">
+            <tr>
+                <td rowspan="2">이름</td>
+                <td>
+                    <div class="input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-lg">한글(Kor)</span>
+                        </div>
+                        {{ patient.name_kor }}
+                    </div>
+                </td>
+
+                <td>
+                    <div class="input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-lg">생년월일</span>
+                        </div>
+                        {{ patient.date_of_birth }}
+                    </div>
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    <div class="input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-lg">영어(Eng)</span>
+                        </div>
+                        {{ patient.name_eng }}
+                    </div>
+                </td>
+
+                <td>
+                    <div class="input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-lg">성별</span>
+                        </div>
+                        {{ patient.gender }}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div class="input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-lg">전화번호</span>
+                        </div>
+                        {{ patient.phone }}
+                    </div>
+                </td>
+
+                <td>
+                    <div class="input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-lg">Etc..</span>
+                        </div>
+                        <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" />
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>이름<br />Description</th>
+                    <th>개수</th>
+                    <th>금액<br />Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in tests %}
+                {% if forloop.counter is 1%}
+                <tr><td colspan="3">검사</td></tr>
+                {% endif %}
+                <tr>
+                    <td>&emsp;&emsp;{{data.name}}</td>
+                    <td></td>
+                    <td>{{data.price}}</td>
+                </tr>
+                {% endfor %}
+                {% for data in precedures %}
+                {% if forloop.counter is 1%}
+                <tr><td colspan="3">처치</td></tr>
+                {% endif %}
+                <tr>
+                    <td>&emsp;&emsp;{{data.name}}</td>
+                    <td></td>
+                    <td>{{data.price}}</td>
+                </tr>
+                {% endfor %}
+                {% for data in medicines %}
+                {% if forloop.counter is 1%}
+                <tr><td colspan="3">투약</td></tr>
+                {% endif %}
+                <tr>
+                    <td>&emsp;&emsp;{{data.name}}</td>
+                    <td>개수</td>
+                    <td>{{data.price}}</td>
+                </tr>
+                {% endfor %}
+                <tr><td colspan="3"></td></tr>
+                <tr>
+                    <td></td>
+                    <td>Total</td>
+                    <td>{{total_amount}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!--F/U-->
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">F/U</span>
+            </div>
+            {{ reservation.date }}
+        </div>
+        <!--결재 수단-->
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">결재 정보</span>
+            </div>
+            {{ payment }}
+        </div>
+        <!--Tax Invoice-->
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Tax invoice</span>
+            </div>
+            <input type="text" class="form-control"  aria-describedby="basic-addon1">
+        </div>
+
+        <input type="submit" name="Cancle" value="Cancle" class="btn btn-default" />
+        <input type="submit" name="save" value="Save" class="btn btn-default" />
+    </form>
+
+
+    {% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/reception.js' %}" type="text/javascript"></script>
+{% endblock %}

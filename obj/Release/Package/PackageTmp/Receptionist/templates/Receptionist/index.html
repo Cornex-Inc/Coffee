@@ -1,0 +1,270 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+    <div class="reception_grid">
+        <!--Reception-->
+        <div class="reception_patient partition">
+            <div class="status_table_title">
+                <span class="btn btn-danger" style=" margin-right: 23vw; ">Registration</span>
+                <input class="btn btn-default status_button"  value="New" onclick="set_new_patient()" />
+                <input class="btn btn-default status_button" value="Edit" onclick="save_patient()"/>
+                <input class="btn btn-default status_button" value="Save" onclick="save_recept()"/>
+            </div>
+            <table class="table patient_table" id="reception_table">
+                <tr>
+                    <td >
+                    <div class="input-group ">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Chart No.') }}</span>
+                        {{patient.id}}
+                        </div>
+                    </td>
+                    <td ></td>
+                </tr>
+                <tr>
+                    <td >
+                    <div class="input-group">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Name_Kor') }}</span>
+                        {{patient.name_kor}}
+                    </div>
+                    </td>
+                    <td >
+                    <div class="input-group">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Name_Eng') }}</span>
+                        {{patient.name_eng}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td >
+                    <div class="input-group">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Date of Birth') }}</span>
+                    {{patient.date_of_birth}}
+                    </div>
+                    </td>
+                    <td >
+                    <div class="input-group" >
+                       
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Gender') }}</span>
+                         <!--
+                             <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-default  active">
+                            <input type="radio" name="gender" id="option1" autocomplete="off" > Male
+                            </label>
+                            <label class="btn btn-default ">
+                            <input type="radio" name="gender" id="option2" autocomplete="off"> Female
+                            </label>
+                        </div>
+                        -->
+                        {{patient.gender}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td >
+                    <div class="input-group">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Phone') }}</span>
+                    {{patient.phone}}
+                    </div>
+                    </td>
+                    <td >
+                    <div class="input-group">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Address') }}</span>
+                        {{patient.address}}</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td >
+                    <div class="input-group" style="width:17vw">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Depart') }}</span>
+                    {{reception.depart}}
+                    </div>
+                    </td>
+                    <td>
+                    <div class="input-group" style="width:17vw">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Doctor') }}</span>
+                        {{reception.doctor}}</div>
+                    </td>
+                </tr>
+
+                
+                <tr>
+                    <td colspan="2">
+                    <div class="input-group" style="width:40vw"> 
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Chief Complaint')}}</span>
+                         
+                        {{reception.chief_complaint}}
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                    <div class="input-group" style="width:40vw">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Past History')}}</span>
+                        {{history.past_history}}
+                    </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                    <div class="input-group" style="width:40vw">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Family History')}}</span>
+                        {{history.family_history}}
+                        </div></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <fieldset style="width:2.6vw;">
+                            <legend><input type="button" value="Inform Tax Invoice" class="btn btn-gray" id="patient_tax_invoice_click" /></legend>
+                            <div id="patient_tax_invoice" style="display:none;">
+                                <div class="input-group" style="width:40vw">
+                                    <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Number') }}</span>
+                                    <input type="text" id="tax_invoice_number" class="form-control" aria-describedby="basic-addon1">
+                                </div>
+                                <div class="input-group" style="width:40vw">
+                                    <span class="input-group-addon patient_table_title" id="basic-addon2">{{ _('Company Name') }}</span>
+                                    <input type="text" id="tax_invoice_company_name" class="form-control" aria-describedby="basic-addon2">
+                                </div>
+
+                                <div class="input-group" style="width:40vw">
+                                    <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Address') }}</span>
+                                    <input type="text" id="tax_invoice_address" class="form-control" aria-describedby="basic-addon1">
+                                </div>
+                            </div>
+                        </fieldset>
+                        
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <!--Patient Search-->
+        <div class="reception_search_patient partition">
+            <div class="status_table_title">
+            <span class="btn btn-danger" style="margin-right:16vw;">Search Patient</span>
+                <div class="status_table_filter">
+                {{ patientsearch.filter }}
+                {{ patientsearch.search_input }}
+                <input type="button" value="search" class="btn" onclick="patient_search()"/>
+                </div>
+            </div>
+            <div style="overflow:auto; height:30vh">
+                <table class="table reception_search_table" id="Patient_Search">
+                    <thead>
+                        <tr>
+                            <th>{{ _('No.')}}</th>
+                            <th>{{ _('Chart No.')}}</th>
+                            <th>{{ _('Name')}}</th>
+                            <th>{{ _('Date of Birth')}}</th>
+                            <th>{{ _('Phone Number')}}</th>
+                            <th>{{ _('Address')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>            
+                </table>
+            </div>
+        </div>
+        <!--Reception Status-->
+        <div class="status_table_wrapper partition" >
+            <div class="status_table_title">
+                 <span class="btn btn-danger" style="margin-right:9vw;">Reception Status</span>
+                <div class="status_table_filter">
+                    {{ _('Date:') }}
+                    {{ receptionsearch.date }} 
+                    <div class="input-group" style="width:10vw; display:inline-table;">
+                        <span class="input-group-addon reception_table_title" id="basic-addon1">{{ _('Depart') }}</span>
+                    {{ receptionsearch.depart }} 
+                    </div>
+                    <div class="input-group" style="width:10vw; display:inline-table;">
+                        <span class="input-group-addon reception_table_title" id="basic-addon1">{{ _('Doctor') }}</span>
+                    {{ receptionsearch.doctor }} 
+                    </div>
+                </div>
+            </div>
+            <div style="overflow:auto; height:40vh;">
+            <table class="table reception_search_table" id="Rectption_Status">
+                <thead>
+                    <tr>
+                        <th style="width:3.2vw;">{{_('No.') }}</th>
+                        <th style="width:5.9vw;">{{_('Chart No.') }}</th>
+                        <th style="width:10.5vw;">{{_('Name') }}</th>
+                        <th style="width:10.5vw;"> {{_('Date of Birth') }}</th>
+                        <th style="width:5.2vw">{{_('Depart') }}</th>
+                        <th style="width:8.4vw">{{_('Doctor') }}</th>
+                        <th style='width:7.8vw; text-align:center''>{{_('New / Repeat') }}</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>            
+            </table>
+            </div>
+        </div>
+       
+        <!--Reservation Status-->
+        <div class="status_table_wrapper partition">
+            <div class="status_table_title">
+            <span class="btn btn-danger" style="margin-right:16vw;">{{_('Reservation Status') }}</span>
+            </div>
+            <div class="status_table_filter">
+                <div class="input-group" style="width:10vw; display:inline-table;">
+                    <span class="input-group-addon reception_table_title" id="basic-addon1">{{ _('Depart') }}</span>
+                {{ reservation.depart }} 
+                </div>
+                <div class="input-group" style="width:10vw; display:inline-table;">
+                    <span class="input-group-addon reception_table_title" id="basic-addon1">{{ _('Doctor') }}</span>
+                {{ reservation.doctor }} 
+                </div>
+            </div>
+
+            <div style="overflow:auto; height:30vh;">
+            <table class="table reception_search_table" id="Reservation_Status">
+                <thead>
+                    <tr>
+                        <th>{{_('No.')}}</th>
+                        <th>{{_('Chart No.')}}</th>
+                        <th>{{_('Name')}}</th>
+                        <th>{{_('Date of Birth')}}</th>
+                        <th>{{_('PhoneNumber')}}</th>
+                        <th>{{_('Depart')}}</th>
+                        <th>{{_('Doctor')}}</th>
+                        <th>{{_('Time')}}</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+        </div>
+
+    <script>
+        reception_waiting_date_w = undefined;
+        function reception_waiting_date_worker(is_run) {
+            if (is_run) {
+                if (window.Worker) {
+                    reception_waiting_date_w = new Worker('{% static 'js/event_listener.js' %}');
+                    reception_waiting_date_w.onmessage = function (event) {
+                        reception_search(true);
+                    };
+                }
+            } else {
+                if( reception_waiting_date_w != undefined){
+                    reception_waiting_date_w.terminate();
+                    reception_waiting_date_w = undefined;
+                }
+            }
+        }
+    </script>
+
+
+{% endblock %}
+
+
+{% block style %}
+   <link rel="stylesheet" type="text/css" href="{% static 'css/reception.css' %}" />
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/reception.js' %}" type="text/javascript"></script>
+{% endblock %}

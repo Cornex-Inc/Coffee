@@ -1,0 +1,112 @@
+﻿{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+
+{% block content %}
+
+
+<form id="signup" class="form-horizontal" method="post" action="{% url 'Receptionist:reception_search' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="search">
+        <div>
+            {{ search.filter }}
+            {{ search.search_input }}
+            <input type="submit" name="search" />
+        </div>
+        <div class="button">
+            <a href="{% url 'Receptionist:reception' %}"><input type="button" value="new" class="btn btn-default" /></a>
+        </div>
+        <table class="table">
+            <thead class="table-primary">
+                <tr>
+                    <td cols="col">Name(Kor)</td>
+                    <td cols="col">Name(Eng)</td>
+                    <td cols="col">Date of Birth</td>
+                    <td cols="col">PHONE NUMBER</td>
+                    <td cols="col">etc..</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in datas %}
+                <tr style="cursor:pointer;" id="" onclick="check_reservation({{ data.id }})">
+                    <td>{{data.name_kor}}</td>
+                    <td>{{data.name_eng}}</td>
+                    <td>{{data.date_of_birth}}</td>
+                    <td>{{data.phone}}</td>
+                    <td>-</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+
+        <!--페이징-->
+        {% if datas.has_other_pages %}
+        <ul class = "pagination">
+        {% if datas.has_previous %}  
+          <li><a href="?page={{ datas.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+          <li class = "disabled"><span>&laquo;</span></li>
+        {% endif %}
+        
+        {% for i in datas.paginator.page_range %}  
+          
+          {% if datas.number == i %}      
+            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+          {% else %}
+            <li><a href="?page={{ i }}">{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+        
+        {% if datas.has_next %}
+            <li><a href="?page={{ datas.next_page_number }}">&raquo;</a></li>
+        {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+        {%endif %}
+        </ul>
+    {%endif%}
+        <div></div>
+    </div>
+    <div>
+        예약 리스트
+        <table class="table" id="reservation_table">
+            <thead>
+                <tr> 
+                    <th>Depart</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Paid</th>
+                    <th>Etc.</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% if reservations  %}
+                {% for reserve in reservations %}
+                    <tr style="cursor:pointer;" onclick="reception_reserve({{ reserve.id }})">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>-</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="5"> - 예약 없음 - </td>
+                </tr>
+            {% endif %}
+                <tr>
+                    <td colspan="5"><input type="submit" value="접수" /></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</form>
+
+
+    {% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/reception.js' %}" type="text/javascript"></script>
+{% endblock %}

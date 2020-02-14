@@ -1,0 +1,174 @@
+
+
+.radiation_grid {
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 40%;
+    /*grid-template-rows: 15%;*/
+}
+
+.partition {
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: rgba(180, 180, 180, 0.15);
+    border: 3.7px solid white;
+    overflow: auto;
+}
+
+.radiation_waiting {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start:1;
+    grid-row-end:3;
+}
+
+.radiation_patient_info {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
+
+.radiation_image {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    overflow:hidden;
+}
+
+
+
+.status_table_title {
+    /* margin-bottom: 15px; */
+}
+
+.status_table_title_label {
+    font-weight: 500;
+    font-size:14px;
+    margin-bottom: 10px;
+}
+
+.radiation_input {
+    width: 140px;
+    display: inline;
+}
+
+
+
+.radiation_control_div{
+    display:inline;
+}
+
+.radiation_patient_info_iniput {
+    width: 410px;
+    display: inline-table;
+    margin-right: 16px;
+}
+    .radiation_patient_info_iniput > span{
+        width: 100px;
+    }
+
+    .radiation_patient_info_iniput:last-child {
+        margin-right: 0px;
+    }
+
+.radiation_remark{
+    display:inline-block;
+}
+
+.radiation_save {
+    display:inline-block;
+}
+
+
+.radiology_search_select {
+    width: 90px;
+    display: inline;
+}
+
+.radiation_waiting_control{
+    text-align:right;
+}
+
+.radiation_list_table_wrap{
+    height:590px;
+}
+
+.radiation_image_wrap {
+    border:2px solid black;
+    width: 100%;
+    height: 453px;
+    margin-top: 20px;
+}
+
+
+.remark_wrap {
+    margin-top: 7.5px;
+    width: 100%;
+    display: inline-table;
+}
+
+.radiation_image {
+    width: 756px;
+    height: 100%;
+    display: inline-block;
+    text-align: center;
+}
+
+.radiation_image_list {
+    border-right: 2px solid black;
+    width: 100px;
+    height: 100%;
+    display: inline-block;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border-right: 2px solid black;
+    text-align: center;
+}
+
+.radiation_image_ul{
+    list-style:none;
+    padding:0px;
+    margin-top:10px;
+   
+}
+
+#load_img {
+    height: 100%;
+    max-width: 100%;
+    cursor: pointer;
+    
+}
+
+@media ( min-width: 1900px ) {
+    .radiation_list_table_wrap {
+        height: 760px;
+    }
+
+    .radiation_image_wrap {
+        height: 600px;
+    }
+    .radiation_patient_info_iniput{
+        width:500px;
+    }
+    .remark_wrap {
+        width:1250px; 
+    }
+}
+
+.image_clsoe {
+    background-image: url('../img/image_close.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.1;
+    position: relative;
+    margin-bottom: -20px;
+    margin-right: -15px;
+    float: right;
+    width: 40px;
+    height: 40px;
+}

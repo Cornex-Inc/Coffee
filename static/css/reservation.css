@@ -1,0 +1,41 @@
+
+
+.form-control {
+    font-size: 12px;
+    padding: 3px 12px;
+    height: 30px;
+}
+
+.reservation_wrap {
+    padding-left: 30px;
+    padding-right: 30px;
+    background: rgba(180, 180, 180, 0.15);
+    border: 5px solid white;
+    overflow-y: hidden;
+    width:100%;
+    height:100%;;
+}
+
+
+.reservation_title {
+    width: 100%;
+    display: inline;
+}
+
+    .reservation_title span {
+        text-align: left;
+    }
+
+.reservation_input {
+    width: 120px;
+    display: inline;
+}
+
+.reservation_select {
+    width: 90px;
+    display: inline;
+}
+
+.btn_reservation_delete{
+    float:left;
+}

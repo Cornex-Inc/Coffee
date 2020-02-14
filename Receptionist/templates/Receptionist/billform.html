@@ -1,0 +1,148 @@
+﻿<html>
+<head>
+    
+    <style type="text/css">
+        @page {
+            size:A4;
+        }
+
+        @media {
+            .title {
+            width:100%;
+            text-align:center;
+            margin-top:10px;
+            margin-bottom:10px;
+            font-size:20px;
+            font-weight:500 ;
+            }
+            .chart {
+            margin-bottom:2.5mm;
+            height:22mm;
+            }
+        }
+        
+        
+        .tr_small {
+            height:10mm;
+        }
+
+        .last {
+            height:79.5mm;
+            vertical-align: baseline;
+            text-align:left;
+            padding:10px;
+        }
+        .last_contents {
+            margin-left:20px;
+            margin-bottom:10px;
+        }
+        .bottom {
+
+        }
+
+        table{
+            border-collapse:collapse;
+            font-size:15px;
+            vertical-align:middle;
+            display:inline-block;
+        }
+
+            tbody tr td:first-child {
+                margin:0 auto;
+                text-align:center;
+                
+            }
+
+        tr {
+            margin: 0 auto;
+            padding:0;
+
+        }
+
+        td {
+            padding-left:5px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="page" style="width:169mm; margin:0 auto;">
+        <div class="sun_info">
+            <img src="{% static 'img/recepts_top.png' %}" />
+        </div>
+        <div class="title" >Receipts</div>
+        <div class="chart">
+            <table style="empty-cells: hide;">
+                <tbody >
+                    <tr class="tr_small" >
+                        <td colspan="7"></td>
+                        <td>Date</td>
+                        <td id="recept_date">2019/11/11</td>
+                    </tr>
+                    <tr>
+                        <td>Name</td>
+                        <td id="recept_patient">Hyungmo Kang</td>
+                        <td>Code</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>Doctor</td>
+                        <td id="recept_doctor">Kang</td>
+                    </tr>
+                </tbody>
+            
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td>ITEMCODE/DESCRIPTION</td>
+                    <td>Consultation</td>
+                    <td>Unit Price</td>
+                    <td>Quantity</td>
+                    <td>Amount(VND)<br />nonVAT</td>
+                    <td>VND</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Oral Exam</td>
+                    <td></td>
+                    <td>230.000</td>
+                    <td>1</td>
+                    <td>230.000</td>
+                    <td>VND</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>Scaling</td>
+                    <td></td>
+                    <td>690.000</td>
+                    <td>1</td>
+                    <td>690.000</td>
+                    <td>VND</td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr>
+                    <td colspan="3"></td>
+                    <td colspan="2">Total</td>
+                    <td>920.000</td>
+                    <td>VND</td>
+                </tr>
+                <tr>
+                    <td colspan="3"></td>
+                    <td colspan="2">Gaim 10%</td>
+                    <td>828.000</td>
+                    <td>VND</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+        
+        <div class="bottom">
+            <span></span>
+        </div>
+            
+    </div>
+</body>
+</html>

@@ -1,0 +1,277 @@
+body {
+    padding-bottom: 0px;
+    overflow: hidden;
+    font-size: 1.4vh;
+}
+
+.report_grid {
+    margin: 0 auto;
+    min-height: 89vh;
+    height: 100%;
+    min-width: 1600px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 40vw 25vw;
+}
+
+.partition {
+    padding: 0.7vh;
+    padding-left: 1.3vw;
+    padding-right: 1.3vw;
+    background: rgba(180, 180, 180, 0.1);
+    border: 0.5vh solid white;
+    overflow: auto;
+}
+
+.search_part{
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+.input_part {
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+.print_preview_part {
+    grid-column-start: 3;
+    grid-column-end: 4;
+}
+
+.input_part_contorl{
+    margin-top:1vh
+}
+
+    .input_part_contorl > div {
+        padding-bottom: 1vh;
+        width: 100%;
+        height: 3.4vh;
+    }
+
+        .input_part_contorl > div > span {
+            width: 6vw;
+            font-size: 1.4vh;
+        }
+
+.search_date {
+    display:inline-block;
+    width:10vh;
+}
+
+.search_select {
+    display: inline-table;
+    width: 10vh;
+}
+
+.search_input {
+    display: inline-block;
+    width: 20vh;
+}
+
+.search_table_contents tr td{
+    height: 4vh
+}
+
+.search_wrap{
+    text-align:center;
+}
+
+
+.report_view_wrap {
+    height: 82vh;
+    width: 32vw;
+    /* margin-right: 20px; */
+}
+
+.report_view {
+    height: 100%;
+    width: 32vw;
+    padding-top: 3vh;
+    background: white;
+    border-left: 0.13vh solid black;
+    border-right: 0.13vh solid black;
+    border-top: 0.2vh solid black;
+    border-bottom: 0.2vh solid black;
+    margin: 0 auto;
+}
+
+
+.page {
+    width: 75%;
+    height: 100%;
+    margin: 0 auto;
+   font-size:2vh;
+
+}
+     
+    .page .title {
+        width: 100%;
+        text-align: center;
+        margin-top: 0px;
+        margin-bottom: 1vh;
+        font-size: 3vh;
+        font-weight: bold;
+        top: 0px;
+    }
+
+    .page .chart {
+        margin-bottom: 2.5mm;
+        height: 7vh;
+    }
+
+    .page .tr_small {
+        height: 3vh;
+    }
+    .page th, .page td{
+        font-size:1.2vh;
+    }
+
+    .page .middle {
+        width:100%;
+    }
+
+    .page .last {
+        vertical-align: baseline;
+        text-align: left;
+        padding: 10px;
+    }
+
+    .page .last_contents {
+        margin-left: 20px;
+        margin-bottom: 10px;
+    }
+
+    .page table {
+        border-collapse: collapse;
+        font-size: 1.2vh;
+        vertical-align: middle;
+        display: inline-block;
+    }
+
+    .page tbody tr td:first-child {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .page tr {
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .page td {
+        border: 1px solid black;
+        padding-left: 5px;
+    }
+
+.contents_name {
+    width: 100%;
+    text-align: justify;
+}
+
+.patient_searach_wrap {
+    height: 35vh;
+}
+
+
+.patient_search{
+    text-align:right;
+    padding-right:20px;
+}
+
+.patient_search_select {
+    display: inline;
+    width: 5vw;
+}
+.patient_search_input {
+    display: inline;
+    width: 10vw;
+}
+.patient_search_btn {
+}
+
+
+
+@page {
+    size: A4;
+    margin: 0 auto;
+}
+
+@media print {
+
+
+    body {
+        width: 100%;
+        height: 100%;
+    }
+
+    .page_print {
+        width: 169mm;
+        height: 253mm;
+        margin: 0 auto;
+    }
+
+        .page_print .title {
+            width: 100%;
+            text-align: center;
+            margin-top: 0px;
+            margin-bottom: 10px;
+            font-size: 30px;
+            font-weight: 500;
+            top: 0px;
+        }
+
+        .page_print .chart {
+            margin-bottom: 2.5mm;
+            height: 22mm;
+        }
+
+        .page_print .tr_small {
+            height: 10mm;
+        }
+        .page_print th, .page_print td {
+            font-size: 14px;
+        }
+        .page_print .middle {
+            height: 216mm;
+        }
+
+        .page_print .last {
+            height: 79.5mm;
+            vertical-align: baseline;
+            text-align: left;
+            padding: 10px;
+        }
+
+        .page_print .last_contents {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .page_print table {
+            border-collapse: collapse;
+            font-size: 15px;
+            vertical-align: middle;
+            display: inline-block;
+        }
+
+        .page_print tbody tr td:first-child {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .page_print tr {
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .page_print td {
+            border: 1px solid black;
+            padding-left: 5px;
+        }
+
+    .contents_name {
+        width: 100%;
+        text-align: justify;
+    }
+}
+

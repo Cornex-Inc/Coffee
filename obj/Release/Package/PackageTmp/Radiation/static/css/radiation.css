@@ -1,0 +1,97 @@
+body {
+    overflow:hidden;
+
+}
+
+.radiation_grid {
+    margin: 0 auto;
+    min-height: 89vh;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 33vw;
+    grid-template-rows: 13vh;
+}
+
+.partition {
+    padding: 0.7vh;
+    padding-left: 1.3vw;
+    padding-right: 1.3vw;
+    background: rgba(180, 180, 180, 0.1);
+    border: 0.5vh solid white;
+}
+
+.radiation_waiting {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start:1;
+    grid-row-end:3;
+}
+
+.radiation_patient_info {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
+
+.radiation_image {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+
+
+
+.status_table_title {
+    margin-bottom: 15px;
+}
+
+.status_table_title_label {
+    font-size: 0.9vw;
+    height: 3vh;
+    padding-top: 0.1vh;
+}
+
+.radiation_input {
+    width: 9vw;
+    display: inline;
+}
+
+.radiation_control_contents{
+    width:15vw;
+}
+
+.radiation_control_div{
+    display:inline;
+}
+
+.radiation_patient_info_iniput{
+    width:15vw;
+    display: inline-table;
+    margin-right: 1vw;
+}
+
+.radiation_patient_info_iniput:last-child{
+    margin-right:0px;
+}
+
+.radiation_remark{
+    width:28vw;
+    display:inline-block;
+}
+
+.radiation_save {
+    display:inline-block;
+}
+
+.laboratory_search_select {
+    width: 5vw;
+    display: inline-block;
+}
+
+.radiology_search_select {
+    width: 5.9vw;
+    display: inline;
+}

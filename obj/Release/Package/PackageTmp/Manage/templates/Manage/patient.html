@@ -1,0 +1,13 @@
+﻿{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+<form id="signup" class="form-horizontal" method="post" action="{% url 'Doctor:diagnosis' %}{{reception_num}}" enctype="multipart/form-data">
+    {% csrf_token %}
+    Patient
+</form>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock%}

@@ -1,0 +1,509 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+{% load staticfiles %}
+    {% csrf_token %}
+
+    <div class="doctor_grid">
+        <!--Patient_Information-->
+        <div class="doctor_patient_info partition">
+            <div class="status_table_title">
+                <span class="btn btn-success" style="">{{ _('Patient Information') }}</span>
+                <div class="need_medical_report" style="background:none; display:none;"id="need_medical_report" >{{_('Medical Report')}}</div>
+            </div>
+            <table class="table" id="reception_table">
+                <tr>
+                    <td >
+                        <div class="input-group ">
+                            <span class="input-group-addon doctor_patient_table_title" id="basic-addon1">{{ _('Chart No.') }}</span>
+                            <input type="hidden" id="patient_id" />
+                            {{patient.id}}
+                        </div>
+                    </td>
+                    <td>                        
+                        <div class="input-group" >
+                            <span class="input-group-addon doctor_patient_table_title" style="width:70px" id="basic-addon1">{{ _('Name') }}</span>
+                            {{patient.name_kor}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group ">
+                            <span class="input-group-addon doctor_patient_table_title" id="basic-addon1">{{ _('Date of Birth') }}</span>
+                            {{patient.date_of_birth}}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-addon doctor_patient_table_title" style="width:70px" id="basic-addon1">{{ _('Gender') }}</span>
+                            {{patient.gender}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="input-group ">
+                            <span class="input-group-addon doctor_patient_table_title"  id="basic-addon1">{{ _('Phone') }}</span>
+                            {{patient.phone}}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group ">
+                            <span class="input-group-addon doctor_patient_table_title" style="width:70px" id="basic-addon1">{{ _('Address') }}</span>
+                            {{patient.address}}
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <div class="input-group" style="width:100%;">
+                            <span class="input-group-addon doctor_patient_table_title" id="basic-addon1">{{ _('Past history') }}</span>
+                            {{history.past_history}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="input-group " style="width:100%;">
+                            <span class="input-group-addon doctor_patient_table_title" id="basic-addon1">{{ _('Familiy history') }}</span>
+                            {{history.family_history}}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!--Vital-->
+        <div class="doctor_vital partition">
+            <div class="status_table_title">
+            <span class="btn btn-success" style="margin-bottom:2px;">{{ _('Vital') }}</span>
+            </div>
+            <div class="Vitial_table_warp">
+                <table class="table vital_table" id="Vitial_table">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">{{ _('Date') }}</th>
+                            <th>Wt(kg)</th>
+                            <th>Ht(cm)</th>
+                            <th>BP(mmHg)</th>
+                            <th>BT(˚c)</th>
+                            <th>RR</th>
+                            <th>PR</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vital_get_body"></tbody>
+                    <tbody id="vital_set_body">
+                        <tr>
+                            <td>{{today_vital}}</td>
+                            <td ><input type="text" class="vital_input"  id="vital_input_weight"/></td>
+                            <td ><input type="text" class="vital_input"  id="vital_input_height"/></td>
+                            <td ><input type="text" class="vital_input"  id="vital_input_blood_pressure"/></td>
+                            <td ><input type="text" class="vital_input"  id="vital_input_blood_temperature"/></td>
+                            <td ><input type="text" class="vital_input"  id="vital_input_breath"/></td>
+                            <td ><input type="text" class="vital_input"  id="vital_input_pulse_rate"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+        </div>
+        <!--Waiting-->
+        <div class="doctor_waiting partition">
+             <div class="status_table_title">
+                 <span class="btn btn-success">{{ _('Reception Status') }}</span>
+
+                </div>
+                <div style="text-align:right">
+                  {{ _('Date') }}:
+                 {{ receptionsearch.date }}
+                 {{ receptionsearch.progress }}
+                     
+                 <input type="button" class="btn btn-default" value="{{ _('Search') }}" onclick="reception_waiting()"/>
+                     </div>
+            <div class="Rectption_Status_wrap">
+                <table class="table reception_search_table" id="Rectption_Status">
+                    <thead>
+                        <tr>
+                            <th>{{ _('No.') }}</th>
+                            <th>{{ _('Chart No.') }}</th>
+                            <th>{{ _('Name') }}</th>
+                            <th>{{ _('Date of Birth') }}</th>
+                            <th>{{ _('Time') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <!--Diagnosis-->
+        <input type="hidden" id="status" />
+        <div class="doctor_diagnosis partition">
+             <div class="status_table_title">
+                <span class="btn btn-success">{{ _('History Taking') }}</span>
+            
+                 <div style="float:right;">
+                <input type="button" class="btn btn-dark"  value="{{ _('Cancel') }}"  />
+                <input type="button" class="btn btn-warning" value="{{ _('Save') }}" onclick="diagnosis_save('hold')" />
+                <input type="button" class="btn btn-danger" value="{{ _('Done') }}" onclick="diagnosis_save('done')" />
+                 </div>
+
+             </div>
+            <div class="input-group diagnosis_history_taking">
+                <span class="input-group-addon diagnosis_history_taking_title" id="basic-addon1">{{ _('Subjective Data') }}</span>
+                <textarea id="chief_complaint" class="form-control diagnosis_history_taking_contents" style="height:30px;" aria-describedby="basic-addon1"></textarea>
+            </div>
+            <div class="input-group ">
+                <span class="input-group-addon diagnosis_history_taking_title" id="basic-addon1">{{ _('Objective Data') }}</span>
+                <textarea id="objective_data" class="form-control diagnosis_history_taking_contents" style="height:30px;" aria-describedby="basic-addon1"></textarea>
+            </div>
+            <div class="input-group ">
+                <span class="input-group-addon diagnosis_history_taking_title" id="basic-addon1">{{ _('Assessment') }}</span>
+                <textarea id="assessment"  class="form-control diagnosis_history_taking_contents" style="height:30px;" aria-describedby="basic-addon1"></textarea>
+            </div>
+            <div class="input-group ">
+                <span class="input-group-addon diagnosis_history_taking_title" id="basic-addon1">{{ _('Plan') }}</span>
+                <textarea id="plan" class="form-control diagnosis_history_taking_contents" style="height:30px;" aria-describedby="basic-addon1"></textarea>
+            </div>
+            <div class="input-group" >
+                <span class="input-group-addon diagnosis_history_taking_title" id="basic-addon1">{{ _('Diagnosis') }}</span>
+                <textarea id="diagnosis" class="form-control diagnosis_history_taking_contents" style="height:30px;" aria-describedby="basic-addon1"></textarea>
+            </div>
+            </div>
+        <div class="order_list partition">
+            <div class="status_table_title" >
+                <span class="btn btn-success" style="margin-bottom:5px;">{{ _('Order List') }}</span>
+            </div>
+
+            <input type="hidden" value="" id="selected_reception" />
+
+            <div class="diagnosis_selected_method">
+                <table class="table" id="diagnosis_selected">
+                    <thead>
+                        <tr>
+                            <th style='text-align:center;'>{{ _('Code') }}</th>
+                            <th style="text-align:center;">{{ _('Name') }}</th>
+                            <th style="width:90px; text-align:center;">{{ _('Unit') }}</th>
+                            <th style="width:80px; text-align:center;">{{ _('Amount') }}</th>
+                            <th style="width:80px; text-align:center;">{{ _('Days') }}</th>
+                            <th style="text-align:center;">{{ _('Use') }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="diagnosis_selected_exam"> 
+                    </tbody>
+                    <tbody id="diagnosis_selected_test">
+                    </tbody>
+                    <tbody id="diagnosis_selected_precedure">
+                    </tbody>
+                    <tbody id="diagnosis_selected_medicine">
+                    </tbody>
+                </table>
+            </div>
+
+
+                <!--<input type="button" class="btn btn-default medical_report" value="Medical Report" onclick="diagnosis_report()" />-->
+                <div class="input-group fu_date">
+                    <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Next Visiting Day') }}</span>
+                    {{reservation.date}}
+                </div>
+            
+                <div style="float:right;">
+                    <div style="display:inline;">Total Price :</div>
+                    <div id="total_price" style="text-align:right; display:inline;">0 VND</div>
+                </div>
+                
+         </div>
+        <!--Past Diagnosis-->
+        <div class="doctor_past_diagnosis partition">
+
+            <div class="status_table_title">
+            <span class="btn btn-success" >{{ _('Past History') }}</span>
+            </div>
+            <div class="diagnosis_table_wrap" style="overflow:auto; height:140px;">
+                <table class="table" id="diagnosis_table">
+                    <tbody>
+                    
+                    </tbody>
+                </table>
+            </div>
+        </div>
+       
+        <!--order-->
+        <div class="diagnosis_select_method partition">
+            <div class="status_table_title">
+                <span class="btn btn-success" >{{ _('Check List') }}</span>
+                <div style="float:right; ">
+                    <input class="form-control" style="margin-left:0; width:150px; display:inline-block;" id="order_search"/>
+                    <input type="button" class="btn"  value="{{ _('Search') }}" style="display:inline-block;"/>
+                </div>
+            </div>
+            <div style="display:inline-block; margin-bottom:10px;" class="diagnosis_select_title">
+                <input type="button" class="btn btn-primary" id="diagnosis_select_exam_title" value="Exam Fee" style="background:rgb(40,95,145); border-color:rgb(40,95,145)">
+                <input type="button" class="btn btn-info" id="diagnosis_select_test_title" value="Lab">
+                <input type="button" class="btn btn-success" id="diagnosis_select_precedure_title" value="Precedure">
+                <input type="button" class="btn btn-primary" id="diagnosis_select_medicine_title" value="Medicine">
+                <input type="button" class="btn btn-warning" id="diagnosis_select_bundle_title" value="Bundle Px" />
+            </div>
+            <!--diagnosis_select_title-->
+
+            <div class="diagnosis_select_contents" id="diagnosis_select_exam_contents">
+                    <table class="table order_list_table" >
+                        <thead>
+                            <tr>
+                                <th style="width:15px; font-weight:bold;"></th>
+                                <th style="width:37px;">{{ _('Code') }}</th>
+                                <th style="width:90px;">{{ _('Name') }}</th>
+                                <th style="width:70px;text-align:center; ">{{ _('Price') }}</th>
+                            </tr>
+                        </thead>
+                        
+                        
+                        <tbody class="contents_items" >
+                            {% for exam in exam_list%}
+                            <tr style="cursor:pointer;">
+                                <td ><input type="hidden" id="exam_id" value="{{exam.id}}" /></td>
+                                <td >{{exam.code}}</td>
+                                <td >{{exam.name}}</td>
+                                <td style="text-align:right;">{{exam.price}}</td>
+                                <td style="display:none;">{{exam.name.lower}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                            
+                    </table>
+            </div>
+            <div class="diagnosis_select_contents" id="diagnosis_select_test_contents">
+                    <table class="table order_list_table" >
+                        <thead>
+                            <tr>
+                                <th style="width:15px; font-weight:bold;"></th>
+                                <th style="width:37px;">{{ _('Code') }}</th>
+                                <th style="width:90px;">{{ _('Name') }}</th>
+                                <th style="width:70px;text-align:center; ">{{ _('Price') }}</th>
+                            </tr>
+                        </thead>
+                        
+                        {% for class, contents in tests.items %}
+                        <tbody>
+                            <tr class="contents_class" style="cursor:pointer;">
+                                <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);" for="order_list_class_{{class}}" > 
+                                    <label>+</label>
+                                    {{ class }}
+                                    <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_{{class}}"/>
+                                    
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody class="contents_items" style="display:none;">
+                            {% for test in contents %}
+                            <tr style="cursor:pointer;">
+                                <td ></td>
+                                <td >{{test.code}}</td>
+                                <td >{{test.name}}</td>
+                                <td style="text-align:right;">{{test.price}}</td>
+                                <td style="display:none;">{{test.name.lower}}</td>
+                            </tr>
+                        
+                            {% endfor %}
+                            </tbody>
+                        {% endfor %}
+                            
+                    </table>
+            </div>
+            <div class="diagnosis_select_contents" id="diagnosis_select_precedure_contents">
+                <table class="table order_list_table" >
+                        <thead>
+                            <tr>
+                                <th style="width:15px; font-weight:bold;"></th>
+                                <th style="width:37px;">{{ _('Code') }}</th>
+                                <th style="width:90px">{{ _('Name') }}</th>
+                                <th style="width:70px; text-align:center;">{{ _('Price') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="contents_class" style="cursor:pointer;">
+                                <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);"> 
+                                    <label for="order_list_class_{{class}}" >+</label>
+                                    <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_p_short"/>
+                                    Shortcut
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody class="contents_items" style="display:none;">
+                            {% for precedure in precedure_short %}
+                            <tr style="cursor:pointer;">
+                                <td ></td>
+                                <td >{{precedure.code}}</td>
+                                <td >{{precedure.name}}</td>
+                                <td style="text-align:right;">{{precedure.price}}</td>
+                                <td style="display:none;">{{precedure.name.lower}}</td>
+                            </tr>
+                        
+                            {% endfor %}
+                        </tbody>
+                        
+                        {% for class, contents in precedures.items %}
+                        <tbody>
+                            <tr class="contents_class" style="cursor:pointer;">
+                                <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);"> 
+                                    <label for="order_list_class_{{class}}" >+</label>
+                                    <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_{{class}}"/>
+                                    {{ class }}
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody class="contents_items" style="display:none;">
+                            {% for precedure in contents %}
+                            <tr style="cursor:pointer;">
+                                <td ></td>
+                                <td >{{precedure.code}}</td>
+                                <td >{{precedure.name}}</td>
+                                <td style="text-align:right;">{{precedure.price}}</td>
+                                <td style="display:none;">{{precedure.name.lower}}</td>
+                            </tr>
+                        
+                            {% endfor %}
+                            </tbody>
+                        {% endfor %}
+                    </table>
+            </div>
+            <div class="diagnosis_select_contents" id="diagnosis_select_medicine_contents">
+                <table class="table" >    
+                    <thead>
+                        <tr>
+                            <th style="width:15px; font-weight:bold;"></th>
+                            <th style="width:37px;">{{ _('Code') }}</th>
+                            <th style="width:90px;">{{ _('Name') }}</th>
+                            <th style="width:70px; text-align:center;">{{ _('Price') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="contents_class" style="cursor:pointer;">
+                            <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);"> 
+                                <label for="order_list_class_{{class}}" >+</label>
+                                <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_m_short"/>
+                                Shortcut
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody class="contents_items" style="display:none;">
+                        {% for medicine in medicine_short %}
+                            <tr style="cursor:pointer;">
+                                <td ></td>
+                                <td >{{medicine.code}}</td>
+                                <td >{{medicine.name}}</td>
+                                <td style="text-align:right;">{{medicine.price}}</td>
+                                <td style="display:none;">{{medicine.name.lower}}</td>
+                                <td style="display:none;">{{medicine.unit}}</td>
+                            </tr>
+                        
+                        {% endfor %}
+                    </tbody>
+                    <!--{% for class, contents in medicines.items %}
+                        <tbody>
+                            <tr class="contents_class" style="cursor:pointer;">
+                                <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);"> 
+                                    <label for="order_list_class_{{class}}" >+</label>
+                                    <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_{{class}}"/>
+                                    {{ class }}
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody class="contents_items" id="contents_items_{{class}}" style="display:none;">
+                            {% for medicine in contents %}
+                            <tr style="cursor:pointer;">
+                                <td></td>
+                                <td>{{medicine.code}}</td>
+                                <td>{{medicine.name}}</td>
+                                <td style="text-align:right;">{{medicine.price}}</td>
+                                <td style="display:none;">{{medicine.unit}}</td>
+                            </tr>
+                        
+                            {% endfor %}
+                            </tbody>
+                        {% endfor %}-->
+                        <tbody class="contents_items" >
+                            {% for medicine in medicines%}
+                            <tr style="cursor:pointer;">
+                                <td ></td>
+                                <td >{{medicine.code}}</td>
+                                <td >{{medicine.name}}</td>
+                                <td style="text-align:right;">{{medicine.price}}</td>
+                                <td style="display:none;">{{medicine.name.lower}}</td>
+                                <td style="display:none;">{{medicine.unit}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                </table>
+            </div>
+            <div id="diagnosis_select_bundle_contents" class="diagnosis_select_contents">
+                <table class="table order_list_table" >
+                        <thead>
+                            <tr>
+                                <th style="width:15px; font-weight:bold;"></th>
+                                <th style="width:37px;">{{ _('Code') }}</th>
+                                <th style="width:90px">{{ _('Name') }}</th>
+                                <th style="width:70px; text-align:center;">{{ _('Price') }}</th>
+                            </tr>
+                        </thead>
+
+                        {% for class, contents in bundle_set.items %}
+                        <tbody>
+                            <tr class="contents_class" style="cursor:pointer;">
+                                <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);"> 
+                                    <label for="order_list_class_{{class}}" >+</label>
+                                    <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_{{class}}"/>
+                                    {{ class }}
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody class="contents_items" style="display:none;">
+                            {% for bundle in contents %}
+                            <tr style="cursor:pointer;">
+                                <td ></td>
+                                <td >{{bundle.code}}</td>
+                                <td >{{bundle.name}}</td>
+                                <td style="text-align:right;"></td>
+                                <td style="display:none;">{{bundle.name.lower}}</td>
+                                <td style="display:none;">{{bundle.id}}</td>
+                            </tr>
+                        
+                            {% endfor %}
+                            </tbody>
+                        {% endfor %}
+                    </table>
+
+            </div>
+        </div>
+        
+    </div>
+<script>
+    w = undefined
+    function worker_on(is_run) {
+        if (is_run) {
+            if (window.Worker) {
+                w = new Worker('{% static 'js/event_listener.js' %}');
+                w.onmessage = function (event) {
+                    reception_waiting(true);
+                };
+            }
+        } else {
+            if( w != undefined){
+                w.terminate();
+                w = undefined;
+            }
+        }
+    }
+
+
+</script>
+
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/doctor.css' %}" />
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/doctor.js' %}" type="text/javascript"></script>
+{% endblock %}

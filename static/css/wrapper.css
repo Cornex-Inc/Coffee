@@ -1,0 +1,260 @@
+html{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+}
+
+body {
+    min-width: 1500px;
+    max-width: 1980px;
+    min-height: 750px;
+    margin: 0;
+    padding: 0;
+    font: 6.7px;
+}
+
+
+    body:before {
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: auto;
+        display: block;
+        padding-top: 100%;
+    }
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    height: 100%;
+    width: 100%;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    font: 400 12px Arial;
+}
+
+
+th ,td{
+    font-size: 13px;
+}
+
+label {
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+.container {
+    width: 100%;
+}
+
+.sub_title {
+    width: 100%;
+}
+
+
+.index_wrap {
+    width: 100%;
+}
+
+.menu_contents_ul {
+    margin-top: 15px;
+    display: inline-block;
+    vertical-align: bottom;
+    list-style: none;
+    float: left;
+    padding-left: 0px;
+}
+
+    .menu_contents_ul li {
+        font-size: 15px;
+        font-weight: bold;
+        /* height: 35px; */
+        border-left: 1px solid gray;
+        list-style: none;
+        float: left;
+        padding-left: 7.7px;
+        padding-right: 7.7px;
+    }
+
+        .menu_contents_ul li:first-child {
+            margin-left: 15px;
+        }
+
+        .menu_contents_ul li a {
+            color: red;
+            padding:8px 16px;
+        }
+
+
+
+
+
+.index_top {
+    padding: 20px;
+    float: left;
+    display: block;
+}
+
+    .index_top img {
+        display: inline-block;
+        margin-right: 20px;
+        margin-left: 20px;
+    }
+
+
+.index_middle {
+    background: linear-gradient( to right, white, rgb(200, 130, 55),white);
+    display: block;
+    clear: both;
+}
+
+    .index_middle img {
+        display: block;
+        margin: 0 auto;
+        height: 100%;
+    }
+
+.index_bottom {
+    width: 100%;
+    clear: both;
+}
+
+    .index_bottom ul {
+
+        margin: 0 auto;
+        display: block;
+        padding-top: 20px;
+        display: inline-block;
+        vertical-align: bottom;
+    }
+
+        .index_bottom ul li {
+            list-style: none;
+            float: left;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+.index_bottom_contents {
+}
+
+.index_bottom_contents_text {
+    text-align: right;
+}
+
+.language_ul{
+    list-style:none;
+}
+
+.language_ul li a{
+    padding:0px;
+    margin-top: 38px;
+    margin-right: 15px;
+}
+
+
+.logout_ul li a {
+    padding: 0px;
+    font-size: 24px;
+}
+
+.top_menu{
+    padding:0px;
+}
+
+.active a{
+    background:rgb(238,238,238);
+}
+
+.input-group-addon {
+    padding: 5px 10px;
+    font-size: 11px;
+    border:1px solid #ccc;
+    height:30px;
+}
+.form-control {
+    font-size: 12px;
+    padding: 3px 12px;
+    height:30px;
+}
+
+.table {
+    margin-bottom: 15px;
+}
+
+    .table thead > tr > th, .table tbody > tr > th, .table tfoot > tr > th, .table thead > tr > td, .table tbody > tr > td, .table tfoot > tr > td {
+        padding: 5px;
+        border-top: 1px solid #ddd;
+    }
+    .table thead > tr > th {
+        border-bottom: 0.4vh solid #ddd;
+    }
+
+.btn {
+    padding: 3.5px 7px;
+    font-size: 12px;
+}
+
+.input[type="radio"], input[type="checkbox"] {
+    margin: 3px 0 0;
+    font-size:3px;
+}
+
+div.ui-datepicker {
+    font-size: 10px;
+}
+
+
+.form-horizontal .control-label{
+    padding:0px;
+}
+
+
+@media ( min-height: 965px ) {
+    body {
+        height: 880px;
+    }
+
+    .form-control {
+        font-size: 14px;
+        padding: 3px 12px;
+        vertical-align:middle;
+    }
+    .input-group {
+    }
+    .input-group-addon {
+        padding: 5px 10px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+    }
+
+}

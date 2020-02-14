@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <Name>Coffee</Name>
+    <RootNamespace>Coffee</RootNamespace>
+    <InterpreterId>MSBuild|env_local|$(MSBuildProjectFullPath)</InterpreterId>
+    <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
+    <WebBrowserPort>
+    </WebBrowserPort>
+    <TestFramework>Pytest</TestFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>1daac0cb-dbaa-4f93-89af-f7c6561a5fda</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <ProjectTypeGuids>{5F0BE9CA-D677-4A4D-8806-6076C0FAAD37};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <StartupFile>manage.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <WebBrowserUrl>http://localhost</WebBrowserUrl>
+    <LaunchProvider>Django launcher</LaunchProvider>
+    <DjangoSettingsModule>Coffee.settings</DjangoSettingsModule>
+    <OutputPath>.</OutputPath>
+    <SuppressCollectPythonCloudServiceFiles>true</SuppressCollectPythonCloudServiceFiles>
+    <PythonRunWebServerCommandType />
+    <PythonDebugWebServerCommandType />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Account\admin.py" />
+    <Compile Include="Account\apps.py" />
+    <Compile Include="Account\migrations\__init__.py" />
+    <Compile Include="Account\models.py" />
+    <Compile Include="Account\forms.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Account\tests.py" />
+    <Compile Include="Account\views.py" />
+    <Compile Include="Account\__init__.py" />
+    <Compile Include="app\forms.py" />
+    <Compile Include="app\models.py" />
+    <Compile Include="app\tests.py" />
+    <Compile Include="app\views.py" />
+    <Compile Include="app\__init__.py" />
+    <Compile Include="app\migrations\__init__.py" />
+    <Compile Include="Coffee\azure_storage.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Doctor\admin.py" />
+    <Compile Include="Doctor\apps.py" />
+    <Compile Include="Doctor\migrations\__init__.py" />
+    <Compile Include="Doctor\models.py" />
+    <Compile Include="Doctor\forms.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Doctor\tests.py" />
+    <Compile Include="Doctor\views.py" />
+    <Compile Include="Doctor\__init__.py" />
+    <Compile Include="Doctor\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Laboratory\admin.py" />
+    <Compile Include="Laboratory\apps.py" />
+    <Compile Include="Laboratory\forms.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Laboratory\migrations\__init__.py" />
+    <Compile Include="Laboratory\models.py" />
+    <Compile Include="Laboratory\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Laboratory\tests.py" />
+    <Compile Include="Laboratory\views.py" />
+    <Compile Include="Laboratory\__init__.py" />
+    <Compile Include="manage.py" />
+    <Compile Include="Coffee\__init__.py" />
+    <Compile Include="Coffee\settings.py" />
+    <Compile Include="Coffee\urls.py" />
+    <Compile Include="Coffee\wsgi.py" />
+    <Compile Include="Manage\admin.py" />
+    <Compile Include="Manage\apps.py" />
+    <Compile Include="Manage\migrations\__init__.py" />
+    <Compile Include="Manage\models.py" />
+    <Compile Include="Manage\forms.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Manage\tests.py" />
+    <Compile Include="Manage\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Manage\views.py" />
+    <Compile Include="Manage\__init__.py" />
+    <Compile Include="Patient\admin.py" />
+    <Compile Include="Patient\apps.py" />
+    <Compile Include="Patient\forms.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Patient\migrations\__init__.py" />
+    <Compile Include="Patient\models.py" />
+    <Compile Include="Patient\tests.py" />
+    <Compile Include="Patient\views.py" />
+    <Compile Include="Patient\__init__.py" />
+    <Compile Include="Pharmacy\admin.py" />
+    <Compile Include="Pharmacy\apps.py" />
+    <Compile Include="Pharmacy\forms.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Pharmacy\migrations\__init__.py" />
+    <Compile Include="Pharmacy\models.py" />
+    <Compile Include="Pharmacy\tests.py" />
+    <Compile Include="Pharmacy\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Pharmacy\views.py" />
+    <Compile Include="Pharmacy\__init__.py" />
+    <Compile Include="Radiation\admin.py" />
+    <Compile Include="Radiation\apps.py" />
+    <Compile Include="Radiation\migrations\__init__.py" />
+    <Compile Include="Radiation\models.py" />
+    <Compile Include="Radiation\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Radiation\forms.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Radiation\tests.py" />
+    <Compile Include="Radiation\views.py" />
+    <Compile Include="Radiation\__init__.py" />
+    <Compile Include="Receptionist\admin.py" />
+    <Compile Include="Receptionist\apps.py" />
+    <Compile Include="Receptionist\forms.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Receptionist\migrations\__init__.py" />
+    <Compile Include="Receptionist\models.py" />
+    <Compile Include="Receptionist\tests.py" />
+    <Compile Include="Receptionist\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Receptionist\views.py" />
+    <Compile Include="Receptionist\__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Account\" />
+    <Folder Include="Account\migrations\" />
+    <Folder Include="Account\templates\" />
+    <Folder Include="Account\templates\Account\" />
+    <Folder Include="app\" />
+    <Folder Include="app\migrations\" />
+    <Folder Include="app\static\" />
+    <Folder Include="app\static\app\" />
+    <Folder Include="app\static\app\content\" />
+    <Folder Include="app\static\app\fonts\" />
+    <Folder Include="app\static\app\scripts\" />
+    <Folder Include="app\static\js\" />
+    <Folder Include="app\static\img\" />
+    <Folder Include="app\static\css\" />
+    <Folder Include="app\templates\" />
+    <Folder Include="app\templates\app\" />
+    <Folder Include="Coffee\" />
+    <Folder Include="Doctor\" />
+    <Folder Include="Doctor\migrations\" />
+    <Folder Include="Doctor\static\" />
+    <Folder Include="Doctor\static\js\" />
+    <Folder Include="Doctor\static\css\" />
+    <Folder Include="Doctor\templates\" />
+    <Folder Include="Doctor\templates\Doctor\" />
+    <Folder Include="Laboratory\" />
+    <Folder Include="Laboratory\migrations\" />
+    <Folder Include="Laboratory\static\" />
+    <Folder Include="Laboratory\static\css\" />
+    <Folder Include="Laboratory\static\js\" />
+    <Folder Include="Laboratory\templates\" />
+    <Folder Include="Laboratory\templates\Laboratory\" />
+    <Folder Include="Manage\" />
+    <Folder Include="Manage\migrations\" />
+    <Folder Include="Manage\static\" />
+    <Folder Include="Manage\static\css\" />
+    <Folder Include="Manage\static\js\" />
+    <Folder Include="Manage\templates\" />
+    <Folder Include="Manage\templates\Manage\" />
+    <Folder Include="Patient\" />
+    <Folder Include="Patient\migrations\" />
+    <Folder Include="Patient\templates\" />
+    <Folder Include="Patient\templates\Patient\" />
+    <Folder Include="Pharmacy\" />
+    <Folder Include="Pharmacy\migrations\" />
+    <Folder Include="Pharmacy\static\" />
+    <Folder Include="Pharmacy\static\js\" />
+    <Folder Include="Pharmacy\static\css\" />
+    <Folder Include="Pharmacy\templates\" />
+    <Folder Include="Pharmacy\templates\Pharmacy\" />
+    <Folder Include="Radiation\" />
+    <Folder Include="Radiation\migrations\" />
+    <Folder Include="Radiation\static\" />
+    <Folder Include="Radiation\static\css\" />
+    <Folder Include="Radiation\static\js\" />
+    <Folder Include="Radiation\static\img\" />
+    <Folder Include="Radiation\templates\" />
+    <Folder Include="Radiation\templates\Radiation\" />
+    <Folder Include="Receptionist\" />
+    <Folder Include="Receptionist\migrations\" />
+    <Folder Include="Receptionist\static\" />
+    <Folder Include="Receptionist\static\calendar\bootstrap\" />
+    <Folder Include="Receptionist\static\calendar\core\" />
+    <Folder Include="Receptionist\static\calendar\core\locales\" />
+    <Folder Include="Receptionist\static\calendar\daygrid\" />
+    <Folder Include="Receptionist\static\calendar\google-calendar\" />
+    <Folder Include="Receptionist\static\calendar\interaction\" />
+    <Folder Include="Receptionist\static\calendar\list\" />
+    <Folder Include="Receptionist\static\calendar\luxon\" />
+    <Folder Include="Receptionist\static\calendar\moment-timezone\" />
+    <Folder Include="Receptionist\static\calendar\moment\" />
+    <Folder Include="Receptionist\static\calendar\rrule\" />
+    <Folder Include="Receptionist\static\calendar\timegrid\" />
+    <Folder Include="Receptionist\static\js\" />
+    <Folder Include="Receptionist\static\calendar\" />
+    <Folder Include="Receptionist\static\css\" />
+    <Folder Include="Receptionist\static\timepicker\" />
+    <Folder Include="Receptionist\templates\" />
+    <Folder Include="Receptionist\templates\Receptionist\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Account\templates\Account\index.html" />
+    <Content Include="app\static\css\main.css" />
+    <Content Include="app\static\favicon.ico" />
+    <Content Include="app\static\favicon.png" />
+    <Content Include="app\static\img\en.png" />
+    <Content Include="app\static\img\index_contents.png" />
+    <Content Include="app\static\img\index_main.png" />
+    <Content Include="app\static\img\ko.png" />
+    <Content Include="app\static\img\recepts_top.png" />
+    <Content Include="app\static\img\Sun_Hanoi_icon.png" />
+    <Content Include="app\static\img\vie.png" />
+    <Content Include="app\static\js\event_listener.js" />
+    <Content Include="app\static\js\main.js" />
+    <Content Include="Doctor\static\css\doctor.css" />
+    <Content Include="Doctor\static\css\report_window.css" />
+    <Content Include="Doctor\static\css\report.css" />
+    <Content Include="Doctor\static\css\audit.css" />
+    <Content Include="Doctor\static\js\doctor.js" />
+    <Content Include="Doctor\static\js\audit.js" />
+    <Content Include="Doctor\static\js\report.js" />
+    <Content Include="Doctor\static\js\print.js" />
+    <Content Include="Doctor\static\js\report_window.js" />
+    <Content Include="Doctor\templates\Doctor\diagnosis.html" />
+    <Content Include="Doctor\templates\Doctor\report.html" />
+    <Content Include="Doctor\templates\Doctor\waiting.html" />
+    <Content Include="Doctor\templates\Doctor\information.html" />
+    <Content Include="Doctor\templates\Doctor\index.html" />
+    <Content Include="Doctor\templates\Doctor\reportform.html" />
+    <Content Include="Doctor\templates\Doctor\reportwindow.html" />
+    <Content Include="Doctor\templates\Doctor\audit.html" />
+    <Content Include="Manage\static\css\login.css" />
+    <Content Include="Manage\static\js\login.js" />
+    <Content Include="Radiation\static\img\image_close.png" />
+    <Content Include="Radiation\static\img\plus-icon-4.png" />
+    <Content Include="Radiation\templates\Radiation\zoomin.html" />
+    <Content Include="Laboratory\static\js\laboratory.js" />
+    <Content Include="Laboratory\static\css\laboratory.css" />
+    <Content Include="Laboratory\templates\Laboratory\index.html" />
+    <Content Include="Manage\static\css\manage.css" />
+    <Content Include="Manage\static\css\wrapper.css" />
+    <Content Include="Manage\static\js\manage.js" />
+    <Content Include="Manage\templates\Manage\manage.html" />
+    <Content Include="Manage\templates\Manage\payment.html" />
+    <Content Include="Manage\templates\Manage\patient.html" />
+    <Content Include="Patient\templates\Patient\index.html" />
+    <Content Include="Pharmacy\static\css\pharmacy.css" />
+    <Content Include="Radiation\static\css\radiation.css" />
+    <Content Include="Radiation\static\js\radiation.js" />
+    <Content Include="Receptionist\static\css\storage_page.css" />
+    <Content Include="Receptionist\static\css\bill.css" />
+    <Content Include="Receptionist\static\css\reservation.css" />
+    <Content Include="Receptionist\static\js\calendar.js" />
+    <Content Include="Receptionist\static\js\reservation.js" />
+    <Content Include="Receptionist\static\js\storage_page.js" />
+    <Content Include="Pharmacy\static\js\pharmacy.js" />
+    <Content Include="Pharmacy\templates\Pharmacy\index.html" />
+    <Content Include="Radiation\templates\Radiation\index.html" />
+    <Content Include="Receptionist\static\calendar\bootstrap\LICENSE.txt" />
+    <Content Include="Receptionist\static\calendar\bootstrap\main.css" />
+    <Content Include="Receptionist\static\calendar\bootstrap\main.d.ts" />
+    <Content Include="Receptionist\static\calendar\bootstrap\main.esm.js" />
+    <Content Include="Receptionist\static\calendar\bootstrap\main.js" />
+    <Content Include="Receptionist\static\calendar\bootstrap\main.min.css" />
+    <Content Include="Receptionist\static\calendar\bootstrap\main.min.js" />
+    <Content Include="Receptionist\static\calendar\bootstrap\package.json" />
+    <Content Include="Receptionist\static\calendar\bootstrap\README.md" />
+    <Content Include="Receptionist\static\calendar\core\LICENSE.txt" />
+    <Content Include="Receptionist\static\calendar\core\locales-all.js" />
+    <Content Include="Receptionist\static\calendar\core\locales-all.min.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\af.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\ar-dz.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\ar-kw.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\ar-ly.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\ar-ma.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\ar-sa.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\ar-tn.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\ar.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\bg.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\bs.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\ca.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\cs.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\da.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\de.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\el.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\en-au.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\en-gb.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\en-nz.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\es-us.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\es.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\et.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\eu.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\fa.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\fi.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\fr-ca.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\fr-ch.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\fr.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\gl.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\he.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\hi.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\hr.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\hu.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\id.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\is.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\it.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\ja.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\ka.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\kk.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\ko.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\lb.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\lt.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\lv.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\mk.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\ms.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\nb.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\nl.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\nn.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\pl.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\pt-br.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\pt.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\ro.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\ru.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\sk.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\sl.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\sq.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\sr-cyrl.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\sr.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\sv.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\th.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\tr.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\uk.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\vi.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\zh-cn.js" />
+    <Content Include="Receptionist\static\calendar\core\locales\zh-tw.js" />
+    <Content Include="Receptionist\static\calendar\core\main.css" />
+    <Content Include="Receptionist\static\calendar\core\main.d.ts" />
+    <Content Include="Receptionist\static\calendar\core\main.esm.js" />
+    <Content Include="Receptionist\static\calendar\core\main.js" />
+    <Content Include="Receptionist\static\calendar\core\main.min.css" />
+    <Content Include="Receptionist\static\calendar\core\main.min.js" />
+    <Content Include="Receptionist\static\calendar\core\package.json" />
+    <Content Include="Receptionist\static\calendar\core\README.md" />
+    <Content Include="Receptionist\static\calendar\daygrid\LICENSE.txt" />
+    <Content Include="Receptionist\static\calendar\daygrid\main.css" />
+    <Content Include="Receptionist\static\calendar\daygrid\main.d.ts" />
+    <Content Include="Receptionist\static\calendar\daygrid\main.esm.js" />
+    <Content Include="Receptionist\static\calendar\daygrid\main.js" />
+    <Content Include="Receptionist\static\calendar\daygrid\main.min.css" />
+    <Content Include="Receptionist\static\calendar\daygrid\main.min.js" />
+    <Content Include="Receptionist\static\calendar\daygrid\package.json" />
+    <Content Include="Receptionist\static\calendar\daygrid\README.md" />
+    <Content Include="Receptionist\static\calendar\google-calendar\LICENSE.txt" />
+    <Content Include="Receptionist\static\calendar\google-calendar\main.d.ts" />
+    <Content Include="Receptionist\static\calendar\google-calendar\main.esm.js" />
+    <Content Include="Receptionist\static\calendar\google-calendar\main.js" />
+    <Content Include="Receptionist\static\calendar\google-calendar\main.min.js" />
+    <Content Include="Receptionist\static\calendar\google-calendar\package.json" />
+    <Content Include="Receptionist\static\calendar\google-calendar\README.md" />
+    <Content Include="Receptionist\static\calendar\interaction\LICENSE.txt" />
+    <Content Include="Receptionist\static\calendar\interaction\main.d.ts" />
+    <Content Include="Receptionist\static\calendar\interaction\main.esm.js" />
+    <Content Include="Receptionist\static\calendar\interaction\main.js" />
+    <Content Include="Receptionist\static\calendar\interaction\main.min.js" />
+    <Content Include="Receptionist\static\calendar\interaction\package.json" />
+    <Content Include="Receptionist\static\calendar\interaction\README.md" />
+    <Content Include="Receptionist\static\calendar\list\LICENSE.txt" />
+    <Content Include="Receptionist\static\calendar\list\main.css" />
+    <Content Include="Receptionist\static\calendar\list\main.d.ts" />
+    <Content Include="Receptionist\static\calendar\list\main.esm.js" />
+    <Content Include="Receptionist\static\calendar\list\main.js" />
+    <Content Include="Receptionist\static\calendar\list\main.min.css" />
+    <Content Include="Receptionist\static\calendar\list\main.min.js" />
+    <Content Include="Receptionist\static\calendar\list\package.json" />
+    <Content Include="Receptionist\static\calendar\list\README.md" />
+    <Content Include="Receptionist\static\calendar\luxon\LICENSE.txt" />
+    <Content Include="Receptionist\static\calendar\luxon\main.d.ts" />
+    <Content Include="Receptionist\static\calendar\luxon\main.esm.js" />
+    <Content Include="Receptionist\static\calendar\luxon\main.js" />
+    <Content Include="Receptionist\static\calendar\luxon\main.min.js" />
+    <Content Include="Receptionist\static\calendar\luxon\package.json" />
+    <Content Include="Receptionist\static\calendar\luxon\README.md" />
+    <Content Include="Receptionist\static\calendar\moment-timezone\LICENSE.txt" />
+    <Content Include="Receptionist\static\calendar\moment-timezone\main.d.ts" />
+    <Content Include="Receptionist\static\calendar\moment-timezone\main.esm.js" />
+    <Content Include="Receptionist\static\calendar\moment-timezone\main.js" />
+    <Content Include="Receptionist\static\calendar\moment-timezone\main.min.js" />
+    <Content Include="Receptionist\static\calendar\moment-timezone\package.json" />
+    <Content Include="Receptionist\static\calendar\moment-timezone\README.md" />
+    <Content Include="Receptionist\static\calendar\moment\LICENSE.txt" />
+    <Content Include="Receptionist\static\calendar\moment\main.d.ts" />
+    <Content Include="Receptionist\static\calendar\moment\main.esm.js" />
+    <Content Include="Receptionist\static\calendar\moment\main.js" />
+    <Content Include="Receptionist\static\calendar\moment\main.min.js" />
+    <Content Include="Receptionist\static\calendar\moment\package.json" />
+    <Content Include="Receptionist\static\calendar\moment\README.md" />
+    <Content Include="Receptionist\static\calendar\rrule\LICENSE.txt" />
+    <Content Include="Receptionist\static\calendar\rrule\main.d.ts" />
+    <Content Include="Receptionist\static\calendar\rrule\main.esm.js" />
+    <Content Include="Receptionist\static\calendar\rrule\main.js" />
+    <Content Include="Receptionist\static\calendar\rrule\main.min.js" />
+    <Content Include="Receptionist\static\calendar\rrule\package.json" />
+    <Content Include="Receptionist\static\calendar\rrule\README.md" />
+    <Content Include="Receptionist\static\calendar\timegrid\LICENSE.txt" />
+    <Content Include="Receptionist\static\calendar\timegrid\main.css" />
+    <Content Include="Receptionist\static\calendar\timegrid\main.d.ts" />
+    <Content Include="Receptionist\static\calendar\timegrid\main.esm.js" />
+    <Content Include="Receptionist\static\calendar\timegrid\main.js" />
+    <Content Include="Receptionist\static\calendar\timegrid\main.min.css" />
+    <Content Include="Receptionist\static\calendar\timegrid\main.min.js" />
+    <Content Include="Receptionist\static\calendar\timegrid\package.json" />
+    <Content Include="Receptionist\static\calendar\timegrid\README.md" />
+    <Content Include="Receptionist\static\css\reception.css" />
+    <Content Include="Receptionist\static\js\reception.js" />
+    <Content Include="Receptionist\static\timepicker\jquery.timepicker.css" />
+    <Content Include="Receptionist\static\timepicker\jquery.timepicker.js" />
+    <Content Include="Receptionist\templates\Receptionist\billform.html" />
+    <Content Include="Receptionist\templates\Receptionist\search.html" />
+    <Content Include="Receptionist\templates\Receptionist\Reception.html" />
+    <Content Include="Receptionist\templates\Receptionist\Reception_Status.html" />
+    <Content Include="Receptionist\templates\Receptionist\storage.html" />
+    <Content Include="Receptionist\templates\Receptionist\reservation.html" />
+    <Content Include="Receptionist\templates\Receptionist\index.html" />
+    <Content Include="Receptionist\templates\Receptionist\storage_page.html" />
+    <Content Include="requirements.txt" />
+    <Content Include="db.sqlite3" />
+    <Content Include="app\static\app\content\bootstrap.css" />
+    <Content Include="app\static\app\content\bootstrap.min.css" />
+    <Content Include="app\static\app\content\site.css" />
+    <Content Include="app\static\app\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="app\static\app\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="app\static\app\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="app\static\app\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="app\static\app\scripts\bootstrap.js" />
+    <Content Include="app\static\app\scripts\bootstrap.min.js" />
+    <Content Include="app\static\app\scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="app\static\app\scripts\jquery-1.10.2.js" />
+    <Content Include="app\static\app\scripts\jquery-1.10.2.min.js" />
+    <Content Include="app\static\app\scripts\jquery-1.10.2.min.map" />
+    <Content Include="app\static\app\scripts\jquery.validate-vsdoc.js" />
+    <Content Include="app\static\app\scripts\jquery.validate.js" />
+    <Content Include="app\static\app\scripts\jquery.validate.min.js" />
+    <Content Include="app\static\app\scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="app\static\app\scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="app\static\app\scripts\modernizr-2.6.2.js" />
+    <Content Include="app\static\app\scripts\respond.js" />
+    <Content Include="app\static\app\scripts\respond.min.js" />
+    <Content Include="app\static\app\scripts\_references.js" />
+    <Content Include="app\templates\app\index.html" />
+    <Content Include="app\templates\app\layout.html" />
+    <Content Include="app\templates\app\login.html" />
+    <Content Include="app\templates\app\loginpartial.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="readme.html">
+      <SubType>WebBrowser</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="Global|PythonCore|3.6" />
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="env_local\">
+      <Id>env_local</Id>
+      <Version>3.6</Version>
+      <Description>env_local (Python 3.6 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
+  <!-- Specify pre- and post-build commands in the BeforeBuild and 
+       AfterBuild targets below. -->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <AutoAssignPort>True</AutoAssignPort>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

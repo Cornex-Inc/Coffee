@@ -1,0 +1,387 @@
+
+
+.form-control {
+    font-size: 12px;
+    padding: 3px 12px;
+    height: 30px;
+}
+
+.storage_grid {
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 25% 35%;
+}
+
+
+.partition {
+    padding: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background: rgba(180, 180, 180, 0.15);
+    border: 3.7px solid white;
+    overflow: auto;
+}
+
+.storage_list {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    overflow: auto;
+}
+
+.storage_contents {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    overflow: auto;
+}
+.storage_paid_list {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    overflow: auto;
+}
+
+.storage_item_table {
+    height: 360px;
+    overflow: auto;
+    margin-bottom: 10px;
+}
+
+.storage_list_title {
+    width: 100%;
+    display: inline;
+}
+
+    .storage_list_title > span {
+        text-align: left;
+        background: #d2322d;
+        font-size: 16px;
+        height: 26.5px;
+        padding-top: 1px;
+    }
+
+
+
+.storage_contents_table_title {
+    width:115px;
+    text-align:left;
+    font-weight:bold;
+}
+
+.storage_item_table_control{
+    width:100%;
+}
+
+    .storage_item_table_control tr, .storage_item_table_control td {
+        vertical-align: middle;
+    }
+
+
+    .storage_pay {
+        display: inline-block;
+    }
+
+.storage_list_calendar{
+    width:160px;
+    display:inline;
+}
+
+.storage_search_select {
+    width: 80px;
+    display: inline;
+}
+
+.storage_search_input {
+    width: 123px;
+    display: inline;
+}
+
+
+
+.page_bill{
+    display:none;
+}
+
+.page_report {
+    display: none;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color: #ccc;
+}
+
+#id_payment_info {
+    width: 80px;
+}
+
+.storage_list_table_wrap {
+    height: 590px;
+    overflow-y: auto;
+}
+
+.waiting_list_doctor_select{
+    display:inline;
+    width:100px;
+}
+
+.storage_today_table_wrap{
+    height:620px;
+    width: 100%;
+    overflow-y:auto;
+}
+
+#depart_select {
+    width: 90px;
+    display: inline;
+}
+
+
+
+@media ( min-width: 1900px ) {
+    .storage_item_table {
+        height: 500px;
+        overflow: auto;
+        margin-bottom: 20px;
+    }
+
+    .paid_by {
+        width: 160px
+    }
+
+    .storage_list_calendar {
+        width: 160px;
+    }
+
+    #id_payment_info {
+        width: 100%;
+    }
+
+    .storage_contents_table_title {
+        width: 120px;
+    }
+    .storage_list_table_wrap {
+        height: 800px;
+    }
+
+    .storage_today_table_wrap {
+        height: 800px;
+    }
+}
+
+
+@page {
+    size: A4;
+    margin: 0;
+}
+
+@media  print{
+    html, body {
+        min-width: 210mm;
+        max-width: 210mm;
+        
+        /*max-height: 297mm;
+        min-height: 297mm;*/
+    }
+    .page_bill {
+        margin: 0 auto;
+        margin-top: 2cm;
+        text-align: center;
+        display: block;
+    }
+
+        .page_bill .sun_info {
+            margin: 0 auto;
+            width: 169mm;
+        }
+
+    .page_bill .title  {
+        width: 100%;
+        text-align: center;
+        margin-top: 30px;
+        margin-bottom: 10px;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+        .page_bill .chart {
+            text-align: center;
+        }
+
+        .page_bill .chart_table {
+            margin: 0 auto;
+            
+        }
+
+            .chart_table tbody tr td {
+                vertical-align: middle;
+                text-align: center;
+                font-size: 11px;
+            }
+    .chart_table tbody tr td:nth-child(3){
+        text-align:center;
+    }
+
+    .payment_record tr{
+       vertical-align:middle;
+    }
+
+    .middle table {
+    }
+
+    .page_bill .chart_table_contents_title tr:first-child td {
+        vertical-align: middle;
+        text-align:center;
+    }
+    .chart_table_contents_title tr td{
+       
+    }
+
+    .page_bill .chart_table_info {
+    }
+
+    .page_bill .chart table tbody tr td:nth-child(2) {
+        text-align: left;
+    }
+
+    .page_bill .chart table tbody tr td:nth-child(4) {
+        text-align: center;
+    }
+
+    .page_bill .chart table tbody tr td:nth-child(5) {
+        text-align: right;
+    }
+
+    .page_bill .chart table tbody tr td:nth-child(6) {
+        text-align: right;
+    }
+
+    .page_bill .chart table tbody tr td:nth-child(8) {
+        text-align: right;
+    }
+
+    .page_bill .chart_table_total {
+        border-top: 40px solid rgba(0,0,0,0);
+    }
+
+
+    .page_bill .tr_small {
+        height: 10mm;
+    }
+
+    .page_bill .last {
+        height: 79.5mm;
+        vertical-align: baseline;
+        text-align: left;
+        padding: 10px;
+    }
+
+    .page_bill .last_contents {
+        margin-left: 20px;
+        margin-bottom: 10px;
+    }
+
+
+
+    .page_bill table {
+        border-collapse: collapse;
+        font-size: 12px;
+        vertical-align: middle;
+        display: inline-block;
+        border: none;
+    }
+
+    .page_bill tbody tr td:first-child {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .page_bill tr {
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .page_bill td {
+        padding-left: 5px;
+    }
+
+    .page_bill .bottom{
+        font-size:11px;
+    }
+
+    .page_report {
+        width: 169mm;
+        height: 253mm;
+        display: block;
+        margin: 0 auto;
+    }
+
+        .page_report .title {
+            width: 100%;
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 10px;
+            font-size: 30px;
+            font-weight: 500;
+            top: 0px;
+        }
+
+        .page_report .chart {
+            margin-bottom: 2.5mm;
+            height: 22mm;
+        }
+
+        .page_report .tr_small {
+            height: 10mm;
+        }
+
+        .page_report th, .page_report td {
+            font-size: 14px;
+        }
+
+        .page_report .middle {
+            height: 216mm;
+        }
+
+        .page_report .last {
+            height: 79.5mm;
+            vertical-align: baseline;
+            text-align: left;
+            padding: 10px;
+        }
+
+        .page_report .last_contents {
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .page_report table {
+            border-collapse: collapse;
+            font-size: 15px;
+            vertical-align: middle;
+            display: inline-block;
+
+        }
+
+        .page_report tbody tr td:first-child {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .page_report tr {
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .page_report td {
+            border: 1px solid black;
+            padding-left: 5px;
+        }
+
+    .contents_name {
+        width: 100%;
+        text-align: justify;
+    }
+
+
+}
+

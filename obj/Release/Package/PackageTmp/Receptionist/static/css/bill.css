@@ -1,0 +1,104 @@
+@page {
+    size: A4;
+}
+
+@media {
+    html,head,body{
+        margin:0px;
+        padding:0px;
+        font-size:12px;
+    }
+    .sun_info {
+        margin: 0 auto;
+        width: 169mm;
+    }
+
+    .title {
+        width: 100%;
+        text-align: center;
+        margin-top: 30px;
+        margin-bottom: 10px;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+    .chart {
+        width:100%;
+        
+    }
+        .chart table{
+            width:100%;
+        }
+    .chart table tbody tr td {
+        vertical-align: top;
+        text-align: center;
+        font-size: 12px;
+    }
+    .chart_table_contents_title tr:first-child td {
+        vertical-align: middle;
+    }
+
+    .chart_table_info {
+
+    }
+
+    .chart table tbody tr td:nth-child(2) {
+        text-align: left;
+    }
+    .chart table tbody tr td:nth-child(4) {
+        text-align: right;
+    }
+    .chart table tbody tr td:nth-child(5) {
+        text-align: right;
+     }
+    .chart table tbody tr td:nth-child(6) {
+        text-align: right;
+    }
+    .chart table tbody tr td:nth-child(8) {
+        text-align:right;
+    }
+.chart_table_total{
+    border-top:40px solid rgba(0,0,0,0);
+}
+
+
+    .tr_small {
+        height: 10mm;
+    }
+
+.last {
+    height: 79.5mm;
+    vertical-align: baseline;
+    text-align: left;
+    padding: 10px;
+}
+
+.last_contents {
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
+.bottom {
+}
+
+table {
+    border-collapse: collapse;
+    font-size: 15px;
+    vertical-align: middle;
+    display: inline-block;
+    border:none;
+}
+
+tbody tr td:first-child {
+    margin: 0 auto;
+    text-align: center;
+}
+
+tr {
+    margin: 0 auto;
+    padding: 0;
+}
+
+td {
+    padding-left: 5px;
+}
