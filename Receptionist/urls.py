@@ -9,6 +9,10 @@ urlpatterns = [
     path('save_patient/',views.save_patient,name='save_patient'),
     path('save_reception/',views.save_reception,name='save_reception'),
 
+    path('Question/<int:patient_id>',views.Question,name='Question'),
+    path('Question/save/',views.Question_save,name='Question_save'),
+    path('Question/get/',views.Question_get,name='Question_get'),
+
     path('set_patient_data/',views.set_patient_data,name='set_patient_data'),
     path('patient_search/',views.patient_search,name='patient_search'),
     path('reception_search/',views.reception_search,name='reception_search'),

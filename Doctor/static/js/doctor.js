@@ -303,6 +303,14 @@ $(function () {
             $(temp).parent().show();
         }
     })
+
+    $('#survey').click(function () {
+        if ($('#patient_id').val().trim() == '') {
+            alert('환자 먼저 선택');
+            return;
+        }
+        window.open('/receptionist/Question/' + $('#patient_id').val().trim() + '?', 'Medical Report', 'width=800,height=700,left=0,top=100,resizable=no,location=no,status=no,scrollbars=yes');
+    })
 });
 
 function selected_table_title(title) {

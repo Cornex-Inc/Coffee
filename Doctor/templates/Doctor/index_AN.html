@@ -9,7 +9,8 @@
     <div class="doctor_patient_info partition">
         <div class="status_table_title">
             <span class="btn btn-success" style="">{{ _('Patient Information') }}</span>
-            <div class="need_medical_report" style="background:none; display:none;" id="need_medical_report">{{_('Medical Report')}}</div>
+            <!--<div class="need_medical_report" style="background:none; display:none;" id="need_medical_report">{{_('Medical Report')}}</div>-->
+            <input type="button" class="btn btn-default" id="survey" value="Survey" style="float:right; "/>
         </div>
         <table class="table" id="reception_table">
             <tr>
@@ -147,8 +148,8 @@
             </div>
 
         </div>
-        <div style="">
-            <img style="height:400px;" src="{% static 'img/DX_AN_Front.png' %}" />
+        <div style="width:100%; background:white; text-align:center; margin-bottom:20px;">
+            <img style="height:400px;" src="{% static 'img/DX_AN.png' %}" />
         </div>
 
         <div class="input-group diagnosis_history_taking">

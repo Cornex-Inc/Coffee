@@ -281,10 +281,12 @@
     <Content Include="Pharmacy\static\css\pharmacy.css" />
     <Content Include="Radiation\static\css\radiation.css" />
     <Content Include="Radiation\static\js\radiation.js" />
+    <Content Include="Receptionist\static\css\Question.css" />
     <Content Include="Receptionist\static\css\storage_page.css" />
     <Content Include="Receptionist\static\css\bill.css" />
     <Content Include="Receptionist\static\css\reservation.css" />
     <Content Include="Receptionist\static\js\calendar.js" />
+    <Content Include="Receptionist\static\js\Question.js" />
     <Content Include="Receptionist\static\js\reservation.js" />
     <Content Include="Receptionist\static\js\storage_page.js" />
     <Content Include="Pharmacy\static\js\pharmacy.js" />
@@ -448,6 +450,7 @@
     <Content Include="Receptionist\static\timepicker\jquery.timepicker.css" />
     <Content Include="Receptionist\static\timepicker\jquery.timepicker.js" />
     <Content Include="Receptionist\templates\Receptionist\billform.html" />
+    <Content Include="Receptionist\templates\Receptionist\Question.html" />
     <Content Include="Receptionist\templates\Receptionist\search.html" />
     <Content Include="Receptionist\templates\Receptionist\Reception.html" />
     <Content Include="Receptionist\templates\Receptionist\Reception_Status.html" />

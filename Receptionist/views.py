@@ -159,6 +159,97 @@ def set_patient_data(request):
         })
     return JsonResponse(context)
 
+def Question(request,patient_id):
+
+    return render(request,
+    'Receptionist/Question.html',
+            {
+                'patient_id': patient_id,
+            },
+        )
+
+def Question_save(request):
+    patient_id = request.POST.get('patient_id')
+    try:
+        query = FIRST_VISIT_SURVEY.objects.get(PT_ID = patient_id)
+    except FIRST_VISIT_SURVEY.DoesNotExist:
+        query = FIRST_VISIT_SURVEY()
+
+    query.PT_ID = patient_id
+    query.pain_posi_text = request.POST.get('pain_posi_text')
+    query.sick_date = request.POST.get('sick_date')
+    query.cure_yn = request.POST.get('cure_yn')
+    query.cure_phy_yn = request.POST.get('cure_phy_yn')
+    query.cure_phy_cnt = request.POST.get('cure_phy_cnt')
+    query.cure_inject_yn = request.POST.get('cure_inject_yn')
+    query.cure_inject_cnt = request.POST.get('cure_inject_cnt')
+    query.cure_medi_yn = request.POST.get('cure_medi_yn')
+    query.cure_medi_cnt = request.POST.get('cure_medi_cnt')
+    query.cure_needle_yn = request.POST.get('cure_needle_yn')
+    query.cure_needle_cnt = request.POST.get('cure_needle_cnt')
+    query.pain_level = request.POST.get('pain_level')
+    query.surgery_yn = request.POST.get('surgery_yn')
+    query.surgery_year = request.POST.get('surgery_year')
+    query.surgery_name = request.POST.get('surgery_name')
+    query.exam_kind = request.POST.get('exam_kind')
+    query.exam_etc = request.POST.get('exam_etc')
+    query.cd_film_yn = request.POST.get('cd_film_yn')
+    query.disease_kind = request.POST.get('disease_kind')
+    query.disease_etc = request.POST.get('disease_etc')
+    query.medication = request.POST.get('medication')
+    query.side_effect_yn = request.POST.get('side_effect_yn')
+    query.pregnant_yn = request.POST.get('pregnant_yn')
+    query.visit_motiv = request.POST.get('visit_motiv')
+    query.save()
+
+
+    result = True
+
+    context = {'result':result}
+    return JsonResponse(context)
+
+
+def Question_get(request):
+    patient_id = request.POST.get('patient_id')
+    context = {}
+    try:
+        query = FIRST_VISIT_SURVEY.objects.get(PT_ID = patient_id)
+        context.update({
+            
+                'pain_posi_text':query.pain_posi_text,
+                'sick_date':query.sick_date,
+                'cure_yn':query.cure_yn,
+                'cure_phy_yn':query.cure_phy_yn,
+                'cure_phy_cnt':query.cure_phy_cnt,
+                'cure_inject_yn':query.cure_inject_yn,
+                'cure_inject_cnt':query.cure_inject_cnt,
+                'cure_medi_yn':query.cure_medi_yn,
+                'cure_medi_cnt':query.cure_medi_cnt,
+                'cure_needle_yn':query.cure_needle_yn,
+                'cure_needle_cnt':query.cure_needle_cnt,
+                'pain_level':query.pain_level,
+                'surgery_yn':query.surgery_yn,
+                'surgery_year':query.surgery_year,
+                'surgery_name':query.surgery_name,
+                'exam_kind':query.exam_kind,
+                'exam_etc':query.exam_etc,
+                'cd_film_yn':query.cd_film_yn,
+                'disease_kind':query.disease_kind,
+                'disease_etc':query.disease_etc,
+                'medication':query.medication,
+                'side_effect_yn':query.side_effect_yn,
+                'pregnant_yn':query.pregnant_yn,
+                'visit_motiv':query.visit_motiv,
+                 
+            })
+
+        context.update({'result':True})
+    except FIRST_VISIT_SURVEY.DoesNotExist:
+        context.update({'result':False})
+
+
+    return JsonResponse(context)
+
 
 def save_reception(request):
     cahrt_no = request.POST.get('cahrt_no')
@@ -654,7 +745,7 @@ def get_today_selected(request):
         'chart':reception.patient.get_chart_no(),
         'name_kor':reception.patient.name_kor,
         'name_eng':reception.patient.name_eng,
-        'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d '),
+        'date_of_birth':reception.patient.date_of_birth.strftime('%d/%m/%Y'),
         'gender':reception.patient.gender,
         'phone':reception.patient.phone,
         'address':reception.patient.address,
@@ -666,6 +757,7 @@ def get_today_selected(request):
 
         'doctor_kor':reception.doctor.name_kor,
         'doctor_eng':reception.doctor.name_eng,
+        'depart':reception.doctor.depart.name,
 
         'total_amount': payment.total,
         'paid':paid,
