@@ -185,11 +185,14 @@ def index(request):
     
 
 
-
+    if request.user.doctor.depart.name == 'AN':
+        url = 'Doctor/index_AN.html'
+    else:
+        url = 'Doctor/index.html'
 
     reservation_form = ReservationForm()
     return render(request,
-    'Doctor/index.html',
+        url,
             {
                 'patient':patient_form,
                 'history':history_form,
@@ -1069,13 +1072,9 @@ def report_search(request):
 
 
     #reports = Report.objects.filter(date_of_publication__range = (date_min, date_max),**kwargs )[:20]
-    reports = Report.objects.all( )
+    reports = Report.objects.all()
 
     kwargs = {}
-
-    
-   
-
 
     page_context = request.POST.get('page_context',10)
     page = request.POST.get('page',1)
@@ -1109,7 +1108,7 @@ def report_search(request):
             }
         datas.append(data)
 
-
+    datas.reverse()
     paginator = Paginator(datas, page_context)
     try:
         paging_data = paginator.page(page)

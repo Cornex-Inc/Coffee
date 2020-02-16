@@ -179,4 +179,7 @@ STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static']))
 # media
 
 MEDIA_ROOT = os.path.join("D:",'uploads')
+#MEDIA_ROOT = os.path.join(BASE_DIR,'uploads')
+
+
 MEDIA_URL ='/uploads/'

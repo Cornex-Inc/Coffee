@@ -76,7 +76,7 @@
                 </button>
                 
                 <a href="{% url 'index' %}" class="navbar-brand" style="padding-top:7.5px; padding-left:15px; padding-right:15px; color:rgba(0,0,0, 1); font-size:20px; ">
-                <img src="{% static 'img/Sun_Hanoi_icon.png' %}" style="height:47px;"/>&nbsp;&nbsp;&nbsp;Hanoi Sun Medical Center</a>
+                <img src="{% static 'img/tmp_logo.png' %}" style="height:47px;"/>&nbsp;&nbsp;&nbsp;I - MEDICARE</a>
             </div>
             <div class="navbar-collapse collapse top_menu" >
                 <ul class="nav menu_contents_ul" style="display:inline-block">
@@ -86,7 +86,6 @@
                         <li {% if url_name == 'storage_page' %}class="active"{% endif %}><a href="{% url 'Receptionist:storage_page'%}">{{ _('Payment') }}</a></li>
                         <li {% if url_name == 'reservation' %}class="active"{% endif %}><a href="{% url 'Receptionist:reservation'%}">{{ _('Reservation') }}</a></li>
                     {% elif user.is_doctor %}
-                        <!--<li {% if url_name == 'index' %}class="active"{% endif %}><a href="{% url 'Doctor:index'%}">{{ _("Doctor's Clinic") }}</a></li>-->
                         <li {% if url_name == 'index' %}class="active"{% endif %}><a href="{% url 'Doctor:index'%}">
                             <span style="margin-right:5px;color:blue;">{{ user.doctor.depart.name }} </span> Dr.{{user.doctor.name_short }}</a>
                         </li>

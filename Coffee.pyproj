@@ -241,6 +241,7 @@
     <Content Include="app\static\img\ko.png" />
     <Content Include="app\static\img\recepts_top.png" />
     <Content Include="app\static\img\Sun_Hanoi_icon.png" />
+    <Content Include="app\static\img\tmp_logo.png" />
     <Content Include="app\static\img\vie.png" />
     <Content Include="app\static\js\event_listener.js" />
     <Content Include="app\static\js\main.js" />
@@ -253,6 +254,7 @@
     <Content Include="Doctor\static\js\report.js" />
     <Content Include="Doctor\static\js\print.js" />
     <Content Include="Doctor\static\js\report_window.js" />
+    <Content Include="Doctor\templates\Doctor\index_AN.html" />
     <Content Include="Doctor\templates\Doctor\diagnosis.html" />
     <Content Include="Doctor\templates\Doctor\report.html" />
     <Content Include="Doctor\templates\Doctor\waiting.html" />

@@ -1,0 +1,350 @@
+
+
+.doctor_grid {
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 30% 40%;
+    grid-template-rows: 31% 7% 23% 10%;
+}
+
+.partition {
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: rgba(180, 180, 180, 0.15);
+    border: 3.7px solid white;
+    overflow: auto;
+}
+
+.doctor_patient_info {
+    grid-row-start: 1;
+    grid-row-end: 3;
+    overflow: hidden;
+}
+
+.doctor_vital {
+    grid-row-start: 3;
+    grid-row-end: 4;
+}
+
+
+
+
+.doctor_patient_info input {
+    /* width: 150px; */
+}
+
+    .doctor_patient_info input[type=radio] {
+        width: auto;
+    }
+
+.doctor_patient_info table li {
+    margin-left: 4.5px;
+    margin-right: 0;
+    display: inline;
+}
+
+.doctor_patient_info table ul {
+    list-style: none;
+    margin: 0px;
+    padding: 0px
+}
+
+doctor_patient_info table ul label {
+    font-size: 11px;
+}
+
+.doctor_patient_info textarea {
+    width: 150px;
+    overflow: auto;
+}
+
+.doctor_waiting {
+    grid-row-start: 4;
+    grid-row-end: 6;
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+.doctor_diagnosis {
+    grid-row-start: 1;
+    grid-row-end: 6;
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+.diagnosis_textarea {
+    max-width: none;
+    width: 100%;
+    height: 50px;
+    resize: none;
+    overflow: auto;
+    margin-bottom: 10px;
+}
+
+
+.diagnosis_select_title {
+    font-weight: 500;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+    .diagnosis_select_title div {
+        display: inline;
+        border: 1px solid #bcbcbc;
+        padding: 10px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+
+.diagnosis_select_contents {
+    width: 420px;
+    height: 180px;
+    overflow-y: auto;
+    border: 2px solid #adadad;
+}
+
+.diagnosis_selected_method {
+    height: 135px;
+    margin-bottom: 15px;
+    overflow: auto;
+}
+
+.diagnosis_selected_input {
+    width: 120px;
+}
+
+.diagnosis_selected_input_number {
+    width: 60px;
+}
+
+
+.diagnosis_select_method {
+    grid-row-start: 1;
+    grid-row-end: 3;
+    grid-column-start: 3;
+    grid-column-end: 4;
+}
+
+.doctor_past_diagnosis {
+    grid-row-start: 5;
+    grid-row-end: 6;
+    grid-column-start: 3;
+    grid-column-end: 4;
+    overflow: hidden;
+}
+
+.order_list {
+    grid-row-start: 3;
+    grid-row-end: 5;
+    grid-column-start: 3;
+    grid-column-end: 4;
+}
+
+.status_table_filter {
+    display: inline;
+    font-size: 15px;
+}
+
+.status_table_title span {
+    margin-bottom: 10px;
+    font-size: 14px;
+    height: 25px;
+    padding-top: 1px;
+    background: rgb(20,135,130);
+    border-color: rgb(20,135,130);
+}
+
+
+.diagnosis_history_taking_title {
+    width: 120px;
+    font-weight: bold;
+}
+
+.diagnosis_history_taking_contents {
+    resize: vertical;
+    width: 440px !important;
+}
+
+.Vitial_table_warp {
+    height: 100px;
+    overflow: auto;
+}
+
+.diagnosis_functions {
+    float: right;
+}
+
+    .diagnosis_functions div {
+        margin: 0 auto;
+    }
+
+.medical_report {
+    background: #ccc;
+    font-weight: bold;
+    float: left;
+}
+
+.fu_date {
+    width: 250px;
+    float: left;
+}
+
+
+
+.diagnosis_select_category_tree ul {
+    margin: 0 auto;
+}
+
+.diagnosis_select_category_tree label {
+    margin: 0
+}
+
+.diagnosis_select_category_tree input[type="checkbox"] {
+    display: none;
+}
+
+    .diagnosis_select_category_tree input[type="checkbox"]:checked ~ ul {
+        display: none;
+    }
+
+.order_list_table {
+    /* 
+    border: 4px solid #adadad;
+    border-top:none;
+    */
+}
+
+.doctor_patient_table_title {
+    font-weight: bold;
+    width: 100px;
+    text-align: left;
+}
+
+.vital_input {
+    width: 100%;
+    text-align: center;
+}
+
+.vital_table td, .vital_table th {
+    text-align: center;
+}
+
+.reception_waiting_date {
+    width: 90px;
+    display: inline;
+}
+
+.reception_progress {
+    width: 82px;
+    display: inline;
+}
+
+
+.table_title {
+    margin: 0;
+    padding: 0;
+    border: 0px;
+}
+
+.diagonal {
+    border: 0;
+    background-image: linear-gradient( to top right, rgba(0,0,0,0) calc(50% - 1px), #adadad, rgba(0,0,0,0) calc(50% + 1px) );
+    border: 0px solid #adadad;
+    border-bottom: 2px solid #adadad;
+}
+
+.diagonal_selected {
+    border: 0;
+    background-image: linear-gradient( to top right, rgba(0,0,0,0) calc(50% - 3px), #adadad, rgba(0,0,0,0) calc(50% + 3px) );
+}
+
+.table diagnosis_select_title2 {
+    /*
+    margin:0;
+    cursor:pointer;
+        */
+}
+
+.Rectption_Status_wrap {
+    height: 175px;
+    overflow: auto;
+}
+
+.diagnosis_table_wrap {
+    overflow: auto;
+    height: 140px;
+}
+
+@-webkit-keyframes blink {
+    0% {
+        color: red;
+    }
+
+    50% {
+        color: black;
+    }
+}
+
+.need_medical_report {
+    float: right;
+    animation-name: blink;
+    animation-duration: 1.5s;
+    animation-timing-function: step-end;
+    animation-iteration-count: infinite;
+}
+
+
+@media ( min-width: 1900px ) {
+    .diagnosis_select_contents {
+        width: 530px;
+        height: 220px;
+    }
+
+    .Rectption_Status_wrap {
+        height: 250px;
+    }
+
+    .Vitial_table_warp {
+        height: 150px;
+    }
+
+    .diagnosis_selected_method {
+        height: 180px;
+    }
+
+    .diagnosis_history_taking_contents {
+        resize: vertical;
+        width: 600px !important;
+        height: 40px !important;
+    }
+
+    .diagnosis_history_taking_title {
+        width: 120px;
+        font-weight: bold;
+    }
+
+    .diagnosis_table_wrap {
+        height: 190px;
+    }
+
+    .doctor_patient_info {
+        font-size: 20px;
+    }
+
+    .doctor_patient_table_title {
+        width: 105px;
+        height: 40px;
+    }
+
+    .doctor_patient_table_contents {
+        height: 40px;
+    }
+
+    .fu_date {
+        width: 300px;
+    }
+}

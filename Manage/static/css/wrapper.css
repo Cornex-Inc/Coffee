@@ -132,7 +132,7 @@ input[type="checkbox"].input-validation-error {
 
 
 .index_middle {
-    background: linear-gradient( to right, white, rgb(200, 130, 55),white);
+    /*background: linear-gradient( to right, white, rgb(200, 130, 55),white);*/
     display: block;
     clear: both;
 }

@@ -185,14 +185,14 @@ function search_report(page = null) {
             $('#payment_pagnation').html('');
             str = '';
             if (response.has_previous == true) {
-                str += '<li> <a onclick="search_report(' + (response.page_number - 1) + ')">&laquo;</a></li>';
+                str += '<li style="cursor:pointer;"> <a onclick="search_report(' + (response.page_number - 1) + ')">&laquo;</a></li>';
             } else {
                 str += '<li class="disabled"><span>&laquo;</span></li>';
             }
 
             for (var i = response.page_range_start; i < response.page_range_stop; i++) {
                 if (response.page_number == i) {
-                    str += '<li class="active"><span>' + i + ' <span class="sr-only">(current)</span></span></li>';
+                    str += '<li style="cursor:pointer;" class="active"><span>' + i + ' <span class="sr-only">(current)</span></span></li>';
                 }
                 else if (response.page_number + 5 > i && response.page_number - 5 < i) {
                     str += '<li> <a onclick="search_report(' + i + ')">' + i + '</a></li>';
@@ -202,7 +202,7 @@ function search_report(page = null) {
 
             }
             if (response.has_next == true) {
-                str += '<li><a onclick="search_payment(' + (response.page_number + 1) + ')">&raquo;</a></li>';
+                str += '<li style="cursor:pointer;"><a onclick="search_payment(' + (response.page_number + 1) + ')">&raquo;</a></li>';
             } else {
                 str += '<li class="disabled"><span>&raquo;</span></li>';
             }
