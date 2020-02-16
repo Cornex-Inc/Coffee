@@ -195,9 +195,9 @@
 
 <div class="page_bill" >
         <div class="sun_info">
-            <img src="{% static 'img/recepts_top.png' %}" style="width:16cm;"/>
+            <!--<img src="{% static 'img/recepts_top.png' %}" style="width:16cm;"/>-->
         </div>
-        <div class="title" >Receipt</div>
+        <div class="title" >MEDICAL RECEIPT</div>
         <div class="chart">
             <table class="chart_table" style="border:none;">
                 <tbody class="chart_table_info" >
@@ -207,19 +207,57 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td>Date</td>
                         <td></td>
-                        <td id="recept_date"></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td style="width:20px;"></td>
-                        <td style="font-size:12px; width:200px;">Name</td>
+                        <td style="font-size:14px; width:200px;">Depart : </td>
+                        <td id="recept_depart"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="width:20px;"></td>
+                        <td style="font-size:14px; width:200px;">Name of Patient : </td>
                         <td id="recept_patient"></td>
                         <td></td>
                         <td></td>
-                        <td>Code</td>
+                        <td></td>
                         <td></td>
                     </tr>
+                    <tr>
+                        <td style="width:20px;"></td>
+                        <td style="font-size:14px; width:200px;">Date of Birth : </td>
+                        <td id="recept_date"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="width:20px;"></td>
+                        <td style="font-size:14px; width:200px;">Date of Service : </td>
+                        <td id="recept_date"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="tr_small" >
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <!--
                     <tr style="border-bottom:30px solid rgba(0,0,0,0);">
                         <td></td>
                         <td></td>
@@ -229,18 +267,18 @@
                         <td>Doctor</td>
                         <td></td>
                         <td id="recept_doctor"></td>
-                    </tr>
+                    </tr>-->
                 </tbody>
             
+                    
+
             <tbody class="chart_table_contents_title">
                 <tr>
-                    <td></td>
-                    <td colspan="2">ITEMCODE/DESCRIPTION</td>
+                    <td colspan="2">ITEM</td>
                     <td style="width:2cm;">Unit Price</td>
                     <td style="width:2cm; text-align:center;">Quantity</td>
                     <td style="width:2.5cm;text-align:right;">Amount<br />(nonVAT)</td>
                     <td>VND</td>
-                    <td></td>
                 </tr>
             </tbody>
             <tbody id="chart_table_contents_items">
@@ -249,25 +287,43 @@
             <tbody class="chart_table_total">
                 <tr>
                     <td></td>
-                    <td></td>
-                    <td></td>
-                    <td >Discount</td>
-                    <td id="chart_table_discount"></td>
-                    <td id="chart_table_discount_amount"></td>
+                    <td colspan="2" style="text-align:right">Total</td>
+                    <td id="chart_table_total"></td>
+                    <td id="chart_table_total_amount"></td>
                     <td>VND</td>
-                    <td></td>
                 </tr>
                 <tr>
                     <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>Total</td>
-                    <td></td>
-                    <td id="chart_table_total"></td>
+                    <td colspan="2" style="text-align:right">Discount</td>
+                    <td id="chart_table_discount"></td>
+                    <td id="chart_table_discount_amount"></td>
                     <td>VND</td>
-                    <td></td>
                 </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="2" style="text-align:right">Estimated Insurance Coverage</td>
+                    <td id="chart_table_insurance"></td>
+                    <td id="chart_table_insurance_amount"></td>
+                    <td>VND</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="2" style="text-align:right">Patient Amount Due</td>
+                    <td id="chart_table_discount"></td>
+                    <td id="chart_table_discount_amount"></td>
+                    <td>VND</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="2" style="text-align:right">Paid</td>
+                    <td id="chart_table_paid"></td>
+                    <td id="chart_table_paid_amount"></td>
+                    <td>VND</td>
+                </tr>
+               
+
             </tbody>
+            <!--
             <tbody>
                 <tr>
                     <td></td>
@@ -283,7 +339,7 @@
                         * Đề nghị Quý khách có nhu cầu liên hệ lấy hóa đơn trong ngày.<br />
                     </td>
                 </tr>
-            </tbody>
+            </tbody>-->
         </table>
         </div>
         
