@@ -171,6 +171,7 @@
     <Folder Include="Doctor\" />
     <Folder Include="Doctor\migrations\" />
     <Folder Include="Doctor\static\" />
+    <Folder Include="Doctor\static\img\" />
     <Folder Include="Doctor\static\js\" />
     <Folder Include="Doctor\static\css\" />
     <Folder Include="Doctor\templates\" />
@@ -246,9 +247,13 @@
     <Content Include="app\static\js\event_listener.js" />
     <Content Include="app\static\js\main.js" />
     <Content Include="Doctor\static\css\doctor.css" />
+    <Content Include="Doctor\static\css\doctor_AN.css" />
     <Content Include="Doctor\static\css\report_window.css" />
     <Content Include="Doctor\static\css\report.css" />
     <Content Include="Doctor\static\css\audit.css" />
+    <Content Include="Doctor\static\img\DX_AN.png" />
+    <Content Include="Doctor\static\img\DX_AN_Front.png" />
+    <Content Include="Doctor\static\img\DX_AN_Rear.png" />
     <Content Include="Doctor\static\js\doctor.js" />
     <Content Include="Doctor\static\js\audit.js" />
     <Content Include="Doctor\static\js\report.js" />
