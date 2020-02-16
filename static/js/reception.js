@@ -4,7 +4,6 @@ var reception_event_count = 0;
 $(function () {
     //init
     if ($('#reception_table').length > 0) {
-
         reservation_search(true);
     }
     reception_search();
@@ -47,70 +46,29 @@ $(function () {
         }
     });
 
-    $('#doctor_select').empty();
-    $('#doctor_select').append(new Option('---------', ''));
+    
+
     $("#depart_select").change(function () {
-        if (this.value == '') {
-            $('#doctor_select').empty();
-            $('#doctor_select').append(new Option('---------', ''));
-            return;
-        }
-        $.ajax({
-            type: 'POST',
-            url: '/receptionist/get_depart_doctor/',
-            data: {
-                'csrfmiddlewaretoken': $('#csrf').val(),
-                'depart': this.value.trim()
-            },
-            dataType: 'Json',
-            success: function (response) {
-                $('#doctor_select').empty();
-                $('#doctor_select').append(new Option('---------', ''));
-                for (var i in response.datas)
-                    $('#doctor_select').append("<option value='" + response.datas[i] + "'>" + i + "</Option>");
-
-            },
-            error: function (request, status, error) {
-                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-
-            },
-        })
+        get_doctor($("#depart_select"));
     });
 
-    $('#reception_waiting_doctor').empty();
-    $('#reception_waiting_doctor').append(new Option('---------', ''));
+    
+
     $("#reception_waiting_depart").change(function () {
         reception_search();
-        if (this.value == '') {
-            $('#reception_waiting_doctor').empty();
-            $('#reception_waiting_doctor').append(new Option('---------', ''));
-            return;
-        }
-        $.ajax({
-            type: 'POST',
-            url: '/receptionist/get_depart_doctor/',
-            data: {
-                'csrfmiddlewaretoken': $('#csrf').val(),
-                'depart': this.value.trim(),
-            },
-            dataType: 'Json',
-            success: function (response) {
-                $('#reception_waiting_doctor').empty();
-                $('#reception_waiting_doctor').append(new Option('---------', ''));
-                for (var i in response.datas)
-                    $('#reception_waiting_doctor').append("<option value='" + response.datas[i] + "'>" + i + "</Option>");
-
-            },
-            error: function (request, status, error) {
-                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-            },
-        })
+        get_doctor($("#reception_waiting_depart"));
     });
     $("#reception_waiting_doctor").change(function () {
         reception_search();
     });
 
-
+    $("#reservation_depart_select").change(function () {
+        reservation_search();
+        get_doctor($("#reservation_depart_select"));
+    });
+    $("#reservation_doctor_select").change(function () {
+        reservation_search();
+    });
 
 
     //payment search
@@ -172,37 +130,15 @@ $(function () {
         });
     }
 
-
-    $('#reservation_doctor_select').empty();
-    $('#reservation_doctor_select').append(new Option('---------', ''));
-    $("#reservation_depart_select").change(function () {
-        reservation_search();
-        if (this.value == '') {
-            $('#reservation_doctor_select').empty();
-            $('#reservation_doctor_select').append(new Option('---------', ''));
-            return;
+    $('#reception_reservation_date').daterangepicker({
+        singleDatePicker: true,
+        drops: "up",
+        locale: {
+            format: 'YYYY-MM-DD'
         }
-        $.ajax({
-            type: 'POST',
-            url: '/receptionist/get_depart_doctor/',
-            data: {
-                'csrfmiddlewaretoken': $('#csrf').val(),
-                'depart': this.value.trim(),
-            },
-            dataType: 'Json',
-            success: function (response) {
-                $('#reservation_doctor_select').empty();
-                $('#reservation_doctor_select').append(new Option('---------', ''));
-                for (var i in response.datas)
-                    $('#reservation_doctor_select').append("<option value='" + response.datas[i] + "'>" + i + "</Option>");
-
-            },
-            error: function (request, status, error) {
-                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-            },
-        })
     });
-    $("#reservation_doctor_select").change(function () {
+
+    $('#reception_reservation_date').on('apply.daterangepicker', function () {
         reservation_search();
     });
 
@@ -213,7 +149,7 @@ $(function () {
 
     })
     $('#patient_tax_invoice_click').click(function () {
-        $('#patient_tax_invoice').toggle();
+        $('#show_Tax_invoice').toggle();
     })
    
 });
@@ -225,7 +161,47 @@ $("#reservation_table").click(function () {
 
 });
 
+function get_doctor(part, depart = null) {
+    var part_id = part.attr('id');
+    var doctor;
+    if (part_id == 'depart_select') {
+        doctor = $('#doctor_select');
+    } else if (part_id == 'reception_waiting_depart') {
+        doctor = $('#reception_waiting_doctor');
+    } else if (part_id == 'reservation_depart_select') {
+        doctor = $('#reservation_doctor_select');
+    }
+    if (depart == null)
+        depart = part.val();
 
+    if (part.val() == '') {
+        doctor.empty();
+        doctor.append(new Option('---------', ''));
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/get_depart_doctor/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'depart': part.val(),
+        },
+        dataType: 'Json',
+        success: function (response) {
+            doctor.empty();
+            doctor.append(new Option('---------', ''));
+            for (var i in response.datas)
+                doctor.append("<option value='" + response.datas[i] + "'>" + i + "</Option>");
+
+        },
+        error: function (request, status, error) {
+            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+
+}
 
 function reservation_none() {
     $('#reservation_table > tbody').append('<tr><td colspan="5"> - 예약 없음 - </td></tr>');
@@ -260,6 +236,7 @@ function check_reservation(data) {
 
 //index.html begin
 function earse_inputs() {
+
     $('#reception_table input ').each(function () {
         name = $(this).attr("name");
         if (name == 'gender' || $(this).attr('id') == 'patient_tax_invoice_click') {
@@ -337,7 +314,7 @@ function save_patient() {
     if ( !patient_check_required() ) {
         return;
     }
-    
+    var id = $('#patient_id').val();
     var chart_no = $('#patient_chart').val();
     var name_kor = $('#patient_name_kor').val();
     var name_eng = $('#patient_name_eng').val();
@@ -358,6 +335,7 @@ function save_patient() {
         url: '/receptionist/save_patient/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
+            'id':id,
             'cahrt_no': chart_no,
             'name_kor': name_kor,
             'name_eng': name_eng,
@@ -421,7 +399,7 @@ function save_recept() {
     if (!reception_check_required()) {
         return
     }
-
+    var id = $('#patient_id').val();
     var chart_no = $('#patient_chart').val();
     var name_kor = $('#patient_name_kor').val();
     var name_eng = $('#patient_name_eng').val();
@@ -441,11 +419,14 @@ function save_recept() {
     var tax_invoice_company_name = $('#tax_invoice_company_name').val();
     var tax_invoice_address = $('#tax_invoice_address').val();
 
+    var need_medical_report = $('#need_medical_report').prop("checked");
+
     $.ajax({
         type: 'POST',
         url: '/receptionist/save_reception/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
+            'id': id,
             'cahrt_no': chart_no,
             'name_kor': name_kor,
             'name_eng': name_eng,
@@ -462,6 +443,8 @@ function save_recept() {
             'tax_invoice_number': tax_invoice_number,
             'tax_invoice_company_name': tax_invoice_company_name,
             'tax_invoice_address': tax_invoice_address,
+
+            'need_medical_report': need_medical_report,
         },
         dataType: 'Json',
         success: function (response) {
@@ -493,6 +476,7 @@ function set_patient_data(patient_id) {
         },
         dataType: 'Json',
         success: function (response) {
+            $('#patient_id').val(response.id);
             $('#patient_chart').val(response.chart);
             $('#patient_name_kor').val(response.name_kor);
             $('#patient_name_eng').val(response.name_eng);
@@ -546,7 +530,7 @@ function patient_search(data) {
             } else {
                 for (var i in response.datas) {
                     var str = "<tr style='cursor:pointer;' onclick='set_patient_data(" +
-                        parseInt(response.datas[i]['chart']) +
+                        parseInt(response.datas[i]['id']) +
                     ")'><td>" + (parseInt(i) + 1) + "</td>";
 
                     if (response.datas[i]['has_unpaid']) {
@@ -683,8 +667,10 @@ function payment_search(Today = false,show_all_unpaid=false) {
 function reservation_search(Today = false) {
     var date, depart, doctor, status;
 
-    date = today = moment().format('YYYY[-]MM[-]DD');
-
+    //date = today = moment().format('YYYY[-]MM[-]DD');
+    date = $('#reception_reservation_date').val();
+    if (date == '')
+        date = today = moment().format('YYYY[-]MM[-]DD');
     depart = $('#reservation_depart_select option:selected').val();
     doctor = $('#reservation_doctor_select option:selected').val();
 

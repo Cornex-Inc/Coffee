@@ -179,17 +179,21 @@
 }
 
 .reception_wait_table_wrap {
-    overflow: auto;
-    height: 300px;
+    height: 360px;
 }
 
 .patient_search_table_wrap {
     overflow: auto;
-    height: 170px;
+    height: 200px;
 }
 .input-group-long {
     width: 615px;
 }
+
+.need_medical_report {
+    margin-left: 150px;
+}
+
 @media ( min-width: 1900px ) {
     .input-group {
         width: 400px;
@@ -213,5 +217,9 @@
 
     .input-group-long {
         width: 850px;
+    }
+
+    .need_medical_report {
+        margin-left: 250px;
     }
 }

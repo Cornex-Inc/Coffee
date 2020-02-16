@@ -193,7 +193,7 @@ function waiting_list(Today = false) {
                         tr_class = "class ='danger'"
 
                 var str = "<tr " + tr_class + " onclick='waiting_selected(" + response.datas[i]['test_manage_id'] + ")'>" +
-                    "<td>" + Number(i + 1) + "</td>" +
+                    "<td>" + (parseInt(i) + 1) + "</td>" +
                     "<td>" + response.datas[i]['chart'] + "</td>" +
                     "<td>" + response.datas[i]['Name'] + "</td>" +
                     "<td>" + response.datas[i]['Date_of_Birth'] + "</td>" +

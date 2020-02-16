@@ -5,8 +5,8 @@
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: 30%;
-    grid-template-rows: 15%;
+    grid-template-columns: 40%;
+    /*grid-template-rows: 15%;*/
 }
 
 .partition {
@@ -63,15 +63,18 @@
     display:inline;
 }
 
-.radiation_patient_info_iniput{
-    width:230px;
+.radiation_patient_info_iniput {
+    width: 410px;
     display: inline-table;
     margin-right: 16px;
 }
+    .radiation_patient_info_iniput > span{
+        width: 100px;
+    }
 
-.radiation_patient_info_iniput:last-child{
-    margin-right:0px;
-}
+    .radiation_patient_info_iniput:last-child {
+        margin-right: 0px;
+    }
 
 .radiation_remark{
     display:inline-block;
@@ -97,19 +100,51 @@
 
 .radiation_image_wrap {
     border:2px solid black;
-    width:100%; 
-    height:453px; 
-    text-align:center;
+    width: 100%;
+    height: 453px;
+    margin-top: 20px;
 }
+
+
 .remark_wrap {
     margin-top: 7.5px;
-    width: 950px;
+    width: 100%;
     display: inline-table;
 }
 
+.radiation_image {
+    width: 756px;
+    height: 100%;
+    display: inline-block;
+    text-align: center;
+}
+
+.radiation_image_list {
+    border-right: 2px solid black;
+    width: 100px;
+    height: 100%;
+    display: inline-block;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border-right: 2px solid black;
+    text-align: center;
+}
+
+.radiation_image_ul{
+    list-style:none;
+    padding:0px;
+    margin-top:10px;
+   
+}
+
+#load_img {
+    height: 100%;
+    max-width: 100%;
+    cursor: pointer;
+    
+}
 
 @media ( min-width: 1900px ) {
-
     .radiation_list_table_wrap {
         height: 760px;
     }
@@ -118,9 +153,22 @@
         height: 600px;
     }
     .radiation_patient_info_iniput{
-        width:300px;
+        width:500px;
     }
     .remark_wrap {
         width:1250px; 
     }
+}
+
+.image_clsoe {
+    background-image: url('../img/image_close.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.1;
+    position: relative;
+    margin-bottom: -20px;
+    margin-right: -15px;
+    float: right;
+    width: 40px;
+    height: 40px;
 }

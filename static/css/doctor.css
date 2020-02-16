@@ -21,7 +21,7 @@
 .doctor_patient_info {
     grid-row-start: 1;
     grid-row-end: 3;
-    overflow:hidden;
+    overflow: hidden;
 }
 .doctor_vital {
     grid-row-start: 3;
@@ -165,7 +165,6 @@
 .diagnosis_history_taking_contents {
     resize: vertical;
     width: 440px !important;
-    height: 30px !important;
 }
 
 .Vitial_table_warp{
@@ -188,8 +187,8 @@
 }
 
 .fu_date {
-    width:250px;
-    float: right;
+    width: 250px;
+    float:left;
 }
 
 
@@ -267,13 +266,33 @@
 }
 
 .Rectption_Status_wrap{
-    height:210px;
+    height:175px;
     overflow:auto;
 }
 .diagnosis_table_wrap {
     overflow:auto;
     height: 140px;
 }
+
+@-webkit-keyframes blink {
+    0% {
+        color: red;
+    }
+
+    50% {
+        color: black;
+    }
+}
+
+.need_medical_report {
+    float: right;
+
+    animation-name: blink;
+    animation-duration: 1.5s;
+    animation-timing-function: step-end;
+    animation-iteration-count: infinite;
+}
+
 
 @media ( min-width: 1900px ) {
     .diagnosis_select_contents {

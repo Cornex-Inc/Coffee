@@ -25,10 +25,29 @@ $(function () {
     });
 
 
+        
     search_doctor_profit();
-    $('#doctor_filter_top select, #doctor_filter_top input,.doctor_search_table_filter select, .doctor_search_table_filter input').change(function () {
+    $('#doctor_search_date').change(function () {
         search_doctor_profit();
     })
+
+    $('#doctor_search_general').change(function () {
+        $('#doctor_search_medicine, #doctor_search_lab').val("").prop("selected", true);
+        search_doctor_profit();
+    })
+
+    $('#doctor_search_medicine').change(function () {
+        $('#doctor_search_general, #doctor_search_lab').val("").prop("selected", true);
+        search_doctor_profit();
+    })
+
+    $('#doctor_search_lab').change(function () {
+        $('#doctor_search_medicine, #doctor_search_general').val("").prop("selected", true);
+        search_doctor_profit();
+    })
+
+
+
 
     $('.doctor_profit_control').keyup(function () {
         var regex = /[^0-9]/g;
@@ -78,64 +97,64 @@ function search_doctor_profit(page = null) {
                         response.datas[i]['date_of_birth'] +
                         ')</td>' +
                         '<td style="vertical-align: middle;">' + response.datas[i]['Depart'] + '</td>' +
-                        '<td style="vertical-align: middle;">' + response.datas[i]['Doctor'] + '</td></td>';
+                        '<td style="vertical-align: middle;">' + response.datas[i]['Doctor'] + '</td>';
 
                     // exam fee
-                    str += '</td><td style="vertical-align: middle;';
+                    str += '<td style="vertical-align: middle;">';
                     if (response.datas[i]['general'].length == 0) {
-                        str += '"> - ';
+                        str += ' - ';
                     } else {
+
                         for (var j = 0; j < response.datas[i]['general'].length; j++) {
-                            str += '" title="' + response.datas[i]['general'][j]['value'] + '">' +
-                                response.datas[i]['general'][j]['code'] + '</td>';
+                            str += response.datas[i]['general'][j]['value'];
                             if (j != response.datas[i]['general'].length - 1) {
                                 str += '<br/>';
                             }
                         }
                     }
-                    str += '</td><td style="vertical-align: middle;';
+                    str += '</td><td style="vertical-align: middle;">';
                     if (response.datas[i]['medi'].length == 0) {
-                        str += '"> - ';
+                        str += ' - ';
                     } else {
+
                         for (var j = 0; j < response.datas[i]['medi'].length; j++) {
-                            str += '" title="' + response.datas[i]['medi'][j]['value'] + '">' +
-                                response.datas[i]['medi'][j]['code'] + '</td>';
+                            str += response.datas[i]['medi'][j]['value'];
                             if (j != response.datas[i]['medi'].length - 1) {
                                 str += '<br/>';
                             }
                         }
                     }
-                    str += '</td><td style="vertical-align: middle;';
+                    str += '</td><td style="vertical-align: middle;">';
                     if (response.datas[i]['lab'].length == 0) {
-                        str += '"> - ';
+                        str += ' - ';
                     } else {
+
                         for (var j = 0; j < response.datas[i]['lab'].length; j++) {
-                            str += '" title="' + response.datas[i]['lab'][j]['value'] + '">' +
-                                response.datas[i]['lab'][j]['code'] + '</td>';
+                            str += response.datas[i]['lab'][j]['value'];
                             if (j != response.datas[i]['lab'].length - 1) {
                                 str += '<br/>';
                             }
                         }
                     }
-                    str += '</td><td style="vertical-align: middle;';
+                    str += '</td><td style="vertical-align: middle;">';
                     if (response.datas[i]['scaling'].length == 0) {
-                        str += '"> - ';
+                        str += ' - ';
                     } else {
+
                         for (var j = 0; j < response.datas[i]['scaling'].length; j++) {
-                            str += '" title="' + response.datas[i]['scaling'][j]['value'] + '">' +
-                                response.datas[i]['scaling'][j]['code'] + '</td>';
+                            str += response.datas[i]['scaling'][j]['value'];
                             if (j != response.datas[i]['scaling'].length - 1) {
                                 str += '<br/>';
                             }
                         }
                     }
-                    str += '</td><td style="vertical-align: middle;';
+                    str += '</td><td style="vertical-align: middle;">';
                     if (response.datas[i]['panorama'].length == 0) {
-                        str += '"> - ';
+                        str += ' - ';
                     } else {
+
                         for (var j = 0; j < response.datas[i]['panorama'].length; j++) {
-                            str += '" title="' + response.datas[i]['panorama'][j]['value'] + '">' +
-                                response.datas[i]['panorama'][j]['code'] + '</td>';
+                            str += response.datas[i]['panorama'][j]['value'];
                             if (j != response.datas[i]['panorama'].length - 1) {
                                 str += '<br/>';
                             }
@@ -165,7 +184,7 @@ function search_doctor_profit(page = null) {
             $('#doctors_pagnation').html('');
             str = '';
             if (response.has_previous == true) {
-                str += '<li> <a onclick="search_doctor_profit(' + (response.page_number - 1) + ')">&laquo;</a></li>';
+                str += '<li> <a onclick="search_doctor_profit(' + (response.page_number - 1) + ')" style="cursor:pointer;">&laquo;</a></li>';
             } else {
                 str += '<li class="disabled"><span>&laquo;</span></li>';
             }
@@ -175,14 +194,14 @@ function search_doctor_profit(page = null) {
                     str += '<li class="active"><span>' + i + ' <span class="sr-only">(current)</span></span></li>';
                 }
                 else if (response.page_number + 5 > i && response.page_number - 5 < i) {
-                    str += '<li> <a onclick="search_doctor_profit(' + i + ')">' + i + '</a></li>';
+                    str += '<li> <a onclick="search_doctor_profit(' + i + ')" style="cursor:pointer;">' + i + '</a></li>';
                 }
                 else {
                 }
 
             }
             if (response.has_next == true) {
-                str += '<li><a onclick="search_doctor_profit(' + (response.page_number + 1) + ')">&raquo;</a></li>';
+                str += '<li><a onclick="search_doctor_profit(' + (response.page_number + 1) + ')" style="cursor:pointer;">&raquo;</a></li>';
             } else {
                 str += '<li class="disabled"><span>&raquo;</span></li>';
             }

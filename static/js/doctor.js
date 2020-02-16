@@ -1,4 +1,9 @@
 ﻿jQuery.browser = {};
+
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 $(function () {
     var _oldShow = $.fn.show;
     var _oldHide = $.fn.hide;
@@ -53,6 +58,9 @@ $(function () {
         else if (id == 'diagnosis_select_medicine_title') {
             $('#diagnosis_select_medicine_contents').show();
         }
+        else if (id = 'diagnosis_select_bundle') {
+            $('#diagnosis_select_bundle_contents').show();
+        }
     });
 
 
@@ -61,30 +69,110 @@ $(function () {
         if (event.target.nodeName.toLowerCase() == 'td') {
             //diagnosis_select_test_contents
             $(event.target.parentElement.parentElement.parentElement.parentElement).attr('id');
-            
+            var what_class = $(event.target.parentElement.parentElement.parentElement.parentElement).attr('id');
+            if (what_class == 'diagnosis_select_bundle_contents') {
+                bundle_id = $(event.target.parentElement).find('td:nth-child(6)').html();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/doctor/get_bundle/',
+                    data: {
+                        'csrfmiddlewaretoken': $('#csrf').val(),
+                        'bundle_id': bundle_id,
+                    },
+                    dataType: 'Json',
+                    success: function (response) {
+                        for (var i in response.datas) {
+                            var what_class = response.datas[i]['type'];
+                            var str = "<tr><td style='width:3vw;'>" + response.datas[i]['code'] + "<input type='hidden' value=''/></td>";
+
+                            if (what_class == 'Medicine') {
+                                str += "<td>" + response.datas[i]['name'] + "<input type='hidden' value=''/></td><td style='text-align: center;'>" +
+                                    "</td><td>" +
+                                    "<input type='number' min='0' value='" + response.datas[i]['amount'] +
+                                    "' class='diagnosis_selected_input_number' id='amount'/></td><td style='text-align: center;'>" +
+                                    "<input type='number' min='0' value='" + response.datas[i]['days'] +
+                                    "' class='diagnosis_selected_input_number' id='days'/></td><td style='text-align: center;'>" +
+                                    "<input type='text' class='diagnosis_selected_input_number' id='memo'/></td>";
+                            } else {
+                                str += "<td colspan='5'>" + response.datas[i]['name'] + "<input type='hidden' value=''/></td>";
+                            }
+
+                            str += "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td>";
+                            str += "<td style='display:none;'>" + response.datas[i]['price'] + "</td></tr>";
+
+                            if (what_class == 'Test')
+                                $('#diagnosis_selected_test').append(str);
+                            else if (what_class == 'Precedure')
+                                $('#diagnosis_selected_precedure').append(str);
+                            else if (what_class == 'Medicine')
+                                $('#diagnosis_selected_medicine').append(str);
+
+
+                            $('#diagnosis_selected input').change(function () {
+                                show_total_price();
+                            })
+                            $('#diagnosis_selected input').keyup(function () {
+                                show_total_price();
+                            })
+
+
+                            show_total_price();
+                        }
+                    },
+                    error: function (request, status, error) {
+                        alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                    },
+                })
+                return;
+            }
             var str = "<tr><td style='width:3vw;'>" + $(this).find('td:nth-child(2)').text().trim() + "<input type='hidden' value=''/></td>";
 
             if (event.target.parentElement.parentElement.parentElement.parentElement.id == 'diagnosis_select_medicine_contents') {
-                str += "<td>" + $(this).find('td:nth-child(3)').text().trim() + "<input type='hidden' value=''/></td><td style='text-align: center;'>" +
-                    $(this).find('td:nth-child(5)').text().trim() + "</td><td>" +
-                    "<input type='number' min='0' class='diagnosis_selected_input_number' id='amount'/></td><td style='text-align: center;'>" +
-                    "<input type='number' min='0' class='diagnosis_selected_input_number' id='days'/></td><td style='text-align: center;'>" +
-                    "<input type='text' class='diagnosis_selected_input_number' id='memo'/></td>";
+                //event.target.parentElement.parentElement.parentElement.getElementById('#tbody_contents_class_Injection');
+                var check_input = $(event.target.parentElement.parentElement).attr('id');
+                if (check_input == 'contents_items_Injection' ||
+                    check_input == 'contents_items_Infusion'
+                ) {
+                    str += "<td>" + $(this).find('td:nth-child(3)').text().trim() + "<input type='hidden' value=''/></td><td style='text-align: center;'>" +
+                        $(this).find('td:nth-child(6)').text().trim() + "</td><td>" +
+                        "<input type='number' style='display:none;' min='0' value='1' class='diagnosis_selected_input_number' id='amount'/></td><td style='text-align: center;'>" +
+                        "<input type='number' style='display:none;' min='0' value='1' class='diagnosis_selected_input_number' id='days'/></td><td style='text-align: center;'>" +
+                        "<input type='text' class='diagnosis_selected_input_number' id='memo'/></td>";
+                }
+                else {
+                    str += "<td>" + $(this).find('td:nth-child(3)').text().trim() + "<input type='hidden' value=''/></td><td style='text-align: center;'>" +
+                        $(this).find('td:nth-child(6)').text().trim() + "</td><td>" +
+                        "<input type='number' min='0' value='1' class='diagnosis_selected_input_number' id='amount'/></td><td style='text-align: center;'>" +
+                        "<input type='number' min='0' value='1' class='diagnosis_selected_input_number' id='days'/></td><td style='text-align: center;'>" +
+                        "<input type='text' class='diagnosis_selected_input_number' id='memo'/></td>";
+                }
             } else {
                 str += "<td colspan='5'>" + $(this).find('td:nth-child(3)').text().trim() + "<input type='hidden' value=''/></td>";
             } 
-            str += "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td></tr>";
+            str += "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td>";
+            str += "<td style='display:none;'>" + $(this).find('td:nth-child(4)').text().replace(/,/g, '').replace('VND', '').trim() + "</td></tr>";
+            
+            what_class = $(event.target.parentElement.parentElement.parentElement.parentElement).attr('id');
 
-            var what_class = $(event.target.parentElement.parentElement.parentElement.parentElement).attr('id');
-
+            
             if (what_class == 'diagnosis_select_exam_contents')
                 $('#diagnosis_selected_exam').append(str);
-            if (what_class == 'diagnosis_select_test_contents')
+            else if (what_class == 'diagnosis_select_test_contents')
                 $('#diagnosis_selected_test').append(str);
             else if (what_class == 'diagnosis_select_precedure_contents')
                 $('#diagnosis_selected_precedure').append(str);
             else if (what_class == 'diagnosis_select_medicine_contents')
-               $('#diagnosis_selected_medicine').append(str);
+                $('#diagnosis_selected_medicine').append(str);
+
+            $('#diagnosis_selected input').change(function () {
+                show_total_price();
+            })
+            $('#diagnosis_selected input').keyup(function () {
+                show_total_price();
+            })
+            
+            show_total_price();
         }
     });
 
@@ -122,8 +210,6 @@ $(function () {
         }
     });
 
-
-
     $('#past_diagnosis_calendar').daterangepicker();
 
     $('#reservation_date').daterangepicker({
@@ -140,23 +226,32 @@ $(function () {
         },
     }).on('show.daterangepicker', function (ev, picker) {
         picker.container.find(".hourselect").empty()
-        picker.container.find(".hourselect").append('<option value = "9" > 9</option>');
-        picker.container.find(".hourselect").append('<option value = "10" > 10</option>' );
-        picker.container.find(".hourselect").append('<option value = "11" > 11</option>' );
-        picker.container.find(".hourselect").append('<option value = "12" > 12</option>' );
-        picker.container.find(".hourselect").append('<option value = "13" > 13</option>' );
-        picker.container.find(".hourselect").append('<option value = "14" > 14</option>' );
-        picker.container.find(".hourselect").append('<option value = "15" > 15</option>' );
-        picker.container.find(".hourselect").append('<option value = "16" > 16</option>');
-        picker.container.find(".hourselect").append('<option value = "17" > 17</option>');
+        picker.container.find(".hourselect").append('<option value="9" selected="selected">9</option>');
+        picker.container.find(".hourselect").append('<option value="10">10</option>' );
+        picker.container.find(".hourselect").append('<option value="11">11</option>' );
+        picker.container.find(".hourselect").append('<option value="12">12</option>' );
+        picker.container.find(".hourselect").append('<option value="13">13</option>' );
+        picker.container.find(".hourselect").append('<option value="14">14</option>' );
+        picker.container.find(".hourselect").append('<option value="15">15</option>' );
+        picker.container.find(".hourselect").append('<option value="16">16</option>');
+        picker.container.find(".hourselect").append('<option value="17">17</option>');
     });
 
     $('#reservation_date').on('apply.daterangepicker', function (ev, picker) {
+        var hour = picker.container.find(".hourselect").children("option:selected").val();
+        if (hour < 9)
+            hour = 9;
+        else if (hour > 17)
+            hour = 17;
+        picker.startDate.set({ hour: hour, });
         $('#reservation_date').val(picker.startDate.format('YYYY-MM-DD HH:mm:ss'));
     });
     $('#reservation_date').on('cancel.daterangepicker', function(ev, picker) {
         $('#reservation_date').val('');
     });
+
+
+
 
 
 
@@ -201,16 +296,13 @@ $(function () {
         }
         else {
             $(".contents_items, .contents_items tr").hide();
+            var temp = $(".contents_items > tr > td:nth-child(5):contains('" + k.toLowerCase() + "')");
             
-            var temp = $(".contents_items > tr > td:nth-child(3):contains('" + k + "')");
-
             $(temp).parent().parent().show();
             $(temp).parent().parent().prev().children().children().children('label').html('-');
             $(temp).parent().show();
         }
-
     })
-
 });
 
 function selected_table_title(title) {
@@ -233,14 +325,21 @@ function get_all_diagnosis() {
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
             'all':'all',
-            'patient_id': $('#patient_chart').val(),
+            'patient_id': $('#patient_id').val(),
         },
         dataType: 'Json',
         success: function (response) {
             for (var i in response.datas) {
                 var str = "<tr style='background:#94ee90'><td colspan='5'>" + response.datas[i]['date'] + "(" + response.datas[i]['day'] + ")[" + response.datas[i]['doctor'] + "]</td>" +
-                    "</td></tr>" +
-                    "<tr><td colspan='5'>History:" + response.datas[i]['diagnosis'] + "</td></tr>";
+                    "</td></tr>" + /*"<tr><td colspan='5'>History: D-" + response.datas[i]['diagnosis']  + */
+
+                    "<tr><td colspan='5'>History: S-" + response.datas[i]['subjective'] + "/O-" +
+                    response.datas[i]['objective'] + "/A-" +
+                    response.datas[i]['assessment'] + "/P-" +
+                    response.datas[i]['plan'] + "/D-" +
+                    response.datas[i]['diagnosis'] +
+                    "</td></tr>";
+
 
                 for (var j in response.datas[i]['exams']) {
                     str += "<tr><td>" + response.datas[i]['exams'][j]['name'] + "</td><td>" +
@@ -285,6 +384,33 @@ function get_all_diagnosis() {
 
 }
 
+function show_total_price() {
+    var total = 0;
+    var table = $('#diagnosis_selected');
+    table.find('tbody tr').each(function (i, el) {
+        var $tds = $(this).find('td');
+        temp_data = {};
+
+        what_class = $tds.parent().parent().attr('id')
+        
+        if (what_class == 'diagnosis_selected_medicine') {
+            var price = parseInt($tds.eq(7).text().trim() );
+            var amount = parseInt( $tds.eq(3).children('input').val() );
+            var days = parseInt( $tds.eq(4).children('input').val() );
+            total += price * amount * days;
+        }
+        else {
+            sd = $tds.eq(3).text();
+            total += parseInt($tds.eq(3).text().trim() );
+        }
+            
+    });
+    
+    $('#total_price').html(numberWithCommas(total) + ' VND');
+
+}
+
+
 
 function set_all_empty() {
     $('input').empty();
@@ -302,6 +428,7 @@ function set_past_diagnosis_date(element) {
 
 
 
+
 function reception_select(reception_id) {
     $.ajax({
         type: 'POST',
@@ -312,6 +439,7 @@ function reception_select(reception_id) {
         },
         dataType: 'Json',
         success: function (response) {
+            $('#patient_id').val(response.id);
             $('#patient_chart').val(response.chart);
             $('#patient_name_kor').val(response.name_kor + ' / ' + response.name_eng);
             $('#patient_date_of_birth').val(response.date_of_birth);
@@ -331,6 +459,13 @@ function reception_select(reception_id) {
             $('#objective_data').val(response.objective_data);
             $('#plan').val(response.plan);
             $('#diagnosis').val(response.diagnosis);
+
+
+            $('#need_medical_report').hide();
+            if (response.need_medical_report) {
+                $('#need_medical_report').show();
+            }
+
 
             get_vital();
             get_all_diagnosis();
@@ -352,7 +487,7 @@ function get_vital() {
         url: '/doctor/get_vital/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
-            'patient_id': $('#patient_chart').val(),
+            'patient_id': $('#patient_id').val(),
         },
         dataType: 'Json',
         success: function (response) {
@@ -364,7 +499,7 @@ function get_vital() {
                     "<td>" + response.datas[i]['blood_pressure'] + "</td>" +
                     "<td>" + response.datas[i]['blood_temperature'] + "</td>" +
                     "<td>" + response.datas[i]['breath'] + "</td>" +
-                    "<td>" + response.datas[i]['purse_rate']  + "</td></tr>";
+                    "<td>" + response.datas[i]['pulse_rate']  + "</td></tr>";
 
                 $('#Vitial_table').append(str);
             }
@@ -392,7 +527,7 @@ function set_vital() {
             'blood_pressure': $('#vital_input_blood_pressure').val(),
             'blood_temperature': $('#vital_input_blood_temperature').val(),
             'breath': $('#vital_input_breath').val(),
-            'purse_rate': $('#vital_input_purse_rate').val(),
+            'pulse_rate': $('#vital_input_pulse_rate').val(),
         },
         dataType: 'Json',
         success: function (response) {
@@ -411,7 +546,7 @@ function set_vital_clear() {
     $('#vital_input_blood_pressure').val('');
     $('#vital_input_blood_temperature').val('');
     $('#vital_input_breath').val('');
-    $('#vital_input_purse_rate').val('');
+    $('#vital_input_pulse_rate').val('');
 }
 
 function get_diagnosis(reception_no) {
@@ -430,38 +565,30 @@ function get_diagnosis(reception_no) {
 
             for (var j in response.datas['exams']) {
                 var str = "<tr><td>" + response.datas['exams'][j]['code'] + "<input type='hidden' value='" +
-                    response.datas['exams'][j]['id'] + "'/></td><td>" +
+                    response.datas['exams'][j]['id'] + "'/></td><td colspan='5'>" +
                     response.datas['exams'][j]['name'] + "</td>" +
-                    "<td></td>" +
-                    "<td></td>" +
-                    "<td></td>" +
-                    "<td></td>" +
-                    "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td></tr>";
+                    "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td>" +
+                    "<td style='display:none;'>" + response.datas['exams'][j]['price'] + "</td></tr > ";
+
                 $('#diagnosis_selected_exam').append(str);
             }
 
             for (var j in response.datas['tests']) {
                     
                 var str = "<tr><td>" + response.datas['tests'][j]['code'] + "<input type='hidden' value='" +
-                    response.datas['tests'][j]['id'] + "'/></td><td>" +
+                    response.datas['tests'][j]['id'] + "'/></td><td colspan='5'>" +
                     response.datas['tests'][j]['name'] + "</td>" +
-                    "<td></td>" +
-                    "<td></td>" +
-                    "<td></td>" +
-                    "<td></td>" +
-                    "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td></tr>";
+                    "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td>" + 
+                    "<td style='display:none;'>" + response.datas['tests'][j]['price']+ "</td></tr > ";
                 $('#diagnosis_selected_test').append(str);
             }
                 
             for (var j in response.datas['precedures']) {
                 var str = "<tr><td>" + response.datas['precedures'][j]['code'] + "<input type='hidden' value='" +
-                    response.datas['precedures'][j]['id'] + "'/></td><td>" +
+                    response.datas['precedures'][j]['id'] + "'/></td><td colspan='5'>" +
                     response.datas['precedures'][j]['name'] + "</td>" +
-                    "<td></td>" +
-                    "<td></td>" +
-                    "<td></td>" +
-                    "<td></td>" +
-                    "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td></tr>";
+                    "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td>" +
+                    "<td style='display:none;'>" + response.datas['precedures'][j]['price'] + "</td></tr > ";
                 $('#diagnosis_selected_precedure').append(str);
             }
                 
@@ -476,7 +603,8 @@ function get_diagnosis(reception_no) {
                     response.datas['medicines'][j]['days'] + "'>" + "</td>" +
                     "<td><input type='text' class='diagnosis_selected_input' id='memo' value='" +
                     response.datas['medicines'][j]['memo'] + "'>" + "</td>" +
-                    "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td></tr>";
+                    "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td>" +
+                    "<td style='display:none;'>" + response.datas['medicines'][j]['price'] + "</td></tr > ";
                 $('#diagnosis_selected_medicine').append(str);
             }
 
@@ -489,7 +617,7 @@ function get_diagnosis(reception_no) {
 
             })
                 
-            
+            show_total_price();
         },
         error: function (request, status, error) {
             alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -523,12 +651,16 @@ function reception_waiting(Today = false) {
                 for (var i in response.datas) {
                     var color;
                     $('#status').val(response.datas[i]['status']);
-                    if (response.datas[i]['status'] == 'new')
+                    //if (response.datas[i]['status'] == 'new')
+                    //    tr_class = "class ='success'"
+                    //else if (response.datas[i]['status'] == 'hold')
+                    //    tr_class = "class ='warning'"
+                    //else if (response.datas[i]['status'] == 'done')
+                    //    tr_class = "class ='danger'"
+                    if (response.datas[i]['status'] == 'done')
                         tr_class = "class ='success'"
-                    else if (response.datas[i]['status'] == 'hold')
-                        tr_class = "class ='warning'"
-                    else if (response.datas[i]['status'] == 'done')
-                        tr_class = "class ='danger'"
+                    else
+                        tr_class = "class =''"
 
                     var str = "<tr style='cursor:pointer;'" + tr_class + " onclick='reception_select(" +
                         response.datas[i]['reception_no'] +
@@ -537,7 +669,7 @@ function reception_waiting(Today = false) {
                         ");'><td>" + (parseInt(i) + 1) + "</td>" +
                         "<td>" + response.datas[i]['chart'] + "</td>" +
                         "<td>" + response.datas[i]['name_kor'] + "/" + response.datas[i]['name_eng'] + "</td>" +
-                        "<td>" + response.datas[i]['date_of_birth'] + ' (' + response.datas[i]['age'] + '/' +response.datas[i]['gender'] + ")</td>" +
+                        "<td>" + response.datas[i]['date_of_birth'] + '<br/>'+ ' (' + response.datas[i]['age'] + '/' +response.datas[i]['gender'] + ")</td>" +
                         "<td>" + response.datas[i]['reception_time'] + "</td></tr>";
 
                     $('#Rectption_Status').append(str);
@@ -582,6 +714,7 @@ function worker_on(path) {
 
 function delete_this_td(x) {
     $(x).parent().remove();
+    show_total_price();
 }
 
 
@@ -601,30 +734,48 @@ function diagnosis_save(set) {
     date = $("#reservation_date").val();
     datas = [];
     var table = $('#diagnosis_selected');
+    var is_valid = true;
     table.find('tbody tr').each(function (i, el) {
         var $tds = $(this).find('td');
         temp_data = {};
 
-        what_class = $tds.parent().parent().attr('id')
-        if (what_class == 'diagnosis_selected_exam') 
-            temp_data['type'] = 'Exam';
-        else if (what_class == 'diagnosis_selected_test') 
-            temp_data['type'] = 'Test';
-        else if (what_class == 'diagnosis_selected_precedure')
+        var code = $tds.html();
+        if (code.indexOf("P") != -1) {
             temp_data['type'] = 'Precedure';
-        else if (what_class == 'diagnosis_selected_medicine')
-            temp_data['type'] = 'Medicine';
+        } else {
+            what_class = $tds.parent().parent().attr('id')
+            if (what_class == 'diagnosis_selected_exam')
+                temp_data['type'] = 'Exam';
+            else if (what_class == 'diagnosis_selected_test')
+                temp_data['type'] = 'Test';
+            else if (what_class == 'diagnosis_selected_precedure')
+                temp_data['type'] = 'Precedure';
+            else if (what_class == 'diagnosis_selected_medicine')
+                temp_data['type'] = 'Medicine';
+        }
+
+        
         temp_data['code'] = $tds.eq(0).text();
         temp_data['id'] = $tds.eq(0).children('input').val();
         temp_data['name']= $tds.eq(1).text();
         temp_data['volume']= $tds.eq(2).children('input').val();
-        temp_data['amount']= $tds.eq(3).children('input').val();
-        temp_data['days']= $tds.eq(4).children('input').val();
+        temp_data['amount'] = $tds.eq(3).children('input').val();
+        if (temp_data['amount'] == '') {
+            alert('amout is empty.');
+            is_valid = false;
+        }
+        temp_data['days'] = $tds.eq(4).children('input').val();
+        if (temp_data['days'] == '') {
+            alert('days is empty.');
+            is_valid = false;
+        }
         temp_data['memo'] = $tds.eq(5).children('input').val();
 
         datas.push(temp_data);
     });
-
+    if (!is_valid) {
+        return;
+    }
 
 
     $.ajax({
@@ -633,6 +784,7 @@ function diagnosis_save(set) {
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
             'reception_id': $('#selected_reception').val(),
+            'chief_complaint': $('#chief_complaint').val(),
             'diagnosis': $('#diagnosis').val(),
             'objective_data': $('#objective_data').val(),
             'assessment': $('#assessment').val(),
@@ -644,9 +796,9 @@ function diagnosis_save(set) {
         dataType: 'Json',
         success: function (response) {
             if (response.result == false) {
-                alert('저장에 실패 했습니다. \n이미 정산 중이거나 정산이 끝났습니다.')
+                alert('Failed \nalready settled or is settled.')
             } else {
-                alert('저장 했습니다.');
+                alert('Saved');
                 set_all_empty();
             }
 

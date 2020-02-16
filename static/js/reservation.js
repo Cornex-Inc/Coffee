@@ -45,3 +45,44 @@ $(function () {
 
 
 });
+
+
+function get_doctor(part, depart = null) {
+    var part_id = part.attr('id');
+    var doctor;
+    if (part_id == 'reservation_search_depart') {
+        doctor = $('#reservation_search_doctor');
+    } else if (part_id == 'reservation_depart') {
+        doctor = $('#reservation_doctor');
+    }
+    if (depart == null)
+        depart = part.val();
+
+    if (part.val() == '') {
+        doctor.empty();
+        doctor.append(new Option('---------', ''));
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/get_depart_doctor/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'depart': part.val(),
+        },
+        dataType: 'Json',
+        success: function (response) {
+            doctor.empty();
+            doctor.append(new Option('---------', ''));
+            for (var i in response.datas)
+                doctor.append("<option value='" + response.datas[i] + "'>" + i + "</Option>");
+
+        },
+        error: function (request, status, error) {
+            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+
+}

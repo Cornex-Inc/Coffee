@@ -37,7 +37,7 @@ $(function () {
 
 function save_data_control() {
     if ($('#selected_option').val() == '') {
-        alert("select 'new' or medicine");
+        alert("select medicine");
         return;
     }
     if (isNaN($('#medicine_search_changes').val()) == true) {
@@ -63,6 +63,8 @@ function save_data_control() {
         success: function (response) {
             alert('saved');
             $('.database_control input').each(function () {
+                if ($(this).attr('type') == 'button')
+                    return;
                 $(this).val('');
             })
         },
@@ -97,6 +99,10 @@ function set_data_control(medicine_id) {
 
         },
     })
+}
+
+function set_new() {
+
 }
 
 function pharmacy_control_save(Done = false) {
@@ -163,10 +169,10 @@ function waiting_selected(diagnosis_id) {
 
                 $('#pharmacy_contents_table').append(str);
             }
+            $('#show_patient_selected').html(response.patient_name);
         },
         error: function (request, status, error) {
             alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-
         },
     })
 }

@@ -17,8 +17,8 @@
 
 .partition {
     padding: 5px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
     background: rgba(180, 180, 180, 0.15);
     border: 3.7px solid white;
     overflow: auto;
@@ -63,7 +63,7 @@
 
 
 .storage_contents_table_title {
-    width:92px;
+    width:115px;
     text-align:left;
     font-weight:bold;
 }
@@ -119,6 +119,24 @@
     overflow-y: auto;
 }
 
+.waiting_list_doctor_select{
+    display:inline;
+    width:100px;
+}
+
+.storage_today_table_wrap{
+    height:620px;
+    width: 100%;
+    overflow-y:auto;
+}
+
+#depart_select {
+    width: 90px;
+    display: inline;
+}
+
+
+
 @media ( min-width: 1900px ) {
     .storage_item_table {
         height: 500px;
@@ -141,6 +159,13 @@
     .storage_contents_table_title {
         width: 120px;
     }
+    .storage_list_table_wrap {
+        height: 800px;
+    }
+
+    .storage_today_table_wrap {
+        height: 800px;
+    }
 }
 
 
@@ -153,6 +178,7 @@
     html, body {
         min-width: 210mm;
         max-width: 210mm;
+        
         /*max-height: 297mm;
         min-height: 297mm;*/
     }
@@ -192,7 +218,11 @@
                 font-size: 11px;
             }
     .chart_table tbody tr td:nth-child(3){
-        text-align:right;
+        text-align:center;
+    }
+
+    .payment_record tr{
+       vertical-align:middle;
     }
 
     .middle table {
@@ -200,6 +230,7 @@
 
     .page_bill .chart_table_contents_title tr:first-child td {
         vertical-align: middle;
+        text-align:center;
     }
     .chart_table_contents_title tr td{
        
@@ -213,7 +244,7 @@
     }
 
     .page_bill .chart table tbody tr td:nth-child(4) {
-        text-align: right;
+        text-align: center;
     }
 
     .page_bill .chart table tbody tr td:nth-child(5) {
@@ -350,5 +381,7 @@
         width: 100%;
         text-align: justify;
     }
+
+
 }
 

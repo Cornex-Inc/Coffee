@@ -5,6 +5,7 @@ body {
     min-height: 750px;
     max-height: 1080px;
     overflow:hidden;
+    overflow-x:auto;
 }
 
     body:before {
@@ -226,7 +227,7 @@ status_table_title span:hover {
     width: 61.5px;
 }
 .middle table tbody tr td:nth-child(4) {
-    text-align: center;
+   
     width: 46px;
 }
 .middle table tbody tr td:nth-child(5) {

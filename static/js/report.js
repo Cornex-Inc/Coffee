@@ -28,10 +28,49 @@ $(function () {
 
     $('#btnPrint_eng').click(function () {
         set_print_html();
-        $('.page_print_eng').printThis({
-            importCSS: true,
-            loadCSS: "/static/css/report.css",
-        });
+
+        if ($('#date_of_hospitalization').val().trim() == '') {
+            alert('Outbreak Day');
+            return;
+        }
+
+        if ($('#reception_report').val().trim() == '') {
+            alert('No Opinion.');
+            return;
+        }
+
+        if ($('#reception_usage').val().trim() == '') {
+            alert('No Purpose.');
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/doctor/medical_report_save/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+                'selected_patient': $('#selected_patient').val(),
+                'report': $('#reception_report').val(),
+                'usage': $('#reception_usage').val(),
+                'hospitalization': $('#date_of_hospitalization').val(),
+                'publication': $('#publication_date').val(),
+                'selected_report': $('#selected_report').val(),
+                'doctor': $('#doctor_id').val(),
+            },
+            dataType: 'Json',
+            success: function (response) {
+                $('#patient_serial_print_eng').html(response.serial);
+                $('.page_print_eng').printThis({
+                    importCSS: true,
+                    loadCSS: "/static/css/report.css",
+                });
+
+            },
+            error: function (request, status, error) {
+                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+            },
+        })
 
 
     });
@@ -112,7 +151,7 @@ $(function () {
 });
 
 
-function search_report() {
+function search_report(page = null) {
     var page_context = 11;
     $.ajax({
         type: 'POST',
@@ -122,6 +161,7 @@ function search_report() {
             'filter': $('#search_select').val(),
             'input': $('#search_input').val(),
             'page_context': page_context,
+            'page': page,
         },
         dataType: 'Json',
         success: function (response) {
@@ -145,24 +185,24 @@ function search_report() {
             $('#payment_pagnation').html('');
             str = '';
             if (response.has_previous == true) {
-                str += '<li> <a onclick="search_payment(' + (response.page_number - 1) + ')">&laquo;</a></li>';
+                str += '<li style="cursor:pointer;"> <a onclick="search_report(' + (response.page_number - 1) + ')">&laquo;</a></li>';
             } else {
                 str += '<li class="disabled"><span>&laquo;</span></li>';
             }
 
             for (var i = response.page_range_start; i < response.page_range_stop; i++) {
                 if (response.page_number == i) {
-                    str += '<li class="active"><span>' + i + ' <span class="sr-only">(current)</span></span></li>';
+                    str += '<li style="cursor:pointer;" class="active"><span>' + i + ' <span class="sr-only">(current)</span></span></li>';
                 }
                 else if (response.page_number + 5 > i && response.page_number - 5 < i) {
-                    str += '<li> <a onclick="search_payment(' + i + ')">' + i + '</a></li>';
+                    str += '<li> <a onclick="search_report(' + i + ')">' + i + '</a></li>';
                 }
                 else {
                 }
 
             }
             if (response.has_next == true) {
-                str += '<li><a onclick="search_payment(' + (response.page_number + 1) + ')">&raquo;</a></li>';
+                str += '<li style="cursor:pointer;"><a onclick="search_payment(' + (response.page_number + 1) + ')">&raquo;</a></li>';
             } else {
                 str += '<li class="disabled"><span>&raquo;</span></li>';
             }
@@ -225,7 +265,7 @@ function set_print_html() {
     $('#patient_date_of_birth_screen').html($('#patient_date_of_birth').val());
     $('#patient_address_screen').html($('#patient_address').val());
 
-    $('#reception_report_screen').html($('#reception_report').val());
+    $('#reception_report_screen').html($('#reception_report').val().replace(/(?:\r\n|\r|\n)/g, '<br />'));
     $('#reception_usage_screen').html($('#reception_usage').val());
 
     $('#publication_date_screen').html($('#publication_date').val());
@@ -239,11 +279,27 @@ function set_print_html() {
     $('#patient_date_of_birth_print').html($('#patient_date_of_birth').val());
     $('#patient_address_print').html($('#patient_address').val());
 
-    $('#reception_report_print').html($('#reception_report').val());
+    $('#reception_report_print').html($('#reception_report').val().replace(/(?:\r\n|\r|\n)/g, '<br />'));
     $('#reception_usage_print').html($('#reception_usage').val());
 
     $('#publication_date_print').html($('#publication_date').val());
     $('#date_of_hospitalization_print').html($('#date_of_hospitalization').val());
+
+
+    $('#patient_chart_print_eng').html($('#patient_chart').val());
+    $('#patient_name_print_eng').html($('#patient_name').val());
+    $('#patient_ID_print_eng').html($('#patient_ID').val());
+    $('#patient_gender_print_eng').html($('#patient_gender').val());
+    $('#patient_age_print_eng').html($('#patient_age').val());
+    $('#patient_date_of_birth_print_eng').html($('#patient_date_of_birth').val());
+    $('#patient_address_print_eng').html($('#patient_address').val());
+
+    $('#reception_report_print_eng').html($('#reception_report').val().replace(/(?:\r\n|\r|\n)/g, '<br />'));
+    $('#reception_usage_print_eng').html($('#reception_usage').val());
+
+    $('#publication_date_print_eng').html($('#publication_date').val());
+    $('#date_of_hospitalization_print_eng').html($('#date_of_hospitalization').val());
+
 }
 
 
@@ -271,7 +327,7 @@ function patient_search(data) {
             for (var i = 0; i < 5; i++) {
                 if (response.datas[i]) {
                     var str = "<tr style='cursor:pointer; height:30px;' onclick='set_patient_data(" +
-                        parseInt(response.datas[i]['chart']) +
+                        parseInt(response.datas[i]['id']) +
                         ")'><td>" + response.datas[i]['chart'] + "</td>" +
                         "<td>" + response.datas[i]['name_kor'] + ' / ' + response.datas[i]['name_eng'] + "</td>" +
                         "<td>" + response.datas[i]['date_of_birth'] + ' (' + response.datas[i]['gender'] + '/' + response.datas[i]['age'] + ")</td>" +
@@ -302,6 +358,11 @@ function set_patient_data(patient_id) {
         },
         dataType: 'Json',
         success: function (response) {
+            if (response.error) {
+                alert(response.error);
+                return;
+            }
+
             $('#patient_chart').val(response.chart);
             $('#patient_name').val(response.name);
             $('#patient_gender').val(response.gender);

@@ -141,6 +141,10 @@
     width:90px;
 }
 
+.show_patient_selected{
+    padding-left:20px;
+}
+
 @media ( min-height: 965px ) {
     .pharmacy_list_calendar{
         width:100px;
