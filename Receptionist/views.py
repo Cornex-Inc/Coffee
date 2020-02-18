@@ -47,17 +47,17 @@ def index(request):
 def set_new_patient(request):
 
     
-    last = Patient.objects.last()
-    if last == None:
-        chart_no = 1
-    else:
-        chart_no = last.id + 1
-
     #last = Patient.objects.last()
-    #if last is None or last.id <= 17000:
-    #    chart_no =17001
+    #if last == None:
+    #    chart_no = 1
     #else:
     #    chart_no = last.id + 1
+
+    last = Patient.objects.last()
+    if last is None: #or last.id <= 17000:
+        chart_no =1
+    else:
+        chart_no = last.id + 1
 
     context = {'chart':"{:06d}".format(chart_no)}
     return JsonResponse(context)
@@ -205,7 +205,11 @@ def Question_save(request):
     query.medication = request.POST.get('medication')
     query.side_effect_yn = request.POST.get('side_effect_yn')
     query.pregnant_yn = request.POST.get('pregnant_yn')
-    query.visit_motiv = request.POST.get('visit_motiv')
+    query.visit_motiv_item = request.POST.get('visit_motiv_item')
+    query.visit_motiv_friend = request.POST.get('visit_motiv_friend')
+    query.visit_motiv_etc = request.POST.get('visit_motiv_etc')
+
+
     query.save()
 
 
@@ -245,7 +249,9 @@ def Question_get(request):
                 'medication':query.medication,
                 'side_effect_yn':query.side_effect_yn,
                 'pregnant_yn':query.pregnant_yn,
-                'visit_motiv':query.visit_motiv,
+                'visit_motiv_item':query.visit_motiv_item,
+                'visit_motiv_friend':query.visit_motiv_friend,
+                'visit_motiv_etc':query.visit_motiv_etc,
                  
             })
 

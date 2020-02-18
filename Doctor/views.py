@@ -185,8 +185,8 @@ def index(request):
     
 
 
-    if request.user.doctor.depart.name == 'AN':
-        url = 'Doctor/index_AN.html'
+    if request.user.doctor.depart.name == 'PM':
+        url = 'Doctor/index_PM.html'
     else:
         url = 'Doctor/index.html'
 

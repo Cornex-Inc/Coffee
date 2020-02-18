@@ -16,7 +16,7 @@ class PatientForm(forms.ModelForm):
                    'text-align':'right',
                    'id':'patient_chart',
                    'class':'form-control',
-                   'placeholder':'000000',
+                   #'placeholder':'000000',
                    'aria-describedby':"basic-addon1",
                    'autocomplete':'off',
                    }

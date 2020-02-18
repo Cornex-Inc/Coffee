@@ -49,7 +49,7 @@ $(function () {
         if (id == 'diagnosis_select_exam_title') {
             $('#diagnosis_select_exam_contents').show();
         }
-        if (id == 'diagnosis_select_test_title') {
+        else if (id == 'diagnosis_select_test_title') {
             $('#diagnosis_select_test_contents').show();
         }
         else if (id == 'diagnosis_select_precedure_title') {

@@ -259,7 +259,7 @@
     <Content Include="Doctor\static\js\report.js" />
     <Content Include="Doctor\static\js\print.js" />
     <Content Include="Doctor\static\js\report_window.js" />
-    <Content Include="Doctor\templates\Doctor\index_AN.html" />
+    <Content Include="Doctor\templates\Doctor\index_PM.html" />
     <Content Include="Doctor\templates\Doctor\diagnosis.html" />
     <Content Include="Doctor\templates\Doctor\report.html" />
     <Content Include="Doctor\templates\Doctor\waiting.html" />
@@ -286,11 +286,13 @@
     <Content Include="Pharmacy\static\css\pharmacy.css" />
     <Content Include="Radiation\static\css\radiation.css" />
     <Content Include="Radiation\static\js\radiation.js" />
+    <Content Include="Receptionist\static\css\ion.rangeSlider.min.css" />
     <Content Include="Receptionist\static\css\Question.css" />
     <Content Include="Receptionist\static\css\storage_page.css" />
     <Content Include="Receptionist\static\css\bill.css" />
     <Content Include="Receptionist\static\css\reservation.css" />
     <Content Include="Receptionist\static\js\calendar.js" />
+    <Content Include="Receptionist\static\js\ion.rangeSlider.min.js" />
     <Content Include="Receptionist\static\js\Question.js" />
     <Content Include="Receptionist\static\js\reservation.js" />
     <Content Include="Receptionist\static\js\storage_page.js" />

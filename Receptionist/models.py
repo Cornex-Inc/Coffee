@@ -470,7 +470,15 @@ class FIRST_VISIT_SURVEY(models.Model):
         max_length = 18,
         null=True)
 
-    visit_motiv = models.CharField(
+    visit_motiv_item = models.CharField(
+        max_length = 50,
+        null=True)
+
+    visit_motiv_friend = models.CharField(
+        max_length = 18,
+        null=True)
+
+    visit_motiv_etc = models.CharField(
         max_length = 50,
         null=True)
 

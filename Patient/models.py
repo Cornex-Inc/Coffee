@@ -78,7 +78,8 @@ class Patient(models.Model):
             except ObjectDoesNotExist:# 에러 종류
                 pass
 
-        return unpaid
+        #return unpaid
+        return False
     
     def get_chart_no(self):
         return "{:06d}".format(self.id) if self.past_id is None or self.past_id is '' else self.past_id
