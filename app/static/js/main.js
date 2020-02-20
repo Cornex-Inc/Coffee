@@ -1,33 +1,58 @@
 
 $(function () {
+    // F12 ë²„íŠ¼ ë°©ì§€
+    $(document).ready(function () {
+        $(document).bind('keydown', function (e) {
+            if (e.keyCode == 123 /* F12 */) {
+                e.preventDefault();
+                e.returnValue = false;
+            }
+        });
+    });
+
+    // ìš°ì¸¡ í´ë¦­ ë°©ì§€
+    document.onmousedown = disableclick;
+    status = "Right click is not available.";
+
+    function disableclick(event) {
+        if (event.button == 2) {
+            alert(status);
+            return false;
+        }
+    }
+
+
     
+
+
+
 });
 
 
 
 function printClock() {
-    var clock = document.getElementById("clock");            // Ãâ·ÂÇÒ Àå¼Ò ¼±ÅÃ
-    var currentDate = new Date();                                     // ÇöÀç½Ã°£
-    var calendar = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate() // ÇöÀç ³¯Â¥
-    var amPm = 'AM'; // ÃÊ±â°ª AM
+    var clock = document.getElementById("clock");            // ì¶œë ¥í•  ì¥ì†Œ ì„ íƒ
+    var currentDate = new Date();                                     // í˜„ì¬ì‹œê°„
+    var calendar = currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate() // í˜„ì¬ ë‚ ì§œ
+    var amPm = 'AM'; // ì´ˆê¸°ê°’ AM
     var currentHours = addZeros(currentDate.getHours(), 2);
     var currentMinute = addZeros(currentDate.getMinutes(), 2);
     var currentSeconds = addZeros(currentDate.getSeconds(), 2);
 
-    if (currentHours >= 12) { // ½Ã°£ÀÌ 12º¸´Ù Å¬ ¶§ PMÀ¸·Î ¼¼ÆÃ, 12¸¦ »©ÁÜ
+    if (currentHours >= 12) { // ì‹œê°„ì´ 12ë³´ë‹¤ í´ ë•Œ PMìœ¼ë¡œ ì„¸íŒ…, 12ë¥¼ ë¹¼ì¤Œ
         amPm = 'PM';
         currentHours = addZeros(currentHours - 12, 2);
     }
 
-    if (currentSeconds >= 50) {// 50ÃÊ ÀÌ»óÀÏ ¶§ »öÀ» º¯È¯ÇØ ÁØ´Ù.
+    if (currentSeconds >= 50) {// 50ì´ˆ ì´ìƒì¼ ë•Œ ìƒ‰ì„ ë³€í™˜í•´ ì¤€ë‹¤.
         currentSeconds = '<span style="color:#de1951;font-size:20px; height:50px ;">' + currentSeconds + '</span>'
     }
-    clock.innerHTML = currentHours + ":" + currentMinute + ":" + currentSeconds + " <span style='font-size:20px; height:50px; '>" + amPm + "</span>"; //³¯Â¥¸¦ Ãâ·ÂÇØ ÁÜ
+    clock.innerHTML = currentHours + ":" + currentMinute + ":" + currentSeconds + " <span style='font-size:20px; height:50px; '>" + amPm + "</span>"; //ë‚ ì§œë¥¼ ì¶œë ¥í•´ ì¤Œ
 
-    setTimeout("printClock()", 1000);         // 1ÃÊ¸¶´Ù printClock() ÇÔ¼ö È£Ãâ
+    setTimeout("printClock()", 1000);         // 1ì´ˆë§ˆë‹¤ printClock() í•¨ìˆ˜ í˜¸ì¶œ
 }
 
-function addZeros(num, digit) { // ÀÚ¸´¼ö ¸ÂÃçÁÖ±â
+function addZeros(num, digit) { // ìë¦¿ìˆ˜ ë§ì¶°ì£¼ê¸°
     var zero = '';
     num = num.toString();
     if (num.length < digit) {

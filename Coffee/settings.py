@@ -163,6 +163,11 @@ LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'),
 )
 
+PROXY_ALLOWED_PATHS = (
+r'i18n/',
+r'jsi18n/',
+)
+
 
 
 TIME_ZONE = 'UTC'

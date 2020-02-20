@@ -139,7 +139,7 @@
 
 @media ( min-width: 1900px ) {
     .storage_item_table {
-        height: 500px;
+        height: 400px;
         overflow: auto;
         margin-bottom: 20px;
     }
@@ -182,10 +182,13 @@
         min-height: 297mm;*/
     }
     .page_bill {
+        min-height:900px;
         margin: 0 auto;
         margin-top: 2cm;
         text-align: center;
         display: block;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
     }
         /*
     .page_bill .sun_info {
@@ -230,20 +233,20 @@
 
     .page_bill .chart_table_contents_title tr:first-child td {
         vertical-align: middle;
-        text-align:center;
+        text-align:left;
     }
-    .chart_table_contents_title tr td{
-        border: 1px solid black;
+    .chart_table_contents_title tr td {
+        /*border: 1px solid black;*/
         padding: 3px;
     }
     #chart_table_contents_items tr td {
-        border: 1px solid black;
+        /*border: 1px solid black;*/
         padding: 3px;
     }
 
     .page_bill .chart_table_info {
         font-size:16px;
-        font-weight:700px;
+        font-weight:700;
         
     }
 
@@ -268,8 +271,8 @@
     }
 
     .page_bill .chart_table_total {
-        border-top: 40px solid rgba(0,0,0,0);
-        border: 1px solid black;
+        border-top: 1px solid black;
+        /*border: 1px solid black;*/
     }
     .chart_table_total tr td{
         padding:3px;
@@ -305,7 +308,7 @@
 
     .page_bill tbody tr td:first-child {
         margin: 0 auto;
-        text-align: center;
+        text-align: left;
     }
 
     .page_bill tr {

@@ -240,14 +240,14 @@
     <Content Include="app\static\img\index_contents.png" />
     <Content Include="app\static\img\index_main.png" />
     <Content Include="app\static\img\ko.png" />
+    <Content Include="app\static\img\Menu_icon.png" />
     <Content Include="app\static\img\recepts_top.png" />
-    <Content Include="app\static\img\Sun_Hanoi_icon.png" />
     <Content Include="app\static\img\tmp_logo.png" />
     <Content Include="app\static\img\vie.png" />
     <Content Include="app\static\js\event_listener.js" />
     <Content Include="app\static\js\main.js" />
     <Content Include="Doctor\static\css\doctor.css" />
-    <Content Include="Doctor\static\css\doctor_AN.css" />
+    <Content Include="Doctor\static\css\doctor_PM.css" />
     <Content Include="Doctor\static\css\report_window.css" />
     <Content Include="Doctor\static\css\report.css" />
     <Content Include="Doctor\static\css\audit.css" />
@@ -256,6 +256,7 @@
     <Content Include="Doctor\static\img\DX_AN_Rear.png" />
     <Content Include="Doctor\static\js\doctor.js" />
     <Content Include="Doctor\static\js\audit.js" />
+    <Content Include="Doctor\static\js\doctor_PM.js" />
     <Content Include="Doctor\static\js\report.js" />
     <Content Include="Doctor\static\js\print.js" />
     <Content Include="Doctor\static\js\report_window.js" />

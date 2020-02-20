@@ -46,11 +46,11 @@ def index(request):
     reception_form = ReceptionForm()
     diagnosis_form = DiagnosisForm()
 
-
+    reservation_form = ReservationForm()
 
     exam_list = []
     #exam_datas = ExamFee.objects.filter( doctor_id = request.user.doctor.id )
-    exam_datas = ExamFee.objects.filter( doctor_id = request.user.doctor.id , code__icontains='E')
+    exam_datas = ExamFee.objects.filter( doctor_id = request.user.doctor.id )
     if not exam_datas:
         exam_datas = ExamFee.objects.filter( doctor_id__isnull = True , code__icontains='E')
 
@@ -70,6 +70,56 @@ def index(request):
                 'price':format(MR_data.get_price(), ',') + ' VND',
                 'code':MR_data.code,
                 })
+
+    #PM 은 별도로 출력
+    if request.user.doctor.depart.name == 'PM':
+        precedure_data = []
+        precedures = Precedure.objects.filter( code__icontains='PM').order_by('code')
+        for precedure in precedures:
+            precedure_data.append({
+                        'id':precedure.id,
+                        'name':precedure.name,
+                        'name_vie':precedure.name_vie,
+                        'code':precedure.code,
+                        'price':format(precedure.get_price(), ',') + ' VND',
+                    })
+
+        radiography_data = []
+        radiography_s = Precedure.objects.filter( code__icontains='R', precedure_class_id = 10).order_by('id')
+        for radiography in radiography_s:
+            radiography_data.append({
+                        'id':radiography.id,
+                        'name':radiography.name,
+                        'name_vie':radiography.name_vie,
+                        'code':radiography.code,
+                        'price':format(radiography.get_price(), ',') + ' VND',
+                    })
+
+
+        return render(request,
+        'Doctor/index_PM.html',
+            {
+                'patient':patient_form,
+                'history':history_form,
+                'vital':vital_form,
+                'receptionsearch':receptionsearch_form,
+                'reception':reception_form,
+                'diagnosis':diagnosis_form,
+
+                'precedures':precedure_data,
+                'radiographys':radiography_data,
+
+                'exam_list':exam_list,
+
+                'reservation':reservation_form,
+                'today_vital':datetime.date.today().strftime('%b-%d'),
+            }
+        )
+
+
+
+
+
     #"P0218"
     #"P0217"
     front_datas = Precedure.objects.filter( Q(code = 'P0217') | Q(code = 'P0218'))
@@ -185,14 +235,11 @@ def index(request):
     
 
 
-    if request.user.doctor.depart.name == 'PM':
-        url = 'Doctor/index_PM.html'
-    else:
-        url = 'Doctor/index.html'
 
-    reservation_form = ReservationForm()
+
+    
     return render(request,
-        url,
+        'Doctor/index.html',
             {
                 'patient':patient_form,
                 'history':history_form,
@@ -217,9 +264,6 @@ def index(request):
                 'bundle_set':bundle_set,
 
                 'reservation':reservation_form,
-
-                
-
                 'today_vital':datetime.date.today().strftime('%b-%d'),
             }
         )
@@ -356,7 +400,7 @@ def reception_select(request):
             'objective_data':diagnosis.objective_data,
             'plan':diagnosis.plan,
             'diagnosis':diagnosis.diagnosis,
-            
+            'recommendation':diagnosis.recommendation,
             })
     except Diagnosis.DoesNotExist:
         pass
@@ -482,6 +526,8 @@ def diagnosis_save(request):
     diagnosis_result.objective_data = request.POST.get('objective_data')
     diagnosis_result.assessment = request.POST.get('assessment')
     diagnosis_result.plan = request.POST.get('plan')
+    diagnosis_result.recommendation = request.POST.get('recommendation')
+    
 
 
     diagnosis_result.save()
@@ -566,6 +612,7 @@ def diagnosis_save(request):
                 precedure_dict.pop(int(data['id']))
             
             precedure = Precedure.objects.get(code = data['code'])
+            result.amount = data['amount']
             result.precedure_id = precedure.id
             result.save()
 
@@ -580,7 +627,7 @@ def diagnosis_save(request):
             #            )
             #    radi_manage.save()
 
-            total_amount += result.precedure.get_price()
+            total_amount += result.precedure.get_price() * int(result.amount)
 
         elif data['type'] == 'Medicine':
             if data['id']=='':
@@ -714,6 +761,8 @@ def diagnosis_past(request):
                 'assessment':diagnosis.assessment,
                 'plan':diagnosis.plan,
                 'diagnosis':diagnosis.diagnosis,
+                'recommendation':diagnosis.recommendation,
+                
 
                 'doctor':reception.doctor.name_kor,
 
@@ -1099,7 +1148,7 @@ def report_search(request):
         data={
             'report_id':report.id,
             'chart':report.patient.get_chart_no(),
-            'serial':report.serial,
+            'No':report.id,
             'patient_name_eng':report.patient.name_eng,
             'patient_name_kor':report.patient.name_kor,
             'ID':report.patient.getID(),

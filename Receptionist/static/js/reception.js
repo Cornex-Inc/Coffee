@@ -158,7 +158,7 @@ $(function () {
     let pain_slider = $(".js-range-slider").data("ionRangeSlider");
     
 
-    $("#patient_medical_exam_click").click(function () {
+    $("#patient_initial_report_click").click(function () {
         $.ajax({
             type: 'POST',
             url: '/receptionist/Question/get/',
@@ -192,6 +192,14 @@ $(function () {
                 if (response.result == false) {
                     return;
                 }
+                //vital
+                $('#input_vital_height').val(response.vital_height);
+                $('#input_vital_weight').val(response.vital_weight);
+                $('#input_vital_bmi').val(response.vital_bmi);
+                $('#input_vital_bp').val(response.vital_bp);
+                $('#input_vital_bt').val(response.vital_bt);
+
+
                 //2
 
                 var q2_item = response.pain_posi_text.split(',');
@@ -309,6 +317,16 @@ $(function () {
 
     $("#save").click(function () {
         var regex = /^[0-9]*$/;
+        //vital sign
+
+        var vital_height = $('#input_vital_height').val();
+        var vital_weight = $('#input_vital_weight').val();
+        var vital_bmi = $('#input_vital_bmi').val();
+        var vital_bp = $('#input_vital_bp').val();
+        var vital_bt = $('#input_vital_bt').val();
+
+
+
         //2.
         var q2_item = "";
         var q2_date = "";
@@ -350,7 +368,7 @@ $(function () {
         var q5_year = '';
         var q5_name = '';
         if (q5_yn == undefined) {
-            alert('5번 지문이 비어있습니다.');
+            alert(gettext('Question 5 is empty.'));
             return;
         }
         if (q5_yn == 1) {
@@ -382,14 +400,14 @@ $(function () {
         //8.
         var q8_yn = $(':radio[name="medicine_side_effects"]:checked').val();
         if (q8_yn == undefined) {
-            alert('8번 지문이 비어있습니다.');
+            alert(gettext('Question 8 is empty.'));
             return;
         }
 
         //9.
         var q9_yn = $(':radio[name="pregnant_radio"]:checked').val();
         if (q9_yn == undefined) {
-            alert('9번 지문이 비어있습니다.');
+            alert(gettext('Question 9 is empty.'));
             return;
         }
 
@@ -407,6 +425,13 @@ $(function () {
             data: {
                 'csrfmiddlewaretoken': $('#csrf').val(),
                 'patient_id': $('#patient_id').val(),
+
+
+                'vital_height': vital_height,
+                'vital_weight': vital_weight,
+                'vital_bmi': vital_bmi,
+                'vital_bp': vital_bp,
+                'vital_bt': vital_bt,
                 'pain_posi_text': q2_item,
                 'sick_date': q2_date,
                 'cure_yn': q3_yn,
@@ -444,6 +469,14 @@ $(function () {
             },
         })
     });
+
+    //vital sign
+    $("#input_vital_bp, #input_vital_temp, #input_vital_rr, #input_vital_pr").keyup(function () {
+        var str = $(this).val();
+        $(this).val(str.replace(/[^0-9./]/g, ""));
+    });
+
+
 
     //3
     $("#physiotherapy_count").prop('disabled', true);
@@ -571,11 +604,11 @@ function get_doctor(part, depart = null) {
 function new_patient_option(on_off) {
     if (on_off) {
         $('#patient_tax_invoice_click').attr('disabled', false);
-        $('#patient_medical_exam_click').attr('disabled', false);
+        $('#patient_initial_report_click').attr('disabled', false);
         $('#need_medical_report').attr('disabled', false);
     } else {
         $('#patient_tax_invoice_click').attr('disabled', true);
-        $('#patient_medical_exam_click').attr('disabled', true);
+        $('#patient_initial_report_click').attr('disabled', true);
         $('#need_medical_report').attr('disabled', true);
         $('#need_medical_report').prop('checked', false);
     }
@@ -632,6 +665,7 @@ function earse_inputs() {
 
 function set_cancel() {
     earse_inputs();
+    new_patient_option(false);
 }
 
 function set_new_patient() {
@@ -664,7 +698,7 @@ function patient_check_required() {
 
 
     if (!$('input[name=gender]').is(':checked')) {
-        alert("gender (은)는 필수 입력입니다.");
+        alert(gettext("'Gender' is necessary."));
         return false;
     }
 
@@ -675,7 +709,7 @@ function patient_check_required() {
             if (!jQuery.trim($t.val())) {
                 t = $t.attr("name");
                 $t.focus();
-                alert("'" + t + "'" + "(은)는 필수 입력입니다.");
+                alert(gettext("'" + t + "'" + "is necessary."));
                 result = false;
                 return false;
             }
@@ -728,12 +762,35 @@ function save_patient() {
         dataType: 'Json',
         success: function (response) {
             if (response.result == true) {
-                alert('저장에 성공 했습니다..');
+                alert(gettext('Saved.'));
                 earse_inputs();
                 set_new_patient(false);
+
+
+                //검색 리스트에 띄우기
+                $('#Patient_Search > tbody ').empty();
+                var str = "<tr style='cursor:pointer;' onclick='set_patient_data(" +
+                    parseInt(response.id) +
+                    ")'><td>" + 1 + "</td>";
+
+                str += "<td>";
+
+
+                str += response.chart + "</td>" +
+                    "<td>" + response.name_kor + ' / ' + response.name_eng + "</td>" +
+                    "<td>" + response.date_of_birth + ' (' + response.gender + '/' + response.age + ")</td>" +
+                    "<td>" + response.phonenumber + "</td>" +
+                    "<td>" + response.address + "</td></tr>";
+
+                $('#Patient_Search').append(str);
+
+
             } else {
-                alert('저장에 실패 했습니다.');
+                alert(gettext('Failed.'));
             }
+
+
+
 
 
         },
@@ -759,7 +816,7 @@ function reception_check_required() {
             if (!jQuery.trim($t.val())) {
                 t = $t.attr("name");
                 $t.focus();
-                alert("'" + t + "'" + "(은)는 필수 입력입니다.");
+                alert(gettext("'" + t + "'" + "is necessary."));
                 result = false;
                 return false;
             }
@@ -825,12 +882,32 @@ function save_recept() {
         dataType: 'Json',
         success: function (response) {
             if (response.result == true) {
-                alert('접수 되었습니다.');
+                alert(gettext('접수 되었습니다.'));
                 reception_search(true);
                 earse_inputs();
                 set_new_patient(false);
+
+
+                //검색 리스트에 띄우기
+                $('#Patient_Search > tbody ').empty();
+                var str = "<tr style='cursor:pointer;' onclick='set_patient_data(" +
+                    parseInt(response.id) +
+                    ")'><td>" + 1 + "</td>";
+
+                str += "<td>";
+
+
+                str += response.chart + "</td>" +
+                    "<td>" + response.name_kor + ' / ' + response.name_eng + "</td>" +
+                    "<td>" + response.date_of_birth + ' (' + response.gender + '/' + response.age + ")</td>" +
+                    "<td>" + response.phonenumber + "</td>" +
+                    "<td>" + response.address + "</td></tr>";
+
+                $('#Patient_Search').append(str);
+
+
             } else {
-                alert('접수에 실패 했습니다.');
+                alert(gettext('접수에 실패 했습니다.'));
             }
 
 
@@ -882,6 +959,7 @@ function set_patient_data(patient_id) {
 
 function patient_search(data) {
     //window.location.href = 'reception/' + data;
+
     var category = $('#patient_search_select option:selected').val();
     var string = $('#patient_search_input').val();
 

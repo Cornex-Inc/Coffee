@@ -66,7 +66,7 @@ $(function () {
 function laboratory_control_save(Done = false) {
     var selected_test_manage = $('#selected_test_manage').val();
     if (selected_test_manage.trim() == '') {
-        alert('검사 먼저 선택');
+        alert(gettext('Select test first.'));
         return;
     }
 
@@ -89,7 +89,7 @@ function laboratory_control_save(Done = false) {
         },
         dataType: 'Json',
         success: function (response) {
-            alert("저장 되었습니다.");
+            alert(gettext("Saved."));
             $('#laboratory_control input ').empty();
             waiting_list();
         },

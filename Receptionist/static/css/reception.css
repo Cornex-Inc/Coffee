@@ -13,7 +13,7 @@
     width: 100%;
     display: grid;
     grid-template-columns: 50%;
-    grid-template-rows: 55%;
+    grid-template-rows: 350px;
 }
 
 .partition {
@@ -116,7 +116,7 @@
 }
 
 .patient_table{
-    height:370px;
+    height:300px;
     margin:0px;
 }
 
@@ -265,8 +265,28 @@
     width: 460px;
 }
 
+.input_report_vital{
+    display:inline;
+    width:120px;
+}
+
+.table_vital tr td:nth-child(2n-1) {
+    width: 60px;
+    text-align: right;
+}
+
 
 @media ( min-width: 1900px ) {
+    .reception_grid {
+        grid-template-columns: 50%;
+        grid-template-rows: 350px;
+    }
+
+    .patient_table {
+        height: 300px;
+        margin: 0px;
+    }
+
     .input-group {
         width: 430px;
     }
@@ -283,7 +303,7 @@
     }
 
     .patient_search_table_wrap {
-        height: 290px;
+        height: 400px;
     }
 
     .reception_wait_table_wrap {

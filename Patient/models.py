@@ -139,24 +139,35 @@ class Vital(models.Model):
 
     weight = models.CharField(
         max_length = 8,
+        null= True,
         )
 
     height = models.CharField(
         max_length = 8,
+        null= True,
         )
 
     blood_pressure = models.CharField(
         max_length = 8,
+        null= True,
         )
     
     blood_temperature = models.CharField(
         max_length = 8,
+        null= True,
         )
     
     breath = models.CharField(
         max_length = 8,
+        null= True,
         )
 
     pulse_rate = models.CharField(
         max_length = 8,
+        null= True,
+        )
+
+    BMI = models.CharField(
+        max_length = 8,
+        null= True,
         )

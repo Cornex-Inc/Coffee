@@ -246,6 +246,10 @@ status_table_title span:hover {
         height: 720px;
     }
 
+    .search_input {
+        width:170px;
+    }
+
     .input_part_contorl > div > span {
         width: 120px;
     }

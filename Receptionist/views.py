@@ -122,7 +122,18 @@ def save_patient(request):
 
     result = True
 
-    context = {'result':result}
+    patient = Patient.objects.get(pk = patient.id)
+    context = {'result':result,
+                'id':patient.id,
+                'chart':patient.get_chart_no(),
+                'name_kor':patient.name_kor,
+                'name_eng':patient.name_eng,
+                'gender':patient.get_gender_simple(),
+                'date_of_birth':patient.date_of_birth,
+                'phonenumber':patient.phone,
+                'age' : patient.get_age(),
+                'address':patient.address,
+               }
     return JsonResponse(context)
 
 
@@ -209,7 +220,20 @@ def Question_save(request):
     query.visit_motiv_friend = request.POST.get('visit_motiv_friend')
     query.visit_motiv_etc = request.POST.get('visit_motiv_etc')
 
+    if query.PT_vital is None:
+        vital = Vital()
+        vital.patient_id = patient_id
+    else:
+        vital = Vital.objects.get(id = query.PT_vital)
 
+    vital.height = request.POST.get('vital_height')
+    vital.weight = request.POST.get('vital_weight')
+    vital.BMI = request.POST.get('vital_bmi')
+    vital.blood_pressure = request.POST.get('vital_bp')
+    vital.blood_temperature = request.POST.get('vital_bt')
+    vital.save()
+
+    query.PT_vital = vital.id
     query.save()
 
 
@@ -224,6 +248,26 @@ def Question_get(request):
     context = {}
     try:
         query = FIRST_VISIT_SURVEY.objects.get(PT_ID = patient_id)
+        if query.PT_vital is None or query.PT_vital is '':
+            context.update({
+                'vital_height':'',
+                'vital_weight':'',
+                'vital_bmi':'',
+                'vital_bp':'',
+                'vital_bt':'',
+                })
+        else:
+            vital = Vital.objects.get(id = query.PT_vital)
+            context.update({
+                'vital_height':vital.height,
+                'vital_weight':vital.weight,
+                'vital_bmi':vital.BMI,
+                'vital_bp':vital.blood_pressure,
+                'vital_bt':vital.blood_temperature,
+                })
+
+
+
         context.update({
             
                 'pain_posi_text':query.pain_posi_text,
@@ -341,7 +385,20 @@ def save_reception(request):
 
     result = True
 
-    context = {'result':result}
+
+
+    patient = Patient.objects.get(pk = patient.id)
+    context = {'result':result,
+                'id':patient.id,
+                'chart':patient.get_chart_no(),
+                'name_kor':patient.name_kor,
+                'name_eng':patient.name_eng,
+                'gender':patient.get_gender_simple(),
+                'date_of_birth':patient.date_of_birth,
+                'phonenumber':patient.phone,
+                'age' : patient.get_age(),
+                'address':patient.address,
+                }
     return JsonResponse(context)
 
 def patient_search(request):
@@ -728,8 +785,11 @@ def get_today_selected(request):
         precedure.update({
             'code':data.precedure.code,
             'name':data.precedure.name,
+            'amount': data.amount,
             'price':data.precedure.get_price(reception.recorded_date),
             })
+
+
         precedures.append(precedure)
 
     medicines = []
@@ -761,6 +821,8 @@ def get_today_selected(request):
         'gender':reception.patient.gender,
         'phone':reception.patient.phone,
         'address':reception.patient.address,
+
+        'recommendation':diagnosis.recommendation,
 
         'exams':exams,
         'tests':tests,
@@ -851,6 +913,7 @@ def waiting_selected(request):
         precedure.update({
             'code':data.precedure.code,
             'name':data.precedure.name,
+            'amount':data.amount,
             'price':data.precedure.get_price(reception.recorded_date),
             })
         precedures.append(precedure)

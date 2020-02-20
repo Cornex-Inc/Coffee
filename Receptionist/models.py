@@ -144,6 +144,11 @@ class Diagnosis(models.Model):
         auto_now_add=True,
         )
 
+    recommendation = models.CharField(
+        max_length = 2048,
+        null = True,
+        )
+
 
 
 
@@ -343,6 +348,8 @@ class Report(models.Model):
         null=True,
         )
 
+    
+
     doctor = models.ForeignKey(
         to = Doctor,
         on_delete=models.DO_NOTHING,
@@ -375,6 +382,10 @@ class Report(models.Model):
 
 class FIRST_VISIT_SURVEY(models.Model):
     PT_ID = models.CharField(
+        max_length = 18,
+        null=True)
+
+    PT_vital = models.CharField(
         max_length = 18,
         null=True)
 

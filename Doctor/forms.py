@@ -153,9 +153,8 @@ class DoctorForm(forms.ModelForm):
 
 class ReportSearchForm(forms.Form):
     SEARCH_SEL = (
-        ('all',_('All')),
+        ('Name',_('Name')),
         ('doctor',_('Doctor')),
-        ('patient',_('Patient')),
         )
 
     date = forms.CharField(

@@ -9,8 +9,10 @@
     <div class="doctor_patient_info partition">
         <div class="status_table_title">
             <span class="btn btn-success" style="">{{ _('Patient Information') }}</span>
-            <div class="need_medical_report" style="background:none; display:none;" id="need_medical_report">{{_('Medical Report')}}</div>
-            <input type="button" class="btn btn-default" id="survey" value="Survey" style="float:right; "/>
+            
+            <!--<div class="need_medical_report" style="background:none; display:none;" id="need_medical_report">{{_('Medical Report')}}</div>-->
+            <input type="button" class="btn btn-default" id="initial_report" value="{{ _('Initial Report') }}" style="float:right; "/>
+            <input type="button" value="{{_('Medical Report') }}" class="btn btn-warning" id="need_medical_report" style="float:right; display:none;"/>
         </div>
         <table class="table" id="reception_table">
             <tr>
@@ -173,6 +175,10 @@
             <span class="input-group-addon diagnosis_history_taking_title" id="basic-addon1">{{ _('Diagnosis') }}</span>
             <textarea id="diagnosis" class="form-control diagnosis_history_taking_contents" style="height:30px;" aria-describedby="basic-addon1"></textarea>
         </div>
+        <div class="input-group">
+            <span class="input-group-addon diagnosis_history_taking_title" id="basic-addon1" style="font-weight:700; color:#449d44; font-size:12px;">{{ _('Recommend') }}</span>
+            <textarea id="recommendation" class="form-control diagnosis_history_taking_contents" style="height:30px;" aria-describedby="basic-addon1"></textarea>
+        </div>
     </div>
     <div class="order_list partition">
         <div class="status_table_title">
@@ -186,11 +192,8 @@
                 <thead>
                     <tr>
                         <th style='text-align:center;'>{{ _('Code') }}</th>
-                        <th style="text-align:center;">{{ _('Name') }}</th>
-                        <th style="width:90px; text-align:center;">{{ _('Unit') }}</th>
-                        <th style="width:80px; text-align:center;">{{ _('Amount') }}</th>
-                        <th style="width:80px; text-align:center;">{{ _('Days') }}</th>
-                        <th style="text-align:center;">{{ _('Use') }}</th>
+                        <th style="text-align:left;">{{ _('Name') }}</th>
+                        <th style="text-align:center; width:80px">{{ _('Time(s)') }}</th><!--Amount-->
                         <th></th>
                     </tr>
                 </thead>
@@ -242,11 +245,11 @@
             </div>
         </div>
         <div style="display:inline-block; margin-bottom:10px;" class="diagnosis_select_title">
-            <input type="button" class="btn btn-primary" id="diagnosis_select_exam_title" value="Exam Fee" style="background:rgb(40,95,145); border-color:rgb(40,95,145)">
-            <input type="button" class="btn btn-info" id="diagnosis_select_test_title" value="Lab">
-            <input type="button" class="btn btn-success" id="diagnosis_select_precedure_title" value="Precedure">
-            <input type="button" class="btn btn-primary" id="diagnosis_select_medicine_title" value="Medicine">
-            <input type="button" class="btn btn-warning" id="diagnosis_select_bundle_title" value="Bundle Px" />
+            <input type="button" class="btn btn-primary" id="diagnosis_select_exam_title" value="Exam Fee" style="background:rgb(40,95,145); border-color:rgb(40,95,145)"/>
+            <!--<input type="button" class="btn btn-info" id="diagnosis_select_test_title" value="Lab"/>-->
+            <input type="button" class="btn btn-success" id="diagnosis_select_precedure_title" value="Precedure"/>
+            <input type="button" class="btn btn-warning" id="diagnosis_select_pm_radio_title" value="Radiography"/>
+            <!--<input type="button" class="btn btn-warning" id="diagnosis_select_bundle_title" value="Radiography" />-->
         </div>
         <!--diagnosis_select_title-->
 
@@ -276,7 +279,8 @@
 
             </table>
         </div>
-        <div class="diagnosis_select_contents" id="diagnosis_select_test_contents">
+
+        <div class="diagnosis_select_contents" id="diagnosis_select_precedure_contents">
             <table class="table order_list_table">
                 <thead>
                     <tr>
@@ -286,201 +290,350 @@
                         <th style="width:70px;text-align:center; ">{{ _('Price') }}</th>
                     </tr>
                 </thead>
-
-                {% for class, contents in tests.items %}
-                <tbody>
-                    <tr class="contents_class" style="cursor:pointer;">
-                        <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);" for="order_list_class_{{class}}">
-                            <label>+</label>
-                            {{ class }}
-                            <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_{{class}}" />
-
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody class="contents_items" style="display:none;">
-                    {% for test in contents %}
-                    <tr style="cursor:pointer;">
-                        <td></td>
-                        <td>{{test.code}}</td>
-                        <td>{{test.name}}</td>
-                        <td style="text-align:right;">{{test.price}}</td>
-                        <td style="display:none;">{{test.name.lower}}</td>
-                    </tr>
-
-                    {% endfor %}
-                </tbody>
-                {% endfor %}
-
-            </table>
-        </div>
-        <div class="diagnosis_select_contents" id="diagnosis_select_precedure_contents">
-            <table class="table order_list_table">
-                <thead>
-                    <tr>
-                        <th style="width:15px; font-weight:bold;"></th>
-                        <th style="width:37px;">{{ _('Code') }}</th>
-                        <th style="width:90px">{{ _('Name') }}</th>
-                        <th style="width:70px; text-align:center;">{{ _('Price') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="contents_class" style="cursor:pointer;">
-                        <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);">
-                            <label for="order_list_class_{{class}}">+</label>
-                            <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_p_short" />
-                            Shortcut
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody class="contents_items" style="display:none;">
-                    {% for precedure in precedure_short %}
-                    <tr style="cursor:pointer;">
-                        <td></td>
-                        <td>{{precedure.code}}</td>
-                        <td>{{precedure.name}}</td>
-                        <td style="text-align:right;">{{precedure.price}}</td>
-                        <td style="display:none;">{{precedure.name.lower}}</td>
-                    </tr>
-
-                    {% endfor %}
-                </tbody>
-
-                {% for class, contents in precedures.items %}
-                <tbody>
-                    <tr class="contents_class" style="cursor:pointer;">
-                        <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);">
-                            <label for="order_list_class_{{class}}">+</label>
-                            <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_{{class}}" />
-                            {{ class }}
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody class="contents_items" style="display:none;">
-                    {% for precedure in contents %}
-                    <tr style="cursor:pointer;">
-                        <td></td>
-                        <td>{{precedure.code}}</td>
-                        <td>{{precedure.name}}</td>
-                        <td style="text-align:right;">{{precedure.price}}</td>
-                        <td style="display:none;">{{precedure.name.lower}}</td>
-                    </tr>
-
-                    {% endfor %}
-                </tbody>
-                {% endfor %}
-            </table>
-        </div>
-        <div class="diagnosis_select_contents" id="diagnosis_select_medicine_contents">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th style="width:15px; font-weight:bold;"></th>
-                        <th style="width:37px;">{{ _('Code') }}</th>
-                        <th style="width:90px;">{{ _('Name') }}</th>
-                        <th style="width:70px; text-align:center;">{{ _('Price') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="contents_class" style="cursor:pointer;">
-                        <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);">
-                            <label for="order_list_class_{{class}}">+</label>
-                            <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_m_short" />
-                            Shortcut
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody class="contents_items" style="display:none;">
-                    {% for medicine in medicine_short %}
-                    <tr style="cursor:pointer;">
-                        <td></td>
-                        <td>{{medicine.code}}</td>
-                        <td>{{medicine.name}}</td>
-                        <td style="text-align:right;">{{medicine.price}}</td>
-                        <td style="display:none;">{{medicine.name.lower}}</td>
-                        <td style="display:none;">{{medicine.unit}}</td>
-                    </tr>
-
-                    {% endfor %}
-                </tbody>
-                <!--{% for class, contents in medicines.items %}
-                    <tbody>
-                        <tr class="contents_class" style="cursor:pointer;">
-                            <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);">
-                                <label for="order_list_class_{{class}}" >+</label>
-                                <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_{{class}}"/>
-                                {{ class }}
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tbody class="contents_items" id="contents_items_{{class}}" style="display:none;">
-                        {% for medicine in contents %}
-                        <tr style="cursor:pointer;">
-                            <td></td>
-                            <td>{{medicine.code}}</td>
-                            <td>{{medicine.name}}</td>
-                            <td style="text-align:right;">{{medicine.price}}</td>
-                            <td style="display:none;">{{medicine.unit}}</td>
-                        </tr>
-
-                        {% endfor %}
-                        </tbody>
-                    {% endfor %}-->
                 <tbody class="contents_items">
-                    {% for medicine in medicines%}
+                    {% for precedure in precedures %}
                     <tr style="cursor:pointer;">
-                        <td></td>
-                        <td>{{medicine.code}}</td>
-                        <td>{{medicine.name}}</td>
-                        <td style="text-align:right;">{{medicine.price}}</td>
-                        <td style="display:none;">{{medicine.name.lower}}</td>
-                        <td style="display:none;">{{medicine.unit}}</td>
+                        <td><input type="hidden" id="precedure_id" value="{{precedure.id}}" /></td>
+                        <td>{{precedure.code}}</td>
+                        <td>{{precedure.name}}</td>
+                        <td style="text-align:right;">{{precedure.price}}</td>
+                        <td style="display:none;">{{precedure.name.lower}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div id="diagnosis_select_bundle_contents" class="diagnosis_select_contents">
-            <table class="table order_list_table">
-                <thead>
-                    <tr>
-                        <th style="width:15px; font-weight:bold;"></th>
-                        <th style="width:37px;">{{ _('Code') }}</th>
-                        <th style="width:90px">{{ _('Name') }}</th>
-                        <th style="width:70px; text-align:center;">{{ _('Price') }}</th>
-                    </tr>
-                </thead>
 
-                {% for class, contents in bundle_set.items %}
-                <tbody>
-                    <tr class="contents_class" style="cursor:pointer;">
-                        <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);">
-                            <label for="order_list_class_{{class}}">+</label>
-                            <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_{{class}}" />
-                            {{ class }}
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody class="contents_items" style="display:none;">
-                    {% for bundle in contents %}
-                    <tr style="cursor:pointer;">
-                        <td></td>
-                        <td>{{bundle.code}}</td>
-                        <td>{{bundle.name}}</td>
-                        <td style="text-align:right;"></td>
-                        <td style="display:none;">{{bundle.name.lower}}</td>
-                        <td style="display:none;">{{bundle.id}}</td>
-                    </tr>
+        <div class="diagnosis_select_contents" id="diagnosis_select_pm_radio_contents">
+                <table class="table" >    
+                    <thead>
+                        <tr>
+                            <th style="width:15px; font-weight:bold;"></th>
+                            <th style="width:37px;">{{ _('Code') }}</th>
+                            <th style="width:90px;">{{ _('Name') }}</th>
+                            <th style="width:70px; text-align:center;">{{ _('Price') }}</th>
+                        </tr>
+                    </thead>
+                        <tbody class="contents_items" >
+                            {% for radiography in radiographys %}
+                            <tr style="cursor:pointer;">
+                                <td><input type="hidden" id="radiography_id" value="{{radiography.id}}" /></td>
+                                <td>{{radiography.code}}</td>
+                                <td>{{radiography.name}}</td>
+                                <td style="text-align:right;">{{radiography.price}}</td>
+                                <td style="display:none;">{{radiography.name.lower}}</td>
+                            </tr>
 
-                    {% endfor %}
-                </tbody>
-                {% endfor %}
-            </table>
-
-        </div>
+                            {% endfor %}
+                        </tbody>
+                </table>
+            </div>
+        
     </div>
 
 </div>
+
+
+
+<div id="medical_exam_EventModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4>{{ _('Initial Report') }}</h4>
+                <div id="modalBody" class="modal-body" >
+                    <div class="medical_exam_pm">
+                        <div>
+                            <div>
+                                <p>Vital Sign</p>
+                                <table class="table table_vital">
+                                    <tr>
+                                        <td>
+                                            {{ _('Height') }} : 
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control input_report_vital" id="input_vital_height" /> cm
+                                        </td>
+                                        <td>
+                                            {{ _('Weight') }} : 
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control input_report_vital" id="input_vital_weight" /> kg
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            {{ _('BMI') }} : 
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control input_report_vital" id="input_vital_bmi" /> kg/m2
+                                        </td>
+                                        <td>
+                                            {{ _('BP') }} : 
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control input_report_vital" id="input_vital_bp" /> mmHg
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            {{ _('BT') }} : 
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control input_report_vital" id="input_vital_bt" /> ˚C
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p class="question_item">{{ _('2. 현재 불편한 부위와 증상에 표시하여 주세요.') }}</p>
+                            <table class="table">
+                                <tr>
+                                    <td rowspan="5">{{ _('부위)') }}</td>
+                                    <td><input type="checkbox" id="pain_location_text_1" class="pain_location_text" value="1"/><label for="pain_location_text_1">{{ _('목') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_2" class="pain_location_text" value="2"/><label for="pain_location_text_2">{{ _('등') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_3" class="pain_location_text" value="3"/><label for="pain_location_text_3">{{ _('어깨') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_4" class="pain_location_text" value="4"/><label for="pain_location_text_4">{{ _('허리') }}</label></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="pain_location_text_5" class="pain_location_text" value="5"/><label for="pain_location_text_5">{{ _('엉덩이') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_6" class="pain_location_text" value="6"/><label for="pain_location_text_6">{{ _('팔') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_7" class="pain_location_text" value="7"/><label for="pain_location_text_7">{{ _('팔꿈치') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_8" class="pain_location_text" value="8"/><label for="pain_location_text_8">{{ _('손등') }}</label></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="pain_location_text_9" class="pain_location_text"  value="9"/><label for="pain_location_text_9">{{ _('손가락') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_10" class="pain_location_text" value="10"/><label for="pain_location_text_10">{{ _('손바닥') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_11" class="pain_location_text" value="11"/><label for="pain_location_text_11">{{ _('손목') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_12" class="pain_location_text" value="12"/><label for="pain_location_text_12">{{ _('허벅지') }}</label></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="pain_location_text_13" class="pain_location_text" value="13"/><label for="pain_location_text_13">{{ _('무릎') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_14" class="pain_location_text" value="14"/><label for="pain_location_text_14">{{ _('종아리') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_15" class="pain_location_text" value="15"/><label for="pain_location_text_15">{{ _('정강이') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_16" class="pain_location_text" value="16"/><label for="pain_location_text_16">{{ _('발등') }}</label></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="pain_location_text_17" class="pain_location_text" value="17"/><label for="pain_location_text_17">{{ _('발가락') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_18" class="pain_location_text" value="18"/><label for="pain_location_text_18">{{ _('발바닥') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_19" class="pain_location_text" value="19"/><label for="pain_location_text_19">{{ _('발목') }}</label></td>
+                                    <td></td>                                                                        
+                                </tr>
+                            </table>
+                            <table class="table">
+                                <tr>
+                                    <td>2)방향</td>
+                                    <td><input type="checkbox" id="pain_location_text_20" class="pain_location_text" value="20"/><label for="pain_location_text_20">{{ _('왼쪽') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_21" class="pain_location_text" value="21"/><label for="pain_location_text_21">{{ _('가운데') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_22" class="pain_location_text" value="22"/><label for="pain_location_text_22">{{ _('오른쪽') }}</label></td>
+                                </tr>
+                            </table>
+                            <table class="table">
+                                <tr>
+                                    <td rowspan="2">3)증상</td>
+                                    <td><input type="checkbox" id="pain_location_text_23" class="pain_location_text" value="23"/><label for="pain_location_text_23">{{ _('당긴다') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_24" class="pain_location_text" value="24"/><label for="pain_location_text_24">{{ _('저리다') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_25" class="pain_location_text" value="25"/><label for="pain_location_text_25">{{ _('쑤신다') }}</label></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><input type="checkbox" id="pain_location_text_26" class="pain_location_text" value="26"/><label for="pain_location_text_26">{{ _('감각이 둔하다') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_27" class="pain_location_text" value="27" /><label for="pain_location_text_27">{{ _('마비가 된다') }}</label></td>
+                                </tr>
+                                <tr>
+                                    <td>{{ _('발병시기') }}</td>
+                                    <td colspan="3"><input class="form-control" type="text" id="occurred_date"></td>
+                                </tr>
+                            </table>
+
+                        </div>
+                        <br /><br />
+                        <div>
+                            <p class="question_item">{{ _('3. 최근 6개월 내 현재 증상으로 치료 받은 내역을 체크해주세요 (한의원 포함) ') }}</p>
+                            <input type="checkbox" id="treatment_history_yn" /><label for="treatment_history_yn">{{ _('없음') }}</label>
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" id="physiotherapy_yn" /><label for="physiotherapy_yn">{{ _('물리치료') }}</label>
+                                        </td>
+                                    <td>
+                                        <input type="text" id="physiotherapy_count" class="form-control " />
+                                    </td>
+                                    <td class="hoi">{{ _('회') }}</td>
+                                    <td>
+                                        <input type="checkbox" id="injection_treatment_yn" /><label for="injection_treatment_yn">{{ _('주사치료') }}</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="injection_treatment_count" class="form-control" />
+                                    </td>
+                                    <td class="hoi">
+                                        {{ _('회') }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" id="taking_medicine_yn" /><label for="taking_medicine_yn">{{ _('약복용') }}</label>
+                                    </td>
+                                    <td class="hoi">
+                                        <input type="text" id="taking_medicine_count" class="form-control"/>
+                                    </td>
+                                    <td class="hoi">{{ _('회') }}</td>
+                                    <td>
+                                        <input type="checkbox" id="acupuncture_yn" /><label for="acupuncture_yn">{{ _('침치료') }}</label>
+                                    </td>
+                                    <td><input type="text" id="acupuncture_count" class="form-control"/></td>
+                                    <td>{{ _('회') }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <br /><br />
+                        <div>
+                            <p class="question_item">{{ _('4. 통증 정도가 어느정도인지 표시해주세요.') }}</p>
+                             <input type="text" class="js-range-slider" id="pain_slider" name="my_range" value="" />
+                            <ul class="ul_pain_slider_img" >
+                                <li style="margin-left:-5px;">😄</li>
+                                <li>😃</li>
+                                <li>😐</li>
+                                <li>😟</li>
+                                <li>😩</li>
+                                <li style="width:1px;">😫</li>
+                            </ul>
+
+                        </div>
+                        <br /><br />
+                        <div>
+                            <p class="question_item">{{ _('5. 한번이라도 수술 받으신 적이 있나요 ?') }}</p>
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        <input type="radio" id="operation_yes" name="operation_yn" value="1"/><label for="operation_yes">{{ _('예') }}</label>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="operation_year" class="form-control" />{{ _('년도') }}
+                                        </td>
+                                    <td>
+                                        {{ _('수술명') }}<input type="text" id="operation_name" class="form-control" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3"><input type="radio" id="operation_no" name="operation_yn" value="0"/><label for="operation_no">{{ _('아니오') }}</label></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <br /><br />
+                        <div>
+                            <p class="question_item">{{ _('6. 위 증상과 관련된 어떤 검사를 하셨는지요?') }}</p>
+                            <table class="table">
+                                <tr>
+                                    <td><input type="checkbox" id="test_kinds_1" class="test_kinds" value="1"/><label for="test_kinds_1">{{ _('MRI') }}</label></td>
+                                    <td><input type="checkbox" id="test_kinds_2" class="test_kinds" value="2"/><label for="test_kinds_2">{{ _('CT') }}</label></td>
+                                    <td><input type="checkbox" id="test_kinds_3" class="test_kinds" value="3"/><label for="test_kinds_3">{{ _('단순방사선촬영') }}</label></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="test_kinds_4" class="test_kinds" value="4"/><label for="test_kinds_4">{{ _('근전도검사') }}</label></td>
+                                    <td><input type="checkbox" id="test_kinds_5" class="test_kinds" value="5"/><label for="test_kinds_5">{{ _('척추조영술') }}</label></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <label for="test_kinds_etc">{{ _('기타') }}</label>
+                                        <input type="text" id="test_etc" class="form-control"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3"><label>{{ _('외부에서 가져온 CD나 필름이 있나요 ?') }}</label></td>
+                                </tr>
+                                <tr>
+                                    
+                                    <td><input type="checkbox" id="cd_film_yn_1" class="cd_film_yn" value="1"/><label for="cd_film_yn_1">{{ _('필름') }}</label></td>
+                                    <td><input type="checkbox" id="cd_film_yn_2" class="cd_film_yn" value="2"/><label for="cd_film_yn_2">{{ _('CD') }}</label></td>
+                                    <td><input type="checkbox" id="cd_film_yn_3" class="cd_film_yn" value="3"/><label for="cd_film_yn_3">{{ _('없음') }}</label></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <br /><br />
+                        <div>
+                            <p class="question_item">{{ _('7. 현재 치료중인 질환과 복용약이 있으신가요? (아스피린, 쿠마딘, 와파린 등)') }}</p>
+                            <table class="table">
+                                <tr>
+                                    <td><input type="checkbox" id="disease_history_kinds_1" class="disease_history_kinds" value="1"/><label for="disease_history_kinds_1">{{ _('고혈압') }}</label></td>
+                                    <td><input type="checkbox" id="disease_history_kinds_2" class="disease_history_kinds" value="2"/><label for="disease_history_kinds_2">{{ _('당뇨') }}</label></td>
+                                    <td><input type="checkbox" id="disease_history_kinds_3" class="disease_history_kinds" value="3"/><label for="disease_history_kinds_3">{{ _('간질환') }}</label></td>
+                                    <td><input type="checkbox" id="disease_history_kinds_4" class="disease_history_kinds" value="4"/><label for="disease_history_kinds_4">{{ _('뇌질환(중풍)') }}</label></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="disease_history_kinds_5" class="disease_history_kinds" value="5"/><label for="disease_history_kinds_5">{{ _('폐결핵') }}</label></td>
+                                    <td><input type="checkbox" id="disease_history_kinds_6" class="disease_history_kinds" value="6"/><label for="disease_history_kinds_6">{{ _('심장질환') }}</label></td>
+                                    <td><input type="checkbox" id="disease_history_kinds_7" class="disease_history_kinds" value="7"/><label for="disease_history_kinds_7">{{ _('관절염') }}</label></td>
+                                    <td><input type="checkbox" id="disease_history_kinds_8" class="disease_history_kinds" value="8"/><label for="disease_history_kinds_8">{{ _('신장질환') }}</label></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4"><input type="checkbox" id="disease_history_kinds_9" class="disease_history_kinds" value="9"/><label for="disease_history_kinds_9">{{ _('갑상선질환') }}</label></td>
+                                </tr>
+                                <tr>
+                                    <td><label>{{ _('기타') }}</label></td>
+                                    <td colspan="3"><textarea id="disease_etc" class="form-control"></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td><label>{{ _('복용약') }}</label></td>
+                                    <td colspan="3"><textarea id="medication" class="form-control"></textarea></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <br /><br />
+                        <div>
+                            <p class="question_item">{{ _('8. 약에 대한 부작용은 있으신가요?') }}</p>
+                            <div class="radio">
+                                <input type="radio" id="medicine_side_effects_1" name="medicine_side_effects" value="1"/><label for="medicine_side_effects_1">{{ _('예') }}</label>
+                            </div>
+                            <div class="radio">
+                                <input type="radio" id="medicine_side_effects_0" name="medicine_side_effects" value="0"/><label for="medicine_side_effects_0">{{ _('아니오') }}</label>
+                            </div>
+
+                        </div>
+                        <br /><br />
+                        <div>
+                            <p class="question_item">{{ _('9. 임신 가능성이 있으신가요?') }}</p>
+                            <div class="radio">
+                                <input type="radio" id="pregnant_0" name="pregnant_radio" value="0"/><label for="pregnant_0">{{ _('해당없음') }}</label>
+                            </div>
+                            <div class="radio">
+                                <input type="radio" id="pregnant_1" name="pregnant_radio" value="1"/><label for="pregnant_1">{{ _('임신중') }}</label>
+                            </div>
+                            <div class="radio">
+                                <input type="radio" id="pregnant_2" name="pregnant_radio" value="2"/><label for="pregnant_2">{{ _('계획중') }}</label>
+                            </div>  
+                        </div>
+                        <br /><br />
+                        <div>
+                            <p class="question_item">{{ _('10. 내원 동기') }}</p>
+                            <table class="table">
+                                <tr>
+                                    <td><input type="checkbox" id="visit_motiv_1" class="visit_motiv_item" value="1"/><label for="visit_motiv_1">{{ _('전단지') }}</label></td>
+                                    <td><input type="checkbox" id="visit_motiv_2" class="visit_motiv_item" value="2"/><label for="visit_motiv_2">{{ _('카카오톡 오픈 채팅') }}</label></td>
+                                    <td><input type="checkbox" id="visit_motiv_3" class="visit_motiv_item" value="3"/><label for="visit_motiv_3">{{ _('페이스북') }}</label></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="visit_motiv_4" /><label for="visit_motiv_4" value="4">{{ _('간판') }}</label></td>
+                                    <td colspan="2">{{ _('지인소개') }} : <input type="text" class="form-control" id="visit_motiv_friend"/></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">{{ _('기타') }} : <input type="text" class="form-control" id="visit_motiv_etc"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="func_container">
+                            <input type="button" class="btn btn-default" data-dismiss="modal" value="close"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     w = undefined
     function worker_on(is_run) {
@@ -505,9 +658,13 @@
 {% endblock %}
 
 {% block style %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/doctor_AN.css' %}" />
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/doctor_PM.css' %}" />
+
+<link rel="stylesheet" href="{% static 'css/ion.rangeSlider.min.css' %}" />
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'js/doctor.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/doctor_PM.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/ion.rangeSlider.min.js' %}"></script>
 {% endblock %}

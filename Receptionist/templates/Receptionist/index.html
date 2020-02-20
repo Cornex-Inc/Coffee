@@ -86,6 +86,7 @@
                         </div>
                     </td>
                 </tr>
+                <!--
                 <tr>
                     <td colspan="2">
                     <div class="input-group input-group-long" >
@@ -101,17 +102,18 @@
                         {{history.family_history}}
                         </div></td>
                 </tr>
+                    -->
                 <tr>
                     <td>
                         <input type="button" value="{{ _('Inform Tax Invoice') }}" class="btn btn-default" id="patient_tax_invoice_click" />
-                        <input type="button" value="{{ _('Medical Exam') }}"class="btn btn-success" id="patient_medical_exam_click" />
+                        <input type="button" value="{{ _('Initial Report') }}"class="btn btn-success" id="patient_initial_report_click" />
                         &nbsp;&nbsp;&nbsp;&nbsp;<label class="need_medical_report" ><input type="checkbox" value="" id="need_medical_report" />{{_('Medical Report') }}</label>
                     </td>
                     <td >
                         <div style="float:right;">
                             <input class="btn btn-default save_cancel_btn"  value="{{ _('Cancel') }}" onclick="set_cancel()" />
                             <input class="btn btn-info save_cancel_btn" value="{{ _('Save') }}" onclick="save_patient()"/>
-                            <input type="button" value="{{ _('Save + Reception') }}" class="btn btn-primary save_cancel_btn" style="width:150px;" onclick="save_recept()"/>
+                            <input type="button" value="{{ _('Save')}} + {{_('Reception') }}" class="btn btn-primary save_cancel_btn" style="width:150px;" onclick="save_recept()"/>
                         </div>
                     </td>
                 </tr>
@@ -264,10 +266,55 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
-                <h4>{{ _('Medical Exam') }}</h4>
+                <h4>{{ _('Initial Report') }}</h4>
                 <div id="modalBody" class="modal-body" >
                     <div class="medical_exam_pm">
                         <div>
+                            <div>
+                                <p>Vital Sign</p>
+                                <table class="table table_vital">
+                                    <tr>
+                                        <td>
+                                            {{ _('Height') }} : 
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control input_report_vital" id="input_vital_height" /> cm
+                                        </td>
+                                        <td>
+                                            {{ _('Weight') }} : 
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control input_report_vital" id="input_vital_weight" /> kg
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            {{ _('BMI') }} : 
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control input_report_vital" id="input_vital_bmi" /> kg/m2
+                                        </td>
+                                        <td>
+                                            {{ _('BP') }} : 
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control input_report_vital" id="input_vital_bp" /> mmHg
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            {{ _('BT') }} : 
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control input_report_vital" id="input_vital_bt" /> ˚C
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <br />
                             <p class="question_item">{{ _('2. 현재 불편한 부위와 증상에 표시하여 주세요.') }}</p>
                             <table class="table">
                                 <tr>
@@ -425,6 +472,7 @@
                                     <td colspan="3"><label>{{ _('외부에서 가져온 CD나 필름이 있나요 ?') }}</label></td>
                                 </tr>
                                 <tr>
+                                    <td><input type="checkbox" id="cd_film_yn_3" class="cd_film_yn" value="3"/><label for="cd_film_yn_3">{{ _('없음') }}</label></td>
                                     <td><input type="checkbox" id="cd_film_yn_1" class="cd_film_yn" value="1"/><label for="cd_film_yn_1">{{ _('필름') }}</label></td>
                                     <td><input type="checkbox" id="cd_film_yn_2" class="cd_film_yn" value="2"/><label for="cd_film_yn_2">{{ _('CD') }}</label></td>
                                 </tr>

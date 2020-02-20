@@ -30,17 +30,17 @@ $(function () {
         set_print_html();
 
         if ($('#date_of_hospitalization').val().trim() == '') {
-            alert('Outbreak Day');
+            alert(gettext('Outbreak Day is empty.'));
             return;
         }
 
         if ($('#reception_report').val().trim() == '') {
-            alert('No Opinion.');
+            alert(gettext('Opinion is empty.'));
             return;
         }
 
         if ($('#reception_usage').val().trim() == '') {
-            alert('No Purpose.');
+            alert(gettext('Purpose is empty.'));
             return;
         }
 
@@ -81,17 +81,17 @@ $(function () {
         set_print_html();
 
         if ($('#date_of_hospitalization').val().trim() == '') {
-            alert('통원 일자를 선택하세요.');
+            alert(gettext('Outbreak Date is empty.'));
             return;
         }
 
         if ($('#reception_report').val().trim() == '') {
-            alert('소견 내용이 없습니다.');
+            alert(gettext('Opinion is empty.'));
             return;
         }
 
         if ($('#reception_usage').val().trim() == '') {
-            alert('용도 내용이 없습니다.');
+            alert(gettext('Purpose is empty.'));
             return;
         }
 
@@ -169,8 +169,8 @@ function search_report(page = null) {
             for (var i = 0; i < page_context; i++) {
                 var str = ""
                 if (response.datas[i]) {
-                    str += '<tr style="cursor:pointer; height:40px;" onclick="set_report(' + response.datas[i].report_id + ')"><td>' + response.datas[i].chart + '</td>' +
-                        '<td>' + response.datas[i].serial + '</td>' +
+                    str += '<tr style="cursor:pointer; height:40px;" onclick="set_report(' + response.datas[i].report_id + ')"><td>' + response.datas[i].No + '</td>' +
+                        '<td>' + response.datas[i].chart + '</td>' +
                         '<td>' + response.datas[i].patient_name_eng + '<br/>' + response.datas[i].patient_name_kor + '</td>' +
                         '<td>' + response.datas[i].ID + '</td>' +
                         '<td>' + response.datas[i].Doctor + '</td>' +
@@ -309,7 +309,7 @@ function patient_search(data) {
     var string = $('#patient_search_input').val();
 
     if (string == null || string == '') {
-        alert('검색어 입력');
+        alert(gettext('Type a text for searching'));
         return;
     }
 
