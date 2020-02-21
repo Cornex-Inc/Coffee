@@ -135,12 +135,12 @@ $(function () {
         $("#patient_date_of_birth").datepicker({
             changeMonth: true,
             changeYear: true,
-            nextText: '´ÙÀ½ ´Ş',
-            prevText: 'ÀÌÀü ´Ş',
-            currentText: '¿À´Ã',
-            closeText: '´İ±â',
+            nextText: 'ë‹¤ìŒ ë‹¬',
+            prevText: 'ì´ì „ ë‹¬',
+            currentText: 'ì˜¤ëŠ˜',
+            closeText: 'ë‹«ê¸°',
             monthNamesShort: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-            monthNames: ['1¿ù', '2¿ù', '3¿ù', '4¿ù', '5¿ù', '6¿ù', '7¿ù', '8¿ù', '9¿ù', '10¿ù', '11¿ù', '12¿ù'],
+            monthNames: ['1ì›”', '2ì›”', '3ì›”', '4ì›”', '5ì›”', '6ì›”', '7ì›”', '8ì›”', '9ì›”', '10ì›”', '11ì›”', '12ì›”'],
             dateFormat: "yy-mm-dd",
             yearRange: '1900:2100',
         });
@@ -286,7 +286,7 @@ $(function () {
             },
             dataType: 'Json',
             success: function (response) {
-                //¹®Áø 
+                //ë¬¸ì§„ 
 
 
                 //init

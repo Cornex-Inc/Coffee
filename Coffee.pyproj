@@ -227,6 +227,7 @@
     <Folder Include="Receptionist\static\js\" />
     <Folder Include="Receptionist\static\calendar\" />
     <Folder Include="Receptionist\static\css\" />
+    <Folder Include="Receptionist\static\img\" />
     <Folder Include="Receptionist\static\timepicker\" />
     <Folder Include="Receptionist\templates\" />
     <Folder Include="Receptionist\templates\Receptionist\" />
@@ -251,12 +252,14 @@
     <Content Include="Doctor\static\css\report_window.css" />
     <Content Include="Doctor\static\css\report.css" />
     <Content Include="Doctor\static\css\audit.css" />
+    <Content Include="Doctor\static\css\audit_PM.css" />
     <Content Include="Doctor\static\img\DX_AN.png" />
     <Content Include="Doctor\static\img\DX_AN_Front.png" />
     <Content Include="Doctor\static\img\DX_AN_Rear.png" />
     <Content Include="Doctor\static\js\doctor.js" />
     <Content Include="Doctor\static\js\audit.js" />
     <Content Include="Doctor\static\js\doctor_PM.js" />
+    <Content Include="Doctor\static\js\audit_PM.js" />
     <Content Include="Doctor\static\js\report.js" />
     <Content Include="Doctor\static\js\print.js" />
     <Content Include="Doctor\static\js\report_window.js" />
@@ -269,6 +272,7 @@
     <Content Include="Doctor\templates\Doctor\reportform.html" />
     <Content Include="Doctor\templates\Doctor\reportwindow.html" />
     <Content Include="Doctor\templates\Doctor\audit.html" />
+    <Content Include="Doctor\templates\Doctor\audit_PM.html" />
     <Content Include="Manage\static\css\login.css" />
     <Content Include="Manage\static\js\login.js" />
     <Content Include="Radiation\static\img\image_close.png" />
@@ -292,6 +296,7 @@
     <Content Include="Receptionist\static\css\storage_page.css" />
     <Content Include="Receptionist\static\css\bill.css" />
     <Content Include="Receptionist\static\css\reservation.css" />
+    <Content Include="Receptionist\static\img\background_back.png" />
     <Content Include="Receptionist\static\js\calendar.js" />
     <Content Include="Receptionist\static\js\ion.rangeSlider.min.js" />
     <Content Include="Receptionist\static\js\Question.js" />

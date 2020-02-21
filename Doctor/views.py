@@ -1188,71 +1188,102 @@ def get_test_contents(request):
 def audit(request):
     doctor_search_form = DoctorsSearchForm()
 
-    
-    #filters
-    general = []
-    lab = []
-    medi = []
-    scaling = []
-    panorama = []
-    
-    general.append({'code':'E_NEW','value':'Exam Fee(New)'})
-    general.append({'code':'E_REP','value':'Exam Fee(Repeat)'})
-    general.append({'code':'E_DNT','value':'Exam Fee(Dental)'})
-    general.append({'code':'E0009','value':'Emergency'})
-        
-    exams = ExamFee.objects.all().exclude(code__icontains = 'E')
-    for exam in exams:
-        general.append({'code':exam.code,'value':exam.name})
-
-    
-    tests = Test.objects.all().order_by('name')
-    for test in tests:
-        lab.append({'code':test.code,'value':test.name})
-
-    precedures = Precedure.objects.all().order_by('name')
-
-    for precedure in precedures:
-        if 'scaling' in precedure.name.lower():
-            general.append({'code':precedure.code,'value':precedure.name})
-        elif 'panorama' in precedure.name.lower():
-            general.append({'code':precedure.code,'value':precedure.name})
-        else:
-            pass
-
-    temp_list_general = []
-    for precedure in precedures:
-        if 'injection' in precedure.name.lower():
-            temp_list_general.append({'code':precedure.code,'value':precedure.name})
-        else:
-            temp_list_general.append({'code':precedure.code,'value':precedure.name})
-
-    medicines = Medicine.objects.all().order_by('name')
-    for medicine in medicines:
-        if medicine.medicine_class_id is 31: #injection
-            temp_list_general.append({'code':medicine.code,'value':medicine.name})
-        else:
-            medi.append({'code':medicine.code,'value':medicine.name})
-
-    sorted_datas = sorted(temp_list_general,key = lambda order: (order['value']))
-    for sorted_data in sorted_datas:
-        general.append({'code':sorted_data['code'],'value':sorted_data['value']})
+    if request.user.doctor.depart.name == 'PM':
+        list_exam_fee = []
+        list_precedures = []
+        list_radiologys = []
 
 
+        exam_fees = ExamFee.objects.filter(Q(code = 'E0010') | Q(code = 'E0011'))
+        for exam_fee in exam_fees:
+            list_exam_fee.append({'code':exam_fee.code,'value':exam_fee.name})
 
-    return render(request,
-        'Doctor/audit.html',
+
+        precedures = Precedure.objects.filter(code__contains='PM')
+        for precedure in precedures:
+            list_precedures.append({'code':precedure.code,'value':precedure.name})
+
+        radiologys = Precedure.objects.filter(code__contains='R', precedure_class_id = 10 )
+        for radiology in radiologys:
+            list_radiologys.append({'code':radiology.code,'value':radiology.name})
+
+        return render(request,
+        'Doctor/audit_PM.html',
             {
                 'doctor_search':doctor_search_form,
 
-                'general_list':general,
-                'lab_list':lab,
-                'medi_list':medi,
-                'scaling_list':scaling,
-                'panorama_list':panorama,
+                'list_exam_fee':list_exam_fee,
+                'list_precedures':list_precedures,
+                'list_radiologys':list_radiologys,
 
             }
         )
+
+    else:
+        #filters
+        general = []
+        lab = []
+        medi = []
+        scaling = []
+        panorama = []
+    
+        general.append({'code':'E_NEW','value':'Exam Fee(New)'})
+        general.append({'code':'E_REP','value':'Exam Fee(Repeat)'})
+        general.append({'code':'E_DNT','value':'Exam Fee(Dental)'})
+        general.append({'code':'E0009','value':'Emergency'})
+        
+        exams = ExamFee.objects.all().exclude(code__icontains = 'E')
+        for exam in exams:
+            general.append({'code':exam.code,'value':exam.name})
+
+    
+        tests = Test.objects.all().order_by('name')
+        for test in tests:
+            lab.append({'code':test.code,'value':test.name})
+
+        precedures = Precedure.objects.all().order_by('name')
+
+        for precedure in precedures:
+            if 'scaling' in precedure.name.lower():
+                general.append({'code':precedure.code,'value':precedure.name})
+            elif 'panorama' in precedure.name.lower():
+                general.append({'code':precedure.code,'value':precedure.name})
+            else:
+                pass
+
+        temp_list_general = []
+        for precedure in precedures:
+            if 'injection' in precedure.name.lower():
+                temp_list_general.append({'code':precedure.code,'value':precedure.name})
+            else:
+                temp_list_general.append({'code':precedure.code,'value':precedure.name})
+
+        medicines = Medicine.objects.all().order_by('name')
+        for medicine in medicines:
+            if medicine.medicine_class_id is 31: #injection
+                temp_list_general.append({'code':medicine.code,'value':medicine.name})
+            else:
+                medi.append({'code':medicine.code,'value':medicine.name})
+
+        sorted_datas = sorted(temp_list_general,key = lambda order: (order['value']))
+        for sorted_data in sorted_datas:
+            general.append({'code':sorted_data['code'],'value':sorted_data['value']})
+
+
+
+        return render(request,
+            'Doctor/audit.html',
+                {
+                    'doctor_search':doctor_search_form,
+
+                    'general_list':general,
+                    'lab_list':lab,
+                    'medi_list':medi,
+                    'scaling_list':scaling,
+                    'panorama_list':panorama,
+
+                }
+            )
 
 def get_bundle(request):
 

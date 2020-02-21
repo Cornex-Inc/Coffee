@@ -305,11 +305,11 @@
     var bar_labels = []//'total','dental','medical'];
     var doughnut_labels=[];
     {% for doctor in doctors %}
-    bar_labels.push('{{doctor.get_name}}');
+        bar_labels.push('{{doctor.get_name}}');
     {% endfor%}
 
 
- var payment_doughnut_ctx = document.getElementById('payment_graph_doughnut').getContext('2d');
+    var payment_doughnut_ctx = document.getElementById('payment_graph_doughnut').getContext('2d');
     var payment_doughnut_chart = new Chart(payment_doughnut_ctx, {
         type: 'doughnut',
         display: true,
@@ -370,9 +370,16 @@
         // Configuration options go here
         options: {
             responsive: false,
+            
             scales: { 
+                yAxes:[{
+    
+                }],
+
                 yAxes: [{ 
                     ticks: { 
+ 
+                        beginAtZero: true,
                         callback: function(value, index, values) { 
                             if (value > 1000) {
                                     return numberWithCommas((value / 1000) + '   K');
@@ -383,18 +390,18 @@
                     }
                 }],
             },
-            animation: {
-                duration: 2000,
-            },
-    tooltips:{
-        callbacks: {
-            label: function(tooltipItem, data) {
-                var label = numberWithCommas( data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] ) + ' VND';
+        animation: {
+            duration: 2000,
+        },
+        tooltips:{
+            callbacks: {
+                label: function(tooltipItem, data) {
+                    var label = numberWithCommas( data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] ) + ' VND';
    
-                    //label += Math.round(tooltipItem.yLabel * 100) / 100;
-                    return label;
+                        //label += Math.round(tooltipItem.yLabel * 100) / 100;
+                        return label;
+                    }
                 }
-            }
             },
         }
 

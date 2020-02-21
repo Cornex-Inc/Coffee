@@ -1,4 +1,4 @@
-﻿jQuery.browser = {};
+jQuery.browser = {};
 
 
 function numberWithCommas(x) {

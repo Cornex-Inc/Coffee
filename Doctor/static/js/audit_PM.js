@@ -25,23 +25,23 @@ $(function () {
     });
 
 
-        
+
     search_doctor_profit();
     $('#doctor_search_date').change(function () {
         search_doctor_profit();
     })
 
-    $('#doctor_search_general').change(function () {
+    $('#doctor_search_exam').change(function () {
         $('#doctor_search_medicine, #doctor_search_lab').val("").prop("selected", true);
         search_doctor_profit();
     })
 
-    $('#doctor_search_medicine').change(function () {
+    $('#doctor_search_precedure').change(function () {
         $('#doctor_search_general, #doctor_search_lab').val("").prop("selected", true);
         search_doctor_profit();
     })
 
-    $('#doctor_search_lab').change(function () {
+    $('#doctor_search_radiography').change(function () {
         $('#doctor_search_medicine, #doctor_search_general').val("").prop("selected", true);
         search_doctor_profit();
     })
@@ -59,7 +59,6 @@ $(function () {
                 profit = 100
                 $(this).val(profit);
             }
-            set_profit_total();
         }
 
     });
@@ -74,13 +73,10 @@ function search_doctor_profit(page = null) {
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
             'start_end_date': $('#doctor_search_date').val(),
-            'depart': $('#doctors_search_depart option:selected').val(),
-            'doctor': $('#doctors_search_doctor option:selected').val(),
-            'general': $('#doctor_search_general option:selected').val(),
-            'medicine': $('#doctor_search_medicine option:selected').val(),
-            'lab': $('#doctor_search_lab option:selected').val(),
-            'scaling': $('#doctor_search_scaling option:selected').val(),
-            'panorama': $('#doctor_search_panorama option:selected').val(),
+            'doctor': $('#doctors_search_doctor').val(),
+            'exam': $('#doctor_search_exam option:selected').val(),
+            'precedure': $('#doctor_search_precedure option:selected').val(),
+            'radiography': $('#doctor_search_radiography option:selected').val(),
             'page': page,
         },
         dataType: 'Json',
@@ -101,69 +97,47 @@ function search_doctor_profit(page = null) {
 
                     // exam fee
                     str += '<td style="vertical-align: middle;">';
-                    if (response.datas[i]['general'].length == 0) {
+                    if (response.datas[i]['exams'].length == 0) {
                         str += ' - ';
                     } else {
 
-                        for (var j = 0; j < response.datas[i]['general'].length; j++) {
-                            str += response.datas[i]['general'][j]['value'];
-                            if (j != response.datas[i]['general'].length - 1) {
+                        for (var j = 0; j < response.datas[i]['exams'].length; j++) {
+                            str += response.datas[i]['exams'][j]['value'];
+                            if (j != response.datas[i]['exams'].length - 1) {
                                 str += '<br/>';
                             }
                         }
                     }
                     str += '</td><td style="vertical-align: middle;">';
-                    if (response.datas[i]['medi'].length == 0) {
+                    if (response.datas[i]['precedures'].length == 0) {
                         str += ' - ';
                     } else {
 
-                        for (var j = 0; j < response.datas[i]['medi'].length; j++) {
-                            str += response.datas[i]['medi'][j]['value'];
-                            if (j != response.datas[i]['medi'].length - 1) {
+                        for (var j = 0; j < response.datas[i]['precedures'].length; j++) {
+                            str += response.datas[i]['precedures'][j]['value'];
+                            if (j != response.datas[i]['precedures'].length - 1) {
                                 str += '<br/>';
                             }
                         }
                     }
                     str += '</td><td style="vertical-align: middle;">';
-                    if (response.datas[i]['lab'].length == 0) {
+                    if (response.datas[i]['radiographys'].length == 0) {
                         str += ' - ';
                     } else {
 
-                        for (var j = 0; j < response.datas[i]['lab'].length; j++) {
-                            str += response.datas[i]['lab'][j]['value'];
-                            if (j != response.datas[i]['lab'].length - 1) {
+                        for (var j = 0; j < response.datas[i]['radiographys'].length; j++) {
+                            str += response.datas[i]['radiographys'][j]['value'] + ' x ' + response.datas[i]['radiographys'][j]['amount'];;
+
+                            if (j != response.datas[i]['radiographys'].length - 1) {
                                 str += '<br/>';
                             }
                         }
                     }
-                    str += '</td><td style="vertical-align: middle;">';
-                    if (response.datas[i]['scaling'].length == 0) {
-                        str += ' - ';
-                    } else {
-
-                        for (var j = 0; j < response.datas[i]['scaling'].length; j++) {
-                            str += response.datas[i]['scaling'][j]['value'];
-                            if (j != response.datas[i]['scaling'].length - 1) {
-                                str += '<br/>';
-                            }
-                        }
-                    }
-                    str += '</td><td style="vertical-align: middle;">';
-                    if (response.datas[i]['panorama'].length == 0) {
-                        str += ' - ';
-                    } else {
-
-                        for (var j = 0; j < response.datas[i]['panorama'].length; j++) {
-                            str += response.datas[i]['panorama'][j]['value'];
-                            if (j != response.datas[i]['panorama'].length - 1) {
-                                str += '<br/>';
-                            }
-                        }
-                    }
+                    str += '<td style="vertical-align: middle;">' + numberWithCommas(response.datas[i]['subtotal']) + '</td>'
                     str += '</td></tr>';
                 }
                 else {
-                    str += "<td colspan='10'></td></tr>"
+                    str += "<td colspan='11'></td></tr>"
                 }
 
                 $('#doctors_table_result').append(str);
@@ -171,13 +145,10 @@ function search_doctor_profit(page = null) {
             //총 계
             //$('#doctors_table_result').empty();
 
-            $('#subtotal_general').html(numberWithCommas(response.amount_general) + ' VND');
-            $('#subtotal_medicine').html(numberWithCommas(response.amount_medicine) + ' VND');
-            $('#subtotal_lab').html(numberWithCommas(response.amount_lab) + ' VND');
-            $('#subtotal_scaling').html(numberWithCommas(response.amount_scaling) + ' VND');
-            $('#subtotal_panorama').html(numberWithCommas(response.amount_panorama) + ' VND');
-
-            set_profit_total();
+            //$('#subtotal_exam').html(numberWithCommas(response.amount_general) + ' VND');
+            //$('#subtotal_precedure').html(numberWithCommas(response.amount_medicine) + ' VND');
+            //$('#subtotal_radiography').html(numberWithCommas(response.amount_lab) + ' VND');
+            $("#profit_total_total").html(numberWithCommas(response.total_amount))
 
 
             //페이징
@@ -206,7 +177,6 @@ function search_doctor_profit(page = null) {
                 str += '<li class="disabled"><span>&raquo;</span></li>';
             }
             $('#doctors_pagnation').html(str);
-            set_profit_total();
 
 
         },
@@ -215,47 +185,4 @@ function search_doctor_profit(page = null) {
 
         },
     })
-}
-
-function set_profit_total() {
-    var regex = /[^0-9]/g;
-
-
-
-
-    var subtotal_general = $('#subtotal_general').html().replace(regex, '');
-    var subtotal_medicine = $('#subtotal_medicine').html().replace(regex, '');
-    var subtotal_lab = $('#subtotal_lab').html().replace(regex, '');
-    var subtotal_scaling = $('#subtotal_scaling').html().replace(regex, '');
-    var subtotal_panorama = $('#subtotal_panorama').html().replace(regex, '');
-
-    var profit_general = $('#profit_general').val();
-    var profit_medicine = $('#profit_medicine').val();
-    var profit_lab = $('#profit_lab').val();
-    var profit_scaling = $('#profit_scaling').val();
-    var profit_panorama = $('#profit_panorama').val();
-
-
-    var profit_total_general = subtotal_general * profit_general / 100;
-    var profit_total_medicine = subtotal_medicine * profit_medicine / 100;
-    var profit_total_lab = subtotal_lab * profit_lab / 100;
-    var profit_total_scaling = subtotal_scaling * profit_scaling / 100;
-    var profit_total_panorama = subtotal_panorama * profit_panorama / 100;
-
-
-
-
-    $('#profit_total_general').html(numberWithCommas(profit_total_general) + ' VND');
-    $('#profit_total_medicine').html(numberWithCommas(profit_total_medicine) + ' VND');
-    $('#profit_total_lab').html(numberWithCommas(profit_total_lab) + ' VND');
-    $('#profit_total_scaling').html(numberWithCommas(profit_total_scaling) + ' VND');
-    $('#profit_total_panorama').html(numberWithCommas(profit_total_panorama) + ' VND');
-
-    $('#profit_total_total').html(numberWithCommas(
-        profit_total_general +
-        profit_total_medicine +
-        profit_total_lab +
-        profit_total_scaling +
-        profit_total_panorama) + ' VND');
-
 }
