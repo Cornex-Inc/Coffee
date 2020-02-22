@@ -1,4 +1,6 @@
-
+.modal-dialog{
+    width:850px;
+}
 
 .form-control {
     font-size: 12px;
@@ -214,7 +216,8 @@
 }
 
 .medical_exam_pm #physiotherapy_count, .medical_exam_pm #injection_treatment_count, .medical_exam_pm #taking_medicine_count, .medical_exam_pm #acupuncture_count {
-    width: 100px;
+    width: 40px;
+    display:inline;
 }
 
 .medical_exam_pm .hoi {
@@ -267,14 +270,13 @@
 
 .input_report_vital{
     display:inline;
-    width:120px;
+    width:70px;
 }
 
 .table_vital tr td:nth-child(2n-1) {
     width: 60px;
     text-align: right;
 }
-
 
 @media ( min-width: 1900px ) {
     .reception_grid {

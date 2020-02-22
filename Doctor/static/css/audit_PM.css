@@ -49,6 +49,11 @@ body {
     width: 160px;
 }
 
+.doctor_search {
+    display: inline;
+    width: 200px;
+}
+
 
 .doctor_search_date {
     display: inline;

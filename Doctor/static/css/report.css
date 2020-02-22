@@ -20,7 +20,7 @@ body {
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: 37% 26%;
+    grid-template-columns: 500px 520px;
 }
 
 .partition {
@@ -242,6 +242,10 @@ status_table_title span:hover {
 
 
 @media ( min-width: 1900px ) {
+    .report_grid {
+        grid-template-columns: 650px 600px;
+    }
+
     .search_wrap {
         height: 720px;
     }
@@ -261,8 +265,8 @@ status_table_title span:hover {
         height:95%;
     }
     .report_view_wrap {
-        height: 840px;
-        width: 670px;
+        height: 800px;
+        width: 620px;
     }
 
     .page th, .page td {

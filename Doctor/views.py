@@ -1198,7 +1198,6 @@ def audit(request):
         for exam_fee in exam_fees:
             list_exam_fee.append({'code':exam_fee.code,'value':exam_fee.name})
 
-
         precedures = Precedure.objects.filter(code__contains='PM')
         for precedure in precedures:
             list_precedures.append({'code':precedure.code,'value':precedure.name})

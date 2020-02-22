@@ -5,7 +5,7 @@
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: 40%;
+    grid-template-columns: 550px;
     /*grid-template-rows: 15%;*/
 }
 
@@ -145,6 +145,11 @@
 }
 
 @media ( min-width: 1900px ) {
+    .radiation_grid {
+        grid-template-columns: 600px;
+        /*grid-template-rows: 15%;*/
+    }
+
     .radiation_list_table_wrap {
         height: 760px;
     }

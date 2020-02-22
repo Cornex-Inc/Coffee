@@ -30,21 +30,25 @@ $(function () {
     $('#doctor_search_date').change(function () {
         search_doctor_profit();
     })
-
-    $('#doctor_search_exam').change(function () {
-        $('#doctor_search_medicine, #doctor_search_lab').val("").prop("selected", true);
+    $('#doctor_search_search').change(function () {
         search_doctor_profit();
     })
+    
 
-    $('#doctor_search_precedure').change(function () {
-        $('#doctor_search_general, #doctor_search_lab').val("").prop("selected", true);
-        search_doctor_profit();
-    })
-
-    $('#doctor_search_radiography').change(function () {
-        $('#doctor_search_medicine, #doctor_search_general').val("").prop("selected", true);
-        search_doctor_profit();
-    })
+    //$('#doctor_search_exam').change(function () {
+    //    $('#doctor_search_medicine, #doctor_search_lab').val("").prop("selected", true);
+    //    search_doctor_profit();
+    //})
+    //
+    //$('#doctor_search_precedure').change(function () {
+    //    $('#doctor_search_general, #doctor_search_lab').val("").prop("selected", true);
+    //    search_doctor_profit();
+    //})
+    //
+    //$('#doctor_search_radiography').change(function () {
+    //    $('#doctor_search_medicine, #doctor_search_general').val("").prop("selected", true);
+    //    search_doctor_profit();
+    //})
 
 
 
@@ -74,15 +78,16 @@ function search_doctor_profit(page = null) {
             'csrfmiddlewaretoken': $('#csrf').val(),
             'start_end_date': $('#doctor_search_date').val(),
             'doctor': $('#doctors_search_doctor').val(),
-            'exam': $('#doctor_search_exam option:selected').val(),
-            'precedure': $('#doctor_search_precedure option:selected').val(),
-            'radiography': $('#doctor_search_radiography option:selected').val(),
+            'search': $('#doctor_search_search').val(),
+            //'exam': $('#doctor_search_exam option:selected').val(),
+            //'precedure': $('#doctor_search_precedure option:selected').val(),
+            //'radiography': $('#doctor_search_radiography option:selected').val(),
             'page': page,
         },
         dataType: 'Json',
         success: function (response) {
             $('#doctors_table_result').empty();
-
+            total_amount = 0;
             for (var i = 0; i < 10; i++) {//response.datas) {
                 var str = '<tr>'
                 if (response.datas[i]) {
@@ -94,7 +99,7 @@ function search_doctor_profit(page = null) {
                         ')</td>' +
                         '<td style="vertical-align: middle;">' + response.datas[i]['Depart'] + '</td>' +
                         '<td style="vertical-align: middle;">' + response.datas[i]['Doctor'] + '</td>';
-
+                    
                     // exam fee
                     str += '<td style="vertical-align: middle;">';
                     if (response.datas[i]['exams'].length == 0) {
@@ -135,6 +140,7 @@ function search_doctor_profit(page = null) {
                     }
                     str += '<td style="vertical-align: middle;">' + numberWithCommas(response.datas[i]['subtotal']) + '</td>'
                     str += '</td></tr>';
+                    total_amount += response.datas[i]['subtotal'];
                 }
                 else {
                     str += "<td colspan='11'></td></tr>"
@@ -143,12 +149,15 @@ function search_doctor_profit(page = null) {
                 $('#doctors_table_result').append(str);
             }
             //총 계
-            //$('#doctors_table_result').empty();
+            $("#profit_total_total").html(numberWithCommas(total_amount));
 
-            //$('#subtotal_exam').html(numberWithCommas(response.amount_general) + ' VND');
-            //$('#subtotal_precedure').html(numberWithCommas(response.amount_medicine) + ' VND');
-            //$('#subtotal_radiography').html(numberWithCommas(response.amount_lab) + ' VND');
-            $("#profit_total_total").html(numberWithCommas(response.total_amount))
+            //단일 선택은 월별 출력
+            if (response.monthly_total != undefined) {
+                $("#profit_monthly_total_total").html(numberWithCommas(response.monthly_total));
+                $('#monthly_total').show();
+            } else {
+                $('#monthly_total').hide();
+            }
 
 
             //페이징

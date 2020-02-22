@@ -23,9 +23,24 @@
             <div>
                 <div class="doctor_search_table_filter">
                     <div id="doctor_search" class="doctor_search_table_filter">
-                        Date:
+                        {{ _('Date') }}:
                         <input type="text" id="doctor_search_date" class="form-control costom-select doctor_search_date" aria-describedby="basic-addon1" />
 
+                        {{ _('Search') }}:
+                        <select id="doctor_search_search" class="form-control costom-select doctor_search">
+                            <option value="" selected>---------</option>
+                            
+                                {% for exam_fee in list_exam_fee  %}
+                                <option value="{{ exam_fee.code }}">{{ exam_fee.value }}</option>
+                                {% endfor %}
+                            
+                                {% for precedures in list_precedures %}
+                                <option value="{{ precedures.code }}">{{ precedures.value }}</option>
+                                {% endfor %}
+                                <option value="R0000">{{ _('Radiography') }}</option>
+                            
+                        </select>
+                        <!--
                         Exam Fee:
                         <select id="doctor_search_exam" class="form-control costom-select doctor_search_general">
                             <option value="" selected>---------</option>
@@ -33,7 +48,6 @@
                             <option value="{{ exam_fee.code }}">{{ exam_fee.value }}</option>
                             {% endfor %}
                         </select>
-
                         Procedure:
                         <select id="doctor_search_precedure" class="form-control costom-select doctor_search_medicine">
                             <option value="" selected>---------</option>
@@ -41,7 +55,7 @@
                             <option value="{{ precedures.code }}">{{ precedures.value }}</option>
                             {% endfor %}
                         </select>
-
+                            
                         Radiography:
                         <select id="doctor_search_radiography" class="form-control costom-select doctor_search_lab">
                             <option value="" selected>---------</option>
@@ -49,7 +63,7 @@
                             <option value="{{ radiologys.code }}">{{ radiologys.value }}</option>
                             {% endfor %}
                         </select>
-
+                            -->
                     </div>
                 </div>
                 <div class="payment_search_table">
@@ -70,11 +84,15 @@
                         <tbody id="doctors_table_result" class="payment_table_result">
                         </tbody>
                         <tbody id="doctors_table_profit" class="doctors_table_profit">
-
-                            <tr style="font-weight:bold;">
+                            <tr>
                                 <td colspan="6"></td>
-                                <td style="font-size:20px;">Total</td>
-                                <td colspan="2" style="font-size:20px;" id="profit_total_total"></td>
+                                <td>Total</td>
+                                <td colspan="2" id="profit_total_total"></td>
+                            </tr>
+                            <tr id="monthly_total">
+                                <td colspan="6"></td>
+                                <td >Monthly Total</td>
+                                <td colspan="2" id="profit_monthly_total_total"></td>
                             </tr>
                         </tbody>
                     </table>

@@ -10,6 +10,8 @@ from .forms import *
 from Receptionist.models import *
 from Doctor.models import *
 
+from dateutil import relativedelta
+
 # Create your views here.
 @login_required
 def manage(request):
@@ -23,61 +25,29 @@ def manage(request):
 
     
     #filters
-    general = []
-    lab = []
-    medi = []
-    scaling = []
-    panorama = []
-    
+    list_exam_fee = []
+    list_lab = []
+    list_precedure = []
+    list_medicine = []
 
-    general = []
-    lab = []
-    medi = []
-    scaling = []
-    panorama = []
-    
-    general.append({'code':'E_NEW','value':'Exam Fee(New)'})
-    general.append({'code':'E_REP','value':'Exam Fee(Repeat)'})
-    general.append({'code':'E_DNT','value':'Exam Fee(Dental)'})
-    general.append({'code':'E0009','value':'Emergency'})
+
         
-    exams = ExamFee.objects.all().exclude(code__icontains = 'E')
+    exams = ExamFee.objects.all().order_by('name')
     for exam in exams:
-        general.append({'code':exam.code,'value':exam.name})
+        list_exam_fee.append({'code':exam.code,'value':exam.name})
 
-    
     tests = Test.objects.all().order_by('name')
     for test in tests:
-        lab.append({'code':test.code,'value':test.name})
+        list_lab.append({'code':test.code,'value':test.name})
 
     precedures = Precedure.objects.all().order_by('name')
-
     for precedure in precedures:
-        if 'scaling' in precedure.name.lower():
-            general.append({'code':precedure.code,'value':precedure.name})
-        elif 'panorama' in precedure.name.lower():
-            general.append({'code':precedure.code,'value':precedure.name})
-        else:
-            pass
-
-    temp_list_general = []
-    for precedure in precedures:
-        if 'injection' in precedure.name.lower():
-            temp_list_general.append({'code':precedure.code,'value':precedure.name})
-        else:
-            temp_list_general.append({'code':precedure.code,'value':precedure.name})
-
+        list_precedure.append({'code':precedure.code,'value':precedure.name})
+        
     medicines = Medicine.objects.all().order_by('name')
     for medicine in medicines:
-        if medicine.medicine_class_id is 31: #injection
-            temp_list_general.append({'code':medicine.code,'value':medicine.name})
-        else:
-            medi.append({'code':medicine.code,'value':medicine.name})
-
-    sorted_datas = sorted(temp_list_general,key = lambda order: (order['value']))
-    for sorted_data in sorted_datas:
-        general.append({'code':sorted_data['code'],'value':sorted_data['value']})
-
+        list_medicine.append({'code':medicine.code,'value':medicine.name})
+        
 
 
     return render(request,
@@ -89,9 +59,10 @@ def manage(request):
                 'doctors':Doctor.objects.all(),
                 'medicine_search':medicine_search_form,
 
-                'general_list':general, # general will be precedure in template
-                'lab_list':lab,
-                'medi_list':medi,
+                'list_exam_fee':list_exam_fee, # general will be precedure in template
+                'list_lab':list_lab,
+                'list_precedure':list_precedure,
+                'list_medicine':list_medicine,
 
             }
         )
@@ -427,7 +398,7 @@ def doctor_profit(request):
 
     date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
     date_max = datetime.datetime.combine(datetime.datetime.strptime(date_end, "%Y-%m-%d").date(), datetime.time.max)
-
+    
     page = request.POST.get('page',1)
     
     if doctor != '':
@@ -451,6 +422,12 @@ def doctor_profit(request):
 
         amount_total = 0
         
+        amount_general = 0
+        amount_medicine = 0
+        amount_lab = 0
+        amount_scaling = 0
+        amount_panorama = 0
+
         for reception in receptions:
             data = {}
             try:
@@ -460,11 +437,7 @@ def doctor_profit(request):
                 scaling = []
                 panorama = []
 
-                amount_general = 0
-                amount_medicine = 0
-                amount_lab = 0
-                amount_scaling = 0
-                amount_panorama = 0
+
 
                 if filter_general == '' and filter_medicine == '' and filter_lab == '':
                     tmp_exam_set = reception.diagnosis.exammanager_set.all()
@@ -688,23 +661,20 @@ def doctor_profit(request):
                 pass
 
 
-            context.update({
-                'amount_general':amount_general,
-                'amount_medicine':amount_medicine,
-                'amount_lab':amount_lab,
-                'amount_scaling':amount_scaling, 
-                'amount_panorama':amount_panorama, 
-                })
+        context.update({
+            'amount_general':amount_general,
+            'amount_medicine':amount_medicine,
+            'amount_lab':amount_lab,
+            'amount_scaling':amount_scaling, 
+            'amount_panorama':amount_panorama, 
+            })
     
     elif request.user.doctor.depart.name == 'PM':
         total_amount = 0
 
-        filter_exam = request.POST.get('exam')
-        filter_precedure = request.POST.get('precedure')
-        filter_radiography = request.POST.get('radiography')
+        filter_search = request.POST.get('search')
 
-
-        receptions = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').order_by("-id")
+        receptions = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').select_related('payment').filter(payment__progress='paid').order_by("-id")
 
         for reception in receptions:
             exams = []
@@ -712,50 +682,53 @@ def doctor_profit(request):
             radiographys = []
 
             data={}
-
-            amount_exam = 0
-            amount_precedure = 0
-            amount_radiography = 0 
-
-            
-
-            if filter_exam == '' and filter_precedure == '' and filter_radiography == '':
+            sub_total = 0
+            if filter_search == '':
                 tmp_exam_set = reception.diagnosis.exammanager_set.all()
-                for tmp_exam in tmp_exam_set:
+                tmp_precedure_set = reception.diagnosis.preceduremanager_set.all()
+            else:
+                if 'E' in filter_search:
+                    tmp_exam_set = reception.diagnosis.exammanager_set.prefetch_related('exam').filter(exam__code=filter_search)
+                    tmp_precedure_set = reception.diagnosis.preceduremanager_set.none()
+                elif 'PM' in filter_search:
+                    tmp_exam_set = reception.diagnosis.exammanager_set.none()
+                    tmp_precedure_set = reception.diagnosis.preceduremanager_set.all().prefetch_related('precedure').filter(precedure__code=filter_search)
+
+                elif 'R' in filter_search:
+                    tmp_exam_set = reception.diagnosis.exammanager_set.none()
+                    tmp_precedure_set = reception.diagnosis.preceduremanager_set.all().prefetch_related('precedure').filter(precedure__code__icontains='R')
+
+                if tmp_exam_set.count() is 0 and tmp_precedure_set.count() is 0:
+                    continue
+                
+            for tmp_exam in tmp_exam_set:
                     exams.append({
                         'code':tmp_exam.exam.code,
                         'value':tmp_exam.exam.name,
                         })
-                    amount_exam += tmp_exam.exam.get_price(reception.recorded_date)
+                    sub_total += tmp_exam.exam.get_price(reception.recorded_date)
 
-
-                tmp_precedure_set = reception.diagnosis.preceduremanager_set.all()
-                for precedure_set in tmp_precedure_set:
+            for precedure_set in tmp_precedure_set:
                     if 'R' in precedure_set.precedure.code:
                         radiographys.append({
                             'code':precedure_set.precedure.code,
                             'value':precedure_set.precedure.name,
                             'amount':precedure_set.amount,
                             })
-                        amount_radiography += precedure_set.precedure.get_price(reception.recorded_date)
+                        sub_total += precedure_set.precedure.get_price(reception.recorded_date)
                     else:
                         precedures.append({
                             'code':precedure_set.precedure.code,
                             'value':precedure_set.precedure.name,
                             })
-                        amount_precedure += precedure_set.precedure.get_price(reception.recorded_date)
-                    
+                        sub_total += precedure_set.precedure.get_price(reception.recorded_date)
                 
             data.update({
                 'exams':exams,
                 'precedures':precedures,
                 'radiographys':radiographys,
 
-                'amount_exam':amount_exam,
-                'amount_precedure':amount_precedure,
-                'amount_radiography':amount_radiography,
-
-                'subtotal':reception.payment.sub_total,
+                'subtotal':sub_total,
   
                 'no':reception.id,
                 'date':reception.recorded_date.strftime('%d-%b-%y'),
@@ -768,13 +741,27 @@ def doctor_profit(request):
                 'Doctor':reception.doctor.get_name(),
                 })
 
-            total_amount += reception.payment.sub_total
+            
             datas.append(data)
 
         context.update({
             'total_amount':total_amount,
             })
 
+        
+      
+        if (date_max - date_min).days == 0:  #단일 날짜는 당일을 Subtotal / 선택된 달의 금액을 Total
+             first_day = datetime.datetime.strptime(date_start, "%Y-%m-%d").date().replace(day=1)
+             last_day = (first_day + relativedelta.relativedelta(months=1)) - datetime.timedelta(seconds=1)
+             
+             receptions = Reception.objects.filter(**kwargs ,recorded_date__range = (first_day, last_day), progress = 'done').order_by("-id").select_related('payment')
+             monthly_total = 0
+             for reception in receptions:
+                 monthly_total += reception.payment.total
+             context.update({
+                'monthly_total':monthly_total,
+                })
+        #else: #범위 날짜는 SubTotal 무시 /범위 계산을 Total로
 
     paginator = Paginator(datas, page_context)
     try:

@@ -40,30 +40,41 @@
             {{ payment_search.doctor_filter }}
             {{ payment_search.paid_by.label}}:
             {{ payment_search.paid_by}}
-            {{ payment_search.check_paid.label }}:
-            {{ payment_search.check_paid }}
+            <!--{{ payment_search.check_paid.label }}:
+            {{ payment_search.check_paid }}-->
 
-            {{ _('Precedure')}}:
-            <select id="payment_search_general" class="form-control costom-select payment_search_general">
-                <option value="" selected >---------</option>
-                {% for general in general_list  %}
-                    <option value="{{ general.code }}">{{ general.value }}</option>
+            {{ _('Exam Fee') }}:
+            <select id="payment_search_exam_fee" class="form-control costom-select payment_search_lab">
+                <option value="" selected>---------</option>
+                {% for exam in list_exam_fee %}
+                    <option value="{{ exam.code }}">{{ exam.value }}</option>
+                {% endfor%}
+            </select>
+
+            {{ _('Lab')}}:
+            <select id="payment_search_lab" class="form-control costom-select payment_search_lab">
+                <option value="" selected>---------</option>
+                {% for lab in list_lab %}
+                    <option value="{{ lab.code }}">{{ lab.value }}</option>
                 {% endfor %}
             </select>
+
+            {{ _('Precedure')}}:
+            <select id="payment_search_precedure" class="form-control costom-select payment_search_general">
+                <option value="" selected >---------</option>
+                {% for precedure in list_precedure  %}
+                    <option value="{{ precedure.code }}">{{ precedure.value }}</option>
+                {% endfor %}
+            </select>
+
             {{ _('Medicine')}}:
             <select id="payment_search_medicine" class="form-control costom-select payment_search_medicine">
                 <option value="" selected>---------</option>
-                {% for medicine in medi_list %}
+                {% for medicine in list_medicine %}
                     <option value="{{ medicine.code }}">{{ medicine.value }}</option>
                 {% endfor %}
             </select>
-            {{ _('Lab')}}
-            <select id="payment_search_lab" class="form-control costom-select payment_search_lab">
-                <option value="" selected>---------</option>
-                {% for lab in lab_list %}
-                    <option value="{{ medicine.code }}">{{ medicine.value }}</option>
-                {% endfor %}
-            </select>
+
 
         </div>
         <div id="payment_search_table" class="payment_search_table">
@@ -75,14 +86,10 @@
                         <th class="search_table_Patient">{{_('Patient')}}</th>
                         <th class="search_table_Depart">{{_('Depart')}}</th>
                         <th class="search_table_Doctor">{{_('Doctor')}}</th>
+                        <th class="search_table_Order">{{_('Lab')}}</th>
                         <th class="search_table_Address">{{_('Precedure')}}</th>
                         <th class="search_table_Order">{{_('Medicine')}}</th>
-                        <th class="search_table_Order">{{_('Lab')}}</th>
-                        <th class="search_table_Order">{{_('Scaling')}}</th>
-                        <th class="search_table_Order">{{_('Panorama')}}</th>
                         <th class="search_table_PaidBy">{{_('Paid by')}}</th>
-                        <th class="search_table_Payment">{{_('Paid')}}( ₫ )</th>
-                        <th class="search_table_Unpaid">{{_('Unpaid')}}( ₫ )</th>
                         <th class="search_table_Total">{{_('Total')}}( ₫ )</th>
                     </tr>
                 </thead>
@@ -97,10 +104,6 @@
             </ul>
             <table class="table payment_total">
                 <tr>
-                    <td>{{_('Paid')}} ( ₫ ) </td>
-                    <td><span id="payment_total_paid"></span></td>
-                    <td>{{_('Unpaid')}} ( ₫ ) </td>
-                    <td><span id="payment_total_unpaid"></span></td>
                     <td>{{_('Total')}} ( ₫ ) </td>
                     <td><span id="payment_total_total"></span></td>
                 </tr>
@@ -123,8 +126,6 @@
 
             </div>
         </div>
-
-
         <div>
             <div class="doctor_search_table_filter">
                 <div id="doctor_search" class="doctor_search_table_filter">
@@ -135,53 +136,42 @@
                 {{doctor_search.doctor_filter.label}}
                 {{doctor_search.doctor_filter}}
 
-                General:
-                <select id="doctor_search_general" class="form-control costom-select doctor_search_general">
-                    <option value="" selected >---------</option>
-                    {% for general in general_list  %}
-                        <option value="{{ general.code }}">{{ general.value }}</option>
-                    {% endfor %}
-                </select>
-                Medicine:
-                <select id="doctor_search_medicine" class="form-control costom-select doctor_search_medicine">
+                {{ _('Exam Fee') }}:
+                <select id="doctor_search_exam_fee" class="form-control costom-select payment_search_exam_fee">
                     <option value="" selected>---------</option>
-                    {% for medicine in medi_list %}
-                        <option value="{{ medicine.code }}">{{ medicine.value }}</option>
-                    {% endfor %}
+                    {% for exam in list_exam_fee %}
+                        <option value="{{ exam.code }}">{{ exam.value }}</option>
+                    {% endfor%}
                 </select>
-                Lab:
-                <select id="doctor_search_lab" class="form-control costom-select doctor_search_lab">
+
+                {{ _('Lab')}}:
+                <select id="doctor_search_lab" class="form-control costom-select payment_search_lab">
                     <option value="" selected>---------</option>
-                    {% for lab in lab_list %}
+                    {% for lab in list_lab %}
                         <option value="{{ lab.code }}">{{ lab.value }}</option>
                     {% endfor %}
                 </select>
-                    <!--
-                Scaling:
-                <select id="doctor_search_scaling" class="form-control costom-select doctor_search_scaling">
-                    <option value="" selected>---------</option>
-                    {% for scaling in scaling_list %}
-                    {% for key,val in scaling.items %}
-                        <option value="{{ key }}">{{ val }}</option>
-                    {% endfor %}
+
+                {{ _('Precedure')}}:
+                <select id="doctor_search_precedure" class="form-control costom-select payment_search_precedure">
+                    <option value="" selected >---------</option>
+                    {% for precedure in list_precedure  %}
+                        <option value="{{ precedure.code }}">{{ precedure.value }}</option>
                     {% endfor %}
                 </select>
-                Panorama:
-                <select id="doctor_search_panorama" class="form-control costom-select doctor_search_panorama">
+
+                {{ _('Medicine')}}:
+                <select id="doctor_search_medicine" class="form-control costom-select payment_search_medicine">
                     <option value="" selected>---------</option>
-                    {% for panorama in panorama_list %}
-                    {% for key,val in panorama.items %}
-                        <option value="{{ key }}">{{ val }}</option>
-                    {% endfor %}
+                    {% for medicine in list_medicine %}
+                        <option value="{{ medicine.code }}">{{ medicine.value }}</option>
                     {% endfor %}
                 </select>
-                        -->
-
-
+                
             </div>
             </div>
             <div class="payment_search_table">
-            <table class="table table-striped">
+            <table class="table table-striped" id="profit_table">
                 <thead>
                     <tr>
                         <th>{{ _('No.') }}</th>
@@ -189,11 +179,9 @@
                         <th>{{ _('Patient') }}</th>
                         <th>{{ _('Depart') }}</th>
                         <th>{{ _('Doctor') }}</th>
-                        <th>{{ _('General') }}</th>
-                        <th>{{ _('Medicine') }}</th>
                         <th>{{ _('Lab') }}</th>
-                        <th>{{ _('Scaling') }}</th>
-                        <th>{{ _('Panorama') }}</th>
+                        <th>{{ _('Precedure') }}</th>
+                        <th>{{ _('Medicine') }}</th>
                     </tr>
                 </thead>
                 <tbody  id="doctors_table_result" class="payment_table_result">
@@ -209,8 +197,6 @@
                         <td id="subtotal_general"></td>
                         <td id="subtotal_medicine"></td>
                         <td id="subtotal_lab"></td>
-                        <td id="subtotal_scaling"></td>
-                        <td id="subtotal_panorama"></td>
                     </tr>
                     <tr>
                         <td colspan="4">
@@ -221,8 +207,6 @@
                         <td><input type="text" class="form-control doctor_profit_control" id="profit_general" /><span style="font-weight:bold;">%</span></td>
                         <td><input type="text" class="form-control doctor_profit_control" id="profit_medicine" />%</td>
                         <td><input type="text" class="form-control doctor_profit_control" id="profit_lab" />%</td>
-                        <td><input type="text" class="form-control doctor_profit_control" id="profit_scaling" />%</td>
-                        <td><input type="text" class="form-control doctor_profit_control" id="profit_panorama" />%</td>
                     </tr>
                     <tr>
                         <td colspan="4">
@@ -233,11 +217,9 @@
                         <td id="profit_total_general"></td>
                         <td id="profit_total_medicine"></td>
                         <td id="profit_total_lab"></td>
-                        <td id="profit_total_scaling"></td>
-                        <td id="profit_total_panorama"></td>
                     </tr>
                     <tr style="font-weight:bold;">
-                        <td colspan="7"></td>
+                        <td colspan="5"></td>
                         <td style="font-size:20px;">Total</td>
                         <td colspan="2" style="font-size:20px;" id="profit_total_total"></td>
                     </tr>
@@ -365,15 +347,18 @@
         // The data for our dataset
         data: {
             labels: bar_labels,
-            datasets: []
+            datasets: [{
+                barThickness:1,
+            }]
         },
         // Configuration options go here
         options: {
             responsive: false,
             
             scales: { 
-                yAxes:[{
-    
+                xAxes:[{
+                    barThickness : 'flex',
+                    maxBarThickness :50,
                 }],
 
                 yAxes: [{ 
@@ -403,6 +388,13 @@
                     }
                 }
             },
+        plugins: {
+                    datalabels: {
+                        formatter: function (value, ctx) {
+                            return null;
+                        }
+                    }
+                },
         }
 
     });
@@ -418,22 +410,22 @@
             if (!datas_set[doctor_name]['total']) {
                 datas_set[doctor_name]['total'] = 0;
             }
-            if (!datas_set[doctor_name]['unpaid']) {
-                datas_set[doctor_name]['unpaid'] = 0;
-            }
-            if (!datas_set[doctor_name]['paid']) {
-                datas_set[doctor_name]['paid'] = 0;
-            }
+            //if (!datas_set[doctor_name]['unpaid']) {
+            //    datas_set[doctor_name]['unpaid'] = 0;
+            //}
+            //if (!datas_set[doctor_name]['paid']) {
+            //    datas_set[doctor_name]['paid'] = 0;
+            //}
             datas_set[doctor_name]['depart'] = datas[i]['Depart'];
             datas_set[doctor_name]['total'] += datas[i]['total'];
-            datas_set[doctor_name]['unpaid'] += datas[i]['unpaid'];
-            datas_set[doctor_name]['paid'] += datas[i]['total'] - datas[i]['unpaid'];
+            //datas_set[doctor_name]['unpaid'] += datas[i]['unpaid'];
+            //datas_set[doctor_name]['paid'] += datas[i]['total'] - datas[i]['unpaid'];
         }
         //bar
 
         var Total_bar_data=[]
-        var Paid_bar_data=[]
-        var Unpaid_bar_data=[]
+        //var Paid_bar_data=[]
+        //var Unpaid_bar_data=[]
 
         for( var i = 0 ; i < payment_chart.data.labels.length ; i ++){
             if(!datas_set[payment_chart.data.labels[i]]){
@@ -442,17 +434,17 @@
                 Total_bar_data.push(datas_set[payment_chart.data.labels[i]]['total']);
             }
 
-            if(!datas_set[payment_chart.data.labels[i]]){
-                Paid_bar_data.push(0);
-            }else{
-                Paid_bar_data.push(datas_set[payment_chart.data.labels[i]]['paid']);
-            }
-
-            if(!datas_set[payment_chart.data.labels[i]]){
-                Unpaid_bar_data.push(0);
-            }else{
-                Unpaid_bar_data.push(datas_set[payment_chart.data.labels[i]]['unpaid']);
-            }   
+            //if(!datas_set[payment_chart.data.labels[i]]){
+            //    Paid_bar_data.push(0);
+            //}else{
+            //    Paid_bar_data.push(datas_set[payment_chart.data.labels[i]]['paid']);
+            //}
+            //
+            //if(!datas_set[payment_chart.data.labels[i]]){
+            //    Unpaid_bar_data.push(0);
+            //}else{
+            //    Unpaid_bar_data.push(datas_set[payment_chart.data.labels[i]]['unpaid']);
+            //}   
         }
 
         var Total_bar = {
@@ -461,22 +453,22 @@
             borderColor: 'rgb(206, 17, 39)',
             data:Total_bar_data,
         }
-        var Paid_bar = {
-            label: 'Paid',
-            backgroundColor: 'rgb(253,209,22)',
-            borderColor: 'rgb(253,209,22)',     
-            data:Paid_bar_data,
-        }
-        var Unpaid_bar = {
-            label: 'Unpaid',
-            backgroundColor: 'rgb(128, 128, 128)',
-            borderColor: 'rgb(128, 128, 128)', 
-            data:Unpaid_bar_data,
-        }
+        //var Paid_bar = {
+        //    label: 'Paid',
+        //    backgroundColor: 'rgb(253,209,22)',
+        //    borderColor: 'rgb(253,209,22)',     
+        //    data:Paid_bar_data,
+        //}
+        //var Unpaid_bar = {
+        //    label: 'Unpaid',
+        //    backgroundColor: 'rgb(128, 128, 128)',
+        //    borderColor: 'rgb(128, 128, 128)', 
+        //    data:Unpaid_bar_data,
+        //}
         payment_chart.data.datasets = [];
         payment_chart.data.datasets.push(Total_bar);
-        payment_chart.data.datasets.push(Paid_bar);
-        payment_chart.data.datasets.push(Unpaid_bar);
+        //payment_chart.data.datasets.push(Paid_bar);
+        //payment_chart.data.datasets.push(Unpaid_bar);
 
         payment_chart.update();
 
