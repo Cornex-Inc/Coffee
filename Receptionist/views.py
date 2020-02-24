@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 import datetime ,calendar
 from django.utils import timezone
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
-from django.db.models import Q,Case,When, CharField
+from django.db.models import Q,Case,When, CharField,Count
 import operator
 import functools
 from django.http import JsonResponse
@@ -16,6 +16,8 @@ from Patient.forms import PatientForm, HistoryForm
 from Patient.models import Patient,History
 from Account.models import User
 from Doctor.models import *
+from app.models import *
+
 
 # Create your views here.
 
@@ -31,6 +33,39 @@ def index(request):
     payment_form = PaymentSearchForm()
     reservation_form = ReservationSearchForm()
 
+    initial_report_q2_option = []
+    initial_report_q2 = COMMCODE.objects.filter(commcode_grp = 'PM_IRQ2').values('id','seq','se1','se2','se4','se5')
+    initial_report_q2_title = COMMCODE.objects.values('se2','seq','se6','se7','se8').annotate(Count('se2'))
+    for title in initial_report_q2_title:
+        item = COMMCODE.objects.values('se2').annotate(Count('se2'))
+
+
+
+    #for item in initial_report_q2:
+    #    array_str_code = item['se1'].split('-')
+    #    array_str = item['se2'].split('-')
+    #    data ={
+    #        'id':array_str_code[0],
+    #        'name':array_str[0],
+    #        'length':array_str.length,
+    #        'front_back':,
+    #        'left_right':,
+    #        }
+    #    option = {}
+    #    if array_str.length > 2 :
+    #        option.update({
+    #            
+    #            })
+    #    else:
+    #        option.update({
+    #            
+    #            })
+                
+                
+        
+
+
+
     return render(request,
     'Receptionist/index.html',
             {
@@ -41,6 +76,10 @@ def index(request):
                 'receptionsearch':receptionsearch_form,
                 'payment':payment_form,
                 'reservation':reservation_form,
+
+                'initial_report_q2':initial_report_q2,
+                'initial_report_q2_title':initial_report_q2_title,
+
             },
         )
 

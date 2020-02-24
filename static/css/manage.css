@@ -145,7 +145,7 @@ th{
     width: 110px;
 }
 
-.payment_search_general, .payment_search_medicine, .payment_search_lab, .payment_search_scaling, .payment_search_panorama {
+.payment_search_exam_fee, .payment_search_medicine, .payment_search_lab, .payment_search_precedure {
     display: inline;
     width: 10vw;
 }
@@ -229,3 +229,71 @@ th{
     display: inline;
     
 }
+
+.table table-striped {
+
+}
+
+#payment_search_table thead tr th:nth-child(1), #profit_table thead tr th:nth-child(1) {
+    width: 50px;
+}
+
+#payment_search_table thead tr th:nth-child(2), #profit_table thead tr th:nth-child(2) {
+    width: 85px;
+}
+
+#payment_search_table thead tr th:nth-child(3), #profit_table thead tr th:nth-child(3) {
+    width: 150px;
+}
+
+#payment_search_table thead tr th:nth-child(4), #profit_table thead tr th:nth-child(4) {
+    width: 70px;
+}
+
+#payment_search_table thead tr th:nth-child(5), #profit_table thead tr th:nth-child(5) {
+    width: 150px;
+}
+
+#payment_search_table thead tr th:nth-child(6) {
+    width: 300px;
+}
+
+#payment_search_table thead tr th:nth-child(7) {
+    width: 300px;
+}
+
+#payment_search_table thead tr th:nth-child(8) {
+    width: 300px;
+}
+
+#payment_search_table thead tr th:nth-child(9) {
+    width: 80px;
+}
+
+#payment_search_table thead tr th:nth-child(10) {
+    width: 150px;
+    text-align:center;
+}
+
+#payment_search_table tbody tr td{
+    vertical-align: middle;
+}
+
+#payment_search_table tbody tr td:nth-child(10) {
+    text-align:right;
+}
+
+
+
+#profit_table thead tr th:nth-child(6) {
+    width:260px;
+}
+
+#profit_table thead tr th:nth-child(7) {
+    width: 260px;
+}
+
+#profit_table thead tr th:nth-child(8) {
+    width: 260px;
+}
+    

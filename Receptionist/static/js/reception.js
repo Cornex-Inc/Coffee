@@ -145,6 +145,49 @@ $(function () {
     })
 
 
+    //문2 선택
+    $(".q2_item_select ").change(function () {
+        var data_code = $(this).attr('data_code');
+
+        if ($('#pain_location_text_' + data_code).is(':checked') != true) {
+            $('#pain_location_text_' + data_code).prop('checked', true);
+        }
+        
+
+        str = '';
+        str += $('#pain_location_text_' + data_code).val() + '-';
+        str += $("#q2_item_select1_" + data_code).val() + '-';
+        str += $("#q2_item_select2_" + data_code).val() ;
+
+        $('.q2_items').each(function () {
+
+            if ($(this).attr('data_code') == data_code) {
+                $(this).hide();
+            }
+        });
+            
+        
+        $('#q2_items_' + str).show();
+    })
+    //문2 해제
+    $('.pain_location_text').change(function () {
+        if ($(this).is(':checked')!= true) {
+            var data_code = $(this).attr('data_code');
+            str = '';
+            str += $('#pain_location_text_' + data_code).val() + '-';
+            str += $("#q2_item_select1_" + data_code).val() + '-';
+            str += $("#q2_item_select2_" + data_code).val();
+
+            $('#q2_items_' + str).hide();
+
+            $("#q2_item_select1_" + data_code).val($("#q2_item_select1_" + data_code + " option:first").val());
+            $("#q2_item_select2_" + data_code).val($("#q2_item_select2_" + data_code + " option:first").val());
+        }
+        
+    })
+
+
+
     //문진 
     $(".js-range-slider").ionRangeSlider({
         min: 0,
@@ -174,6 +217,8 @@ $(function () {
                 
 
                 //init
+                $('.q2_items').hide();
+
                 $('.medical_exam_pm input[type="text"]').val('');
                 $('.medical_exam_pm input[type="checkbox"]').each(function () {
                     $(this).prop('checked', false);
@@ -205,12 +250,25 @@ $(function () {
                 var q2_item = response.pain_posi_text.split(',');
                 for (var item in q2_item) {
                     if (q2_item[item] == "") {
-
                     }
                     else {
-                        $('input[class=pain_location_text]:input[value=' + q2_item[item] + ']').prop("checked", true);
+                        var code = q2_item[item].split('-')
+                        if (code.length == 1) {
+                            $('#pain_location_text_' + code[0]).prop('checked', true);
+                        } else {
+                            $('#pain_location_text_' + code[0]).prop('checked', true);
+                            $('#q2_item_select1_' + code[0] + ' option[value=' + code[1] + ']').attr('selected', 'selected');
+                            $('#q2_item_select2_' + code[0] + ' option[value=' + code[2] + ']').attr('selected', 'selected');
+
+                            $('#q2_items_' + q2_item[item]).show();
+                            //$('input[class=pain_location_text]:input[value=' + q2_item[item] + ']').prop("checked", true);
+                        }
                     }
                 }
+
+
+
+
                 $('#occurred_date').val(response.sick_date);
                 //3
                 if (response.cure_yn == "true") {
@@ -330,11 +388,18 @@ $(function () {
         //2.
         var q2_item = "";
         var q2_date = "";
-        $('.pain_location_text:checkbox:checked').each(function () {
-            q2_item += (this.checked ? $(this).val() + "," : "");
-        })
+        //$('.pain_location_text:checkbox:checked').each(function () {
+        //    q2_item += (this.checked ? $(this).val() + "," : "");
+        //})
 
         q2_date = $('#occurred_date').val();
+        $('.q2_items:visible').each(function () {
+            q2_item += $(this).attr('data_seq') + ',';
+        });
+        $('#pain_location_text_23, #pain_location_text_24, #pain_location_text_25, #pain_location_text_26, #pain_location_text_27').each(function () {
+            q2_item += (this.checked ? $(this).val() + "," : "");
+        });
+
 
         //3.
         var q3_yn = $('#treatment_history_yn').prop("checked");

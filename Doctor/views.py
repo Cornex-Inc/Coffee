@@ -17,12 +17,13 @@ from Radiation.models import *
 from Manage.forms import DoctorsSearchForm 
 
 from .models import *
+from app.models import *
 
 from .forms import *
 # Create your views here.
 from django.utils.translation import gettext as _
 from django.forms.models import model_to_dict
-from django.db.models import Q
+from django.db.models import Q, Count
 
 @login_required
 def index(request):
@@ -96,6 +97,12 @@ def index(request):
                     })
 
 
+        initial_report_q2_option = []
+        initial_report_q2 = COMMCODE.objects.filter(commcode_grp = 'PM_IRQ2').values('id','seq','se1','se2','se4','se5')
+        initial_report_q2_title = COMMCODE.objects.values('se2','seq','se6','se7','se8').annotate(Count('se2'))
+        for title in initial_report_q2_title:
+            item = COMMCODE.objects.values('se2').annotate(Count('se2'))
+
         return render(request,
         'Doctor/index_PM.html',
             {
@@ -113,6 +120,11 @@ def index(request):
 
                 'reservation':reservation_form,
                 'today_vital':datetime.date.today().strftime('%b-%d'),
+
+                
+                'initial_report_q2':initial_report_q2,
+                'initial_report_q2_title':initial_report_q2_title,
+
             }
         )
 
@@ -868,7 +880,9 @@ def get_diagnosis(request):
     except Diagnosis.DoesNotExist:
         pass
 
-    context = {'datas':datas}
+    context = {'datas':datas,
+               'patient_id':reception.patient_id,
+               }
     return JsonResponse(context)
 
 def show_medical_report_save(request):

@@ -164,8 +164,6 @@ function search_payment(page=null) {
             'general': $('#payment_search_general option:selected').val(),
             'medicine': $('#payment_search_medicine option:selected').val(),
             'lab': $('#payment_search_lab option:selected').val(),
-            'scaling': $('#payment_search_scaling option:selected').val(),
-            'panorama': $('#payment_search_panorama option:selected').val(),
 
             'input': $('#payment_search_input').val(),
             'pup': $('#payment_search_check_paid option:selected').val(),
@@ -175,23 +173,32 @@ function search_payment(page=null) {
         dataType: 'Json',
         success: function (response) {
             $('#payment_table_result').empty();
-            $('#payment_total_amount').html('');
-            $('#payment_total_paid').html('');
-
             for (var i = 0; i < 10; i++){//response.datas) {
                 var str ='<tr>'
                 if (response.datas[i]) {
-                    str += '<td style="vertical-align: middle;">' + response.datas[i]['no'] + '</td>' +
-                        '<td style="vertical-align: middle;">' + response.datas[i]['date'] + '</td>' + 
-                        '<td style="vertical-align: middle;">' + response.datas[i]['patient_eng'] + '<br/>' +
+                    str += '<td>' + response.datas[i]['no'] + '</td>' +
+                        '<td>' + response.datas[i]['date'] + '</td>' + 
+                        '<td>' + response.datas[i]['patient_eng'] + '<br/>' +
                         response.datas[i]['Patient'] + ' (' +
                         response.datas[i]['date_of_birth'] +
                         ')</td>' +
-                        '<td style="vertical-align: middle;">' + response.datas[i]['Depart'] + '</td>' +
-                        '<td style="vertical-align: middle;">' + response.datas[i]['Doctor'] + '</td>';
+                        '<td>' + response.datas[i]['Depart'] + '</td>' +
+                        '<td>' + response.datas[i]['Doctor'] + '</td>';
 
                     // exam fee
-                    str += '<td style="vertical-align: middle;">';
+                    str += '<td>';
+                    if (response.datas[i]['lab'].length == 0) {
+                        str += ' - ';
+                    } else {
+                        for (var j = 0; j < response.datas[i]['lab'].length; j++) {
+                            str += response.datas[i]['lab'][j]['value'];
+                            if (j != response.datas[i]['lab'].length - 1) {
+                                str += '<br/>';
+                            }
+                        }
+                    }
+                    str += '</td><td>';
+                    
                     if (response.datas[i]['general'].length == 0) {
                         str += ' - ';
                     } else {
@@ -204,7 +211,7 @@ function search_payment(page=null) {
                         }
                     }
                     
-                    str += '</td><td style="vertical-align: middle;">';
+                    str += '</td><td>';
                     if (response.datas[i]['medi'].length == 0) {
                         str += ' - ';
                     } else {
@@ -215,42 +222,10 @@ function search_payment(page=null) {
                             }
                         }
                     }
-                    str += '</td><td style="vertical-align: middle;">';
-                    if (response.datas[i]['lab'].length == 0) {
-                        str += ' - ';
-                    } else {
-                        for (var j = 0; j < response.datas[i]['lab'].length; j++) {
-                            str += response.datas[i]['lab'][j]['value'];
-                            if (j != response.datas[i]['lab'].length - 1) {
-                                str += '<br/>';
-                            }
-                        }
-                    }
-                    str += '</td><td style="vertical-align: middle;">';
-                    if (response.datas[i]['scaling'].length == 0) {
-                        str += ' - ';
-                    } else {
-                        for (var j = 0; j < response.datas[i]['scaling'].length; j++) {
-                            str += response.datas[i]['scaling'][j]['value'];
-                            if (j != response.datas[i]['scaling'].length - 1) {
-                                str += '<br/>';
-                            }
-                        }
-                    }
-                    str += '</td><td style="vertical-align: middle;">';
-                    if (response.datas[i]['panorama'].length == 0) {
-                        str += ' - ';
-                    } else {
-                        for (var j = 0; j < response.datas[i]['panorama'].length; j++) {
-                            str += response.datas[i]['panorama'][j]['value'];
-                            if (j != response.datas[i]['panorama'].length - 1) {
-                                str += '<br/>';
-                            }
-                        }
-                    }
+                    
                     str += '</td>';
 
-                    var method = '<td style="vertical-align: middle;">'
+                    var method = '<td>'
                     if (response.datas[i]['paid_by_card'] != '')
                         method += 'card<br/>';
                     if (response.datas[i]['paid_by_cash'] != '')
@@ -262,21 +237,18 @@ function search_payment(page=null) {
                     str += method.substring(0,method.length-5);
                     str += '</td>'
 
-                    str += '<td style="vertical-align: middle;">' + numberWithCommas(response.datas[i]['paid']) + '</td>' +
-                        '<td style="vertical-align: middle;">' + numberWithCommas(response.datas[i]['unpaid']) + '</td>' +
-                        '<td style="vertical-align: middle;">' + numberWithCommas(response.datas[i]['total']) + '</td></td>';
+                    str += '<td>' + numberWithCommas(response.datas[i]['total']) + '</td>';
+
 
                 }
                 else {
-                    str +="<td colspan='14'></td></tr>"
+                    str +="<td colspan='10'></td></tr>"
                 }
 
                 $('#payment_table_result').append(str);
             }
-            
+
             $('#payment_total_total').html(numberWithCommas(response.payment_total_total));
-            $('#payment_total_paid').html(numberWithCommas(response.payment_total_paid));
-            $('#payment_total_unpaid').html(numberWithCommas(response.payment_total_unpaid));
 
             //페이징
             $('#payment_pagnation').html('');
@@ -330,8 +302,8 @@ function search_doctor_profit(page = null) {
             'general': $('#doctor_search_general option:selected').val(),
             'medicine': $('#doctor_search_medicine option:selected').val(),
             'lab': $('#doctor_search_lab option:selected').val(),
-            'scaling': $('#doctor_search_scaling option:selected').val(),
-            'panorama': $('#doctor_search_panorama option:selected').val(),
+            //'scaling': $('#doctor_search_scaling option:selected').val(),
+            //'panorama': $('#doctor_search_panorama option:selected').val(),
             'page': page, 
         },
         dataType: 'Json',
@@ -355,7 +327,6 @@ function search_doctor_profit(page = null) {
                     if (response.datas[i]['general'].length == 0) {
                         str += ' - ';
                     } else {
-
                         for (var j = 0; j < response.datas[i]['general'].length; j++) {
                             str += response.datas[i]['general'][j]['value'];
                             if (j != response.datas[i]['general'].length - 1) {
@@ -368,7 +339,6 @@ function search_doctor_profit(page = null) {
                     if (response.datas[i]['medi'].length == 0) {
                         str += ' - ';
                     } else {
-
                         for (var j = 0; j < response.datas[i]['medi'].length; j++) {
                             str += response.datas[i]['medi'][j]['value'];
                             if (j != response.datas[i]['medi'].length - 1) {
@@ -381,7 +351,6 @@ function search_doctor_profit(page = null) {
                     if (response.datas[i]['lab'].length == 0) {
                         str += ' - ';
                     } else {
-
                         for (var j = 0; j < response.datas[i]['lab'].length; j++) {
                             str += response.datas[i]['lab'][j]['value'];
                             if (j != response.datas[i]['lab'].length - 1) {
@@ -389,100 +358,11 @@ function search_doctor_profit(page = null) {
                             }
                         }
                     }
-
-                    str += '</td><td style="vertical-align: middle;">';
-                    if (response.datas[i]['scaling'].length == 0) {
-                        str += ' - ';
-                    } else {
-
-                        for (var j = 0; j < response.datas[i]['scaling'].length; j++) {
-                            str += response.datas[i]['scaling'][j]['value'];
-                            if (j != response.datas[i]['scaling'].length - 1) {
-                                str += '<br/>';
-                            }
-                        }
-                    }
-
-                    str += '</td><td style="vertical-align: middle;">';
-                    if (response.datas[i]['panorama'].length == 0) {
-                        str += ' - ';
-                    } else {
-
-                        for (var j = 0; j < response.datas[i]['panorama'].length; j++) {
-                            str += response.datas[i]['panorama'][j]['value'];
-                            if (j != response.datas[i]['panorama'].length - 1) {
-                                str += '<br/>';
-                            }
-                        }
-                    }
                     str += '</td></tr>';
 
-
-                    // exam fee
-                    //str += '</td><td style="vertical-align: middle;';
-                    //if (response.datas[i]['general'].length == 0) {
-                    //    str += '"> - ';
-                    //} else {
-                    //    for (var j = 0; j < response.datas[i]['general'].length; j++) {
-                    //        str += '" title="' + response.datas[i]['general'][j]['value'] + '">' +
-                    //            response.datas[i]['general'][j]['code'] + '</td>';
-                    //        if (j != response.datas[i]['general'].length - 1) {
-                    //            str += '<br/>';
-                    //        }
-                    //    }
-                    //}
-                    //str += '</td><td style="vertical-align: middle;';
-                    //if (response.datas[i]['medi'].length == 0) {
-                    //    str += '"> - ';
-                    //} else {
-                    //    for (var j = 0; j < response.datas[i]['medi'].length; j++) {
-                    //        str += '" title="' + response.datas[i]['medi'][j]['value'] + '">' +
-                    //            response.datas[i]['medi'][j]['code'] + '</td>';
-                    //        if (j != response.datas[i]['medi'].length - 1) {
-                    //            str += '<br/>';
-                    //        }
-                    //    }
-                    //}
-                    //str += '</td><td style="vertical-align: middle;';
-                    //if (response.datas[i]['lab'].length == 0) {
-                    //    str += '"> - ';
-                    //} else {
-                    //    for (var j = 0; j < response.datas[i]['lab'].length; j++) {
-                    //        str += '" title="' + response.datas[i]['lab'][j]['value'] + '">' +
-                    //            response.datas[i]['lab'][j]['code'] + '</td>';
-                    //        if (j != response.datas[i]['lab'].length - 1) {
-                    //            str += '<br/>';
-                    //        }
-                    //    }
-                    //}
-                    //str += '</td><td style="vertical-align: middle;';
-                    //if (response.datas[i]['scaling'].length == 0) {
-                    //    str += '"> - ';
-                    //} else {
-                    //    for (var j = 0; j < response.datas[i]['scaling'].length; j++) {
-                    //        str += '" title="' + response.datas[i]['scaling'][j]['value'] + '">' +
-                    //            response.datas[i]['scaling'][j]['code'] + '</td>';
-                    //        if (j != response.datas[i]['scaling'].length - 1) {
-                    //            str += '<br/>';
-                    //        }
-                    //    }
-                    //}
-                    //str += '</td><td style="vertical-align: middle;';
-                    //if (response.datas[i]['panorama'].length == 0) {
-                    //    str += '"> - ';
-                    //} else {
-                    //    for (var j = 0; j < response.datas[i]['panorama'].length; j++) {
-                    //        str += '" title="' + response.datas[i]['panorama'][j]['value'] + '">' +
-                    //            response.datas[i]['panorama'][j]['code'] + '</td>';
-                    //        if (j != response.datas[i]['panorama'].length - 1) {
-                    //            str += '<br/>';
-                    //        }
-                    //    }
-                    //}
-                    //str += '</td></tr>';
                 }
                 else {
-                    str += "<td colspan='10'></td></tr>"
+                    str += "<td colspan='8'></td></tr>"
                 }
 
                 $('#doctors_table_result').append(str);
@@ -493,8 +373,6 @@ function search_doctor_profit(page = null) {
             $('#subtotal_general').html(numberWithCommas(response.amount_general) + ' VND');
             $('#subtotal_medicine').html(numberWithCommas(response.amount_medicine) + ' VND');
             $('#subtotal_lab').html(numberWithCommas(response.amount_lab) + ' VND');
-            $('#subtotal_scaling').html(numberWithCommas(response.amount_scaling) + ' VND');
-            $('#subtotal_panorama').html(numberWithCommas(response.amount_panorama) + ' VND');
 
             set_profit_total();
 
@@ -545,21 +423,21 @@ function set_profit_total() {
     var subtotal_general = $('#subtotal_general').html().replace(regex,'');
     var subtotal_medicine = $('#subtotal_medicine').html().replace(regex, '');
     var subtotal_lab = $('#subtotal_lab').html().replace(regex, '');
-    var subtotal_scaling = $('#subtotal_scaling').html().replace(regex, '');
-    var subtotal_panorama = $('#subtotal_panorama').html().replace(regex, '');
+    //var subtotal_scaling = $('#subtotal_scaling').html().replace(regex, '');
+    //var subtotal_panorama = $('#subtotal_panorama').html().replace(regex, '');
 
     var profit_general = $('#profit_general').val();
     var profit_medicine = $('#profit_medicine').val();
     var profit_lab = $('#profit_lab').val();
-    var profit_scaling = $('#profit_scaling').val();
-    var profit_panorama = $('#profit_panorama').val();
+    //var profit_scaling = $('#profit_scaling').val();
+    //var profit_panorama = $('#profit_panorama').val();
 
    
     var profit_total_general = subtotal_general * profit_general / 100;
     var profit_total_medicine = subtotal_medicine * profit_medicine / 100;
     var profit_total_lab = subtotal_lab * profit_lab / 100;
-    var profit_total_scaling = subtotal_scaling * profit_scaling / 100;
-    var profit_total_panorama = subtotal_panorama * profit_panorama / 100;
+    //var profit_total_scaling = subtotal_scaling * profit_scaling / 100;
+    //var profit_total_panorama = subtotal_panorama * profit_panorama / 100;
 
 
 
@@ -567,15 +445,15 @@ function set_profit_total() {
     $('#profit_total_general').html(numberWithCommas(profit_total_general) + ' VND');
     $('#profit_total_medicine').html(numberWithCommas(profit_total_medicine) + ' VND');
     $('#profit_total_lab').html(numberWithCommas(profit_total_lab) + ' VND');
-    $('#profit_total_scaling').html(numberWithCommas(profit_total_scaling) + ' VND');
-    $('#profit_total_panorama').html(numberWithCommas(profit_total_panorama) + ' VND');
+    //$('#profit_total_scaling').html(numberWithCommas(profit_total_scaling) + ' VND');
+    //$('#profit_total_panorama').html(numberWithCommas(profit_total_panorama) + ' VND');
 
     $('#profit_total_total').html(numberWithCommas(
         profit_total_general +
         profit_total_medicine +
-        profit_total_lab +
-        profit_total_scaling +
-        profit_total_panorama) + ' VND');
+        profit_total_lab) + ' VND');
+        //profit_total_scaling +
+        //profit_total_panorama) + ' VND');
 
 }
 

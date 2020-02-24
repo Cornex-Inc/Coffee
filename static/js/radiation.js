@@ -31,7 +31,7 @@ $(function () {
         
     $('#zoom').click(function () {
         if ($('#selected_img_id').val() == '') {
-            alert('Image Select or save First');
+            alert(gettext('Image Select or save First.'));
             return;
         }
 
@@ -158,7 +158,7 @@ function delete_image(image_id,li) {
             dataType: 'Json',
             success: function (response) {
                 if (response.result == 'success') {
-                    alert('deleted.');
+                    alert(gettext('deleted.'));
                     var parent_ul = $(li).parent();
                     $(li).parent().remove();
                     if ($(li).parent().length == 1)

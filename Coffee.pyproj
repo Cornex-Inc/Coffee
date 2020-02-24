@@ -256,6 +256,7 @@
     <Content Include="Doctor\static\img\DX_AN.png" />
     <Content Include="Doctor\static\img\DX_AN_Front.png" />
     <Content Include="Doctor\static\img\DX_AN_Rear.png" />
+    <Content Include="Doctor\static\img\Medical_Exam_X.png" />
     <Content Include="Doctor\static\js\doctor.js" />
     <Content Include="Doctor\static\js\audit.js" />
     <Content Include="Doctor\static\js\doctor_PM.js" />

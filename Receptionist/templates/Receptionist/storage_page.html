@@ -200,8 +200,8 @@
 </script>
 
 <div class="page_bill" style="background-image:url({% static 'img/background_back.png'%}) !important">
-        <div class="sun_info">
-            <!--<img src="{% static 'img/recepts_top.png' %}" style="width:16cm;"/>-->
+        <div class="print_top_info">
+            <img src="{% static 'img/recepts_top.png' %}" style="width:16cm;"/>
         </div>
         <div class="title" >MEDICAL RECEIPT</div>
         <div class="chart">
@@ -251,18 +251,32 @@
                 </tbody>
             
                     
-
+            <tbody id="space">
+                <tr>
+                    <td style="height:18px;"></td>
+                </tr>
+            </tbody>
             <tbody class="chart_table_contents_title">
                 <tr>
                     <th colspan="2">ITEM</th>
-                    <th style="width:2cm;">Unit Price</th>
+                    <th style="width:2cm; text-align:right">Unit Price</th>
                     <th style="width:2cm; text-align:center;">Quantity</th>
                     <th style="width:2.5cm;text-align:right;">Amount</th>
-                    <th>VND</th>
+                    <th style="text-align:right;">VND</th>
+                </tr>
+            </tbody>
+            <tbody id="space">
+                <tr>
+                    <td style="height:18px;"></td>
                 </tr>
             </tbody>
             <tbody id="chart_table_contents_items">
 
+            </tbody>
+            <tbody id="space">
+                <tr>
+                    <td style="height:40px;"></td>
+                </tr>
             </tbody>
             <tbody class="chart_table_total">
                 <tr>

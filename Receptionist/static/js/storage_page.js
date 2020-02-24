@@ -434,7 +434,7 @@ function waiting_selected(paymentrecord_id) {
                         "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['exams'][i].price) + " VND</td></tr>";
 
                     recepts_table += '<tr>  ' +
-                        '<td colspan="2">&nbsp;&nbsp;' + response.datas['exams'][i].name + '</td>' +
+                        '<td colspan="2">' + response.datas['exams'][i].name + '</td>' +
                         '<td style="text-align:right;">' + numberWithCommas(response.datas['exams'][i].price) + '</td>' +
                         '<td></td>' +
                         '<td style="text-align:right;">' + numberWithCommas(response.datas['exams'][i].price) + '</td><td></td></tr>';
@@ -452,7 +452,7 @@ function waiting_selected(paymentrecord_id) {
                         "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['tests'][i].price) + " VND</td></tr>";
 
                     recepts_table += '<tr>' +
-                        '<td>&nbsp;&nbsp;' + response.datas['tests'][i].name + '</td>' +
+                        '<td>' + response.datas['tests'][i].name + '</td>' +
                         '<td style="text-align:right;">' + numberWithCommas(response.datas['tests'][i].price) + '</td>' +
                         '<td></td>' +
                         '<td style="text-align:right;">' + numberWithCommas(response.datas['tests'][i].price) + '</td><td></td></tr>';
@@ -479,7 +479,7 @@ function waiting_selected(paymentrecord_id) {
 
 
                     recepts_table += '<tr>' +
-                        '<td colspan="2">&nbsp;&nbsp;' + response.datas['precedures'][i].name + '</td>' +
+                        '<td colspan="2">' + response.datas['precedures'][i].name + '</td>' +
                         '<td style="text-align:right;">' + numberWithCommas(response.datas['precedures'][i].price) + '</td>';
                     if (response.datas['precedures'][i].code.search('R') == -1) {
                         recepts_table += '<td style="text-align:center;"></td>';
@@ -505,7 +505,7 @@ function waiting_selected(paymentrecord_id) {
 
 
                     recepts_table += "<tr class='chart_table_medicine_contents'>" +
-                        "<td colspan='2'>&nbsp;&nbsp;" + response.datas['medicines'][i].name + "</td>" +
+                        "<td colspan='2'>" + response.datas['medicines'][i].name + "</td>" +
                         "<td style='text-align: right;'>" + numberWithCommas(response.datas['medicines'][i].unit) + "</td>" +
                         "<td>" + response.datas['medicines'][i].quantity + "</td>" +
                         "<td style='text-align: right;'>" + numberWithCommas(response.datas['medicines'][i].price) + "</td><td></td></tr>";
@@ -845,7 +845,7 @@ function get_today_selected(reception_id) {
                         "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['exams'][i].price) + " VND</td></tr>";
 
                     recepts_table += '<tr>' +
-                        '<td colspan="2">&nbsp;&nbsp;' + response.datas['exams'][i].name + '</td>' +
+                        '<td colspan="2">' + response.datas['exams'][i].name + '</td>' +
                         '<td style="text-align:right;">' + numberWithCommas(response.datas['exams'][i].price) + '</td>' +
                         '<td></td>' +
                         '<td style="text-align:right;">' + numberWithCommas(response.datas['exams'][i].price) + '</td><td></td></tr>';
@@ -863,7 +863,7 @@ function get_today_selected(reception_id) {
                         "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['tests'][i].price) + " VND</td></tr>";
 
                     recepts_table += '<tr>' +
-                        '<td colspan="2">&nbsp;&nbsp;' + response.datas['tests'][i].name + '</td>' +
+                        '<td colspan="2">' + response.datas['tests'][i].name + '</td>' +
                         '<td style="text-align:right;">' + numberWithCommas(response.datas['tests'][i].price) + '</td>' +
                         '<td></td>' +
                         '<td style="text-align:right;">' + numberWithCommas(response.datas['tests'][i].price) + '</td><td></td></tr>';
@@ -890,7 +890,7 @@ function get_today_selected(reception_id) {
 
 
                     recepts_table += '<tr>' +
-                        '<td colspan="2">&nbsp;&nbsp;' + response.datas['precedures'][i].name + '</td>' +
+                        '<td colspan="2">' + response.datas['precedures'][i].name + '</td>' +
                         '<td style="text-align:right;">' + numberWithCommas(response.datas['precedures'][i].price) + '</td>';
                     if (response.datas['precedures'][i].code.search('R') == -1) {
                         recepts_table += '<td style="text-align:center;"></td>';

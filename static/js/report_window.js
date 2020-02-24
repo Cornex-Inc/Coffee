@@ -1,4 +1,4 @@
-﻿jQuery.browser = {};
+jQuery.browser = {};
 $(function () {
     $('.input_part').keyup(function () {
         set_print_html();

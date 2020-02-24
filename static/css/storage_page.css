@@ -139,7 +139,7 @@
 
 @media ( min-width: 1900px ) {
     .storage_item_table {
-        height: 500px;
+        height: 400px;
         overflow: auto;
         margin-bottom: 20px;
     }
@@ -178,29 +178,32 @@
     html, body {
         min-width: 210mm;
         max-width: 210mm;
-        
         /*max-height: 297mm;
         min-height: 297mm;*/
     }
     .page_bill {
+        min-height:900px;
         margin: 0 auto;
         margin-top: 2cm;
         text-align: center;
         display: block;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
     }
-
-        .page_bill .sun_info {
-            margin: 0 auto;
-            width: 169mm;
-        }
-
+        /*
+    .page_bill .sun_info {
+        margin: 0 auto;
+        width: 169mm;
+    }
+        */
     .page_bill .title  {
         width: 100%;
         text-align: center;
         margin-top: 30px;
-        margin-bottom: 10px;
-        font-size: 15px;
-        font-weight: 500;
+        margin-bottom: 100px;
+        font-size: 20px;
+        font-weight: 700;
+        
     }
 
         .page_bill .chart {
@@ -230,13 +233,21 @@
 
     .page_bill .chart_table_contents_title tr:first-child td {
         vertical-align: middle;
-        text-align:center;
+        text-align:left;
     }
-    .chart_table_contents_title tr td{
-       
+    .chart_table_contents_title tr td {
+        /*border: 1px solid black;*/
+        padding: 3px;
+    }
+    #chart_table_contents_items tr td {
+        /*border: 1px solid black;*/
+        padding: 3px;
     }
 
     .page_bill .chart_table_info {
+        font-size:16px;
+        font-weight:700;
+        
     }
 
     .page_bill .chart table tbody tr td:nth-child(2) {
@@ -260,7 +271,12 @@
     }
 
     .page_bill .chart_table_total {
-        border-top: 40px solid rgba(0,0,0,0);
+        border-top: 1px solid black;
+        /*border: 1px solid black;*/
+    }
+    .chart_table_total tr td{
+        padding:3px;
+        font-weight:700;
     }
 
 
@@ -292,7 +308,7 @@
 
     .page_bill tbody tr td:first-child {
         margin: 0 auto;
-        text-align: center;
+        text-align: left;
     }
 
     .page_bill tr {

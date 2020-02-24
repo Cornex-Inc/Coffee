@@ -1,6 +1,4 @@
-.modal-dialog{
-    width:850px;
-}
+
 
 .form-control {
     font-size: 12px;
@@ -207,7 +205,9 @@
     margin: 50px;
 }
 
-
+.modal-dialog {
+    width: 850px;
+}
 
 .medical_exam_pm .func_container {
     margin-top: 20px;
@@ -245,7 +245,7 @@
 
     .ul_pain_slider_img li {
         float: left;
-        width: 100px;
+        width: 150px;
         margin-left: -1px;
         /*border:1px solid black;*/
     }
@@ -265,7 +265,7 @@
 }
 #visit_motiv_etc {
     display: inline;
-    width: 460px;
+    width: 700px;
 }
 
 .input_report_vital{
@@ -276,6 +276,46 @@
 .table_vital tr td:nth-child(2n-1) {
     width: 60px;
     text-align: right;
+}
+
+.q2_items_div {
+    width: 100%;
+    height: 400px;
+    background: white;
+    text-align: center;
+    margin-bottom: 20px;
+
+}
+
+    .q2_items_div > div:first-child {
+        height:400px;
+        width:440px;
+        position:absolute;
+        background-size: 440px 400px;
+        background-repeat: no-repeat;
+        left:50%;
+        transform:translateX(-50%);
+    }
+
+.q2_items {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+}
+.q2_item_select{
+    border-color:#dddddd;
+    height:25px;
+}
+
+
+
+    .q2_item_select option {
+        color: black;
+    }
+    .q2_item_select option:first-child{
+    color:#aaaaaa;
 }
 
 @media ( min-width: 1900px ) {

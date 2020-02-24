@@ -37,11 +37,11 @@ $(function () {
 
 function save_data_control() {
     if ($('#selected_option').val() == '') {
-        alert("select medicine");
+        alert(gettext("Select medicine first."));
         return;
     }
     if (isNaN($('#medicine_search_changes').val()) == true) {
-        alert('Amount should be number');
+        alert(gettext('Amount should be number'));
         return;
     }
 
@@ -61,7 +61,7 @@ function save_data_control() {
         },
         dataType: 'Json',
         success: function (response) {
-            alert('saved');
+            alert(gettext('Saved.'));
             $('.database_control input').each(function () {
                 if ($(this).attr('type') == 'button')
                     return;
@@ -108,11 +108,11 @@ function set_new() {
 function pharmacy_control_save(Done = false) {
     var diagnosis_id = $('#selected_diagnosis').val();
     if (diagnosis_id.trim() == '') {
-        alert('환자 먼저 선택');
+        alert(gettext('Select patient first.'));
         return;
     }
     if ($('#selected_diagnosis_status').val() == 'done') {
-        alert('Already done');
+        alert(gettext('Already done.'));
         return;
     }
 
@@ -131,7 +131,7 @@ function pharmacy_control_save(Done = false) {
         },
         dataType: 'Json',
         success: function (response) {
-            alert("저장 되었습니다.");
+            alert(gettext("Saved."));
         },
         error: function (request, status, error) {
             alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);

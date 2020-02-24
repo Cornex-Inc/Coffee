@@ -13,7 +13,7 @@
     width: 100%;
     display: grid;
     grid-template-columns: 50%;
-    grid-template-rows: 60%;
+    grid-template-rows: 350px;
 }
 
 .partition {
@@ -64,13 +64,13 @@
 }
 
 
-.reception_search_patient {
+.receptionearch_patient {
     grid-row-start: 2;
     grid-row-end: 3;
     grid-column-start: 1;
     grid-column-end: 2;
     border-right: none;
-    overflow: auto;
+    overflow: hidden;
 }
 
 
@@ -101,18 +101,23 @@
         margin-bottom:5px;
     }
 
-    .status_button {
-        width: 75px;
-    }
+.save_cancel_btn {
+    width: 75px;
+    
+}
+
+.save_recp_btn{
+    width:150px;
+}
 
 .status_table_filter {
-    display:inline;
-    font-size:15px;
-    float:right;
+    display: inline;
+    font-size: 15px;
 }
 
 .patient_table{
-    margin-top:10px;
+    height:300px;
+    margin:0px;
 }
 
 
@@ -191,35 +196,164 @@
 }
 
 .need_medical_report {
-    margin-left: 150px;
+    font-weight:300;
+}
+
+
+.medical_exam_pm .container {
+    width: 700px;
+    margin: 50px;
+}
+
+.modal-dialog {
+    width: 850px;
+}
+
+.medical_exam_pm .func_container {
+    margin-top: 20px;
+    width: 100%;
+    text-align: right;
+}
+
+.medical_exam_pm #physiotherapy_count, .medical_exam_pm #injection_treatment_count, .medical_exam_pm #taking_medicine_count, .medical_exam_pm #acupuncture_count {
+    width: 40px;
+    display:inline;
+}
+
+.medical_exam_pm .hoi {
+}
+
+
+
+.medical_exam_pm #pain_level {
+    width: 100px;
+}
+
+.medical_exam_pm p {
+    font-size: 16px;
+    font-weight: bold;
+}
+.medical_exam_pm label{
+    font-weight:300;
+}
+
+.ul_pain_slider_img {
+    font-size:20px; 
+    list-style:none;
+    padding:0px;
+}
+
+    .ul_pain_slider_img li {
+        float: left;
+        width: 150px;
+        margin-left: -1px;
+        /*border:1px solid black;*/
+    }
+
+#operation_name {
+    width: 100px;
+    display:inline;
+}
+
+#operation_year {
+    width: 100px;
+    display: inline;
+}
+#visit_motiv_friend {
+    display: inline;
+    width: 150px;
+}
+#visit_motiv_etc {
+    display: inline;
+    width: 700px;
+}
+
+.input_report_vital{
+    display:inline;
+    width:70px;
+}
+
+.table_vital tr td:nth-child(2n-1) {
+    width: 60px;
+    text-align: right;
+}
+
+.q2_items_div {
+    width: 100%;
+    height: 400px;
+    background: white;
+    text-align: center;
+    margin-bottom: 20px;
+
+}
+
+    .q2_items_div > div:first-child {
+        height:400px;
+        width:440px;
+        position:absolute;
+        background-size: 440px 400px;
+        background-repeat: no-repeat;
+        left:50%;
+        transform:translateX(-50%);
+    }
+
+.q2_items {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+}
+.q2_item_select{
+    border-color:#dddddd;
+    height:25px;
+}
+
+
+
+    .q2_item_select option {
+        color: black;
+    }
+    .q2_item_select option:first-child{
+    color:#aaaaaa;
 }
 
 @media ( min-width: 1900px ) {
+    .reception_grid {
+        grid-template-columns: 50%;
+        grid-template-rows: 350px;
+    }
+
+    .patient_table {
+        height: 300px;
+        margin: 0px;
+    }
+
     .input-group {
-        width: 400px;
+        width: 430px;
     }
 
     .costom-select {
         width: 300px;
     }
 
+    .patient_search_select{
+        width:123px;
+    }
     .patient_table_title {
         width: 150px;
     }
 
     .patient_search_table_wrap {
-        height: 290px;
+        height: 400px;
     }
 
     .reception_wait_table_wrap {
-        height: 470px;
+        height: 390px;
     }
 
     .input-group-long {
-        width: 850px;
+        width: 885px;
     }
 
-    .need_medical_report {
-        margin-left: 250px;
-    }
 }

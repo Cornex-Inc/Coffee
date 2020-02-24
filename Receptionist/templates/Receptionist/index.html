@@ -293,8 +293,6 @@
                                         <td>
                                             <input type="text" class="form-control input_report_vital" id="input_vital_bmi" /> kg/m2
                                         </td>
-                                    </tr>
-                                    <tr>
                                         <td>
                                             {{ _('혈압') }} : 
                                         </td>
@@ -307,73 +305,77 @@
                                         <td>
                                             <input type="text" class="form-control input_report_vital" id="input_vital_bt" /> ˚C
                                         </td>
-                                        <td></td>
-                                        <td></td>
                                     </tr>
                                 </table>
+                            </div>
+                            <br/>
+                            <div class="q2_items_div">
+                                <div style="background-image: url('{% static 'img/DX_AN.png'%}')" >
+                                    {% for item in initial_report_q2 %}
+                                    <div class="q2_items" data_code="{{ item.seq }}" data_seq="{{ item.se1 }}" id="q2_items_{{item.se1}}" style="background-image:url('{% static 'img/Medical_Exam_X.png'%}'); left:{{item.se4}}px; top:{{item.se5}}px; display:none; "></div>
+                                    {% endfor %}
+                                </div>
                             </div>
                             <br />
                             <p class="question_item">{{ _('2. 현재 불편한 부위와 증상에 표시하여 주세요.') }}</p>
                             <table class="table">
+                                {% for data in initial_report_q2_title%}
+                                {% if forloop.counter0|divisibleby:4 %}
                                 <tr>
-                                    <td rowspan="5">{{ _('1)부위)') }}</td>
-                                    <td><input type="checkbox" id="pain_location_text_1" class="pain_location_text" value="1"/><label for="pain_location_text_1">{{ _('목') }}</label></td>
-                                    <td><input type="checkbox" id="pain_location_text_2" class="pain_location_text" value="2"/><label for="pain_location_text_2">{{ _('등') }}</label></td>
-                                    <td><input type="checkbox" id="pain_location_text_3" class="pain_location_text" value="3"/><label for="pain_location_text_3">{{ _('어깨') }}</label></td>
-                                    <td><input type="checkbox" id="pain_location_text_4" class="pain_location_text" value="4"/><label for="pain_location_text_4">{{ _('허리') }}</label></td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" id="pain_location_text_5" class="pain_location_text" value="5"/><label for="pain_location_text_5">{{ _('엉덩이') }}</label></td>
-                                    <td><input type="checkbox" id="pain_location_text_6" class="pain_location_text" value="6"/><label for="pain_location_text_6">{{ _('팔') }}</label></td>
-                                    <td><input type="checkbox" id="pain_location_text_7" class="pain_location_text" value="7"/><label for="pain_location_text_7">{{ _('팔꿈치') }}</label></td>
-                                    <td><input type="checkbox" id="pain_location_text_8" class="pain_location_text" value="8"/><label for="pain_location_text_8">{{ _('손등') }}</label></td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" id="pain_location_text_9" class="pain_location_text"  value="9"/><label for="pain_location_text_9">{{ _('손가락') }}</label></td>
-                                    <td><input type="checkbox" id="pain_location_text_10" class="pain_location_text" value="10"/><label for="pain_location_text_10">{{ _('손바닥') }}</label></td>
-                                    <td><input type="checkbox" id="pain_location_text_11" class="pain_location_text" value="11"/><label for="pain_location_text_11">{{ _('손목') }}</label></td>
-                                    <td><input type="checkbox" id="pain_location_text_12" class="pain_location_text" value="12"/><label for="pain_location_text_12">{{ _('허벅지') }}</label></td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" id="pain_location_text_13" class="pain_location_text" value="13"/><label for="pain_location_text_13">{{ _('무릎') }}</label></td>
-                                    <td><input type="checkbox" id="pain_location_text_14" class="pain_location_text" value="14"/><label for="pain_location_text_14">{{ _('종아리') }}</label></td>
-                                    <td><input type="checkbox" id="pain_location_text_15" class="pain_location_text" value="15"/><label for="pain_location_text_15">{{ _('정강이') }}</label></td>
-                                    <td><input type="checkbox" id="pain_location_text_16" class="pain_location_text" value="16"/><label for="pain_location_text_16">{{ _('발등') }}</label></td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" id="pain_location_text_17" class="pain_location_text" value="17"/><label for="pain_location_text_17">{{ _('발가락') }}</label></td>
-                                    <td><input type="checkbox" id="pain_location_text_18" class="pain_location_text" value="18"/><label for="pain_location_text_18">{{ _('발바닥') }}</label></td>
-                                    <td><input type="checkbox" id="pain_location_text_19" class="pain_location_text" value="19"/><label for="pain_location_text_19">{{ _('발목') }}</label></td>
-                                    <td></td>                                                                        
-                                </tr>
-                            </table>
+                                {% endif %}
+                                    <td>
+                                        <input type="checkbox" id="pain_location_text_{{ data.seq }}" class="pain_location_text" value="{{ data.seq }}" data_code="{{ data.seq }}"/>
+                                        <label for="pain_location_text_{{ data.seq }}">{{ data.se2 }}</label>
+                                        {% if data.se6 != 'hidden' %}
+                                        <select class="q2_item_select" id="q2_item_select1_{{ data.seq }}" data_code="{{ data.seq }}">
+                                            <option value="" selected>선택</option>
+                                            <option value="0">앞</option>
+                                            <option value="1">뒤</option>
+                                        </select>
+                                        {% else %}
+                                        <select class="q2_item_select" id="q2_item_select1_{{ data.seq }}" style="display:none;" data_code="{{ data.seq }}">
+                                            <option value="0" selected></option>
+                                        </select>
+                                        {% endif %}
+                                        <select class="q2_item_select q2_item_select2" id="q2_item_select2_{{ data.seq }}" data_code="{{ data.seq }}">
+                                            <option value="" selected>선택</option>
+                                            <option value="0">좌</option>
+                                            <option value="2">우</option>
+                                            {% if data.se7 == 'middle' %}
+                                            <option value="1">가운데</option>
+                                            {% endif %}
+                                        </select>
+                                    </td>
+                                
+                                {% endfor %}
+                                    <td></td>
+                                    </table>
+                            <!--
                             <table class="table">
                                 <tr>
-                                    <td>{{_('2)방향')}}</td>
+                                    <td style="vertical-align:middle;">{{_('2)방향')}}</td>
                                     <td><input type="checkbox" id="pain_location_text_20" class="pain_location_text" value="20"/><label for="pain_location_text_20">{{ _('왼쪽') }}</label></td>
                                     <td><input type="checkbox" id="pain_location_text_21" class="pain_location_text" value="21"/><label for="pain_location_text_21">{{ _('가운데') }}</label></td>
                                     <td><input type="checkbox" id="pain_location_text_22" class="pain_location_text" value="22"/><label for="pain_location_text_22">{{ _('오른쪽') }}</label></td>
                                 </tr>
                             </table>
+                                -->
                             <table class="table">
                                 <tr>
-                                    <td rowspan="2">{{ _('3)증상') }}</td>
+                                    <td rowspan="2" style="vertical-align:middle;">{{ _('3)증상') }}</td>
                                     <td><input type="checkbox" id="pain_location_text_23" class="pain_location_text" value="23"/><label for="pain_location_text_23">{{ _('당긴다') }}</label></td>
                                     <td><input type="checkbox" id="pain_location_text_24" class="pain_location_text" value="24"/><label for="pain_location_text_24">{{ _('저리다') }}</label></td>
                                     <td><input type="checkbox" id="pain_location_text_25" class="pain_location_text" value="25"/><label for="pain_location_text_25">{{ _('쑤신다') }}</label></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2"><input type="checkbox" id="pain_location_text_26" class="pain_location_text" value="26"/><label for="pain_location_text_26">{{ _('감각이 둔하다') }}</label></td>
+                                    <td><input type="checkbox" id="pain_location_text_26" class="pain_location_text" value="26"/><label for="pain_location_text_26">{{ _('감각이 둔하다') }}</label></td>
                                     <td><input type="checkbox" id="pain_location_text_27" class="pain_location_text" value="27" /><label for="pain_location_text_27">{{ _('마비가 된다') }}</label></td>
                                 </tr>
                                 <tr>
                                     <td>{{ _('발병시기') }}</td>
-                                    <td colspan="3"><input class="form-control" type="text" id="occurred_date"></td>
+                                    <td colspan="4"><input class="form-control" type="text" id="occurred_date"></td>
                                 </tr>
                             </table>
 
                         </div>
-                        <br />
                         <div>
                             <p class="question_item">{{ _('3. 최근 6개월 내 현재 증상으로 치료 받은 내역을 체크해주세요 (한의원 포함) ') }}</p>
                             <input type="checkbox" id="treatment_history_yn" /><label for="treatment_history_yn">{{ _('없음') }}</label>
@@ -396,7 +398,6 @@
                                 </tr>
                             </table>
                         </div>
-                        <br />
                         <div>
                             <p class="question_item">{{ _('4. 통증 정도가 어느정도인지 표시해주세요.') }}</p>
                              <input type="text" class="js-range-slider" id="pain_slider" name="my_range" value="" />
@@ -410,7 +411,7 @@
                             </ul>
 
                         </div>
-                        <br /><br />
+                        <br />
                         <div>
                             <p class="question_item">{{ _('5. 한번이라도 수술 받으신 적이 있나요 ?') }}</p>
                             <table class="table">
@@ -425,7 +426,6 @@
                                 </tr>
                             </table>
                         </div>
-                        <br />
                         <div>
                             <p class="question_item">{{ _('6. 위 증상과 관련된 어떤 검사를 하셨는지요?') }}</p>
                             <table class="table">
@@ -438,8 +438,8 @@
                                 </tr>
                                 <tr>
                                     <td colspan="5">
-                                        <label for="test_kinds_etc">{{ _('기타') }}</label>
-                                        <input type="text" id="test_etc" class="form-control"/>
+                                        <label for="test_kinds_etc">{{ _('기타') }} : </label>
+                                        <input type="text" id="test_etc" class="form-control" style="display:inline; width:630px"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -453,7 +453,6 @@
                                 </tr>
                             </table>
                         </div>
-                        <br />
                         <div>
                             <p class="question_item">{{ _('7. 현재 치료중인 질환과 복용약이 있으신가요? (아스피린, 쿠마딘, 와파린 등)') }}</p>
                             <table class="table">
@@ -472,15 +471,14 @@
                                 </tr>
                                 <tr>
                                     <td><label>{{ _('기타') }}</label></td>
-                                    <td colspan="3"><textarea id="disease_etc" class="form-control" style="resize: vertical;"></textarea></td>
+                                    <td colspan="4"><textarea id="disease_etc" class="form-control" style="resize: vertical;"></textarea></td>
                                 </tr>
                                 <tr>
                                     <td><label>{{ _('복용약') }}</label></td>
-                                    <td colspan="3"><textarea id="medication" class="form-control" style="resize: vertical;"></textarea></td>
+                                    <td colspan="4"><textarea id="medication" class="form-control" style="resize: vertical;"></textarea></td>
                                 </tr>
                             </table>
                         </div>
-                        <br />
                         <div>
                             <p class="question_item">{{ _('8. 약에 대한 부작용은 있으신가요?') }}</p>
                             <table>
@@ -494,7 +492,6 @@
                             </table>
 
                         </div>
-                        <br />
                         <div>
                             <p class="question_item">{{ _('9. 임신 가능성이 있으신가요?') }}</p>
                             <table>
@@ -513,7 +510,6 @@
                                 </tr>
                             </table>  
                         </div>
-                        <br />
                         <div>
                             <p class="question_item">{{ _('10. 내원 동기') }}</p>
                             <table class="table">
@@ -524,7 +520,7 @@
                                 </tr>
                                 <tr>
                                     <td><input type="checkbox" id="visit_motiv_4" /><label for="visit_motiv_4" value="4">{{ _('간판') }}</label></td>
-                                    <td colspan="2">{{ _('지인소개') }} : <input type="text" class="form-control" id="visit_motiv_friend"/></td>
+                                    <td colspan="2"><input type="checkbox" id="visit_motiv_5" /> <label for="visit_motiv_5">{{ _('지인소개') }}</label> : <input type="text" class="form-control" id="visit_motiv_friend"/></td>
                                 </tr>
                                 <tr>
                                     <td colspan="3">{{ _('기타') }} : <input type="text" class="form-control" id="visit_motiv_etc"/></td>

@@ -168,7 +168,7 @@ function search_doctor_profit(page = null) {
 
                 $('#doctors_table_result').append(str);
             }
-            //√— ∞Ë
+            //Ï¥ù Í≥Ñ
             //$('#doctors_table_result').empty();
 
             $('#subtotal_general').html(numberWithCommas(response.amount_general) + ' VND');
@@ -180,7 +180,7 @@ function search_doctor_profit(page = null) {
             set_profit_total();
 
 
-            //∆‰¿Ã¬°
+            //ÌéòÏù¥Ïßï
             $('#doctors_pagnation').html('');
             str = '';
             if (response.has_previous == true) {
