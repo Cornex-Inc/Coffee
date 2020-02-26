@@ -75,7 +75,7 @@ def index(request):
     #PM 은 별도로 출력
     if request.user.doctor.depart.name == 'PM':
         precedure_data = []
-        precedures = Precedure.objects.filter( code__icontains='PM').order_by('code')
+        precedures = Precedure.objects.filter( code__icontains='PM').order_by('code').exclude(code='PM010')
         for precedure in precedures:
             precedure_data.append({
                         'id':precedure.id,
@@ -99,7 +99,7 @@ def index(request):
 
         initial_report_q2_option = []
         initial_report_q2 = COMMCODE.objects.filter(commcode_grp = 'PM_IRQ2').values('id','seq','se1','se2','se4','se5')
-        initial_report_q2_title = COMMCODE.objects.values('se2','seq','se6','se7','se8').annotate(Count('se2'))
+        initial_report_q2_title = COMMCODE.objects.values('se2','seq','se6','se7','se8').annotate(Count('se2')).extra(select={'tmp_seq':'CAST(seq AS INTERGER)'}).order_by('tmp_seq')
         for title in initial_report_q2_title:
             item = COMMCODE.objects.values('se2').annotate(Count('se2'))
 
@@ -356,7 +356,7 @@ def reception_waiting(request):
     date_min = datetime.datetime.combine(datetime.datetime.strptime(date, "%Y-%m-%d").date(), datetime.time.min)
     date_max = datetime.datetime.combine(datetime.datetime.strptime(date, "%Y-%m-%d").date(), datetime.time.max)
 
-    receptions = Reception.objects.filter(recorded_date__range = (date_min, date_max),**kwargs)
+    receptions = Reception.objects.filter(recorded_date__range = (date_min, date_max),**kwargs).exclude(progress='deleted')
 
     datas=[]
     today = datetime.date.today()
@@ -499,17 +499,7 @@ def diagnosis_save(request):
         reception = Reception.objects.get(pk = reception_id)
         reception.chief_complaint = chief_complaint
         reception.save()
-        #payment begin check
-        try:
-            tmp_payment = Payment.objects.get(reception_id=reception_id)
-            if tmp_payment.paymentrecord_set.count() != 0:
-                context = {'result':False}
-                return JsonResponse(context)
-
-        except Payment.DoesNotExist:
-            pass
-
-
+        
          #delete all order then save again
 
         if reserve_date:
@@ -540,9 +530,17 @@ def diagnosis_save(request):
     diagnosis_result.plan = request.POST.get('plan')
     diagnosis_result.recommendation = request.POST.get('recommendation')
     
-
-
     diagnosis_result.save()
+    #payment begin check
+    try:
+        tmp_payment = Payment.objects.get(reception_id=reception_id)
+        if tmp_payment.paymentrecord_set.count() != 0:
+            context = {'result':False}
+            return JsonResponse(context)
+
+    except Payment.DoesNotExist:
+        pass
+
 
     #save orders
     

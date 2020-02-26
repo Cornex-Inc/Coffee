@@ -182,13 +182,13 @@
         min-height: 297mm;*/
     }
     .page_bill {
-        min-height:1400px;
+        min-height:1000px;
         margin: 0 auto;
         margin-top: 2cm;
         text-align: center;
         display: block;
         background-repeat: no-repeat !important;
-        background-position: center !important;
+        background-position: bottom !important;
     }
 
         .page_bill .title {
@@ -275,7 +275,7 @@
 
 
     .page_bill .tr_small {
-        height: 10mm;
+        height: 8mm;
     }
 
     .page_bill .last {

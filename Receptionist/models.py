@@ -52,6 +52,7 @@ class Reservation(models.Model):
 class Reception(models.Model):
     progress_choice = (
         ('new',_('new')),
+        ('deleted',_('deleted')),
         ('done',_('done'))
         )
 

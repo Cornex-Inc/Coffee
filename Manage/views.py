@@ -3,7 +3,7 @@ from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-
+from django.db.models import Q, Count
 
 
 from .forms import *
@@ -12,10 +12,45 @@ from Doctor.models import *
 
 from dateutil import relativedelta
 
+
 # Create your views here.
 @login_required
 def manage(request):
+    doctor_search_form = DoctorsSearchForm()
 
+    
+    list_exam_fee = []
+    list_precedures = []
+    list_radiologys = []
+
+
+    exam_fees = ExamFee.objects.filter(Q(code = 'E0010') | Q(code = 'E0011'))
+    for exam_fee in exam_fees:
+        list_exam_fee.append({'code':exam_fee.code,'value':exam_fee.name})
+
+    precedures = Precedure.objects.filter(code__contains='PM')
+    for precedure in precedures:
+        list_precedures.append({'code':precedure.code,'value':precedure.name})
+
+    radiologys = Precedure.objects.filter(code__contains='R', precedure_class_id = 10 )
+    for radiology in radiologys:
+        list_radiologys.append({'code':radiology.code,'value':radiology.name})
+
+    return render(request,
+    'Doctor/audit_PM.html',
+        {
+            'doctor_search':doctor_search_form,
+
+            'list_exam_fee':list_exam_fee,
+            'list_precedures':list_precedures,
+            'list_radiologys':list_radiologys,
+
+        }
+    )
+
+
+
+    #####################################################
     payment_search_form = PaymentSearchForm()
     doctor_search_form = DoctorsSearchForm()
 
@@ -407,7 +442,90 @@ def doctor_profit(request):
 
     context = {}
 
-    if request.user.is_admin:
+    if request.user.is_admin or request.user.doctor.depart.name == 'PM' :
+        total_amount = 0
+
+        filter_search = request.POST.get('search')
+
+        receptions = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').select_related('payment').filter(payment__progress='paid').order_by("-id")
+
+        for reception in receptions:
+            exams = []
+            precedures = []
+            radiographys = []
+
+            data={}
+            sub_total = 0
+            if filter_search == '':
+                tmp_exam_set = reception.diagnosis.exammanager_set.all()
+                tmp_precedure_set = reception.diagnosis.preceduremanager_set.all()
+            else:
+                if 'E' in filter_search:
+                    tmp_exam_set = reception.diagnosis.exammanager_set.prefetch_related('exam').filter(exam__code=filter_search)
+                    tmp_precedure_set = reception.diagnosis.preceduremanager_set.none()
+                elif 'PM' in filter_search:
+                    tmp_exam_set = reception.diagnosis.exammanager_set.none()
+                    tmp_precedure_set = reception.diagnosis.preceduremanager_set.all().prefetch_related('precedure').filter(precedure__code=filter_search)
+
+                elif 'R' in filter_search:
+                    tmp_exam_set = reception.diagnosis.exammanager_set.none()
+                    tmp_precedure_set = reception.diagnosis.preceduremanager_set.all().prefetch_related('precedure').filter(precedure__code__icontains='R')
+
+                if tmp_exam_set.count() is 0 and tmp_precedure_set.count() is 0:
+                    continue
+                
+            for tmp_exam in tmp_exam_set:
+                    exams.append({
+                        'code':tmp_exam.exam.code,
+                        'value':tmp_exam.exam.name,
+                        })
+                    sub_total += tmp_exam.exam.get_price(reception.recorded_date)
+
+            for precedure_set in tmp_precedure_set:
+                    if 'R' in precedure_set.precedure.code:
+                        radiographys.append({
+                            'code':precedure_set.precedure.code,
+                            'value':precedure_set.precedure.name,
+                            'amount':precedure_set.amount,
+                            })
+                        sub_total += precedure_set.precedure.get_price(reception.recorded_date)
+                    else:
+                        precedures.append({
+                            'code':precedure_set.precedure.code,
+                            'value':precedure_set.precedure.name,
+                            })
+                        sub_total += precedure_set.precedure.get_price(reception.recorded_date)
+                
+            data.update({
+                'exams':exams,
+                'precedures':precedures,
+                'radiographys':radiographys,
+                
+                'subtotal':reception.payment.sub_total if filter_search == '' else sub_total,
+                'discount':reception.payment.discounted_amount if filter_search == '' else 0,
+                'total':reception.payment.total if filter_search == '' else sub_total,
+
+
+  
+                'no':reception.id,
+                'date':reception.recorded_date.strftime('%d-%b-%y'),
+                'Patient':reception.patient.name_kor,
+                'patient_eng':reception.patient.name_eng,
+                'date_of_birth':str(reception.patient.get_age()) + '/' + reception.patient.get_gender_simple(),
+                'address':reception.patient.address,
+                'gender':reception.patient.gender,
+                'Depart':reception.depart.name,
+                'Doctor':reception.doctor.get_name(),
+                })
+
+            
+            datas.append(data)
+
+        context.update({
+            'total_amount':total_amount,
+            })
+
+    else:
         filter_general = request.POST.get('general')
         filter_medicine = request.POST.get('medicine')
         filter_lab = request.POST.get('lab')
@@ -669,84 +787,7 @@ def doctor_profit(request):
             'amount_panorama':amount_panorama, 
             })
     
-    elif request.user.doctor.depart.name == 'PM':
-        total_amount = 0
-
-        filter_search = request.POST.get('search')
-
-        receptions = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').select_related('payment').filter(payment__progress='paid').order_by("-id")
-
-        for reception in receptions:
-            exams = []
-            precedures = []
-            radiographys = []
-
-            data={}
-            sub_total = 0
-            if filter_search == '':
-                tmp_exam_set = reception.diagnosis.exammanager_set.all()
-                tmp_precedure_set = reception.diagnosis.preceduremanager_set.all()
-            else:
-                if 'E' in filter_search:
-                    tmp_exam_set = reception.diagnosis.exammanager_set.prefetch_related('exam').filter(exam__code=filter_search)
-                    tmp_precedure_set = reception.diagnosis.preceduremanager_set.none()
-                elif 'PM' in filter_search:
-                    tmp_exam_set = reception.diagnosis.exammanager_set.none()
-                    tmp_precedure_set = reception.diagnosis.preceduremanager_set.all().prefetch_related('precedure').filter(precedure__code=filter_search)
-
-                elif 'R' in filter_search:
-                    tmp_exam_set = reception.diagnosis.exammanager_set.none()
-                    tmp_precedure_set = reception.diagnosis.preceduremanager_set.all().prefetch_related('precedure').filter(precedure__code__icontains='R')
-
-                if tmp_exam_set.count() is 0 and tmp_precedure_set.count() is 0:
-                    continue
-                
-            for tmp_exam in tmp_exam_set:
-                    exams.append({
-                        'code':tmp_exam.exam.code,
-                        'value':tmp_exam.exam.name,
-                        })
-                    sub_total += tmp_exam.exam.get_price(reception.recorded_date)
-
-            for precedure_set in tmp_precedure_set:
-                    if 'R' in precedure_set.precedure.code:
-                        radiographys.append({
-                            'code':precedure_set.precedure.code,
-                            'value':precedure_set.precedure.name,
-                            'amount':precedure_set.amount,
-                            })
-                        sub_total += precedure_set.precedure.get_price(reception.recorded_date)
-                    else:
-                        precedures.append({
-                            'code':precedure_set.precedure.code,
-                            'value':precedure_set.precedure.name,
-                            })
-                        sub_total += precedure_set.precedure.get_price(reception.recorded_date)
-                
-            data.update({
-                'exams':exams,
-                'precedures':precedures,
-                'radiographys':radiographys,
-
-                'subtotal':sub_total,
-  
-                'no':reception.id,
-                'date':reception.recorded_date.strftime('%d-%b-%y'),
-                'Patient':reception.patient.name_kor,
-                'patient_eng':reception.patient.name_eng,
-                'date_of_birth':str(reception.patient.get_age()) + '/' + reception.patient.get_gender_simple(),
-                'address':reception.patient.address,
-                'gender':reception.patient.gender,
-                'Depart':reception.depart.name,
-                'Doctor':reception.doctor.get_name(),
-                })
-
-            
-            datas.append(data)
-
-        context.update({
-            'total_amount':total_amount,
-            })
+    
 
         
       
@@ -869,8 +910,39 @@ def search_medicine(request):
     return JsonResponse(context)
 
 
+@login_required
+def temp_doctor_audit(request):
+    doctor_search_form = DoctorsSearchForm()
+
+    
+    list_exam_fee = []
+    list_precedures = []
+    list_radiologys = []
 
 
+    exam_fees = ExamFee.objects.filter(Q(code = 'E0010') | Q(code = 'E0011'))
+    for exam_fee in exam_fees:
+        list_exam_fee.append({'code':exam_fee.code,'value':exam_fee.name})
+
+    precedures = Precedure.objects.filter(code__contains='PM')
+    for precedure in precedures:
+        list_precedures.append({'code':precedure.code,'value':precedure.name})
+
+    radiologys = Precedure.objects.filter(code__contains='R', precedure_class_id = 10 )
+    for radiology in radiologys:
+        list_radiologys.append({'code':radiology.code,'value':radiology.name})
+
+    return render(request,
+    'Doctor/audit_PM.html',
+        {
+            'doctor_search':doctor_search_form,
+
+            'list_exam_fee':list_exam_fee,
+            'list_precedures':list_precedures,
+            'list_radiologys':list_radiologys,
+
+        }
+    )
 
 
 def search_patient(request):

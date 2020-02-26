@@ -68,7 +68,7 @@
                 </div>
                 <div class="payment_search_table">
                     <table class="table table-striped">
-                        <thead>
+                        <thead class="doctors_table_th">
                             <tr>
                                 <th>{{ _('No.') }}</th>
                                 <th>{{ _('Date') }}</th>
@@ -78,7 +78,9 @@
                                 <th>{{ _('Exam Fee') }}</th>
                                 <th>{{ _('Procedure') }}</th>
                                 <th>{{ _('Radiography') }}</th>
-                                <th style="text-align:center;">{{ _('Amount') }}( ₫ )</th>
+                                <th>{{ _('Discount') }}( ₫ )</th>
+                                <th>{{ _('Sub Total') }}( ₫ )</th>
+                                <th>{{ _('Total') }}( ₫ )</th>
                             </tr>
                         </thead>
                         <tbody id="doctors_table_result" class="payment_table_result">
@@ -86,13 +88,10 @@
                         <tbody id="doctors_table_profit" class="doctors_table_profit">
                             <tr>
                                 <td colspan="6"></td>
-                                <td>Total</td>
-                                <td colspan="2" id="profit_total_total"></td>
-                            </tr>
-                            <tr id="monthly_total">
-                                <td colspan="6"></td>
-                                <td >Monthly Total</td>
-                                <td colspan="2" id="profit_monthly_total_total"></td>
+                                <td style="font-weight:700">Total</td>
+                                <td colspan="2" id="profit_total_subtotal"></td>
+                                <td id="profit_total_discounted"></td>
+                                <td id="profit_total_total"></td>
                             </tr>
                         </tbody>
                     </table>

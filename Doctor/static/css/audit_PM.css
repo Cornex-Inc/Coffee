@@ -88,7 +88,35 @@ body {
     height: 4vh;
 }
 
+.doctors_table_th tr th:nth-child(1){
+    width:50px;
+}
+.doctors_table_th tr th:nth-child(2){
+    width:100px;
+}
+.doctors_table_th tr th:nth-child(3) {
+    width: 150px;
+}
+.doctors_table_th tr th:nth-child(4) {
+    width: 85px;
+}
+.doctors_table_th tr th:nth-child(5) {
+    width: 240px;
+}
 
-.payment_table_result tr td:last-child {
+.doctors_table_th tr th:nth-child(6) {
+    width: 250px;
+}
+.doctors_table_th tr th:nth-child(7) {
+    width: 320px;
+}
+
+
+.doctors_table_th tr th:nth-child(9), .doctors_table_th tr th:nth-child(10), .doctors_table_th tr th:nth-child(11) {
+    text-align: center;
+    width: 135px;
+}
+
+.payment_table_result tr td:nth-child(9), .payment_table_result tr td:nth-child(10), .payment_table_result tr td:nth-child(11) {
     text-align: right;
 }

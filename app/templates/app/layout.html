@@ -104,8 +104,8 @@
                         <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Radiation:radiation_index'%}">{{ _('Radiology') }}</a></li>
                     {% elif user.is_admin %}
                         <li><a href="#REVENUE_TOTAL">REVENUE TOTAL</a></li>
-                        <li><a href="#DOCTOR_PROFIT">DOCTORS PROFIT</a></li>
-                        <li><a href="#MEDICINE_TOTAL">MEDICINE</a></li>
+                        <!--<li><a href="#DOCTOR_PROFIT">DOCTORS PROFIT</a></li>
+                        <li><a href="#MEDICINE_TOTAL">MEDICINE</a></li>-->
                     {% endif %}
                     {% endwith %}
                 </ul>

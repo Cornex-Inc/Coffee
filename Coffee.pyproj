@@ -242,7 +242,6 @@
     <Content Include="app\static\img\index_main.png" />
     <Content Include="app\static\img\ko.png" />
     <Content Include="app\static\img\Menu_icon.png" />
-    <Content Include="app\static\img\recepts_top.png" />
     <Content Include="app\static\img\tmp_logo.png" />
     <Content Include="app\static\img\vie.png" />
     <Content Include="app\static\js\event_listener.js" />
@@ -276,6 +275,7 @@
     <Content Include="Doctor\templates\Doctor\audit_PM.html" />
     <Content Include="Manage\static\css\login.css" />
     <Content Include="Manage\static\js\login.js" />
+    <Content Include="Manage\templates\Manage\temp_manage.html" />
     <Content Include="Radiation\static\img\image_close.png" />
     <Content Include="Radiation\static\img\plus-icon-4.png" />
     <Content Include="Radiation\templates\Radiation\zoomin.html" />
@@ -298,6 +298,7 @@
     <Content Include="Receptionist\static\css\bill.css" />
     <Content Include="Receptionist\static\css\reservation.css" />
     <Content Include="Receptionist\static\img\background_back.png" />
+    <Content Include="Receptionist\static\img\recepts_top.png" />
     <Content Include="Receptionist\static\js\calendar.js" />
     <Content Include="Receptionist\static\js\ion.rangeSlider.min.js" />
     <Content Include="Receptionist\static\js\Question.js" />

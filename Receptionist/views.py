@@ -35,7 +35,8 @@ def index(request):
 
     initial_report_q2_option = []
     initial_report_q2 = COMMCODE.objects.filter(commcode_grp = 'PM_IRQ2').values('id','seq','se1','se2','se4','se5')
-    initial_report_q2_title = COMMCODE.objects.values('se2','seq','se6','se7','se8').annotate(Count('se2'))
+
+    initial_report_q2_title = COMMCODE.objects.values('se2','seq','se6','se7','se8').annotate(Count('se2')).extra(select={'tmp_seq':'CAST(seq AS INTERGER)'}).order_by('tmp_seq')
     for title in initial_report_q2_title:
         item = COMMCODE.objects.values('se2').annotate(Count('se2'))
 
@@ -61,7 +62,7 @@ def index(request):
     #            
     #            })
                 
-                
+    list_depart = Depart.objects.all().values('id','name')
         
 
 
@@ -79,7 +80,7 @@ def index(request):
 
                 'initial_report_q2':initial_report_q2,
                 'initial_report_q2_title':initial_report_q2_title,
-
+                'list_depart':list_depart,
             },
         )
 
@@ -510,7 +511,7 @@ def reception_search(request):
     date_min = datetime.datetime.combine(datetime.datetime.strptime(date, "%Y-%m-%d").date(), datetime.time.min)
     date_max = datetime.datetime.combine(datetime.datetime.strptime(date, "%Y-%m-%d").date(), datetime.time.max)
 
-    receptions = Reception.objects.filter(recorded_date__range = (date_min, date_max),**kwargs)
+    receptions = Reception.objects.filter(recorded_date__range = (date_min, date_max),**kwargs).exclude(progress='deleted')
 
     datas=[]
     today = datetime.date.today()
@@ -524,8 +525,14 @@ def reception_search(request):
         if is_new == 1:
             data.update({'is_new':'N'})
         else:
-            data.update({'is_new':'R'})
+            tmp_rec = Reception.objects.filter(patient = reception.patient).first()
+            if tmp_rec.id == reception.id:
+                data.update({'is_new':'N'})
+            else:
+                data.update({'is_new':'R'})
+
         data.update({
+            'id':reception.id,
             'chart':reception.patient.get_chart_no(),
             'name_kor':reception.patient.name_kor,
             'name_eng':reception.patient.name_eng,
@@ -1743,3 +1750,58 @@ def get_patient_past(request):
     return JsonResponse({'datas':datas})
 
 
+
+
+def Edit_Reception_get(request):
+
+    reception_id = request.POST.get('reception_id')
+
+    reception = Reception.objects.get(id=reception_id)
+
+    context = {
+            'id':reception.id,
+            'chart':reception.patient.get_chart_no(),
+            'name_kor':reception.patient.name_kor,
+            'name_eng':reception.patient.name_eng,
+            'age':reception.patient.get_age(),
+            'gender':reception.patient.get_gender_simple(),
+            'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),
+            'depart_id':reception.depart.id,
+
+            'doctor':reception.doctor.name_kor,
+            'doctor_id':reception.doctor.id,
+            'chief_complaint':reception.chief_complaint,
+            'medical_report':reception.need_medical_report,
+        }
+
+
+
+    return JsonResponse(context)
+
+
+def Edit_Reception_save(request):
+    reception_id = request.POST.get('reception_id')
+    depart = request.POST.get('depart')
+    doctor = request.POST.get('doctor')
+    chief_complaint = request.POST.get('chief_complaint')
+    medical_report = request.POST.get('medical_report')
+
+    rec = Reception.objects.get(id = reception_id)
+    rec.depart_id = depart
+    rec.doctor_id = doctor
+    rec.chief_complaint = chief_complaint
+    rec.need_medical_report = 1 if medical_report =='true' else 0
+    rec.save()
+
+
+
+    return JsonResponse({'result':True})
+
+
+def Edit_Reception_delete(request):
+    reception_id = request.POST.get('reception_id')
+    rec = Reception.objects.get(id = reception_id)
+    rec.progress = 'deleted'
+    rec.save()
+
+    return JsonResponse({'result':True})

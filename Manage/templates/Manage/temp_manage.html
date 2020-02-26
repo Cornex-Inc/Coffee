@@ -1,0 +1,128 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+    <div class="contents_wrap">
+
+        <!--Doctor-->
+        <input type="hidden" id="doctors_search_doctor" value="{{ user.doctor.id }}"/>
+        <div id="DOCTORS">
+
+            <div>
+                <div class="contents_Title_wrap">
+                    <span class="contents_Title">{{ _('AUDIT') }}</span>
+                </div>
+
+                <div class="contents_filter_top" id="doctor_filter_top">
+
+                </div>
+            </div>
+
+
+            <div>
+                <div class="doctor_search_table_filter">
+                    <div id="doctor_search" class="doctor_search_table_filter">
+                        {{ _('Date') }}:
+                        <input type="text" id="doctor_search_date" class="form-control costom-select doctor_search_date" aria-describedby="basic-addon1" />
+
+                        {{ _('Search') }}:
+                        <select id="doctor_search_search" class="form-control costom-select doctor_search">
+                            <option value="" selected>---------</option>
+                            
+                                {% for exam_fee in list_exam_fee  %}
+                                <option value="{{ exam_fee.code }}">{{ exam_fee.value }}</option>
+                                {% endfor %}
+                            
+                                {% for precedures in list_precedures %}
+                                <option value="{{ precedures.code }}">{{ precedures.value }}</option>
+                                {% endfor %}
+                                <option value="R0000">{{ _('Radiography') }}</option>
+                            
+                        </select>
+                        <!--
+                        Exam Fee:
+                        <select id="doctor_search_exam" class="form-control costom-select doctor_search_general">
+                            <option value="" selected>---------</option>
+                            {% for exam_fee in list_exam_fee  %}
+                            <option value="{{ exam_fee.code }}">{{ exam_fee.value }}</option>
+                            {% endfor %}
+                        </select>
+                        Procedure:
+                        <select id="doctor_search_precedure" class="form-control costom-select doctor_search_medicine">
+                            <option value="" selected>---------</option>
+                            {% for precedures in list_precedures %}
+                            <option value="{{ precedures.code }}">{{ precedures.value }}</option>
+                            {% endfor %}
+                        </select>
+                            
+                        Radiography:
+                        <select id="doctor_search_radiography" class="form-control costom-select doctor_search_lab">
+                            <option value="" selected>---------</option>
+                            {% for radiologys in list_radiologys %}
+                            <option value="{{ radiologys.code }}">{{ radiologys.value }}</option>
+                            {% endfor %}
+                        </select>
+                            -->
+                    </div>
+                </div>
+                <div class="payment_search_table">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>{{ _('No.') }}</th>
+                                <th>{{ _('Date') }}</th>
+                                <th>{{ _('Patient') }}</th>
+                                <th>{{ _('Depart') }}</th>
+                                <th>{{ _('Doctor') }}</th>
+                                <th>{{ _('Exam Fee') }}</th>
+                                <th>{{ _('Procedure') }}</th>
+                                <th>{{ _('Radiography') }}</th>
+                                <th style="text-align:center;">{{ _('Amount') }}( ₫ )</th>
+                            </tr>
+                        </thead>
+                        <tbody id="doctors_table_result" class="payment_table_result">
+                        </tbody>
+                        <tbody id="doctors_table_profit" class="doctors_table_profit">
+                            <tr>
+                                <td colspan="6"></td>
+                                <td>Total</td>
+                                <td colspan="2" id="profit_total_total"></td>
+                            </tr>
+                            <tr id="monthly_total">
+                                <td colspan="6"></td>
+                                <td >Monthly Total</td>
+                                <td colspan="2" id="profit_monthly_total_total"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <ul class="pagination" id="doctors_pagnation">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    $('#doctors_search_doctor').hide();
+    $('#doctors_search_doctor').empty();
+    $('#doctors_search_doctor').append('<option value = "{{user.doctor.id}}" selected>{{user.doctor.id}} </option>');
+
+
+</script>
+{% endblock %}
+
+
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/audit_PM.css' %}" />
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/printThis/1.15.0/printThis.min.js"></script>
+
+<script src="{% static 'js/audit_PM.js' %}" type="text/javascript"></script>
+{% endblock %}

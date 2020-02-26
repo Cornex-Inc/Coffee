@@ -354,7 +354,7 @@ msgstr "활력징후"
 #: .\Receptionist\templates\Receptionist\index.html:153
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:120
 msgid "Reception Status"
-msgstr "수납상태"
+msgstr "접수상태"
 
 #: .\Doctor\templates\Doctor\index.html:121
 #: .\Doctor\templates\Doctor\index.html:237

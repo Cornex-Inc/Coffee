@@ -13,6 +13,10 @@ urlpatterns = [
     path('Question/save/',views.Question_save,name='Question_save'),
     path('Question/get/',views.Question_get,name='Question_get'),
 
+    path('Edit_Reception/get/',views.Edit_Reception_get,name='Edit_Reception_get'),
+    path('Edit_Reception/save/',views.Edit_Reception_save,name='Edit_Reception_save'),
+    path('Edit_Reception/delete/',views.Edit_Reception_delete,name='Edit_Reception_delete'),
+
     path('set_patient_data/',views.set_patient_data,name='set_patient_data'),
     path('patient_search/',views.patient_search,name='patient_search'),
     path('reception_search/',views.reception_search,name='reception_search'),

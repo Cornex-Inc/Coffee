@@ -14,10 +14,10 @@
             <table class="table patient_table" id="reception_table">
                 <tr>
                     <td >
-                    <div class="input-group ">
-                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Chart No.') }}</span>
-                        <input type="hidden" id="patient_id" />
-                        {{patient.id}}
+                        <div class="input-group ">
+                            <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Chart No.') }}</span>
+                            <input type="hidden" id="patient_id" />
+                            {{patient.id}}
                         </div>
                     </td>
                     <td ></td>
@@ -113,7 +113,7 @@
                         <div style="float:right;">
                             <input class="btn btn-default save_cancel_btn"  value="{{ _('Cancel') }}" onclick="set_cancel()" />
                             <input class="btn btn-info save_cancel_btn" value="{{ _('Save') }}" onclick="save_patient()"/>
-                            <input type="button" value="{{ _('Save')}} + {{_('Reception') }}" class="btn btn-primary save_cancel_btn" style="width:150px;" onclick="save_recept()"/>
+                            <input type="button" value="{{_('Registration') }}" class="btn btn-primary save_cancel_btn" style="width:100px;" onclick="save_recept()"/>
                         </div>
                     </td>
                 </tr>
@@ -177,6 +177,7 @@
                         <th style="width:80px">{{_('Depart') }}</th>
                         <th style="width:130px">{{_('Doctor') }}</th>
                         <th style='width:113px; text-align:center'>{{_('New / Repeat') }}</th>
+                        <th style="width:50px;"></th>
                     </tr>
                 </thead>
                 <tbody></tbody>            
@@ -528,8 +529,8 @@
                             </table>
                         </div>
                         <div class="func_container">
-                            <input type="button" class="btn btn-default" data-dismiss="modal" value="close"/>
-                            <input type="button" id="save" class="btn btn-primary" value="save"/>
+                            <input type="button" class="btn btn-default" data-dismiss="modal" value="Close"/>
+                            <input type="button" id="save" class="btn btn-primary" value="Save"/>
                         </div>
                     </div>
                 </div>
@@ -563,6 +564,90 @@
                     </div>
                 </div>
             </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+<div id="Edit_Reception_EventModal" class="modal fade">
+    <div class="modal-dialog Edit_Reception_modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4>{{ _('Edit Reception') }}</h4>
+                    <div id="modalBody" class="modal-body" >
+                        <h5>{{ _('Patient Info') }}</h5>
+                        <input type="hidden" value="" id="selected_reception_id"/>
+                        <table class="table table-bordered edit_reception_table"> 
+                            <tr>
+                                <td >
+                                    <div class="input-group edit_reception_title">
+                                        <span class="input-group-addon Edit_Reception_input-group-addon" id="basic-addon1">{{ _('Chart No.') }}</span>
+                                        <input type="text" class="form-control" id="edit_reception_chart" disabled/>
+                                    </div>
+                                </td>
+                                <td ></td>
+                            </tr>
+                            <tr>
+                                <td >
+                                    <div class="input-group edit_reception_title">
+                                        <span class="input-group-addon Edit_Reception_input-group-addon" id="basic-addon1">{{ _('Name') }}</span>
+                                        <input type="text" class="form-control" id="edit_reception_name" disabled/>
+                                    </div>
+                                </td>
+                                <td >
+                                    <div class="input-group edit_reception_title">
+                                        <span class="input-group-addon Edit_Reception_input-group-addon" id="basic-addon1">{{ _('Date of Birth') }}</span>
+                                        <input type="text" class="form-control" id="edit_reception_date_of_birth" disabled/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <h5>{{ _('Reception Info') }}</h5>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td >
+                                    <div class="input-group edit_reception_title" >
+                                        <span class="input-group-addon Edit_Reception_input-group-addon" id="basic-addon1">{{ _('Depart') }}</span>
+                                        <select id="edit_reception_depart" class="form-control">
+                                            <option value="" selected="">---------</option>
+                                            {% for depart in list_depart %}
+                                            <option value="{{ depart.id }}">{{ depart.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group edit_reception_title" >
+                                        <span class="input-group-addon Edit_Reception_input-group-addon" id="basic-addon2">{{ _('Doctor') }}</span>
+                                        <select id="edit_reception_doctor" class="form-control">
+                                            <option value="" selected="">---------</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="input-group edit_reception_title"> 
+                                        <span class="input-group-addon Edit_Reception_input-group-addon" id="basic-addon1">C / C</span>
+                                        <input type="text" id="edit_reception_chief_complaint" class="form-control" aria-describedby="basic-addon1" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<label class="need_medical_report" ><input type="checkbox" value="" id="reception_edit_need_medical_report" />{{_('Medical Report') }}</label>
+                        </div>
+                        <div>
+                            <!--<input type="button" value="{{ _('Delete') }}" class="btn btn-Warning" onclick="edit_reception_del()"/>-->
+                            <div style="text-align:right;">
+                                <input type="button" value="{{ _('Close') }}" class="btn btn-default" data-dismiss="modal"/>
+                                <input type="button" value="{{ _('Save') }}" class="btn btn-primary" onclick="edit_reception_save()" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

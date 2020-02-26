@@ -51,6 +51,9 @@ $(function () {
     $("#depart_select").change(function () {
         get_doctor($("#depart_select"));
     });
+    $("#edit_reception_depart").change(function () {
+        get_doctor($("#edit_reception_depart"));
+    });
 
     
 
@@ -69,6 +72,8 @@ $(function () {
     $("#reservation_doctor_select").change(function () {
         reservation_search();
     });
+
+
 
 
     //payment search
@@ -155,9 +160,9 @@ $(function () {
         
 
         str = '';
-        str += $('#pain_location_text_' + data_code).val() + '-';
-        str += $("#q2_item_select1_" + data_code).val() + '-';
-        str += $("#q2_item_select2_" + data_code).val() ;
+        str += parseInt($('#pain_location_text_' + data_code).val()) + '-';
+        str += parseInt($("#q2_item_select1_" + data_code).val()) + '-';
+        str += parseInt($("#q2_item_select2_" + data_code).val()) ;
 
         $('.q2_items').each(function () {
 
@@ -614,6 +619,10 @@ $(function () {
         }
     });
 
+
+
+
+
 });
 
 
@@ -623,7 +632,7 @@ $("#reservation_table").click(function () {
 
 });
 
-function get_doctor(part, depart = null) {
+function get_doctor(part, depart = null, selected= null) {
     var part_id = part.attr('id');
     var doctor;
     if (part_id == 'depart_select') {
@@ -632,7 +641,10 @@ function get_doctor(part, depart = null) {
         doctor = $('#reception_waiting_doctor');
     } else if (part_id == 'reservation_depart_select') {
         doctor = $('#reservation_doctor_select');
+    } else if (part_id == 'edit_reception_depart') {
+        doctor = $('#edit_reception_doctor');
     }
+
     if (depart == null)
         depart = part.val();
 
@@ -653,8 +665,14 @@ function get_doctor(part, depart = null) {
         success: function (response) {
             doctor.empty();
             doctor.append(new Option('---------', ''));
-            for (var i in response.datas)
-                doctor.append("<option value='" + response.datas[i] + "'>" + i + "</Option>");
+            for (var i in response.datas) {
+                if (selected == response.datas[i]) {
+                    doctor.append("<option value='" + response.datas[i] + "' selected>" + i + "</Option>");
+                } else {
+                    doctor.append("<option value='" + response.datas[i] + "'>" + i + "</Option>");
+                }
+                
+            }
 
         },
         error: function (request, status, error) {
@@ -1076,6 +1094,67 @@ function patient_search(data) {
 
 }
 
+function reception_edit(id = null) {
+
+    $('#selected_reception_id').val();
+
+    $('#edit_reception_depart option:eq(0)').prop("selected", true);
+    
+    $('#edit_reception_title').empty();
+    $('#edit_reception_title').append(new Option('---------', ''));
+    $('#reception_edit_need_medical_report').prop('checked', false);
+    if (id == null) {
+        alert(gettext('Abnormal approach'));
+        return;
+    }
+
+
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/Edit_Reception/get/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'reception_id': id,
+        },
+        dataType: 'Json',
+        success: function (response) {
+            //chart no
+            $('#edit_reception_chart').val(response['chart']);
+            //name
+            $('#edit_reception_name').val(response['name_kor'] + "/" + response['name_eng']);
+            //date of birth
+            $('#edit_reception_date_of_birth').val(response['date_of_birth'] + ' (' + response['gender'] + '/' + response['age'] + ")");
+
+            //depart & doctor
+            $('#edit_reception_depart option[value=' + response['depart_id'] + ']').prop("selected", true);
+            get_doctor($("#edit_reception_depart"), null, response['doctor_id']);
+            
+            //$('#edit_reception_doctor option[value=' + response['doctor_id'] + ']').prop("selected", true);
+
+
+            //chief complaint
+            $("#edit_reception_chief_complaint").val(response['chief_complaint']);
+
+            //medical_report
+            if (response['medical_report'] == true)
+                $('#reception_edit_need_medical_report').prop('checked', true);
+
+            $('#selected_reception_id').val(response['id']);
+
+        },
+        error: function (request, status, error) {
+            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    });
+
+
+    ////////////////////////////////////////////////
+    $('#Edit_Reception_EventModal').modal({ backdrop: 'static', keyboard: false });
+    $("#Edit_Reception_EventModal").scrollTop(0);
+    $('#Edit_Reception_EventModal').modal('show');
+
+}
 
 function reception_search() {
     var date, depart, doctor;
@@ -1101,19 +1180,20 @@ function reception_search() {
                 $('#Rectption_Status').append("<tr><td colspan='8'>None Result !!</td></tr>");
             } else {
                 for (var i in response.datas) {
-                    var str = "<tr><td style='width: 3.2vw;'>" + (parseInt(i) + 1) + "</td>";
+                    var str = "<tr><td>" + (parseInt(i) + 1) + "</td>";
 
                         if (response.datas[i]['has_unpaid']) {
-                            str += "<td style=color:rgb(228,97,131); width: 5.9vw;>";
+                            str += "<td style=color:rgb(228,97,131);>";
                         } else {
-                            str += "<td style='width: 5.9vw;'>";
+                            str += "<td>";
                         }
                     str += response.datas[i]['chart'] + "</td>" +
-                        "<td style='width:10.5vw;'>" + response.datas[i]['name_kor'] + "<br/>" + response.datas[i]['name_eng'] + "</td>" +
-                        "<td style='width:10.5vw;'>" + response.datas[i]['date_of_birth'] +' ('+ response.datas[i]['gender']+'/' + response.datas[i]['age'] + ")</td>" +
-                        "<td style='width:5.2vw'>" + response.datas[i]['depart'] + "</td>" +
-                        "<td style='width: 8.4vw'>" + response.datas[i]['doctor'] + "</td>" +
-                        "<td style='width:7.8vw; text-align:center'> " + response.datas[i]['is_new'] + "</td></tr>";
+                        "<td>" + response.datas[i]['name_kor'] + "<br/>" + response.datas[i]['name_eng'] + "</td>" +
+                        "<td>" + response.datas[i]['date_of_birth'] +' ('+ response.datas[i]['gender']+'/' + response.datas[i]['age'] + ")</td>" +
+                        "<td>" + response.datas[i]['depart'] + "</td>" +
+                        "<td>" + response.datas[i]['doctor'] + "</td>" +
+                        "<td> " + response.datas[i]['is_new'] + "</td>" +
+                        "<td> <input type='button' class='btn btn-default' value='Edit' onclick='reception_edit(" + response.datas[i]['id'] + ")'/></td></tr > ";
 
                     $('#Rectption_Status').append(str);
                 }
@@ -1258,7 +1338,70 @@ function worker_on(path) {
 }
 
 
+//Edit Reception Save
+function edit_reception_save() {
+    rec_id = $('#selected_reception_id').val();
+    depart = $('#edit_reception_depart option:selected').val();
+    doctor = $('#edit_reception_doctor option:selected').val();
+    chief_complaint = $('#edit_reception_chief_complaint').val();
+    medical_report = $('#reception_edit_need_medical_report').is(':checked');
 
+    if (depart == '') {
+        alert(gettext('Select Depart.'));
+        return;
+    }
+    if (doctor == '') {
+        alert(gettext('Select Doctor.'));
+        return;
+    }
 
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/Edit_Reception/save/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'reception_id': rec_id,
+            'depart': depart,
+            'doctor': doctor,
+            'chief_complaint': chief_complaint,
+            'medical_report': medical_report,
+        },
+        dataType: 'Json',
+        success: function (response) {
+            alert(gettext('Saved.'));
+            reception_search();
+            $('#Edit_Reception_EventModal').modal('hide');
+        },
+        error: function (request, status, error) {
+            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+        },
+    })
 
-$("#medical_exam_EventModal #save");
+}
+
+function edit_reception_del() {
+    if (confirm(gettext('Are you sure you want to delete ?'))) {
+
+        rec_id = $('#selected_reception_id').val();
+        $.ajax({
+            type: 'POST',
+            url: '/receptionist/Edit_Reception/delete/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+                'reception_id': rec_id,
+            },
+            dataType: 'Json',
+            success: function (response) {
+                alert(gettext('Deleted.'));
+                reception_search();
+                $('#Edit_Reception_EventModal').modal('hide');
+            },
+            error: function (request, status, error) {
+                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            },
+        })
+    }
+
+    
+
+}

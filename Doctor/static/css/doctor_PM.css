@@ -370,7 +370,7 @@ doctor_patient_info table ul label {
 
 .input_report_vital {
     display: inline;
-    width: 52px;
+    width: 50px;
 }
 
 .table_vital tr td:nth-child(2n-1) {
@@ -395,7 +395,7 @@ doctor_patient_info table ul label {
     .q2_items_div > div:first-child {
         height: 400px;
         width: 440px;
-        position: absolute;
+        position: relative;
         background-size: 440px 400px;
         background-repeat: no-repeat;
         left: 50%;
