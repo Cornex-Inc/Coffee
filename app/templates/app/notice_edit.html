@@ -1,0 +1,26 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+
+
+<!--Payment-->
+<div class="contents_wrap" >
+    <form action="{% url 'notice_edit' %}">
+    {{ form }}
+    <input type="submit" value="save" />
+    </form>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/notice.css' %}" />
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/notice.js' %}" type="text/javascript"></script>
+{% endblock%}

@@ -39,34 +39,9 @@ def index(request):
     initial_report_q2_title = COMMCODE.objects.values('se2','seq','se6','se7','se8').annotate(Count('se2')).extra(select={'tmp_seq':'CAST(seq AS INTERGER)'}).order_by('tmp_seq')
     for title in initial_report_q2_title:
         item = COMMCODE.objects.values('se2').annotate(Count('se2'))
-
-
-
-    #for item in initial_report_q2:
-    #    array_str_code = item['se1'].split('-')
-    #    array_str = item['se2'].split('-')
-    #    data ={
-    #        'id':array_str_code[0],
-    #        'name':array_str[0],
-    #        'length':array_str.length,
-    #        'front_back':,
-    #        'left_right':,
-    #        }
-    #    option = {}
-    #    if array_str.length > 2 :
-    #        option.update({
-    #            
-    #            })
-    #    else:
-    #        option.update({
-    #            
-    #            })
                 
     list_depart = Depart.objects.all().values('id','name')
         
-
-
-
     return render(request,
     'Receptionist/index.html',
             {
@@ -1803,5 +1778,62 @@ def Edit_Reception_delete(request):
     rec = Reception.objects.get(id = reception_id)
     rec.progress = 'deleted'
     rec.save()
+
+    return JsonResponse({'result':True})
+
+
+def Tax_Invoice_get(request):
+    patient_id = request.POST.get('patient_id')
+
+    context = {}
+
+    patient = Patient.objects.select_related('taxinvoice').get(id = patient_id)
+
+    
+    context.update({
+        'id':patient.id,
+        'chart':patient.get_chart_no(),
+        'name_kor':patient.name_kor,
+        'name_eng':patient.name_eng,
+        'age':patient.get_age(),
+        'gender':patient.get_gender_simple(),
+        'date_of_birth':patient.date_of_birth.strftime('%Y-%m-%d'),
+        })
+
+
+    try:
+        context.update({
+            'number':patient.taxinvoice.number,
+            'company_name':patient.taxinvoice.company_name,
+            'address':patient.taxinvoice.address,
+            })
+    except TaxInvoice.DoesNotExist:
+        context.update({
+            'number':'',
+            'company_name':'',
+            'address':'',
+            })
+
+
+    return JsonResponse(context)
+
+
+def Tax_Invoice_save(request):
+    patient_id = request.POST.get('patient_id')
+    number = request.POST.get('number')
+    company_name = request.POST.get('company_name')
+    address = request.POST.get('address')
+
+
+    try:
+        tax_invoice = TaxInvoice.objects.get(patient_id = patient_id)
+    except:
+        tax_invoice = TaxInvoice()
+        tax_invoice.patient_id = patient_id
+
+    tax_invoice.number = number
+    tax_invoice.company_name = company_name
+    tax_invoice.address = address
+    tax_invoice.save()
 
     return JsonResponse({'result':True})

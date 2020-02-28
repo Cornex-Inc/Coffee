@@ -76,3 +76,54 @@ class COMMCODE(models.Model):
         null=True,
         max_length = 18,
         )
+
+
+class notice(models.Model):
+    #작성자
+    writer = models.CharField(
+        null=True,
+        max_length = 18,
+        )
+    #제목
+    ntce_title = models.CharField(
+        null=True,
+        max_length = 200,
+        )
+    #내용
+    ntce_cn = models.CharField(
+        null=True,
+        max_length =5000,
+        )
+    #등록일
+    reg_dd = models.DateTimeField(
+        auto_now_add=True,
+        )
+    #권한
+    auth = models.CharField(
+        null=True,
+        max_length =8,
+        )
+    #삭제 여부
+    del_yn = models.CharField(
+        default='N',
+        max_length =1,
+        )
+    #마지막 수정
+    last_upd_dd = models.DateTimeField(
+        null=True,
+        )
+    #공지 유무
+    noti_yn = models.CharField(
+        default='N',
+        max_length =1,
+        )
+    #구분1
+    se1 = models.CharField(
+        null=True,
+        max_length =16,
+        )
+    #구분2
+    se2 = models.CharField(
+        null=True,
+        max_length =16,
+        )

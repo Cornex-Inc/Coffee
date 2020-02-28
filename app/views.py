@@ -1,7 +1,7 @@
 """
 Definition of views.
 """
-from app.forms import BootstrapAuthenticationForm
+from app.forms import *
 from datetime import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpRequest
@@ -19,6 +19,7 @@ from django.contrib.auth.views import LoginView
 
 from Account.models import *
 from Account.forms import *
+
 #@login_required
 def home(request):
 
@@ -121,3 +122,28 @@ def register(request):
 
 
     return JsonResponse({'return':'success'})
+
+
+@login_required
+def notice(request):
+
+
+    return render(request,
+        'app/notice.html',
+            {
+             'form':form, 
+            }
+        )
+
+@login_required
+def notice_edit(request):
+
+    form = SomeForm(request.POST)
+
+
+    return render(request,
+        'app/notice_edit.html',
+            {
+             'form':form, 
+            }
+        )

@@ -12,4 +12,5 @@ urlpatterns = [
     path('search_payment/',views.search_payment,name='search_payment'),
     path('search_patient/',views.search_patient,name='search_patient'),
     path('search_medicine/',views.search_medicine,name='search_medicine'),
+
 ]

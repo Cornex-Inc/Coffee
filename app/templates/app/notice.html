@@ -1,0 +1,39 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+
+
+<!--Payment-->
+<div class="contents_wrap" >
+    {{ form }}
+    <table class="table table_list">
+        <thead>
+            <tr>
+                <th>{{ _('No') }}</th>
+                <th>{{ _('Title') }}</th>
+                <th>{{ _('Writer') }}</th>
+                <th>{{ _('Date') }}</th>
+            </tr>
+        </thead>
+        <tbody id="tbody_notice">
+                
+        </tbody>
+        <tbody id="tbody_contents">
+                
+        </tbody>
+    </table>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/notice.css' %}" />
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/notice.js' %}" type="text/javascript"></script>
+{% endblock%}

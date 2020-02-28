@@ -87,7 +87,10 @@ function search_doctor_profit(page = null) {
         dataType: 'Json',
         success: function (response) {
             $('#doctors_table_result').empty();
-            total_amount = 0;
+            total_subtotal = 0;
+            total_discounted = 0;
+            total_total = 0;
+            
             for (var i = 0; i < 10; i++) {//response.datas) {
                 var str = '<tr>'
                 if (response.datas[i]) {
@@ -139,8 +142,25 @@ function search_doctor_profit(page = null) {
                         }
                     }
                     str += '<td style="vertical-align: middle;">' + numberWithCommas(response.datas[i]['subtotal']) + '</td>'
+
+                    if (response.datas[i]['discount'] == 0) {
+                        str += '<td style="vertical-align: middle;">-</td>'
+                    } else {
+                        str += '<td style="vertical-align: middle;">' + numberWithCommas(response.datas[i]['discount']) + '</td>'
+                        total_discounted += response.datas[i]['discount'];
+                    }
+                    
+
+
+                    str += '<td style="vertical-align: middle;">' + numberWithCommas(response.datas[i]['total']) + '</td>'
+
+
+
+
                     str += '</td></tr>';
-                    total_amount += response.datas[i]['subtotal'];
+                    total_subtotal += response.datas[i]['subtotal'];
+                    
+                    total_total += response.datas[i]['total'];
                 }
                 else {
                     str += "<td colspan='11'></td></tr>"
@@ -149,15 +169,11 @@ function search_doctor_profit(page = null) {
                 $('#doctors_table_result').append(str);
             }
             //총 계
-            $("#profit_total_total").html(numberWithCommas(total_amount));
-
-            //단일 선택은 월별 출력
-            if (response.monthly_total != undefined) {
-                $("#profit_monthly_total_total").html(numberWithCommas(response.monthly_total));
-                $('#monthly_total').show();
-            } else {
-                $('#monthly_total').hide();
-            }
+            $("#profit_total_subtotal").html(numberWithCommas(total_subtotal));
+            $("#profit_total_discounted").html(numberWithCommas(total_discounted));
+            $("#profit_total_total").html(numberWithCommas(total_total));
+            
+            
 
 
             //페이징

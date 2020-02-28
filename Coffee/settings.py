@@ -44,7 +44,7 @@ INSTALLED_APPS = [
 
     'Manage',
     'bootstrap4',
-    
+    'django_summernote',
     # Add your apps here to enable them
     'django.contrib.admin',
     'django.contrib.auth',
@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'storages', # azure storage
 ]
+
+SUMMERNOTE_THEME = 'bs3'
 
 #azure storage
 #DEFAULT_FILE_STORAGE = 'Coffee.azure_storage.AzureMediaStorage'

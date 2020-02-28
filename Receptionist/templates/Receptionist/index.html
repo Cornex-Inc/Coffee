@@ -546,27 +546,72 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
                 <h4>{{ _('Medical Exam') }}</h4>
                 <div id="modalBody" class="modal-body" >
-                <div id="show_Tax_invoice">
-                    <div id="patient_tax_invoice">
-                        <div class="input-group" style="width:615px;">
-                            <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Number') }}</span>
-                            <input type="text" id="tax_invoice_number" class="form-control" aria-describedby="basic-addon1">
+                    <div id="show_Tax_invoice">
+                        <h5>{{ _('Patient Info') }}</h5>
+                        <input type="hidden" value="" id="selected_tax_invoice_id"/>
+                        <table class="table table-bordered edit_reception_table"> 
+                            <tr>
+                                <td >
+                                    <div class="input-group edit_reception_title">
+                                        <span class="input-group-addon Edit_Reception_input-group-addon" id="basic-addon1">{{ _('Chart No.') }}</span>
+                                        <input type="text" class="form-control" id="tax_invoice_chart" disabled/>
+                                    </div>
+                                </td>
+                                <td ></td>
+                            </tr>
+                            <tr>
+                                <td >
+                                    <div class="input-group edit_reception_title">
+                                        <span class="input-group-addon Edit_Reception_input-group-addon" id="basic-addon1">{{ _('Name') }}</span>
+                                        <input type="text" class="form-control" id="tax_invoice_name" disabled/>
+                                    </div>
+                                </td>
+                                <td >
+                                    <div class="input-group edit_reception_title">
+                                        <span class="input-group-addon Edit_Reception_input-group-addon" id="basic-addon1">{{ _('Date of Birth') }}</span>
+                                        <input type="text" class="form-control" id="tax_invoice_date_of_birth" disabled/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <!--patient_tax_invoice-->
+                        <h5>{{ _('Tax Invoice Info') }}</h5>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td>
+                                    <div class="input-group edit_reception_title">
+                                        <span class="input-group-addon Edit_Reception_input-group-addon" id="basic-addon1">{{ _('Number') }}</span>
+                                        <input type="text" id="tax_invoice_number" class="form-control" aria-describedby="basic-addon1">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="input-group edit_reception_title">
+                                        <span class="input-group-addon Edit_Reception_input-group-addon" id="basic-addon2">{{ _('Company Name') }}</span>
+                                        <input type="text" id="tax_invoice_company_name" class="form-control" aria-describedby="basic-addon2">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="input-group edit_reception_title">
+                                        <span class="input-group-addon Edit_Reception_input-group-addon" id="basic-addon1">{{ _('Address') }}</span>
+                                        <input type="text" id="tax_invoice_address" class="form-control" aria-describedby="basic-addon1">
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="text-align:right;">
+                            <input type="button" class="btn btn-default" value="{{ _('Cancel') }}" data-dismiss="modal"/>
+                            <input type="button" class="btn btn-primary" value="{{ _('Save') }}" id="tax_invoice_save"/>
                         </div>
-                        <div class="input-group" style="width:615px">
-                            <span class="input-group-addon patient_table_title" id="basic-addon2">{{ _('Company Name') }}</span>
-                            <input type="text" id="tax_invoice_company_name" class="form-control" aria-describedby="basic-addon2">
-                        </div>
-
-                        <div class="input-group" style="width:615px">
-                            <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Address') }}</span>
-                            <input type="text" id="tax_invoice_address" class="form-control" aria-describedby="basic-addon1">
-                        </div>
+                       
                     </div>
                 </div>
             </div>
-                </div>
-            </div>
         </div>
+    </div>
 </div>
 
 <div id="Edit_Reception_EventModal" class="modal fade">

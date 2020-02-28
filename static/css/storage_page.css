@@ -182,29 +182,23 @@
         min-height: 297mm;*/
     }
     .page_bill {
-        min-height:900px;
+        min-height:1000px;
         margin: 0 auto;
         margin-top: 2cm;
         text-align: center;
         display: block;
         background-repeat: no-repeat !important;
-        background-position: center !important;
+        background-position: bottom !important;
     }
-        /*
-    .page_bill .sun_info {
-        margin: 0 auto;
-        width: 169mm;
-    }
-        */
-    .page_bill .title  {
-        width: 100%;
-        text-align: center;
-        margin-top: 30px;
-        margin-bottom: 100px;
-        font-size: 20px;
-        font-weight: 700;
-        
-    }
+
+        .page_bill .title {
+            width: 100%;
+            text-align: center;
+            margin-top: 68px;
+            margin-bottom: 65px;
+            font-size: 18px;
+            font-weight: 700;
+        }
 
         .page_bill .chart {
             text-align: center;
@@ -255,7 +249,7 @@
     }
 
     .page_bill .chart table tbody tr td:nth-child(4) {
-        text-align: center;
+        text-align: right;
     }
 
     .page_bill .chart table tbody tr td:nth-child(5) {
@@ -271,7 +265,7 @@
     }
 
     .page_bill .chart_table_total {
-        border-top: 1px solid black;
+        /*border-top: 1px solid black;*/
         /*border: 1px solid black;*/
     }
     .chart_table_total tr td{
@@ -281,7 +275,7 @@
 
 
     .page_bill .tr_small {
-        height: 10mm;
+        height: 8mm;
     }
 
     .page_bill .last {

@@ -187,10 +187,16 @@
     height: 360px;
 }
 
-.patient_search_table_wrap {
-    overflow: auto;
-    height: 200px;
+.reception_search_table tbody tr td {
+    vertical-align: middle;
 }
+    .reception_search_table tbody tr td:nth-child(7){
+        text-align:center;
+    }
+    .patient_search_table_wrap {
+        overflow: auto;
+        height: 200px;
+    }
 .input-group-long {
     width: 615px;
 }
@@ -270,7 +276,7 @@
 
 .input_report_vital{
     display:inline;
-    width:70px;
+    width:50px;
 }
 
 .table_vital tr td:nth-child(2n-1) {
@@ -318,6 +324,8 @@
     color:#aaaaaa;
 }
 
+
+
 @media ( min-width: 1900px ) {
     .reception_grid {
         grid-template-columns: 50%;
@@ -356,4 +364,24 @@
         width: 885px;
     }
 
+
+}
+
+.Edit_Reception_modal-dialog{
+    width:740px;
+}
+
+.edit_reception_table {
+}
+
+.edit_reception_title{
+    width: 100%;
+}
+
+.edit_text_title_long{
+
+}
+
+.Edit_Reception_input-group-addon{
+    width:100px;
 }

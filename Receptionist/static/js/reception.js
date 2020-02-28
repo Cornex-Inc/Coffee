@@ -141,12 +141,76 @@ $(function () {
 
 
 
-
-    $('.status_table_filter input').change(function () {
-
-    })
+    //보험
     $('#patient_tax_invoice_click').click(function () {
-        $('#show_Tax_invoice').toggle();
+
+        //초기화
+        $('#tax_exam_EventModal input[type=hidden]').val('');
+        $('#tax_exam_EventModal input[type=text]').val('');
+
+        //불러오기
+        $.ajax({
+            type: 'POST',
+            url: '/receptionist/Tax_Invoice/get/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+                'patient_id': $('#patient_id').val(),
+            },
+            dataType: 'Json',
+            success: function (response) {
+                //id - hidden
+                $('#selected_tax_invoice_id').val(response['id']),
+                //chart no
+                $('#tax_invoice_chart').val(response['chart']);
+                //name
+                $('#tax_invoice_name').val(response['name_kor'] + "/" + response['name_eng']);
+                //date of birth
+                $('#tax_invoice_date_of_birth').val(response['date_of_birth'] + ' (' + response['gender'] + '/' + response['age'] + ")");
+
+                //tax invoice info
+                $('#tax_invoice_number').val(response['number']);
+                $('#tax_invoice_company_name').val(response['company_name']);
+                $('#tax_invoice_address').val(response['address']);
+
+            },
+            error: function (request, status, error) {
+                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+            },
+        })
+
+
+
+        $('#tax_exam_EventModal').modal({ backdrop: 'static', keyboard: false });
+        $("#tax_exam_EventModal").scrollTop(0);
+        $('#tax_exam_EventModal').modal('show');
+
+
+        //저장
+        $('#tax_invoice_save').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '/receptionist/Tax_Invoice/save/',
+                data: {
+                    'csrfmiddlewaretoken': $('#csrf').val(),
+                    'patient_id': $('#patient_id').val(),
+                    'number': $('#tax_invoice_number').val(),
+                    'company_name': $('#tax_invoice_company_name').val(),
+                    'address': $('#tax_invoice_address').val(),
+                },
+                dataType: 'Json',
+                success: function (response) {
+                    $('#tax_exam_EventModal').modal('hide');
+                },
+                error: function (request, status, error) {
+                    alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+                },
+            })
+
+
+        })
+
     })
 
 

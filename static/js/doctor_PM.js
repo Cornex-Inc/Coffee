@@ -268,9 +268,9 @@ $(function () {
 
 
         str = '';
-        str += $('#pain_location_text_' + data_code).val() + '-';
-        str += $("#q2_item_select1_" + data_code).val() + '-';
-        str += $("#q2_item_select2_" + data_code).val();
+        str += parseInt($('#pain_location_text_' + data_code).val()) + '-';
+        str += parseInt($("#q2_item_select1_" + data_code).val()) + '-';
+        str += parseInt($("#q2_item_select2_" + data_code).val());
 
         $('.q2_items').each(function () {
 
@@ -818,7 +818,7 @@ function get_diagnosis(reception_no) {
 
             show_total_price();
 
-
+            $('.q2_items').hide();
 
             $.ajax({
                 type: 'POST',
@@ -1031,13 +1031,11 @@ function diagnosis_save(set) {
         dataType: 'Json',
         success: function (response) {
             if (response.result == false) {
-                alert(gettext('Failed \nalready settled or is settled.'))
+                alert(gettext('Only SOAPD and Recommend are saved. \nalready settled or is settled.'))
             } else {
                 alert(gettext('Saved'));
                 set_all_empty();
             }
-
-
         },
         error: function (request, status, error) {
             alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);

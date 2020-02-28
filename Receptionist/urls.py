@@ -17,6 +17,9 @@ urlpatterns = [
     path('Edit_Reception/save/',views.Edit_Reception_save,name='Edit_Reception_save'),
     path('Edit_Reception/delete/',views.Edit_Reception_delete,name='Edit_Reception_delete'),
 
+    path('Tax_Invoice/get/',views.Tax_Invoice_get,name='Tax_Invoice_get'),
+    path('Tax_Invoice/save/',views.Tax_Invoice_save,name='Tax_Invoice_save'),
+
     path('set_patient_data/',views.set_patient_data,name='set_patient_data'),
     path('patient_search/',views.patient_search,name='patient_search'),
     path('reception_search/',views.reception_search,name='reception_search'),

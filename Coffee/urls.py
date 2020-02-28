@@ -37,7 +37,10 @@ urlpatterns = [
     #     name='login'),
     path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
     path('register/', views.register, name='register'),
-    
+
+    #notice
+    path('notice/', views.notice, name = 'notice'),
+    path('notice/edit/', views.notice_edit, name = 'notice_edit'),
     
     path('doctor/',include('Doctor.urls',namespace='Doctor')),
     path('receptionist/',include('Receptionist.urls',namespace='receptionist')),
@@ -55,6 +58,8 @@ urlpatterns = [
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
 
     path('admin/', admin.site.urls),
+    path('summernote/', include('django_summernote.urls')),
+
 ]
 
 

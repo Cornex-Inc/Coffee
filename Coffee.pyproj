@@ -235,6 +235,7 @@
   <ItemGroup>
     <Content Include="Account\templates\Account\index.html" />
     <Content Include="app\static\css\main.css" />
+    <Content Include="app\static\css\notice.css" />
     <Content Include="app\static\favicon.ico" />
     <Content Include="app\static\favicon.png" />
     <Content Include="app\static\img\en.png" />
@@ -245,7 +246,10 @@
     <Content Include="app\static\img\tmp_logo.png" />
     <Content Include="app\static\img\vie.png" />
     <Content Include="app\static\js\event_listener.js" />
+    <Content Include="app\static\js\notice.js" />
     <Content Include="app\static\js\main.js" />
+    <Content Include="app\templates\app\notice.html" />
+    <Content Include="app\templates\app\notice_edit.html" />
     <Content Include="Doctor\static\css\doctor.css" />
     <Content Include="Doctor\static\css\doctor_PM.css" />
     <Content Include="Doctor\static\css\report_window.css" />
