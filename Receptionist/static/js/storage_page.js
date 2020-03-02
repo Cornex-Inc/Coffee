@@ -634,11 +634,11 @@ function waiting_selected(paymentrecord_id) {
                 $("#discount_input").val('');
                 chage_amount();
             })
-
-
-            $('#is_emergency').change(function () {
-                chage_amount();
-            });
+            $('#id_pay').val('');
+            //응급
+            //$('#is_emergency').change(function () {
+            //    chage_amount();
+            //});
 
 
             $('#chart_table_total').html(numberWithCommas(response.datas['sub_total']));
@@ -1025,10 +1025,11 @@ function get_today_selected(reception_id) {
                 $("#discount_input").val('');
                 chage_amount();
             })
-
-            $('#is_emergency').change(function () {
-                chage_amount();
-            });
+            $('#id_pay').val(response.datas['total_amount']);
+            //응급
+            //$('#is_emergency').change(function () {
+            //    chage_amount();
+            //});
 
 
             
@@ -1129,8 +1130,8 @@ function chage_amount() {
     $('#chart_table_discount').html('');
     $('#chart_table_discount_amount').html(numberWithCommas($('#discount_amount').val()));
     $('#chart_table_total').html(numberWithCommas((total_aount.toFixed(0))));
-
-   
+    
+    $('#id_pay').val(total_aount)
 
 }
 

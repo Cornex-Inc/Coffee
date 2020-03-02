@@ -307,8 +307,9 @@
     width: 20px;
     height: 20px;
     position: absolute;
-    background-size: 20px 20px;
+    background-size: 15px 15px;
     background-repeat: no-repeat;
+    background-position:2.5px;
 }
 .q2_item_select{
     border-color:#dddddd;
