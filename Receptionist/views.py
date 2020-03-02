@@ -971,7 +971,9 @@ def waiting_selected(request):
 
         'doctor_kor':reception.doctor.name_kor,
         'doctor_eng':reception.doctor.name_eng,
+        'depart':reception.doctor.depart.name,
 
+        'sub_total':payment.sub_total,
         'unpaid_total': payment_record.get_rest_total(),
         'paid':payment_record.paid,
         'total_payment':payment.total,
@@ -1446,15 +1448,21 @@ def reservation(request):
     datas = Reservation.objects.filter(reservation_date__month = today.month)
     
     reception_form = ReceptionForm()
+
+    list_depart = Depart.objects.all()
+
     return render(request,
     'Receptionist/reservation.html',
             {
                 'datas':datas,
                 'reservation_dialog':reservation_dialog_form,
                 'reservation_search':reservation_search_form,
+
+                'list_depart':list_depart,
             },
         )
 
+@login_required
 def reservation_save(request):
     reception_id = request.POST.get('reception')
     date =request.POST.get('reservation_date')

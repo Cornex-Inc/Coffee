@@ -1,10 +1,10 @@
 ﻿from django.shortcuts import render,redirect,HttpResponse
 import datetime
-from django.utils import timezone
+from django.utils import timezone, translation
+
 from django.http import JsonResponse
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from django.contrib.auth.decorators import login_required
-
 
 from Receptionist.models import *
 from Receptionist.forms import *
@@ -53,7 +53,7 @@ def index(request):
     #exam_datas = ExamFee.objects.filter( doctor_id = request.user.doctor.id )
     exam_datas = ExamFee.objects.filter( doctor_id = request.user.doctor.id )
     if not exam_datas:
-        exam_datas = ExamFee.objects.filter( doctor_id__isnull = True , code__icontains='E')
+        exam_datas = ExamFee.objects.filter( doctor_id__isnull = True , code__icontains='E', use_yn='Y')
 
     for exam_data in exam_datas:
         exam_list.append({
@@ -63,34 +63,26 @@ def index(request):
             'code':exam_data.code,
             })
 
-    MR_datas = ExamFee.objects.filter( code__icontains='MR')
-    for MR_data in MR_datas:
-        exam_list.append({
-                'id':MR_data.id,
-                'name':MR_data.name,
-                'price':format(MR_data.get_price(), ',') + ' VND',
-                'code':MR_data.code,
-                })
 
     #PM 은 별도로 출력
     if request.user.doctor.depart.name == 'PM':
         precedure_data = []
-        precedures = Precedure.objects.filter( code__icontains='PM').order_by('code').exclude(code='PM010')
+        precedures = Precedure.objects.filter( code__icontains='PM' ,use_yn='Y').order_by('code')
         for precedure in precedures:
             precedure_data.append({
                         'id':precedure.id,
-                        'name':precedure.name,
+                        'name':precedure.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
                         'name_vie':precedure.name_vie,
                         'code':precedure.code,
                         'price':format(precedure.get_price(), ',') + ' VND',
                     })
 
         radiography_data = []
-        radiography_s = Precedure.objects.filter( code__icontains='R', precedure_class_id = 10).order_by('id')
+        radiography_s = Precedure.objects.filter( code__icontains='R', precedure_class_id = request.user.doctor.depart.id , use_yn='Y').order_by('id')
         for radiography in radiography_s:
             radiography_data.append({
                         'id':radiography.id,
-                        'name':radiography.name,
+                        'name':radiography.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
                         'name_vie':radiography.name_vie,
                         'code':radiography.code,
                         'price':format(radiography.get_price(), ',') + ' VND',
@@ -129,29 +121,18 @@ def index(request):
         )
 
 
-
-
-
     #"P0218"
     #"P0217"
-    front_datas = Precedure.objects.filter( Q(code = 'P0217') | Q(code = 'P0218'))
-    for front_data in front_datas:
-        exam_list.append({
-                'id':front_data.id,
-                'name':front_data.name,
-                'price':format(front_data.get_price(), ',') + ' VND',
-                'code':front_data.code,
-                })
 
     test_classes = TestClass.objects.all()
     test_data = {}
     for test_class in test_classes:
-        tests = Test.objects.filter(test_class = test_class)
+        tests = Test.objects.filter(test_class = test_class, use_yn='Y')
         temp = []
         for test in tests:
             temp.append({
                         'id':test.id,
-                        'name':test.name,
+                        'name':test.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
                         'name_vie':test.name_vie,
                         'code':test.code,
                         'price':format(test.get_price(), ',') + ' VND',
@@ -160,60 +141,57 @@ def index(request):
         test_data.update({ test_class.name : temp})
 
 
-
-
-
-    p_short_filter = PrecedureShort.objects.filter(doctor_id = request.user.doctor.id)
-    precedure_short = []
-    for p_short in p_short_filter:
-        precedure_short.append({
-            'id':p_short.precedure.id,
-            'name':p_short.precedure.name,
-            'name_vie':p_short.precedure.name_vie,
-            'code':p_short.precedure.code,
-            'price':format(p_short.precedure.get_price(), ',') + ' VND',
-            #'upper':p_short.precedure_class.name ,
-            })
+    #p_short_filter = PrecedureShort.objects.filter(doctor_id = request.user.doctor.id)
+    #precedure_short = []
+    #for p_short in p_short_filter:
+    #    precedure_short.append({
+    #        'id':p_short.precedure.id,
+    #        'name':p_short.precedure.name,
+    #        'name_vie':p_short.precedure.name_vie,
+    #        'code':p_short.precedure.code,
+    #        'price':format(p_short.precedure.get_price(), ',') + ' VND',
+    #        #'upper':p_short.precedure_class.name ,
+    #        })
     
    
-    if request.user.doctor.depart.id is 1:
-        precedure_classes=PrecedureClass.objects.all().exclude(pk = 2).exclude(pk = 3).exclude(pk = 4).exclude(pk = 8).exclude(pk = 9).values()
-    else:
-        precedure_classes=PrecedureClass.objects.all().exclude(pk = 1).values()
+
+    precedure_classes=PrecedureClass.objects.all().values()
 
     precedure_data = {}
 
     for precedure_class in precedure_classes:
-        precedures = Precedure.objects.filter(precedure_class_id = precedure_class['id'])
+        precedures = Precedure.objects.filter( precedure_class_id = precedure_class['id'],use_yn='Y')
         temp = []
 
         for precedure in precedures:
             temp.append({
                         'id':precedure.id,
-                        'name':precedure.name,
+                        'name':precedure.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
                         'name_vie':precedure.name_vie,
                         'code':precedure.code,
                         'price':format(precedure.get_price(), ',') + ' VND',
-                        'upper':precedure_class['name'] ,
+                        'upper':precedure_class['name'],
                     })
         precedure_data.update({ precedure_class['name'] : temp})
 
     
-    m_short_filter = MedicineShort.objects.filter(doctor_id = request.user.doctor.id)
-    medicine_short = []
-    for m_short in m_short_filter:
-        medicine_short.append({
-                'id':m_short.medicine.id,
-                'name':m_short.medicine.name,
-                'name_vie':m_short.medicine.name_vie,
-                'code':m_short.medicine.code,
-                'unit':'' if m_short.medicine.unit is None else m_short.medicine.unit,
-                'price':format(m_short.medicine.get_price(), ',') + ' VND',
-            })
-
+    #m_short_filter = MedicineShort.objects.filter(doctor_id = request.user.doctor.id)
+    #medicine_short = []
+    #for m_short in m_short_filter:
+    #    medicine_short.append({
+    #            'id':m_short.medicine.id,
+    #            'name':m_short.medicine.name,
+    #            'name_vie':m_short.medicine.name_vie,
+    #            'code':m_short.medicine.code,
+    #            'unit':'' if m_short.medicine.unit is None else m_short.medicine.unit,
+    #            'price':format(m_short.medicine.get_price(), ',') + ' VND',
+    #        })
+    #
     medicine_classes = MedicineClass.objects.all()
     medicine_data = []
-    medicines = Medicine.objects.all().order_by('name')
+    medicines = Medicine.objects.filter(use_yn='Y').order_by('name')
+
+
     #for medicine_class in medicine_classes:
     #    medicines = Medicine.objects.filter(medicine_class_id = medicine_class.id)
 
@@ -221,7 +199,7 @@ def index(request):
         
         tmp_data = {
                     'id':medicine.id,
-                    'name':medicine.name,
+                    'name':medicine.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
                     'name_vie':medicine.name_vie,
                     'code':medicine.code,
                     'unit':'' if medicine.unit is None else medicine.unit,
@@ -263,11 +241,11 @@ def index(request):
                 'test_class':test_class,
                 'tests':test_data,
 
-                'precedure_short':precedure_short,
+                #'precedure_short':precedure_short,
                 'precedure_classes':precedure_classes,
                 'precedures':precedure_data,
 
-                'medicine_short':medicine_short,
+                #'medicine_short':medicine_short,
                 'medicine_classes':medicine_classes,
                 'medicines':medicine_data,
 

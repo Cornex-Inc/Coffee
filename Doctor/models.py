@@ -76,11 +76,11 @@ class Pricechange(models.Model):
         )
 
     date_start = models.CharField(
-        max_length=8,
+        max_length=18,
         )
 
     date_end = models.CharField(
-        max_length=8,
+        max_length=18,
         )
 
     price = models.IntegerField(
@@ -129,6 +129,12 @@ class Test(models.Model):
         default=0,
         )
 
+    use_yn = models.CharField(
+        max_length = 1,
+        null=True,
+        default='Y',
+        )
+
     def __str__(self):
         return self.name
 
@@ -144,6 +150,15 @@ class Test(models.Model):
             return check.price
         except Pricechange.DoesNotExist:
             return self.price
+
+    def get_name_lang(self,lang=None):
+        if lang == 'vi':
+            if self.name_vie == None:
+                return self.name
+            else:
+                return self.name_vie
+        else:
+            return self.name
 
 
     
@@ -215,6 +230,12 @@ class Precedure(models.Model):
         default=0,
         )
 
+    use_yn = models.CharField(
+        max_length = 1,
+        null=True,
+        default='Y',
+        )
+
     def __str__(self):
         return self.name
 
@@ -230,6 +251,15 @@ class Precedure(models.Model):
             return check.price
         except Pricechange.DoesNotExist:
             return self.price
+        
+    def get_name_lang(self,lang=None):
+        if lang == 'vi':
+            if self.name_vie == None:
+                return self.name
+            else:
+                return self.name_vie
+        else:
+            return self.name
 
 class PrecedureShort(models.Model):
     doctor = models.ForeignKey(
@@ -302,7 +332,11 @@ class Medicine(models.Model):
         default=0,
         )
 
-
+    use_yn = models.CharField(
+        max_length = 1,
+        null=True,
+        default='Y',
+        )
 
     def __str__(self):
         if self.name is None:
@@ -321,6 +355,15 @@ class Medicine(models.Model):
             return check.price
         except Pricechange.DoesNotExist:
             return self.price
+
+    def get_name_lang(self,lang=None):
+        if lang == 'vi':
+            if self.name_vie == None:
+                return self.name
+            else:
+                return self.name_vie
+        else:
+            return self.name
 
 
 class MedicineShort(models.Model):
@@ -355,6 +398,12 @@ class ExamFee(models.Model):
         null=True,
         )
 
+    use_yn = models.CharField(
+        max_length = 1,
+        null=True,
+        default='Y',
+        )
+
     def __str__(self):
         return self.name
 
@@ -370,6 +419,17 @@ class ExamFee(models.Model):
             return check.price
         except Pricechange.DoesNotExist:
             return self.price
+
+    def get_name_lang(self,lang=None):
+        if lang == 'vi':
+            if self.name_vie == None:
+                return self.name
+            else:
+                return self.name_vie
+        else:
+            return self.name
+
+
 
 
 class BundleClass(models.Model):
@@ -405,4 +465,10 @@ class Bundle(models.Model):
 
     days = models.IntegerField(
         null=True,
+        )
+
+    use_yn = models.CharField(
+        max_length = 1,
+        null=True,
+        default='Y',
         )

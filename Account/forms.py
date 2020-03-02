@@ -9,8 +9,8 @@ from django.utils.translation import gettext as _
 class UserCreationForm(forms.ModelForm):
     user_role_choices=(('ADMIN',_('Admin')),
             ('DOCTOR', _('Doctor')),
+            ('PT', _('Physical Therapist')),
             ('RECEPTIONIST', _('Receptionist')),
-            ('DENTREC',_('Receptionist for Dental')),
             ('PHARMACY', _('Pharmacy')),
             ('LABORATORY',_('Laboratory')),
             ('RADIATION', _('Radiation')),)

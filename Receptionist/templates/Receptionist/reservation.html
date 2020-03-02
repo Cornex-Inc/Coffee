@@ -308,7 +308,20 @@
     }
 
     $(function () {
-        $('.fc-left').html('<div class="reservation_title"><span class="btn btn-danger" style="font-size:16px; height:26.5px; padding-top:1.5px; background:#d2322d;">{{ _('Search')}}</span><input type="text" id="reservation_search_date" class="form-control reservation_input" aria-describedby="sizing-addon1"><select name="depart" id="reservation_search_depart" class="form-control reservation_select" placeholder="" aria-describedby="basic-addon1" required=""><option value="" selected="">---------</option><option value="1">Dent</option><option value="2">GS</option><option value="3">OM</option><option value="4">OBGY</option><option value="5">ENT</option><option value="6">DR</option></select><select name="doctor" id="reservation_search_doctor" class="form-control reservation_select" placeholder="" aria-describedby="basic-addon1" required=""><option value="" selected="">---------</option><option value="6">의사1</option><option value="7">의사2</option><option value="9">의사3</option><option value="10">의사4</option></select><input type="text" id="reservation_search_string" class="form-control reservation_input" aria-describedby="sizing-addon1" autocomplete="off"/></div>');
+        $('.fc-left').html('<div class="reservation_title"><span class="btn btn-danger" style="font-size:16px; height:26.5px; padding-top:1.5px; background:#d2322d;">{{ _('Search')}}</span>' +
+            '<input type="text" id="reservation_search_date" class="form-control reservation_input" aria-describedby="sizing-addon1">' +
+            '<select name="depart" id="reservation_search_depart" class="form-control reservation_select" placeholder="" aria-describedby="basic-addon1" required="">' +
+            '<option value="" selected="">---------</option>' +
+            {% for depart in list_depart%}
+                '<option value="{{ depart.id }}">{{ depart.name }}</option>' +
+            {% endfor %}
+            '</select>' +
+            '<select name="doctor" id="reservation_search_doctor" class="form-control reservation_select" placeholder="" aria-describedby="basic-addon1" required="">' +
+            '<option value="" selected="">---------</option>' +
+            '</select>' +
+            '<input type="text" id="reservation_search_string" class="form-control reservation_input" aria-describedby="sizing-addon1" autocomplete="off"/>' + 
+            '</div>');
+
         $('.fc-center').css("position","absolute");
         $('.fc-center').css('left', '690px');
 

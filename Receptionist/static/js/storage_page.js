@@ -418,8 +418,9 @@ function waiting_selected(paymentrecord_id) {
             $('#patient_date_of_birth').val(response.datas['date_of_birth']);
             $('#patient_phone').val(response.datas['phone']);
             $('#patient_address').val(response.datas['address']);
-            $('#patient_doctor').val(response.datas['doctor_kor'] + ' / ' + response.datas['doctor_eng']  )
+            $('#patient_doctor').val(response.datas['doctor_kor'] + ' / ' + response.datas['doctor_eng'])
             $('#id_follow_update').val(response.datas['reservation']);
+            $('#recommendation').val(response.datas['recommendation']);
             
             var recepts_table = '';
             var str = '';
@@ -540,11 +541,11 @@ function waiting_selected(paymentrecord_id) {
             str += "<td></td><td style='text-align:right; padding-right:10px;'><input autocomplete='off' style='text-align:right; width:70px;display:inline; text-align:right;' id='additional_amount' class='form-control' value='" + response.datas['additional'] + "'/>VND</td></tr>"
 
 
-            str += "<tr><td></td><td></td><td colspan='2' style='vertical-align:middle; text-align:center; font-weight:bold;'>" +
-                "<label><input type='checkbox' id='is_emergency' style='position: relative;top: 15px;'";
-            if (response.datas['is_emergency'] == true)
-                str += 'checked';
-            str += ">Emergency<br/>Fee(30%)</label>" + "</td ><td id='emergency_amount' style='text-align:right; vertical-align:middle;'>" + numberWithCommas(response.datas['emergency_amount'])+" VND</td></tr>";
+            //str += "<tr><td></td><td></td><td colspan='2' style='vertical-align:middle; text-align:center; font-weight:bold;'>" +
+            //    "<label><input type='checkbox' id='is_emergency' style='position: relative;top: 15px;'";
+            //if (response.datas['is_emergency'] == true)
+            //    str += 'checked';
+            //str += ">Emergency<br/>Fee(30%)</label>" + "</td ><td id='emergency_amount' style='text-align:right; vertical-align:middle;'>" + numberWithCommas(response.datas['emergency_amount'])+" VND</td></tr>";
 
 
             str += "<tr><td></td><td></td><td style='text-align:center;font-weight:bold;' >Total</td>" +
@@ -554,8 +555,8 @@ function waiting_selected(paymentrecord_id) {
             str += "<tr><td></td><td></td><td style='text-align:center;font-weight:bold;' >Paid</td>" +
                 "<td id='discount_paid' colspan='2'style='text-align:right; padding-right:0.6vw;'>" + numberWithCommas(response.datas['paid']) + " VND</td></tr >";
              
-            str += "<tr><td></td><td></td><td style='text-align:center;font-weight:bold;' >Unpaid</td>" +
-                "<td id='discount_unpaid' colspan='2'style='text-align:right; padding-right:0.6vw;'>" + numberWithCommas(response.datas['unpaid_total']) + " VND</td></tr >";
+            //str += "<tr><td></td><td></td><td style='text-align:center;font-weight:bold;' >Unpaid</td>" +
+            //    "<td id='discount_unpaid' colspan='2'style='text-align:right; padding-right:0.6vw;'>" + numberWithCommas(response.datas['unpaid_total']) + " VND</td></tr >";
 
 
 
@@ -566,6 +567,16 @@ function waiting_selected(paymentrecord_id) {
             $('.chart_table_medicine_contents').hide();
             //discount isvalid
             //discount percent
+
+            //
+            $('#recept_patient').html(response.datas['name_kor'] + ' / ' + response.datas['name_eng']);
+            $('#recept_date').html(response.datas['date']);
+            $('#recept_doctor').html(response.datas['doctor_eng']);
+            $('#recept_date_of_birth').html(response.datas['date_of_birth']);
+            $('#recept_depart').html(response.datas['depart']);
+
+
+
             $('#discount_input').keyup(function () {
                 var regex = /[^0-9]/g;
                 var discount = $('#discount_input').val();
@@ -586,10 +597,16 @@ function waiting_selected(paymentrecord_id) {
 
                     $('#chart_table_discount').html($('#discount_input').val() + '%');
                     $('#chart_table_discount_amount').html(numberWithCommas((total_aount * discount)))
-                    $('#chart_table_total').html(numberWithCommas((totalValue.toFixed(0))));
+                    $('#chart_table_total').html(numberWithCommas((response.datas.sub_total.toFixed(0))));
+
+                    $('#chart_table_paid_amount').html(numberWithCommas((totalValue.toFixed(0))));
 
                     $('#discount_unpaid').html(numberWithCommas(totalValue - response.datas['paid']) + ' VND');
                     $('#discount_amount').val('');
+
+
+;
+
                 }
             });
 
@@ -624,7 +641,23 @@ function waiting_selected(paymentrecord_id) {
             });
 
 
-            $('#chart_table_total').html(numberWithCommas(response.datas['total_payment']));
+            $('#chart_table_total').html(numberWithCommas(response.datas['sub_total']));
+            $('#chart_table_paid_amount').html(numberWithCommas(response.datas['total_payment']));
+            //임시
+            if (response.datas['discount_amount'] != '') {
+                
+                $('#chart_table_discount_amount').html(numberWithCommas(response.datas['discount_amount']));
+            } else if(response.datas['discount'] != '')  {
+                discount = response.datas['discount'] / 100;
+
+                var totalValue = (response.datas['sub_total'] * discount)
+
+
+                $('#chart_table_discount').html(response.datas['discount'] + '%');
+                $('#chart_table_discount_amount').html(numberWithCommas(totalValue));
+            }
+            
+            //$('#chart_table_discount_amount').$('#discount_show').val()
 
 
             //tax invoice
@@ -652,6 +685,9 @@ function waiting_selected(paymentrecord_id) {
             })
             $("#discount_input, #discount_amount,#is_emergency,#additional_amount").prop('disabled', true);
             $('#show_medication_contents').prop("checked", false);
+
+
+
         },
         error: function (request, status, error) {
             alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -951,11 +987,11 @@ function get_today_selected(reception_id) {
             str += "<td></td><td style='text-align:right; padding-right:10px;'><input autocomplete='off' style='text-align:right; width:70px;display:inline; text-align:right;' id='additional_amount' class='form-control' value='" + response.datas['additional'] + "'/>VND</td></tr>"
             
 
-            str += "<tr><td></td><td></td><td colspan='2' style='vertical-align:middle; text-align:center; font-weight:bold;'>" +
-                "<label><input type='checkbox' id='is_emergency' style='position: relative;top: 15px;'";
-            if (response.datas['is_emergency'] == true)
-                str += 'checked';
-            str += ">Emergency<br/>Fee(30%)</label>" + "</td ><td id='emergency_amount' style='text-align:right; vertical-align:middle;'></td></tr>";
+            //str += "<tr><td></td><td></td><td colspan='2' style='vertical-align:middle; text-align:center; font-weight:bold;'>" +
+            //    "<label><input type='checkbox' id='is_emergency' style='position: relative;top: 15px;'";
+            //if (response.datas['is_emergency'] == true)
+            //    str += 'checked';
+            //str += ">Emergency<br/>Fee(30%)</label>" + "</td ><td id='emergency_amount' style='text-align:right; vertical-align:middle;'></td></tr>";
 
 
 
@@ -968,8 +1004,8 @@ function get_today_selected(reception_id) {
             str += "<tr><td></td><td></td><td style='text-align:center;font-weight:bold;' >Paid</td>" +
                 "<td id='discount_paid' colspan='2'style='text-align:right; padding-right:0.6vw;'>" + numberWithCommas(response.datas['paid']) + " VND</td></tr >";
             
-            str += "<tr><td></td><td></td><td style='text-align:center;font-weight:bold;' >Unpaid</td>" +
-                "<td id='discount_unpaid' colspan='2'style='text-align:right; padding-right:0.6vw;'>" + numberWithCommas(response.datas['unpaid']) + " VND</td></tr >";
+            //str += "<tr><td></td><td></td><td style='text-align:center;font-weight:bold;' >Unpaid</td>" +
+            //    "<td id='discount_unpaid' colspan='2'style='text-align:right; padding-right:0.6vw;'>" + numberWithCommas(response.datas['unpaid']) + " VND</td></tr >";
 
             
 

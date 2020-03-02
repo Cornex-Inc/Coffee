@@ -123,6 +123,16 @@
     </Compile>
     <Compile Include="Pharmacy\views.py" />
     <Compile Include="Pharmacy\__init__.py" />
+    <Compile Include="physical_therapist\admin.py" />
+    <Compile Include="physical_therapist\apps.py" />
+    <Compile Include="physical_therapist\migrations\__init__.py" />
+    <Compile Include="physical_therapist\models.py" />
+    <Compile Include="physical_therapist\tests.py" />
+    <Compile Include="physical_therapist\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="physical_therapist\views.py" />
+    <Compile Include="physical_therapist\__init__.py" />
     <Compile Include="Radiation\admin.py" />
     <Compile Include="Radiation\apps.py" />
     <Compile Include="Radiation\migrations\__init__.py" />
@@ -201,6 +211,10 @@
     <Folder Include="Pharmacy\static\css\" />
     <Folder Include="Pharmacy\templates\" />
     <Folder Include="Pharmacy\templates\Pharmacy\" />
+    <Folder Include="physical_therapist\" />
+    <Folder Include="physical_therapist\migrations\" />
+    <Folder Include="physical_therapist\templates\" />
+    <Folder Include="physical_therapist\templates\physical_therapist\" />
     <Folder Include="Radiation\" />
     <Folder Include="Radiation\migrations\" />
     <Folder Include="Radiation\static\" />
@@ -280,6 +294,7 @@
     <Content Include="Manage\static\css\login.css" />
     <Content Include="Manage\static\js\login.js" />
     <Content Include="Manage\templates\Manage\temp_manage.html" />
+    <Content Include="physical_therapist\templates\physical_therapist\index.html" />
     <Content Include="Radiation\static\img\image_close.png" />
     <Content Include="Radiation\static\img\plus-icon-4.png" />
     <Content Include="Radiation\templates\Radiation\zoomin.html" />

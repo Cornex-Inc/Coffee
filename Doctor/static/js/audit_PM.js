@@ -143,7 +143,7 @@ function search_doctor_profit(page = null) {
                     }
                     str += '<td style="vertical-align: middle;">' + numberWithCommas(response.datas[i]['subtotal']) + '</td>'
 
-                    if (response.datas[i]['discount'] == 0) {
+                    if (response.datas[i]['discount'] == 0 || response.datas[i]['discount'] == null) {
                         str += '<td style="vertical-align: middle;">-</td>'
                     } else {
                         str += '<td style="vertical-align: middle;">' + numberWithCommas(response.datas[i]['discount']) + '</td>'

@@ -47,7 +47,7 @@ urlpatterns = [
     path('laboratory/',include('Laboratory.urls',namespace='Laboratory')),
     path('radiation/',include('Radiation.urls',namespace='Radiation')),
     path('pharmacy/',include('Pharmacy.urls',namespace='Pharmacy')),
-    
+    path('physical_therapist/',include('physical_therapist.urls',namespace='physical_therapist')),
 
     path('manage/',include('Manage.urls',namespace='Manage')),
 

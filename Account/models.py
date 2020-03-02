@@ -33,6 +33,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser,PermissionsMixin):
     user_role_choices=(('ADMIN',_('Admin')),
             ('DOCTOR', _('Doctor')),
+            ('PT', _('Physical Therapist')),#Physical Therapist
             ('RECEPTIONIST', _('Receptionist')),
             ('DENTREC',_('Receptionist for Dental')),
             ('PHARMACY', _('Pharmacy')),
@@ -83,7 +84,8 @@ class User(AbstractBaseUser,PermissionsMixin):
         return str(self.user_role) == 'LABORATORY'
     def is_radiation(self):
         return str(self.user_role) == 'RADIATION'
-
+    def is_physical_therapist(self):
+        return str(self.user_role) == 'PT'
         
 
     @property

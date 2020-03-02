@@ -45,6 +45,8 @@ def home(request):
         return redirect('/manage')
     elif request.user.is_radiation:
         return redirect('/radiation')
+    elif request.user.is_physical_therapist:
+        return redirect('/physical_therapist')
         
 
 def login(request):
