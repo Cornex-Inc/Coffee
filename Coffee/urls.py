@@ -58,7 +58,10 @@ urlpatterns = [
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
 
     path('admin/', admin.site.urls),
-    path('summernote/', include('django_summernote.urls')),
+
+    #path('summernote/', include('django_summernote.urls')),
+
+    path('test/',views.test),
 
 ]
 

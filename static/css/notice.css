@@ -1,3 +1,31 @@
-body
-{
+.contents_wrap{
+    width:100%;
+    text-align:center;
 }
+
+.table_list {
+    margin:auto;
+    margin-top:100px;
+    width: 1400px;
+}
+    .table_list thead tr th, .table_list thead tr td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+
+    .table_list thead tr th:nth-child(1){
+        width:100px;
+    }
+
+    .table_list thead tr th:nth-child(2) {
+        width: 990px;
+    }
+
+    .table_list thead tr th:nth-child(3) {
+        width: 150px;
+    }
+
+    .table_list thead tr th:nth-child(4) {
+        width: 150px;
+    }

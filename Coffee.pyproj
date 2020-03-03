@@ -213,6 +213,9 @@
     <Folder Include="Pharmacy\templates\Pharmacy\" />
     <Folder Include="physical_therapist\" />
     <Folder Include="physical_therapist\migrations\" />
+    <Folder Include="physical_therapist\static\" />
+    <Folder Include="physical_therapist\static\js\" />
+    <Folder Include="physical_therapist\static\css\" />
     <Folder Include="physical_therapist\templates\" />
     <Folder Include="physical_therapist\templates\physical_therapist\" />
     <Folder Include="Radiation\" />
@@ -262,8 +265,10 @@
     <Content Include="app\static\js\event_listener.js" />
     <Content Include="app\static\js\notice.js" />
     <Content Include="app\static\js\main.js" />
+    <Content Include="app\static\obgy 001%28p294%29start.mp4" />
     <Content Include="app\templates\app\notice.html" />
     <Content Include="app\templates\app\notice_edit.html" />
+    <Content Include="app\templates\app\test.html" />
     <Content Include="Doctor\static\css\doctor.css" />
     <Content Include="Doctor\static\css\doctor_PM.css" />
     <Content Include="Doctor\static\css\report_window.css" />
@@ -294,6 +299,8 @@
     <Content Include="Manage\static\css\login.css" />
     <Content Include="Manage\static\js\login.js" />
     <Content Include="Manage\templates\Manage\temp_manage.html" />
+    <Content Include="physical_therapist\static\css\physical_therapist.css" />
+    <Content Include="physical_therapist\static\js\physical_therapist.js" />
     <Content Include="physical_therapist\templates\physical_therapist\index.html" />
     <Content Include="Radiation\static\img\image_close.png" />
     <Content Include="Radiation\static\img\plus-icon-4.png" />

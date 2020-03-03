@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'Pharmacy',
     'Laboratory',
     'Radiation',
+    'physical_therapist',
 
     'Manage',
     'bootstrap4',

@@ -78,7 +78,7 @@ def index(request):
                     })
 
         radiography_data = []
-        radiography_s = Precedure.objects.filter( code__icontains='R', precedure_class_id = request.user.doctor.depart.id , use_yn='Y').order_by('id')
+        radiography_s = Precedure.objects.filter( code__icontains='R',precedure_class_id = 10, use_yn='Y').order_by('id')
         for radiography in radiography_s:
             radiography_data.append({
                         'id':radiography.id,

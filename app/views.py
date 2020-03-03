@@ -30,8 +30,13 @@ def home(request):
         request.session[translation.LANGUAGE_SESSION_KEY] = 'en'
 
 
+
+
     if request.user.is_anonymous:
         return redirect('login')
+
+    tmp1 = request.user.is_radiation
+    tmp2 = request.user.is_physical_therapist
 
     if request.user.is_doctor():
         return redirect('/doctor')
@@ -41,12 +46,12 @@ def home(request):
         return redirect('/pharmacy')
     elif request.user.is_laboratory():
         return redirect('/laboratory')
+    elif request.user.is_radiation():
+        return redirect('/radiation')
+    elif request.user.is_physical_therapist():
+        return redirect('/physical_therapist')
     elif request.user.is_admin:
         return redirect('/manage')
-    elif request.user.is_radiation:
-        return redirect('/radiation')
-    elif request.user.is_physical_therapist:
-        return redirect('/physical_therapist')
         
 
 def login(request):
@@ -147,5 +152,13 @@ def notice_edit(request):
         'app/notice_edit.html',
             {
              'form':form, 
+            }
+        )
+
+def test(request):
+
+    return render(request,
+        'app/test.html',
+            {
             }
         )
