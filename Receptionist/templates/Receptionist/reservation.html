@@ -447,7 +447,7 @@
                     success: function (response) {
 
                         if (response.datas.length == 0) {
-                            alert('No Patient');
+                            alert( "{{ _('No Patient') }}" );
                         }
                         else if (response.datas.length == 1) {
                             $('#reservation_chart').val(response.datas[0].id);
@@ -525,26 +525,26 @@
     function reservation_save() {
 
         if ($('#reservation_date').val() == '') {
-            alert('selecte Reservation Date ! ');
+            alert(" {{ _('selecte Reservation Date ! ') }} ");
             return;
         }
         if ($('#reservation_patient').val() == '') {
-            alert('Name is necessary! ');
+            alert(" {{ _('Name is necessary! ') }} ");
             return;
         }
         
         if ($('#reservation_depart').val() == '') {
-            alert('Depart is necessary! ! ');
+            alert(" {{ _('Depart is necessary! ! ') }} ");
             return;
         }
 
         if ($('#reservation_doctor').val() == '') {
-            alert('Doctor is necessary! ! ');
+            alert(" {{ _('Doctor is necessary! ! ') }} ");
             return;
         }
         
         if ($('#reservation_memo').val() == '') {
-            alert('Memo is necessary! ! ');
+            alert(" {{ _('Memo is necessary! ! ') }} ");
             return;
         }
         
@@ -568,7 +568,7 @@
             },
             dataType: 'Json',
             success: function (response) {
-                alert('saved');
+                alert({{ _('saved') }});
                 location.reload();
             },
             error: function (request, status, error) {
@@ -587,7 +587,7 @@ function set_reservation(reservation_id = null) {
     $('#selected_reservation').val(reservation_id);
 
     if (reservation_id == null) {
-        $('.modal-header h4').html('Add Reservation');
+        $('.modal-header h4').html("{{ _('Add Reservation') }}" );
         $('#btn_reservation_delete').attr('style','display:none;');
 
         $('#reservation_date').val('');
@@ -599,7 +599,7 @@ function set_reservation(reservation_id = null) {
         $('#reservation_doctor').val('---------');
         $('#reservation_memo').val('');
     } else {
-        $('.modal-header h4').html('Edit Reservation');
+        $('.modal-header h4').html(" {{_('Edit Reservation') }} ");
         $('#btn_reservation_delete').attr('style','display:block; float:left;');
 
         $.ajax({
@@ -632,7 +632,7 @@ function set_reservation(reservation_id = null) {
     }
 }
     function delete_reservation(){
-        if(confirm('Delete?')){
+        if(confirm(" {{ _('Do you want to delete?') }}") ){
             $.ajax({
                 type: 'POST',
                 url: '/receptionist/reservation_events_delete/',
@@ -642,7 +642,7 @@ function set_reservation(reservation_id = null) {
                 },
                 dataType: 'Json',
                 success: function (response) {
-                    alert('Deleted');
+                    alert( {{ _('Deleted') }});
                     location.reload();                
     //info.event.remove();
                 },

@@ -9,7 +9,7 @@
         <div class="doctor_patient_info partition">
             <div class="status_table_title">
                 <span class="btn btn-success" style="">{{ _('Patient Information') }}</span>
-                <div class="need_medical_report" style="background:none; display:none;"id="need_medical_report" >{{_('Medical Report')}}</div>
+                <input type="button" value="{{_('Medical Report') }}" class="btn btn-warning" id="need_medical_report" style="float:right; display:none;"/>
             </div>
             <table class="table" id="reception_table">
                 <tr>
@@ -84,12 +84,12 @@
                     <thead>
                         <tr>
                             <th style="width: 60px;">{{ _('Date') }}</th>
-                            <th>Wt(kg)</th>
-                            <th>Ht(cm)</th>
-                            <th>BP(mmHg)</th>
-                            <th>BT(˚c)</th>
-                            <th>RR</th>
-                            <th>PR</th>
+                            <th>{{ _('Wt(kg)') }}</th>
+                            <th>{{ _('Ht(cm)') }}</th>
+                            <th>{{ _('BP(mmHg)') }}</th>
+                            <th>{{ _('BT(˚c)') }}</th>
+                            <th>{{ _('RR') }}</th>
+                            <th>{{ _('PR') }}</th>
                         </tr>
                     </thead>
                     <tbody id="vital_get_body"></tbody>
@@ -206,12 +206,12 @@
                     <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Next Visiting Day') }}</span>
                     {{reservation.date}}
                 </div>
-            
+            <!--
                 <div style="float:right;">
                     <div style="display:inline;">Total Price :</div>
                     <div id="total_price" style="text-align:right; display:inline;">0 VND</div>
                 </div>
-                
+                -->
          </div>
         <!--Past Diagnosis-->
         <div class="doctor_past_diagnosis partition">
@@ -282,7 +282,7 @@
                                 <th style="width:70px;text-align:center; ">{{ _('Price') }}</th>
                             </tr>
                         </thead>
-                        
+                        <!--
                         {% for class, contents in tests.items %}
                         <tbody>
                             <tr class="contents_class" style="cursor:pointer;">
@@ -294,7 +294,8 @@
                                 </td>
                             </tr>
                         </tbody>
-                        <tbody class="contents_items" style="display:none;">
+                            
+                        <tbody class="contents_items">
                             {% for test in contents %}
                             <tr style="cursor:pointer;">
                                 <td ></td>
@@ -307,7 +308,20 @@
                             {% endfor %}
                             </tbody>
                         {% endfor %}
-                            
+                            -->
+
+                            <tbody class="contents_items">
+                            {% for test in tests %}
+                            <tr style="cursor:pointer;">
+                                <td ></td>
+                                <td >{{test.code}}</td>
+                                <td >{{test.name}}</td>
+                                <td style="text-align:right;">{{test.price}}</td>
+                                <td style="display:none;">{{test.name.lower}}</td>
+                            </tr>
+                        
+                            {% endfor %}
+                            </tbody>
                     </table>
             </div>
             <div class="diagnosis_select_contents" id="diagnosis_select_precedure_contents">
@@ -320,17 +334,6 @@
                                 <th style="width:70px; text-align:center;">{{ _('Price') }}</th>
                             </tr>
                         </thead>
-                    <!--
-                        <tbody>
-                            <tr class="contents_class" style="cursor:pointer;">
-                                <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);"> 
-                                    <label for="order_list_class_{{class}}" >+</label>
-                                    <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_p_short"/>
-                                    Shortcut
-                                </td>
-                            </tr>
-                        </tbody>
-                        -->
                         <tbody class="contents_items" style="display:none;">
                             {% for precedure in precedure_short %}
                             <tr style="cursor:pointer;">
@@ -379,30 +382,6 @@
                             <th style="width:70px; text-align:center;">{{ _('Price') }}</th>
                         </tr>
                     </thead>
-                    <!--
-                    <tbody>
-                        <tr class="contents_class" style="cursor:pointer;">
-                            <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);"> 
-                                <label for="order_list_class_{{class}}" >+</label>
-                                <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_m_short"/>
-                                Shortcut
-                            </td>
-                        </tr>
-                    </tbody>
-                    -->
-                    <tbody class="contents_items" style="display:none;">
-                        {% for medicine in medicine_short %}
-                            <tr style="cursor:pointer;">
-                                <td ></td>
-                                <td >{{medicine.code}}</td>
-                                <td >{{medicine.name}}</td>
-                                <td style="text-align:right;">{{medicine.price}}</td>
-                                <td style="display:none;">{{medicine.name.lower}}</td>
-                                <td style="display:none;">{{medicine.unit}}</td>
-                            </tr>
-                        
-                        {% endfor %}
-                    </tbody>
                     <!--{% for class, contents in medicines.items %}
                         <tbody>
                             <tr class="contents_class" style="cursor:pointer;">
@@ -427,7 +406,7 @@
                             </tbody>
                         {% endfor %}-->
                         <tbody class="contents_items" >
-                            {% for medicine in medicines%}
+                            {% for medicine in medicines %}
                             <tr style="cursor:pointer;">
                                 <td ></td>
                                 <td >{{medicine.code}}</td>

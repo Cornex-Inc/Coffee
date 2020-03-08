@@ -133,7 +133,7 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <input class="btn btn-default" type="button" value="Inform Tax Invoice" id="patient_tax_invoice_click" />
+                        <input class="btn btn-default" type="button" value="{{ _('Inform Tax Invoice')}}" id="patient_tax_invoice_click" />
                         <div id="patient_tax_invoice" style="display:none;">
                             <div class="input-group" style="width:480px">
                                 <span class="input-group-addon storage_contents_table_title" id="basic-addon1">{{ _('Number') }}</span>
@@ -170,7 +170,12 @@
                
             <div class="status_table_filter">
                 <input id="storage_list_calendar" class="form-control storage_list_calendar" />
-                {{storage_search.filter}}
+                    <select name="filter" id="storage_search_select" class="form-control storage_search_select" aria-describedby="basic-addon1" autocomplete="off">
+                      <option value="name">{{ _('Name') }}</option>
+                      <option value="Chart">{{ _('Chart No') }}</option>
+                      <option value="Depart">{{ _('Depart') }}</option>
+                      <option value="Doctor">{{ _('Doctor') }}</option>
+                    </select>
                 {{storage_search.search_input}}
                 <input type="button" class="btn btn-default" value="Search" onclick="waiting_list()"/>
             </div>
@@ -209,7 +214,7 @@
                 <tbody class="chart_table_info" >
                     <tr>
                         <td colspan="2" style="font-size:14px; width:200px; text-align:left;">Depart : </td>
-                        <td id="recept_depart" ></td>
+                        <td id="recept_depart"></td>
                         <td></td>
                         <td></td>
                     </tr>
@@ -405,9 +410,9 @@
                         <br />
                         <br />
                         <div class="last_contents" style="letter-spacing:-0.2px;">발&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;행&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;일&nbsp;:&nbsp; <span id="publication_date_print"></span></div>
-                        <div class="last_contents">의료기관 명칭 : &nbsp;</div>
-                        <div class="last_contents">의료기관 주소 : &nbsp;</div>
-                        <div class="last_contents">대표 전화번호 : &nbsp;</div>
+                        <div class="last_contents">의료기관 명칭 : &nbsp;I - MEDICARE</div>
+                        <div class="last_contents">의료기관 주소 : &nbsp;Tang 1, The Garden, My Dinh, Hanoi</div>
+                        <div class="last_contents">대표 전화번호 : &nbsp;081 - 933 - 0102</div>
                         <br />
                         <div style="margin-left:210px; line-height:200%;">면허번호 : &nbsp;&nbsp; 제  호</div>
                         <div style="margin-left:210px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;성명 : &nbsp;&nbsp;<span id=""></span>(서명 또는 인)</div>
@@ -434,11 +439,11 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Chart No.</th>
-                                <th>Name</th>
-                                <th>Date Paid</th>
-                                <th>Paid</th>
-                                <th>Paid by</th>
+                                <th>{{ _('Chart No.') }}</th>
+                                <th>{{ _('Name') }}</th>
+                                <th>{{ _('Date Paid') }}</th>
+                                <th>{{ _('Paid') }}</th>
+                                <th>{{ _('Paid by') }}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -451,7 +456,7 @@
                         <ul class="pagination" id="record_pagnation" style="float:left;">
 
                         </ul>
-                        <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</a>
+                        <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
                     </div>
                 </div>
             </div>
@@ -472,12 +477,12 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Chart No.</th>
-                                <th>Name</th>
-                                <th>Date of Birth</th>
-                                <th>Depart</th>
-                                <th>Doctor</th>
-                                <th>Date of Hospitalization</th>
+                                <th>{{ _('Chart No.') }}</th>
+                                <th>{{ _('Name') }}</th>
+                                <th>{{ _('Date of Birth') }}</th>
+                                <th>{{ _('Depart') }}</th>
+                                <th>{{ _('Doctor') }}</th>
+                                <th>{{ _('Date of Hospitalization') }}</th>
                             </tr>
                         </thead>
                         <tbody id="Report_List">
@@ -489,7 +494,7 @@
                         <ul class="pagination" id="report_pagnation" style="float:left;">
 
                         </ul>
-                        <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</a>
+                        <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
                     </div>
                 </div>
             </div>

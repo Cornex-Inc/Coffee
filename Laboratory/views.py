@@ -92,7 +92,7 @@ def waiting_list(request):
     date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
     date_max = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.max)
 
-    test_manages = TestManage.objects.filter(date_ordered__range = (date_min, date_max),**kwargs)
+    test_manages = TestManage.objects.filter(date_ordered__range = (date_min, date_max),**kwargs).select_related('manager__diagnosis__reception').exclude(manager__diagnosis__reception__progress='deleted')
 
     datas=[]
     today = datetime.date.today()

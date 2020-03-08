@@ -328,6 +328,10 @@ class Medicine(models.Model):
         default=0,
         )
 
+    price_input = models.IntegerField(
+        default=0,
+        )
+
     inventory_count = models.IntegerField(
         default=0,
         )

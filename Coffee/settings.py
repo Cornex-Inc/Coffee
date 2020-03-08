@@ -54,7 +54,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'storages', # azure storage
+
+    #'crispy_forms',
+    #'ckeditor',
+    #'ckeditor_uploader',
 ]
+CKEDITOR_UPLOAD_PATH = "uploads/"
 
 SUMMERNOTE_THEME = 'bs3'
 

@@ -881,7 +881,7 @@ function reception_waiting(Today = false) {
         success: function (response) {
             $('#Rectption_Status > tbody ').empty();
             if (response.datas.length == 0) {
-                $('#Rectption_Status').append("<tr><td colspan='8'>None Result !!</td></tr>");
+                $('#Rectption_Status').append("<tr><td colspan='8'>gettext('No Result !!')</td></tr>");
             } else {
                 for (var i in response.datas) {
                     var color;
@@ -942,7 +942,7 @@ function worker_on(path) {
         }
     } else {
         w.terminate();
-        w = undefined;
+        w = undefined;  
     }
 }
 

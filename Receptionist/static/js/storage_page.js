@@ -102,7 +102,7 @@ $(function () {
     $('#showpayments').click(function () {
         var reception_id = $('#selected_reception').val();
         if (reception_id == '') {
-            alert('환자 먼저 선택');
+            alert(gettext('Select patient first.'));
             return;
         }
         payment_record_list();
@@ -116,7 +116,7 @@ $(function () {
     $('#Report').click(function () {
         var reception_id = $('#selected_reception').val();
         if (reception_id == '') {
-            alert('환자 먼저 선택');
+            alert(gettext('Select patient first.'));
             return;
         }
 
@@ -205,7 +205,7 @@ function delete_payment(record_id) {
             success: function (response) {
                 
 
-                alert('Deleted');
+                alert(gettext('Deleted'));
                 payment_record_list();
             },
             error: function (request, status, error) {
@@ -516,7 +516,7 @@ function waiting_selected(paymentrecord_id) {
                     medication_total += response.datas['medicines'][i].unit * response.datas['medicines'][i].quantity
                 }
 
-                recepts_table += '<tr class="chart_table_contents_items_shortcut"><td></td>' +
+                recepts_table += '<tr class="chart_table_contents_items_shortcut">' +
                     '<td colspan="2">Medicine</td>' +
                     '<td></td>' +
                     "<td></td>" +
@@ -952,7 +952,7 @@ function get_today_selected(reception_id) {
                         "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['medicines'][i].price) + " VND</td></tr>";
 
 
-                    recepts_table += "<tr class='chart_table_medicine_contents'><td>"/*+ no*/ + "</td>" +
+                    recepts_table += "<tr class='chart_table_medicine_contents'>" +
                         "<td colspan='2'>" + response.datas['medicines'][i].name + "</td>" +
                         "<td style='text-align:right;'>" + numberWithCommas(response.datas['medicines'][i].unit) + "</td>" +
                         "<td>" + response.datas['medicines'][i].quantity + "</td>" +
@@ -962,7 +962,7 @@ function get_today_selected(reception_id) {
                     medication_total += response.datas['medicines'][i].unit * response.datas['medicines'][i].quantity
                 }
 
-                recepts_table += '<tr class="chart_table_contents_items_shortcut"><td></td>' +
+                recepts_table += '<tr class="chart_table_contents_items_shortcut">' +
                     '<td colspan="2">Medicine</td>' +
                     '<td></td>' +
                     "<td></td>" +
@@ -1137,7 +1137,7 @@ function chage_amount() {
 
 function save_storage() {
     if ($('#selected_reception').val().trim = '') {
-        alert('환자 먼저 선택');
+        alert(gettext('Select patient first.'));
         return;
     }
 
@@ -1163,12 +1163,12 @@ function save_storage() {
         dataType: 'Json',
         success: function (response) {
             if (response.result == 'paid') {
-                alert('already paid.');
+                alertalert(gettext('Already paid.'));
                 waiting_list(true);
             } else if (response.result == 'overflowed') {
-                alert('Payment amount should be lower than remaining.')
+                alert(gettext('Payment amount should be lower than remaining.'));
             } else {
-                alert('paid')
+                alert(gettext('Paid'));
             }
             
         },

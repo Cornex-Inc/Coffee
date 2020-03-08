@@ -3,7 +3,7 @@ from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Sum
 
 
 from .forms import *
@@ -526,224 +526,78 @@ def doctor_profit(request):
             })
 
     else:
-        filter_general = request.POST.get('general')
+        filter_exam_fee = request.POST.get('exam_fee')
+        filter_test = request.POST.get('test')
+        filter_precedure = request.POST.get('precedure')
         filter_medicine = request.POST.get('medicine')
-        filter_lab = request.POST.get('lab')
-        #filter_scaling = request.POST.get('scaling')
-        #filter_panorama = request.POST.get('panorama')
 
         pup =request.POST.get('pup')
         paid_by = request.POST.get('paid_by')
 
 
-        receptions = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').order_by("-id")
+        receptions = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').select_related('payment').filter(payment__progress='paid').order_by("-id")
 
-        amount_total = 0
         
-        amount_general = 0
+        
+        amount_exam_fee = 0
+        amount_test = 0
+        amount_precedure = 0
         amount_medicine = 0
-        amount_lab = 0
-        amount_scaling = 0
-        amount_panorama = 0
+
 
         for reception in receptions:
             data = {}
             try:
-                general = []
-                lab = []
+                exam_fee = []
+                test = []
+                precedure = []
                 medi = []
-                scaling = []
-                panorama = []
 
-
-
-                if filter_general == '' and filter_medicine == '' and filter_lab == '':
+                
+                #필터링 없을 때
+                if filter_exam_fee == '' and filter_test == '' and filter_precedure == '' and filter_medicine=='':
+                    query_total = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').select_related('payment').filter(payment__progress='paid').annotate(
+                        sub_total=Sum('payment__sub_total'),
+                        discount=Sum('payment__discounted_amount'),
+                        total=Sum('payment__total')).values('sub_total','discount','total')
+                    query_total['sub_total']
                     tmp_exam_set = reception.diagnosis.exammanager_set.all()
                     for tmp_exam in tmp_exam_set:
-                        if hasattr(tmp_exam,'doctor'):
-                            general.append({
-                                'code':tmp_exam.exam.code,
-                                'value':tmp_exam.name + tmp_exam.exam.doctor.name_kor
-                                })
-                            amount_general += tmp_exam.exam.get_price(reception.recorded_date)
-                        else:
-                            general.append({
-                                'code':tmp_exam.exam.code,
-                                'value':tmp_exam.exam.name
-                                })
-                            amount_general += tmp_exam.exam.get_price(reception.recorded_date)
-           
+                        exam_fee.append({
+                            'code':tmp_exam.exam.code,
+                            'value':tmp_exam.exam.name
+                            })
+
                     tmp_test_set = reception.diagnosis.testmanager_set.all()
                     for tmp_test in tmp_test_set:
-                        lab.append({
+                        test.append({
                             'code':tmp_test.test.code,
                             'value':tmp_test.test.name,
                             })
-                        amount_lab += tmp_test.test.get_price(reception.recorded_date)
 
                     tmp_precedure_set = reception.diagnosis.preceduremanager_set.all()
                     for tmp_precedure in tmp_precedure_set:
-                        if 'scaling' in tmp_precedure.precedure.name.lower():
-                            scaling.append({
-                                'code':tmp_precedure.precedure.code,
-                                'value':tmp_precedure.precedure.name
-                                })
-                            amount_scaling += tmp_precedure.precedure.get_price(reception.recorded_date)
-
-                        elif 'injection' in tmp_precedure.precedure.name.lower():
-                            general.append({
-                                'code':tmp_precedure.precedure.code,
-                                'value':tmp_precedure.precedure.name
-                                })
-                            amount_general += tmp_exam.exam.get_price(reception.recorded_date)
-
-                        elif 'panorama' in tmp_precedure.precedure.name.lower():
-                            panorama.append({
-                                'code':tmp_precedure.precedure.code,
-                                'value':tmp_precedure.precedure.name
-                                })
-                            amount_panorama += tmp_precedure.precedure.get_price(reception.recorded_date)
-
-                        else:
-                            general.append({
-                                'code':tmp_precedure.precedure.code,
-                                'value':tmp_precedure.precedure.name
-                                })
-                            amount_general += tmp_precedure.precedure.get_price(reception.recorded_date)
+                        precedure.append({
+                            'code':tmp_precedure.precedure.code,
+                            'value':tmp_precedure.precedure.name
+                            })
             
 
                     tmp_medicine_set = reception.diagnosis.medicinemanager_set.all()
                     for tmp_medicine in tmp_medicine_set:
-                        if tmp_medicine.medicine.medicine_class_id is 31:
-                            general.append({
-                                'code':tmp_medicine.medicine.code,
-                                'value':tmp_medicine.medicine.name + ' x ' + str(tmp_medicine.days * tmp_medicine.amount),
-                                })
-                            amount_general += tmp_medicine.medicine.get_price(reception.recorded_date) * tmp_medicine.days * tmp_medicine.amount
-
-                        else:
-                            medi.append({
-                                'code':tmp_medicine.medicine.code,
-                                'value':tmp_medicine.medicine.name + ' x ' + str(tmp_medicine.days * tmp_medicine.amount),
-                                })
-                            amount_medicine += tmp_medicine.medicine.get_price(reception.recorded_date) * tmp_medicine.days * tmp_medicine.amount
-
-                    
-                else:
-                    if filter_general != '':
-                        if 'E' in filter_general:
-                            tmp_exam_set = reception.diagnosis.exammanager_set.all()
-                            res = True
-                            for tmp_exam_data in tmp_exam_set:
-                                if 'E_NEW' in filter_general:
-                                    if 'New' not in tmp_exam_data.exam.name:
-                                        res = False
-                                elif 'E_REP' in filter_general:
-                                    if 'Rep' not in tmp_exam_data.exam.name:
-                                        res = False
-                                elif 'E_DNT' in filter_general:
-                                    if 'Ora' not in tmp_exam_data.exam.name:
-                                        res = False
-                                else:
-                                    tmp_exam = ExamFee.objects.get(code = filter_general)
-                                    if tmp_exam.code not in tmp_exam_data.exam.code:
-                                        res = False
-                            
-                                if res:
-                                    general.append({
-                                        'code':tmp_exam_data.exam.code,
-                                        'value':tmp_exam_data.exam.name
-                                        })
-                                    amount_general += tmp_exam_data.exam.get_price(reception.recorded_date)
-                            if res is False or tmp_exam_set.count()==0:
-                                continue
-                                
-
-                        elif 'MR' in filter_general:
-                            tmp_exam = ExamFee.objects.get(code = filter_general)
-                            tmp_exam_set = reception.diagnosis.exammanager_set.filter(exam_id = tmp_exam.id)
-                            if tmp_exam_set.count() == 0:
-                                continue
-                            for tmp_exam_data in tmp_exam_set:
-                                general.append({
-                                    'code':tmp_exam_data.exam.code,
-                                    'value':tmp_exam_data.exam.name
-                                    })
-                                amount_general += tmp_exam_data.exam.get_price(reception.recorded_date)
-
-                        elif 'M' in filter_general:
-                            tmp_medicine = Medicine.objects.get(code = filter_general)
-                            tmp_medi_set = reception.diagnosis.medicinemanager_set.filter(medicine_id = tmp_medicine.id)
-
-                            if tmp_medi_set.count() == 0:
-                                continue
-                            for tmp_medi_data in tmp_medi_set:
-                                general.append({
-                                    'code':tmp_medi_data.medicine.code,
-                                    'value':tmp_medi_data.medicine.name + ' x ' + str(tmp_medi_data.days * tmp_medi_data.amount),
-                                    })
-                                amount_general += tmp_medi_data.medicine.get_price(reception.recorded_date) * tmp_medi_data.days * tmp_medi_data.amount
-
-                        else: #P D G R U O OB
-                            tmp_precedure = Precedure.objects.get(code = filter_general)
-                            tmp_precedure_set = reception.diagnosis.preceduremanager_set.filter(precedure_id = tmp_precedure.id)
-
-                            if tmp_precedure_set.count() == 0:
-                                continue
-                            for tmp_precedure_data in tmp_precedure_set:
-                                general.append({
-                                        'code':tmp_precedure_data.precedure.code,
-                                        'value':tmp_precedure_data.precedure.name
-                                        })
-                                amount_general += tmp_precedure_data.precedure.get_price(reception.recorded_date)
-
-                    if filter_medicine != '':
-                        tmp_medicine = Medicine.objects.get(code = filter_medicine)
-                        tmp_set = reception.diagnosis.medicinemanager_set.filter(medicine_id = tmp_medicine.id)
-
-                        if tmp_set.count() == 0:
-                                continue
-                        for tmp_data in tmp_set:
-                            medi.append({
-                                'code':tmp_data.exam.code,
-                                'value':tmp_data.medicine.name + ' x ' + str(tmp_data.days * tmp_data.amount),
-                                })
-                    if filter_lab != '':
-                        tmp_test = Test.objects.get(code = filter_lab)
-                        tmp_set = reception.diagnosis.testmanager_set.filter(test_id = tmp_test.id)
-                        if tmp_set.count() == 0:
-                                continue
-                        for tmp_data in tmp_set:
-                            lab.append({
-                               'code':tmp_data.exam.code,
-                                'value':tmp_data.exam.name
-                                })
-                           
-
-
-                data.update({'general':general})
-                data.update({'medi':medi})
-                data.update({'lab':lab})
-                data.update({'scaling':scaling})
-                data.update({'panorama':panorama})
+                        medi.append({
+                            'code':tmp_medicine.medicine.code,
+                            'value':tmp_medicine.medicine.name + ' x ' + str(tmp_medicine.days * tmp_medicine.amount),
+                            })
 
                 paid_set = reception.payment.paymentrecord_set.all()
-                unpaid_sum = reception.payment.total
+                paid_sum = 0
                 for paid in paid_set:
-                    unpaid_sum -= paid.paid
-
-
-        
-                if pup == 'Paid':
-                    if unpaid_sum != 0:
-                        continue
-                elif pup == 'Unpaid':
-                    if unpaid_sum == 0:
-                        continue
+                    paid_sum  += paid.paid
 
                 data.update({
                     'no':reception.id,
-                    'date':reception.recorded_date.strftime('%d-%b-%y'),
+                    'date':reception.recorded_date.strftime('%d-%m-%Y'),
                     'Patient':reception.patient.name_kor,
                     'patient_eng':reception.patient.name_eng,
                     'date_of_birth':str(reception.patient.get_age()) + '/' + reception.patient.get_gender_simple(),
@@ -752,21 +606,22 @@ def doctor_profit(request):
                     'Depart':reception.depart.name,
                     'Doctor':reception.doctor.get_name(),
 
+                    'list_exam_fee':exam_fee,
+                    'list_test':test,
+                    'list_precedure':precedure,
+                    'list_medi':medi,
+
                     'paid_by_cash':'',
                     'paid_by_card':'',
                     'paid_by_remit':'',
 
+                    'sub_total':reception.payment.sub_total,
                     'total' :reception.payment.total,
-                    'paid':reception.payment.total - unpaid_sum,
-                    'unpaid':unpaid_sum,
+                    'discount':reception.payment.discounted_amount,
                     })
 
-    
 
-
-                pay_records = PaymentRecord.objects.filter(payment = reception.payment)
-
-                for pay_record in pay_records:
+                for pay_record in paid_set:
                     if pay_record.method == 'card':
                         data.update({'paid_by_card':'card'})
                     elif pay_record.method == 'cash':
@@ -780,11 +635,9 @@ def doctor_profit(request):
 
 
         context.update({
-            'amount_general':amount_general,
-            'amount_medicine':amount_medicine,
-            'amount_lab':amount_lab,
-            'amount_scaling':amount_scaling, 
-            'amount_panorama':amount_panorama, 
+            'amount_sub_total':query_total.sub_total,
+            'amount_discount':query_total.discount,
+            'amount_total':query_total.total,
             })
     
     

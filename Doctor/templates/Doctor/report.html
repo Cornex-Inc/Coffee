@@ -105,6 +105,9 @@
             <div class="status_table_title">
                 <span class="btn" >{{ _('Preview') }}</span>
             </div>
+
+
+
     <div class="report_view_wrap">
         <div class="report_view">
             <div class="page">
@@ -169,9 +172,9 @@
                                     <br />
                                     <br />
                                     <div class="last_contents" style="letter-spacing:-0.2px;">발&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;행&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;일&nbsp;:&nbsp; <span id="print_date_screen"></span></div>
-                                    <div class="last_contents">의료기관 명칭 : &nbsp;</div>
-                                    <div class="last_contents">의료기관 주소 : &nbsp;</div>
-                                    <div class="last_contents">대표 전화번호 : &nbsp;</div>
+                                    <div class="last_contents">의료기관 명칭 : &nbsp;I - MEDICARE</div>
+                                    <div class="last_contents">의료기관 주소 : &nbsp;Tang, The Garden, Mydinh, Hanoi</div>
+                                    <div class="last_contents">대표 전화번호 : &nbsp;081 - 933 - 0102</div>
                                     <br />
                                     <div style="margin-left:95px; line-height:200%;">면허번호 : &nbsp;&nbsp; 제  호</div>
                                     <div style="margin-left:95px;">&nbsp;&nbsp;&nbsp;&nbsp;성명 : &nbsp;&nbsp;<span id="doctor_name_screen"></span> (서명 또는 인)</div>
@@ -246,9 +249,9 @@
                             <br />
                             <br />
                             <div class="last_contents" style="letter-spacing:-0.2px;">발&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;행&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;일&nbsp;:&nbsp; <span id="publication_date_print"></span></div>
-                            <div class="last_contents">의료기관 명칭 : &nbsp;</div>
-                            <div class="last_contents">의료기관 주소 : &nbsp;</div>
-                            <div class="last_contents">대표 전화번호 : &nbsp;</div>
+                            <div class="last_contents">의료기관 명칭 : &nbsp;I - MEDICARE</div>
+                            <div class="last_contents">의료기관 주소 : &nbsp;Tang 1, The Garden, My Dinh, Hanoi</div>
+                            <div class="last_contents">대표 전화번호 : &nbsp;081 - 933 - 0102</div>
                             <br />
                             <div style="margin-left:210px; line-height:200%;">면허번호 : &nbsp;&nbsp; 제  호</div>
                             <div style="margin-left:210px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;성명 : &nbsp;&nbsp;<span id=""></span> (서명 또는 인)</div>
@@ -317,9 +320,9 @@
                             <br />
                             <br />
                             <div class="last_contents" style="letter-spacing:-0.2px;">Publication Date&nbsp;:&nbsp; <span id="publication_date_print_eng"></span></div>
-                            <div class="last_contents">Name : &nbsp;</div>
-                            <div class="last_contents">Address : &nbsp;</div>
-                            <div class="last_contents">Number : &nbsp;</div>
+                            <div class="last_contents">Name : &nbsp;I - MEDICARE</div>
+                            <div class="last_contents">Address : &nbsp;Tang 1, The Garden, My Dinh, Hanoi</div>
+                            <div class="last_contents">Number : &nbsp; 081 - 933 - 0102</div>
                             <br />
                             <div style="margin-left:230px; line-height:200%;">License : &nbsp;&nbsp; </div>
                             <div style="margin-left:230px">Doctor Name : &nbsp;&nbsp;<span id=""></span>  (Sign)</div>
@@ -349,10 +352,10 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Chart No.</th>
-                                <th>Name</th>
-                                <th>Date of Birth</th>
-                                <th>Phone</th>
+                                <th>{{ _('Chart No.') }}</th>
+                                <th>{{ _('Name') }}</th>
+                                <th>{{ _('Date of Birth') }}</th>
+                                <th>{{ _('Phone') }}</th>
                             </tr>
                         </thead>
                         <tbody id="Patient_Search">

@@ -1029,7 +1029,7 @@ function save_recept() {
         dataType: 'Json',
         success: function (response) {
             if (response.result == true) {
-                alert(gettext('접수 되었습니다.'));
+                alert(gettext('has been Recepted.'));
                 reception_search(true);
                 earse_inputs();
                 set_new_patient(false);
@@ -1054,7 +1054,7 @@ function save_recept() {
 
 
             } else {
-                alert(gettext('접수에 실패 했습니다.'));
+                alert(gettext('failed to recepted.'));
             }
 
 
@@ -1111,7 +1111,7 @@ function patient_search(data) {
     var string = $('#patient_search_input').val();
 
     if (string == null || string == '') {
-        alert('검색어 입력');
+        alert(gettext('Input search string.'));
         return;
     }
 
@@ -1127,7 +1127,7 @@ function patient_search(data) {
         success: function (response) {
             $('#Patient_Search > tbody ').empty();
             if (response.datas.length == 0) {
-                $('#Patient_Search').append("<tr><td colspan='8'>None Result !!</td></tr>");
+                $('#Patient_Search').append("<tr><td colspan='8'>gettext('No Result !!')</td></tr>");
             } else {
                 for (var i in response.datas) {
                     var str = "<tr style='cursor:pointer;' onclick='set_patient_data(" +
@@ -1241,7 +1241,7 @@ function reception_search() {
         success: function (response) {
             $('#Rectption_Status > tbody ').empty();
             if ( response.datas.length == 0 ) {
-                $('#Rectption_Status').append("<tr><td colspan='8'>None Result !!</td></tr>");
+                $('#Rectption_Status').append("<tr><td colspan='8'>gettext('No Result !!')</td></tr>");
             } else {
                 for (var i in response.datas) {
                     var str = "<tr><td>" + (parseInt(i) + 1) + "</td>";
@@ -1303,7 +1303,7 @@ function payment_search(Today = false,show_all_unpaid=false) {
         success: function (response) {
             $('#Payment_Status > tbody ').empty();
             if (response.datas.length == 0) {
-                $('#Payment_Status').append("<tr><td colspan='8'>None Result !!</td></tr>");
+                $('#Payment_Status').append("<tr><td colspan='8'>gettext('No Result !!')</td></tr>");
             } else {
                 for (var i in response.datas)
                     var str = "<tr><td>" + (parseInt(i) + 1) + "</td>" +
@@ -1351,7 +1351,7 @@ function reservation_search(Today = false) {
         success: function (response) {
             $('#Reservation_Status > tbody ').empty();
             if (response.datas.length == 0) {
-                $('#Reservation_Status').append("<tr><td colspan='8'>None Result !!</td></tr>");
+                $('#Reservation_Status').append("<tr><td colspan='8'>gettext('No Result !!')</td></tr>");
             } else {
                 for (var i in response.datas) {
                     var str = "<tr><td>" + (parseInt(i) + 1) + "</td>";

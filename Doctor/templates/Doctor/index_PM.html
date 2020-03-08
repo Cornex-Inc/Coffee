@@ -253,7 +253,7 @@
             <!--<input type="button" class="btn btn-info" id="diagnosis_select_test_title" value="Lab"/>-->
             <input type="button" class="btn btn-success" id="diagnosis_select_precedure_title" value="Precedure"/>
             <input type="button" class="btn btn-warning" id="diagnosis_select_pm_radio_title" value="Radiography"/>
-            <!--<input type="button" class="btn btn-warning" id="diagnosis_select_bundle_title" value="Radiography" />-->
+            <input type="button" class="btn btn-primary" id="diagnosis_select_medicine_title" value="Medicine">
         </div>
         <!--diagnosis_select_title-->
 
@@ -328,6 +328,31 @@
                                 <td style="display:none;">{{radiography.name.lower}}</td>
                             </tr>
 
+                            {% endfor %}
+                        </tbody>
+                </table>
+            </div>
+
+        <div class="diagnosis_select_contents" id="diagnosis_select_medicine_contents">
+                <table class="table" >    
+                    <thead>
+                        <tr>
+                            <th style="width:15px; font-weight:bold;"></th>
+                            <th style="width:37px;">{{ _('Code') }}</th>
+                            <th style="width:90px;">{{ _('Name') }}</th>
+                            <th style="width:70px; text-align:center;">{{ _('Price') }}</th>
+                        </tr>
+                    </thead>
+                        <tbody class="contents_items" >
+                            {% for medicine in medicines%}
+                            <tr style="cursor:pointer;">
+                                <td ></td>
+                                <td >{{medicine.code}}</td>
+                                <td >{{medicine.name}}</td>
+                                <td style="text-align:right;">{{medicine.price}}</td>
+                                <td style="display:none;">{{medicine.name.lower}}</td>
+                                <td style="display:none;">{{medicine.unit}}</td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                 </table>

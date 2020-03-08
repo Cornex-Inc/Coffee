@@ -45,7 +45,7 @@
 
             {{ _('Exam Fee') }}:
             <select id="payment_search_exam_fee" class="form-control costom-select payment_search_lab">
-                <option value="" selected>---------</option>
+                <option value="" selected>{{ _('ALL') }}</option>
                 {% for exam in list_exam_fee %}
                     <option value="{{ exam.code }}">{{ exam.value }}</option>
                 {% endfor%}
@@ -53,7 +53,7 @@
 
             {{ _('Lab')}}:
             <select id="payment_search_lab" class="form-control costom-select payment_search_lab">
-                <option value="" selected>---------</option>
+                <option value="" selected>{{ _('ALL') }}</option>
                 {% for lab in list_lab %}
                     <option value="{{ lab.code }}">{{ lab.value }}</option>
                 {% endfor %}
@@ -61,7 +61,7 @@
 
             {{ _('Precedure')}}:
             <select id="payment_search_precedure" class="form-control costom-select payment_search_general">
-                <option value="" selected >---------</option>
+                <option value="" selected >{{ _('ALL') }}</option>
                 {% for precedure in list_precedure  %}
                     <option value="{{ precedure.code }}">{{ precedure.value }}</option>
                 {% endfor %}
@@ -69,7 +69,7 @@
 
             {{ _('Medicine')}}:
             <select id="payment_search_medicine" class="form-control costom-select payment_search_medicine">
-                <option value="" selected>---------</option>
+                <option value="" selected>{{ _('ALL') }}</option>
                 {% for medicine in list_medicine %}
                     <option value="{{ medicine.code }}">{{ medicine.value }}</option>
                 {% endfor %}
@@ -138,7 +138,7 @@
 
                 {{ _('Exam Fee') }}:
                 <select id="doctor_search_exam_fee" class="form-control costom-select payment_search_exam_fee">
-                    <option value="" selected>---------</option>
+                    <option value="" selected>{{ _('ALL') }}</option>
                     {% for exam in list_exam_fee %}
                         <option value="{{ exam.code }}">{{ exam.value }}</option>
                     {% endfor%}
@@ -146,7 +146,7 @@
 
                 {{ _('Lab')}}:
                 <select id="doctor_search_lab" class="form-control costom-select payment_search_lab">
-                    <option value="" selected>---------</option>
+                    <option value="" selected>{{ _('ALL') }}</option>
                     {% for lab in list_lab %}
                         <option value="{{ lab.code }}">{{ lab.value }}</option>
                     {% endfor %}
@@ -154,7 +154,7 @@
 
                 {{ _('Precedure')}}:
                 <select id="doctor_search_precedure" class="form-control costom-select payment_search_precedure">
-                    <option value="" selected >---------</option>
+                    <option value="" selected >{{ _('ALL') }}</option>
                     {% for precedure in list_precedure  %}
                         <option value="{{ precedure.code }}">{{ precedure.value }}</option>
                     {% endfor %}
@@ -162,7 +162,7 @@
 
                 {{ _('Medicine')}}:
                 <select id="doctor_search_medicine" class="form-control costom-select payment_search_medicine">
-                    <option value="" selected>---------</option>
+                    <option value="" selected>{{ _('ALL') }}</option>
                     {% for medicine in list_medicine %}
                         <option value="{{ medicine.code }}">{{ medicine.value }}</option>
                     {% endfor %}

@@ -116,7 +116,7 @@ def waiting_list(request):
     precedures = Precedure.objects.filter(code__icontains='R')
     diagnosiss = Diagnosis.objects.filter(recorded_date__range = (date_min, date_max))
     for diagnosis in diagnosiss:
-        manager_datas = PrecedureManager.objects.filter(precedure__in=precedures,diagnosis = diagnosis)
+        manager_datas = PrecedureManager.objects.filter(precedure__in=precedures,diagnosis = diagnosis).select_related('diagnosis__reception').exclude(diagnosis__reception__progress='deleted')
         for manager_data in manager_datas:
             if input=='':
                 data= {

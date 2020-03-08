@@ -3,12 +3,9 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
-msgid ""
-msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-18 23:16+0700\n"
+"POT-Creation-Date: 2020-03-08 14:15+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,8 +15,199 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: .\Receptionist\static\js\reception.js:667
-msgid "gender (은)는 필수 입력입니다."
+#: .\Doctor\static\js\doctor.js:516 .\Doctor\static\js\doctor.js:690
+#: .\Doctor\static\js\doctor.js:724 .\Doctor\static\js\doctor_PM.js:324
+#: .\Doctor\static\js\doctor_PM.js:707 .\Doctor\static\js\doctor_PM.js:926
+#: .\Doctor\static\js\doctor_PM.js:960 .\Pharmacy\static\js\pharmacy.js:111
+#: .\Receptionist\static\js\storage_page.js:105
+#: .\Receptionist\static\js\storage_page.js:119
+#: .\Receptionist\static\js\storage_page.js:1140
+#: .\physical_therapist\static\js\physical_therapist.js:320
+#: .\physical_therapist\static\js\physical_therapist.js:703
+#: .\physical_therapist\static\js\physical_therapist.js:924
+#: .\physical_therapist\static\js\physical_therapist.js:958
+#: .\static\js\doctor.js:516 .\static\js\doctor.js:690
+#: .\static\js\doctor.js:724 .\static\js\doctor_PM.js:320
+#: .\static\js\doctor_PM.js:703 .\static\js\doctor_PM.js:922
+#: .\static\js\doctor_PM.js:956 .\static\js\pharmacy.js:111
+#: .\static\js\physical_therapist.js:320 .\static\js\physical_therapist.js:703
+#: .\static\js\physical_therapist.js:922 .\static\js\physical_therapist.js:956
+msgid "Select patient first."
+msgstr ""
+
+#: .\Doctor\static\js\doctor.js:729 .\Doctor\static\js\doctor_PM.js:965
+#: .\physical_therapist\static\js\physical_therapist.js:963
+#: .\static\js\doctor.js:729 .\static\js\doctor_PM.js:961
+#: .\static\js\physical_therapist.js:961
+msgid "Diagnosis is empty."
+msgstr ""
+
+#: .\Doctor\static\js\doctor.js:765 .\Doctor\static\js\doctor_PM.js:1002
+#: .\physical_therapist\static\js\physical_therapist.js:1000
+#: .\static\js\doctor.js:765 .\static\js\doctor_PM.js:998
+#: .\static\js\physical_therapist.js:998
+msgid "amout is empty."
+msgstr ""
+
+#: .\Doctor\static\js\doctor.js:770 .\Doctor\static\js\doctor_PM.js:1007
+#: .\physical_therapist\static\js\physical_therapist.js:1005
+#: .\static\js\doctor.js:770 .\static\js\doctor_PM.js:1003
+#: .\static\js\physical_therapist.js:1003
+msgid "days is empty."
+msgstr ""
+
+#: .\Doctor\static\js\doctor.js:801 .\static\js\doctor.js:801
+msgid ""
+"Failed \n"
+"already settled or is settled."
+msgstr ""
+
+#: .\Doctor\static\js\doctor.js:803 .\Doctor\static\js\doctor_PM.js:1040
+#: .\physical_therapist\static\js\physical_therapist.js:1038
+#: .\static\js\doctor.js:803 .\static\js\doctor_PM.js:1036
+#: .\static\js\physical_therapist.js:1036
+msgid "Saved"
+msgstr ""
+
+#: .\Doctor\static\js\doctor_PM.js:1038
+#: .\physical_therapist\static\js\physical_therapist.js:1036
+#: .\static\js\doctor_PM.js:1034 .\static\js\physical_therapist.js:1034
+msgid ""
+"Only SOAPD and Recommend are saved. \n"
+"already settled or is settled."
+msgstr ""
+
+#: .\Doctor\static\js\report.js:33 .\static\js\report.js:33
+msgid "Outbreak Day is empty."
+msgstr ""
+
+#: .\Doctor\static\js\report.js:38 .\Doctor\static\js\report.js:89
+#: .\static\js\report.js:38 .\static\js\report.js:89
+msgid "Opinion is empty."
+msgstr ""
+
+#: .\Doctor\static\js\report.js:43 .\Doctor\static\js\report.js:94
+#: .\static\js\report.js:43 .\static\js\report.js:94
+msgid "Purpose is empty."
+msgstr ""
+
+#: .\Doctor\static\js\report.js:84 .\static\js\report.js:84
+msgid "Outbreak Date is empty."
+msgstr ""
+
+#: .\Doctor\static\js\report.js:312 .\static\js\report.js:312
+msgid "Type a text for searching"
+msgstr ""
+
+#: .\Laboratory\static\js\laboratory.js:69 .\static\js\laboratory.js:69
+msgid "Select test first."
+msgstr ""
+
+#: .\Laboratory\static\js\laboratory.js:92 .\Pharmacy\static\js\pharmacy.js:64
+#: .\Pharmacy\static\js\pharmacy.js:134
+#: .\Receptionist\static\js\reception.js:912
+#: .\Receptionist\static\js\reception.js:1435 .\static\js\laboratory.js:92
+#: .\static\js\pharmacy.js:64 .\static\js\pharmacy.js:134
+#: .\static\js\reception.js:912 .\static\js\reception.js:1435
+msgid "Saved."
+msgstr ""
+
+#: .\Pharmacy\static\js\pharmacy.js:40 .\static\js\pharmacy.js:40
+msgid "Select medicine first."
+msgstr ""
+
+#: .\Pharmacy\static\js\pharmacy.js:44 .\static\js\pharmacy.js:44
+msgid "Amount should be number"
+msgstr ""
+
+#: .\Pharmacy\static\js\pharmacy.js:115 .\static\js\pharmacy.js:115
+msgid "Already done."
+msgstr ""
+
+#: .\Radiation\static\js\radiation.js:34 .\static\js\radiation.js:34
+msgid "Image Select or save First."
+msgstr ""
+
+#: .\Radiation\static\js\radiation.js:161 .\static\js\radiation.js:161
+msgid "deleted."
+msgstr ""
+
+#: .\Receptionist\static\js\reception.js:505 .\static\js\reception.js:505
+msgid "Question 5 is empty."
+msgstr ""
+
+#: .\Receptionist\static\js\reception.js:537 .\static\js\reception.js:537
+msgid "Question 8 is empty."
+msgstr ""
+
+#: .\Receptionist\static\js\reception.js:544 .\static\js\reception.js:544
+msgid "Question 9 is empty."
+msgstr ""
+
+#: .\Receptionist\static\js\reception.js:848 .\static\js\reception.js:848
+msgid "'Gender' is necessary."
+msgstr ""
+
+#: .\Receptionist\static\js\reception.js:859
+#: .\Receptionist\static\js\reception.js:966 .\static\js\reception.js:859
+#: .\static\js\reception.js:966
+msgid "'"
+msgstr ""
+
+#: .\Receptionist\static\js\reception.js:936 .\static\js\reception.js:936
+msgid "Failed."
+msgstr ""
+
+#: .\Receptionist\static\js\reception.js:1032 .\static\js\reception.js:1032
+msgid "has been Recepted."
+msgstr ""
+
+#: .\Receptionist\static\js\reception.js:1057 .\static\js\reception.js:1057
+msgid "failed to recepted."
+msgstr ""
+
+#: .\Receptionist\static\js\reception.js:1114
+msgid "Input search string."
+msgstr ""
+
+#: .\Receptionist\static\js\reception.js:1171 .\static\js\reception.js:1171
+msgid "Abnormal approach"
+msgstr ""
+
+#: .\Receptionist\static\js\reception.js:1414 .\static\js\reception.js:1414
+msgid "Select Depart."
+msgstr ""
+
+#: .\Receptionist\static\js\reception.js:1418 .\static\js\reception.js:1418
+msgid "Select Doctor."
+msgstr ""
+
+#: .\Receptionist\static\js\reception.js:1447 .\static\js\reception.js:1447
+msgid "Are you sure you want to delete ?"
+msgstr ""
+
+#: .\Receptionist\static\js\reception.js:1459 .\static\js\reception.js:1459
+msgid "Deleted."
+msgstr ""
+
+#: .\Receptionist\static\js\storage_page.js:208
+msgid "Deleted"
+msgstr ""
+
+#: .\Receptionist\static\js\storage_page.js:1166
+msgid "Already paid."
+msgstr ""
+
+#: .\Receptionist\static\js\storage_page.js:1169
+msgid "Payment amount should be lower than remaining."
+msgstr ""
+
+#: .\Receptionist\static\js\storage_page.js:1171
+msgid "Paid"
+msgstr ""
+
+#: .\app\static\js\main.js:15
+msgid "Right click is not available."
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\SelectFilter2.js:47

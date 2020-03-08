@@ -88,12 +88,26 @@ def index(request):
                         'price':format(radiography.get_price(), ',') + ' VND',
                     })
 
+        medicines_data = []
+        medicine_s = Medicine.objects.filter( medicine_class_id=1, use_yn='Y').order_by('code')
+        for medicine in medicine_s:
+            medicines_data.append({
+                        'id':medicine.id,
+                        'name':medicine.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                        'name_vie':medicine.name_vie,
+                        'code':medicine.code,
+                        'price':format(medicine.get_price(), ',') + ' VND',
+                    })
+
 
         initial_report_q2_option = []
         initial_report_q2 = COMMCODE.objects.filter(commcode_grp = 'PM_IRQ2').values('id','seq','se1','se2','se4','se5')
         initial_report_q2_title = COMMCODE.objects.values('se2','seq','se6','se7','se8').annotate(Count('se2')).extra(select={'tmp_seq':'CAST(seq AS INTERGER)'}).order_by('tmp_seq')
         for title in initial_report_q2_title:
             item = COMMCODE.objects.values('se2').annotate(Count('se2'))
+
+
+        
 
         return render(request,
         'Doctor/index_PM.html',
@@ -105,10 +119,11 @@ def index(request):
                 'reception':reception_form,
                 'diagnosis':diagnosis_form,
 
+                'exam_list':exam_list,
                 'precedures':precedure_data,
                 'radiographys':radiography_data,
-
-                'exam_list':exam_list,
+                'medicines':medicines_data,
+                
 
                 'reservation':reservation_form,
                 'today_vital':datetime.date.today().strftime('%b-%d'),
@@ -124,21 +139,32 @@ def index(request):
     #"P0218"
     #"P0217"
 
-    test_classes = TestClass.objects.all()
-    test_data = {}
-    for test_class in test_classes:
-        tests = Test.objects.filter(test_class = test_class, use_yn='Y')
-        temp = []
-        for test in tests:
-            temp.append({
-                        'id':test.id,
-                        'name':test.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
-                        'name_vie':test.name_vie,
-                        'code':test.code,
-                        'price':format(test.get_price(), ',') + ' VND',
-                        'upper':test_class.name ,
-                    })
-        test_data.update({ test_class.name : temp})
+    #test_classes = TestClass.objects.all()
+    #test_data = {}
+    #for test_class in test_classes:
+    #    tests = Test.objects.filter(test_class = test_class, use_yn='Y')
+    #    temp = []
+    #    for test in tests:
+    #        temp.append({
+    #                    'id':test.id,
+    #                    'name':test.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+    #                    'name_vie':test.name_vie,
+    #                    'code':test.code,
+    #                    'price':format(test.get_price(), ',') + ' VND',
+    #                    'upper':test_class.name ,
+    #                })
+    #    test_data.update({ test_class.name : temp})
+
+    tests = Test.objects.filter( use_yn='Y')
+    test_data = []
+    for test in tests:
+        test_data.append({
+                    'id':test.id,
+                    'name':test.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                    'name_vie':test.name_vie,
+                    'code':test.code,
+                    'price':format(test.get_price(), ',') + ' VND',
+                })
 
 
     #p_short_filter = PrecedureShort.objects.filter(doctor_id = request.user.doctor.id)
@@ -155,7 +181,7 @@ def index(request):
     
    
 
-    precedure_classes=PrecedureClass.objects.all().values()
+    precedure_classes=PrecedureClass.objects.all().exclude(id=10).values()
 
     precedure_data = {}
 
@@ -186,17 +212,16 @@ def index(request):
     #            'unit':'' if m_short.medicine.unit is None else m_short.medicine.unit,
     #            'price':format(m_short.medicine.get_price(), ',') + ' VND',
     #        })
-    #
+
     medicine_classes = MedicineClass.objects.all()
     medicine_data = []
-    medicines = Medicine.objects.filter(use_yn='Y').order_by('name')
+    medicines = Medicine.objects.filter(use_yn='Y').exclude(medicine_class_id=1).order_by('code')
 
 
     #for medicine_class in medicine_classes:
     #    medicines = Medicine.objects.filter(medicine_class_id = medicine_class.id)
 
     for medicine in medicines:
-        
         tmp_data = {
                     'id':medicine.id,
                     'name':medicine.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
@@ -238,7 +263,7 @@ def index(request):
                 'reception':reception_form,
                 'diagnosis':diagnosis_form,
 
-                'test_class':test_class,
+                #'test_class':test_class,
                 'tests':test_data,
 
                 #'precedure_short':precedure_short,
@@ -628,7 +653,7 @@ def diagnosis_save(request):
             result.medicine_id = medicine.id
             result.amount = data['amount']
             result.days = data['days']
-            result.memo = data['memo']
+            #result.memo = data['memo']
             result.save()
             try:
                 medicine_manage = MedicineManage.objects.get(diagnosis_id = diagnosis_result.id)
@@ -1210,53 +1235,35 @@ def audit(request):
 
     else:
         #filters
-        general = []
-        lab = []
-        medi = []
-        scaling = []
-        panorama = []
+        list_exam_fee = []
+        list_test = []
+        list_precedure = []
+        list_medicine = []
     
-        general.append({'code':'E_NEW','value':'Exam Fee(New)'})
-        general.append({'code':'E_REP','value':'Exam Fee(Repeat)'})
-        general.append({'code':'E_DNT','value':'Exam Fee(Dental)'})
-        general.append({'code':'E0009','value':'Emergency'})
         
-        exams = ExamFee.objects.all().exclude(code__icontains = 'E')
+        exams = ExamFee.objects.filter(Q(code = 'E0001') | Q(code = 'E0002')).order_by('name')
         for exam in exams:
-            general.append({'code':exam.code,'value':exam.name})
+            list_exam_fee.append({'code':exam.code,'value':exam.name})
 
     
         tests = Test.objects.all().order_by('name')
         for test in tests:
-            lab.append({'code':test.code,'value':test.name})
+            list_test.append({'code':test.code,'value':test.name})
+
 
         precedures = Precedure.objects.all().order_by('name')
-
         for precedure in precedures:
-            if 'scaling' in precedure.name.lower():
-                general.append({'code':precedure.code,'value':precedure.name})
-            elif 'panorama' in precedure.name.lower():
-                general.append({'code':precedure.code,'value':precedure.name})
-            else:
-                pass
+            list_precedure.append({'code':precedure.code,'value':precedure.name})
 
-        temp_list_general = []
-        for precedure in precedures:
-            if 'injection' in precedure.name.lower():
-                temp_list_general.append({'code':precedure.code,'value':precedure.name})
-            else:
-                temp_list_general.append({'code':precedure.code,'value':precedure.name})
 
         medicines = Medicine.objects.all().order_by('name')
         for medicine in medicines:
-            if medicine.medicine_class_id is 31: #injection
-                temp_list_general.append({'code':medicine.code,'value':medicine.name})
-            else:
-                medi.append({'code':medicine.code,'value':medicine.name})
+            list_medicine.append({'code':medicine.code,'value':medicine.name})
 
-        sorted_datas = sorted(temp_list_general,key = lambda order: (order['value']))
-        for sorted_data in sorted_datas:
-            general.append({'code':sorted_data['code'],'value':sorted_data['value']})
+
+        #sorted_datas = sorted(temp_list_general,key = lambda order: (order['value']))
+        #for sorted_data in sorted_datas:
+        #    general.append({'code':sorted_data['code'],'value':sorted_data['value']})
 
 
 
@@ -1265,11 +1272,10 @@ def audit(request):
                 {
                     'doctor_search':doctor_search_form,
 
-                    'general_list':general,
-                    'lab_list':lab,
-                    'medi_list':medi,
-                    'scaling_list':scaling,
-                    'panorama_list':panorama,
+                    'list_exam_fee':list_exam_fee,
+                    'list_test':list_test,
+                    'list_precedure':list_precedure,
+                    'list_medicine':list_medicine,
 
                 }
             )

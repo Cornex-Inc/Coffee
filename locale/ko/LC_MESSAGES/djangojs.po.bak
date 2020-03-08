@@ -159,7 +159,7 @@ msgid "Failed."
 msgstr ""
 
 #: .\Receptionist\static\js\reception.js:1032 .\static\js\reception.js:1032
-msgid "has been Recepted."
+msgid "has been Recepted"
 msgstr ""
 
 #: .\Receptionist\static\js\reception.js:1057 .\static\js\reception.js:1057

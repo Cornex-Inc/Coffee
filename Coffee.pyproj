@@ -4,7 +4,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>Coffee</Name>
     <RootNamespace>Coffee</RootNamespace>
-    <InterpreterId>MSBuild|env_local|$(MSBuildProjectFullPath)</InterpreterId>
+    <InterpreterId>MSBuild|env_test|$(MSBuildProjectFullPath)</InterpreterId>
     <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
     <WebBrowserPort>
     </WebBrowserPort>
@@ -541,6 +541,15 @@
       <Id>env_local</Id>
       <Version>3.6</Version>
       <Description>env_local (Python 3.6 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
+    <Interpreter Include="env_test\">
+      <Id>env_test</Id>
+      <Version>3.6</Version>
+      <Description>env_test (Python 3.6 (64-bit))</Description>
       <InterpreterPath>Scripts\python.exe</InterpreterPath>
       <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
