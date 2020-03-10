@@ -24,6 +24,8 @@ from .forms import *
 from django.utils.translation import gettext as _
 from django.forms.models import model_to_dict
 from django.db.models import Q, Count
+from django.db.models.functions import Lower
+
 
 @login_required
 def index(request):
@@ -66,6 +68,19 @@ def index(request):
 
     #PM 은 별도로 출력
     if request.user.doctor.depart.name == 'PM':
+        tests = Test.objects.filter( use_yn='Y')
+        test_data = []
+        for test in tests:
+            test_data.append({
+                        'id':test.id,
+                        'name':test.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                        'name_vie':test.name_vie,
+                        'code':test.code,
+                        'price':format(test.get_price(), ',') + ' VND',
+                    })
+
+
+
         precedure_data = []
         precedures = Precedure.objects.filter( code__icontains='PM' ,use_yn='Y').order_by('code')
         for precedure in precedures:
@@ -120,6 +135,7 @@ def index(request):
                 'diagnosis':diagnosis_form,
 
                 'exam_list':exam_list,
+                'tests':test_data,
                 'precedures':precedure_data,
                 'radiographys':radiography_data,
                 'medicines':medicines_data,
@@ -181,14 +197,20 @@ def index(request):
     
    
 
-    precedure_classes=PrecedureClass.objects.all().exclude(id=10).values()
 
+    if request.user.doctor.depart.id == 5: #ENT
+        precedure_classes = PrecedureClass.objects.filter( id = 3).values()
+    elif request.user.doctor.depart.id == 2: #ENT
+        precedure_classes = PrecedureClass.objects.filter( Q(id = 2) | Q(id = 4) |Q(id = 6)|Q(id = 8) ).values()
+    else:
+        precedure_classes=PrecedureClass.objects.all().exclude(id=10).values()
+    
     precedure_data = {}
-
+    
     for precedure_class in precedure_classes:
         precedures = Precedure.objects.filter( precedure_class_id = precedure_class['id'],use_yn='Y')
         temp = []
-
+    
         for precedure in precedures:
             temp.append({
                         'id':precedure.id,
@@ -213,26 +235,38 @@ def index(request):
     #            'price':format(m_short.medicine.get_price(), ',') + ' VND',
     #        })
 
-    medicine_classes = MedicineClass.objects.all()
-    medicine_data = []
-    medicines = Medicine.objects.filter(use_yn='Y').exclude(medicine_class_id=1).order_by('code')
+    medicine_classes = MedicineClass.objects.all().exclude(id=1).values()
+    medicine_data = {}
+    
+    for medicine_class in medicine_classes:
+        medicines = Medicine.objects.filter(medicine_class_id = medicine_class['id'])
+        temp = []
+        for medicine in medicines:
+            temp.append( {
+                        'id':medicine.id,
+                        'name':medicine.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                        'name_vie':medicine.name_vie,
+                        'code':medicine.code,
+                        'unit':'' if medicine.unit is None else medicine.unit,
+                        'price':format(medicine.get_price(), ',') + ' VND',
+                        'upper':medicine_class['name'],
+                    })
+        medicine_data.update({ medicine_class['name'] : temp})
 
 
-    #for medicine_class in medicine_classes:
-    #    medicines = Medicine.objects.filter(medicine_class_id = medicine_class.id)
-
-    for medicine in medicines:
-        tmp_data = {
-                    'id':medicine.id,
-                    'name':medicine.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
-                    'name_vie':medicine.name_vie,
-                    'code':medicine.code,
-                    'unit':'' if medicine.unit is None else medicine.unit,
-                    'price':format(medicine.get_price(), ',') + ' VND',
-                }
-        medicine_data.append( tmp_data )
-        #medicine_data.update({ medicine_class.name : temp})
-
+    #medicines = Medicine.objects.filter(use_yn='Y').exclude(medicine_class_id=1).order_by(Lower('name'))
+    #for medicine in medicines:
+    #    tmp_data = {
+    #                'id':medicine.id,
+    #                'name':medicine.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+    #                'name_vie':medicine.name_vie,
+    #                'code':medicine.code,
+    #                'unit':'' if medicine.unit is None else medicine.unit,
+    #                'price':format(medicine.get_price(), ',') + ' VND',
+    #            }
+    #    medicine_data.append( tmp_data )
+    #    #
+    
     bundle_set = {}
     category = BundleClass.objects.values('upper').distinct()
 

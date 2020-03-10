@@ -242,7 +242,7 @@
                 <input type="button" class="btn btn-info" id="diagnosis_select_test_title" value="Lab">
                 <input type="button" class="btn btn-success" id="diagnosis_select_precedure_title" value="Precedure">
                 <input type="button" class="btn btn-primary" id="diagnosis_select_medicine_title" value="Medicine">
-                <input type="button" class="btn btn-warning" id="diagnosis_select_bundle_title" value="Bundle Px" />
+                <!--<input type="button" class="btn btn-warning" id="diagnosis_select_bundle_title" value="Bundle Px" />-->
             </div>
             <!--diagnosis_select_title-->
 
@@ -382,7 +382,7 @@
                             <th style="width:70px; text-align:center;">{{ _('Price') }}</th>
                         </tr>
                     </thead>
-                    <!--{% for class, contents in medicines.items %}
+                    {% for class, contents in medicines.items %}
                         <tbody>
                             <tr class="contents_class" style="cursor:pointer;">
                                 <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);"> 
@@ -396,16 +396,17 @@
                             {% for medicine in contents %}
                             <tr style="cursor:pointer;">
                                 <td></td>
-                                <td>{{medicine.code}}</td>
-                                <td>{{medicine.name}}</td>
+                                <td >{{medicine.code}}</td>
+                                <td >{{medicine.name}}</td>
                                 <td style="text-align:right;">{{medicine.price}}</td>
+                                <td style="display:none;">{{medicine.name.lower}}</td>
                                 <td style="display:none;">{{medicine.unit}}</td>
                             </tr>
                         
                             {% endfor %}
                             </tbody>
-                        {% endfor %}-->
-                        <tbody class="contents_items" >
+                        {% endfor %}
+                        <!--<tbody class="contents_items" >
                             {% for medicine in medicines %}
                             <tr style="cursor:pointer;">
                                 <td ></td>
@@ -417,8 +418,10 @@
                             </tr>
                             {% endfor %}
                         </tbody>
+                            -->
                 </table>
             </div>
+            <!--
             <div id="diagnosis_select_bundle_contents" class="diagnosis_select_contents">
                 <table class="table order_list_table" >
                         <thead>
@@ -457,6 +460,7 @@
                     </table>
 
             </div>
+            -->
         </div>
         
     </div>

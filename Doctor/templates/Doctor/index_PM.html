@@ -250,7 +250,7 @@
         </div>
         <div style="display:inline-block; margin-bottom:10px;" class="diagnosis_select_title">
             <input type="button" class="btn btn-primary" id="diagnosis_select_exam_title" value="Exam Fee" style="background:rgb(40,95,145); border-color:rgb(40,95,145)"/>
-            <!--<input type="button" class="btn btn-info" id="diagnosis_select_test_title" value="Lab"/>-->
+            <input type="button" class="btn btn-info" id="diagnosis_select_test_title" value="Lab"/>
             <input type="button" class="btn btn-success" id="diagnosis_select_precedure_title" value="Precedure"/>
             <input type="button" class="btn btn-warning" id="diagnosis_select_pm_radio_title" value="Radiography"/>
             <input type="button" class="btn btn-primary" id="diagnosis_select_medicine_title" value="Medicine">
@@ -284,6 +284,59 @@
             </table>
         </div>
 
+        <div class="diagnosis_select_contents" id="diagnosis_select_test_contents">
+                    <table class="table order_list_table" >
+                        <thead>
+                            <tr>
+                                <th style="width:15px; font-weight:bold;"></th>
+                                <th style="width:37px;">{{ _('Code') }}</th>
+                                <th style="width:90px;">{{ _('Name') }}</th>
+                                <th style="width:70px;text-align:center; ">{{ _('Price') }}</th>
+                            </tr>
+                        </thead>
+                        <!--
+                        {% for class, contents in tests.items %}
+                        <tbody>
+                            <tr class="contents_class" style="cursor:pointer;">
+                                <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);" for="order_list_class_{{class}}" > 
+                                    <label>+</label>
+                                    {{ class }}
+                                    <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_{{class}}"/>
+                                    
+                                </td>
+                            </tr>
+                        </tbody>
+                            
+                        <tbody class="contents_items">
+                            {% for test in contents %}
+                            <tr style="cursor:pointer;">
+                                <td ></td>
+                                <td >{{test.code}}</td>
+                                <td >{{test.name}}</td>
+                                <td style="text-align:right;">{{test.price}}</td>
+                                <td style="display:none;">{{test.name.lower}}</td>
+                            </tr>
+                        
+                            {% endfor %}
+                            </tbody>
+                        {% endfor %}
+                            -->
+
+                            <tbody class="contents_items">
+                            {% for test in tests %}
+                            <tr style="cursor:pointer;">
+                                <td ></td>
+                                <td >{{test.code}}</td>
+                                <td >{{test.name}}</td>
+                                <td style="text-align:right;">{{test.price}}</td>
+                                <td style="display:none;">{{test.name.lower}}</td>
+                            </tr>
+                        
+                            {% endfor %}
+                            </tbody>
+                    </table>
+            </div>
+
         <div class="diagnosis_select_contents" id="diagnosis_select_precedure_contents">
             <table class="table order_list_table">
                 <thead>
@@ -307,6 +360,7 @@
                 </tbody>
             </table>
         </div>
+
 
         <div class="diagnosis_select_contents" id="diagnosis_select_pm_radio_contents">
                 <table class="table" >    
