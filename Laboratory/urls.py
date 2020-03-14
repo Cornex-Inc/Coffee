@@ -9,7 +9,8 @@ urlpatterns = [
     path('waiting_selected/',views.waiting_selected,name='waiting_selected'),
     path('get_test_manage/',views.get_test_manage,name='get_test_manage'),
     
-
-    
     path('save/',views.save,name='save'),
+
+
+    path('checklist',views.checklist,name='checklist'),
 ]

@@ -518,6 +518,7 @@ def reception_search(request):
             'depart':reception.depart.name,
             'doctor':reception.doctor.name_kor,
             'has_unpaid':reception.patient.has_unpaid(),
+            'time':reception.recorded_date.strftime('%H:%M'),
             })
 
         
@@ -666,17 +667,24 @@ def waiting_list(request):
     filter = request.POST.get('filter')
     string = request.POST.get('string')
  
-
-    kwargs={}
-
-
     date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
     date_max = datetime.datetime.combine(datetime.datetime.strptime(date_end, "%Y-%m-%d").date(), datetime.time.max)
 
 
-    datas=[]
-    receptions = Reception.objects.filter( recorded_date__range = (date_min, date_max), **kwargs)
+    kwargs={}
+    filter_string=[]
+    if filter == 'name':
+        filter_string.append(Q( ** {'patient__name_kor__icontains' : string } ))
+        filter_string.append(Q( ** {'patient__name_eng__icontains' : string } ))
+        receptions = Reception.objects.select_related('patient').filter( functools.reduce(operator.or_, filter_string), recorded_date__range = (date_min, date_max) )
+    #if doctor_id != '':
+    #    doctor = Doctor.objects.get(id = doctor_id)
+    #    kwargs['doctor'] = doctor
+    else:
+        receptions = Reception.objects.select_related('patient').filter(  recorded_date__range = (date_min, date_max) )
 
+
+    datas=[]
     for reception in receptions:
         if hasattr(reception,'payment'):
             if hasattr(reception.payment,'paymentrecord_set'):

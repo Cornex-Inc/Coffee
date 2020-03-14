@@ -117,8 +117,8 @@ $(function () {
 
             if (what_class == 'diagnosis_select_exam_contents')
                 $('#diagnosis_selected_exam').append(str);
-            //else if (what_class == 'diagnosis_select_test_contents')
-            //    $('#diagnosis_selected_test').append(str);
+            else if (what_class == 'diagnosis_select_test_contents')
+                $('#diagnosis_selected_test').append(str);
             else if (what_class == 'diagnosis_select_precedure_contents' || what_class == 'diagnosis_select_pm_radio_contents')
                 $('#diagnosis_selected_precedure').append(str);
             else if (what_class == 'diagnosis_select_medicine_contents')
@@ -765,15 +765,15 @@ function get_diagnosis(reception_no) {
                 $('#diagnosis_selected_exam').append(str);
             }
 
-            //for (var j in response.datas['tests']) {
-            //
-            //    var str = "<tr><td>" + response.datas['tests'][j]['code'] + "<input type='hidden' value='" +
-            //        response.datas['tests'][j]['id'] + "'/></td><td colspan='5'>" +
-            //        response.datas['tests'][j]['name'] + "</td>" +
-            //        "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td>" +
-            //        "<td style='display:none;'>" + response.datas['tests'][j]['price'] + "</td></tr > ";
-            //    $('#diagnosis_selected_test').append(str);
-            //}
+            for (var j in response.datas['tests']) {
+            
+                var str = "<tr><td>" + response.datas['tests'][j]['code'] + "<input type='hidden' value='" +
+                    response.datas['tests'][j]['id'] + "'/></td><td colspan='2'>" +
+                    response.datas['tests'][j]['name'] + "</td>" +
+                    "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td>" +
+                    "<td style='display:none;'>" + response.datas['tests'][j]['price'] + "</td></tr > ";
+                $('#diagnosis_selected_test').append(str);
+            }
 
             for (var j in response.datas['precedures']) {
                 var str = "<tr><td>" + response.datas['precedures'][j]['code'] + "<input type='hidden' value='" +
@@ -883,7 +883,7 @@ function reception_waiting(Today = false) {
         success: function (response) {
             $('#Rectption_Status > tbody ').empty();
             if (response.datas.length == 0) {
-                $('#Rectption_Status').append("<tr><td colspan='8'>gettext('No Result !!')</td></tr>");
+                $('#Rectption_Status').append("<tr><td colspan='8'>" + gettext('No Result !!') + "</td></tr>");
             } else {
                 for (var i in response.datas) {
                     var color;
@@ -999,7 +999,7 @@ function diagnosis_save(set) {
         //temp_data['amount'] = $tds.eq(3).children('input').val();
         temp_data['amount'] = $tds.eq(2).children('input').val();
         if (temp_data['amount'] == '') {
-            alert(gettext('amout is empty.'));
+            alert(gettext('amount is empty.'));
             is_valid = false;
         }
         temp_data['days'] = 1;//$tds.eq(4).children('input').val();

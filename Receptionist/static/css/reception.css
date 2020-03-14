@@ -190,8 +190,8 @@
 .reception_search_table tbody tr td {
     vertical-align: middle;
 }
-    .reception_search_table tbody tr td:nth-child(7){
-        text-align:center;
+    .reception_search_table tbody tr td:nth-child(7), .reception_search_table tbody tr td:nth-child(8) {
+        text-align: center;
     }
     .patient_search_table_wrap {
         overflow: auto;

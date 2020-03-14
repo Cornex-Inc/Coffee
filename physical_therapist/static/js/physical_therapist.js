@@ -881,7 +881,7 @@ function reception_waiting(Today = false) {
         success: function (response) {
             $('#Rectption_Status > tbody ').empty();
             if (response.datas.length == 0) {
-                $('#Rectption_Status').append("<tr><td colspan='8'>gettext('No Result !!')</td></tr>");
+                $('#Rectption_Status').append("<tr><td colspan='8'>" + gettext('No Result !!') + "</td></tr>");
             } else {
                 for (var i in response.datas) {
                     var color;
@@ -997,7 +997,7 @@ function diagnosis_save(set) {
         //temp_data['amount'] = $tds.eq(3).children('input').val();
         temp_data['amount'] = $tds.eq(2).children('input').val();
         if (temp_data['amount'] == '') {
-            alert(gettext('amout is empty.'));
+            alert(gettext('amount is empty.'));
             is_valid = false;
         }
         temp_data['days'] = $tds.eq(4).children('input').val();

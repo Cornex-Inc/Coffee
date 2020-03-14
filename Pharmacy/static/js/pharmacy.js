@@ -1,6 +1,6 @@
-﻿jQuery.browser = {};
+jQuery.browser = {};
 $(function () {
-
+    
     $('.database_control input[type=text],input[type=number]').each(function () {
         //this.className += 'form-control';
 

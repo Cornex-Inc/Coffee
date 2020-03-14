@@ -171,7 +171,7 @@
     grid-row-end: 5;
     grid-column-start: 2;
     grid-column-end: 3;
-
+    overflow:hidden;
 }
 
 .status_table_filter {
@@ -342,11 +342,11 @@
     }
     .diagnosis_history_taking_contents {
         resize: vertical;
-        width: 600px !important;
+        width: 580px !important;
         height: 40px !important;
     }
     .diagnosis_history_taking_title {
-        width: 120px;
+        width: 140px;
         font-weight: bold;
     }
     .diagnosis_table_wrap{

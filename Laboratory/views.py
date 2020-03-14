@@ -92,7 +92,7 @@ def waiting_list(request):
     date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
     date_max = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.max)
 
-    test_manages = TestManage.objects.filter(date_ordered__range = (date_min, date_max),**kwargs).select_related('manager__diagnosis__reception').exclude(manager__diagnosis__reception__progress='deleted')
+    test_manages = TestManage.objects.filter(date_ordered__range = (date_min, date_max),**kwargs).select_related('manager__diagnosis__reception').exclude(manager__diagnosis__reception__progress='deleted').order_by('-date_ordered')
 
     datas=[]
     today = datetime.date.today()
@@ -122,7 +122,7 @@ def waiting_list(request):
                                 '(' + test_manage.manager.diagnosis.reception.patient.get_gender_simple() +
                                 '/' + str(test_manage.manager.diagnosis.reception.patient.get_age()) + ')',
                 'name_service':test_manage.name_service,
-                'date_ordered':'' if test_manage.date_ordered is None else test_manage.date_ordered.strftime('%Y-%m-%d %H:%M'),
+                'date_ordered':'' if test_manage.date_ordered is None else test_manage.date_ordered.strftime('%Y-%m-%d'),
                 'date_examination':'' if test_manage.date_examination is None else test_manage.date_examination.strftime('%Y-%m-%d') ,
                 'date_expected':'' if test_manage.date_expected is None else test_manage.date_expected.strftime('%Y-%m-%d') ,
                 'result':'' if test_manage.result is None or '' else test_manage.result,
@@ -142,7 +142,7 @@ def waiting_list(request):
                                     '(' + test_manage.manager.diagnosis.reception.patient.get_gender_simple() +
                                     '/' + str(test_manage.manager.diagnosis.reception.patient.get_age()) + ')',
                     'name_service':test_manage.name_service,
-                    'date_ordered':'' if test_manage.date_ordered is None else test_manage.date_ordered.strftime('%Y-%m-%d %H:%M'),
+                    'date_ordered':'' if test_manage.date_ordered is None else test_manage.date_ordered.strftime('%Y-%m-%d'),
                     'date_examination':'' if test_manage.date_examination is None else test_manage.date_examination.strftime('%Y-%m-%d') ,
                     'date_expected':'' if test_manage.date_expected is None else test_manage.date_expected.strftime('%Y-%m-%d') ,
                     'result':'' if test_manage.result is None or '' else test_manage.result,
@@ -163,7 +163,7 @@ def waiting_list(request):
                                     '(' + test_manage.manager.diagnosis.reception.patient.get_gender_simple() +
                                     '/' + str(test_manage.manager.diagnosis.reception.patient.get_age()) + ')',
                     'name_service':test_manage.name_service,
-                    'date_ordered':'' if test_manage.date_ordered is None else test_manage.date_ordered.strftime('%Y-%m-%d %H:%M'),
+                    'date_ordered':'' if test_manage.date_ordered is None else test_manage.date_ordered.strftime('%Y-%m-%d'),
                     'date_examination':'' if test_manage.date_examination is None else test_manage.date_examination.strftime('%Y-%m-%d') ,
                     'date_expected':'' if test_manage.date_expected is None else test_manage.date_expected.strftime('%Y-%m-%d') ,
                     'result':'' if test_manage.result is None or '' else test_manage.result,
@@ -183,7 +183,7 @@ def waiting_list(request):
                                     '(' + test_manage.manager.diagnosis.reception.patient.get_gender_simple() +
                                     '/' + str(test_manage.manager.diagnosis.reception.patient.get_age()) + ')',
                     'name_service':test_manage.name_service,
-                    'date_ordered':'' if test_manage.date_ordered is None else test_manage.date_ordered.strftime('%Y-%m-%d %H:%M'),
+                    'date_ordered':'' if test_manage.date_ordered is None else test_manage.date_ordered.strftime('%Y-%m-%d'),
                     'date_examination':'' if test_manage.date_examination is None else test_manage.date_examination.strftime('%Y-%m-%d') ,
                     'date_expected':'' if test_manage.date_expected is None else test_manage.date_expected.strftime('%Y-%m-%d') ,
                     'result':'' if test_manage.result is None or '' else test_manage.result,
@@ -230,3 +230,14 @@ def save(request):
     return JsonResponse(context)
 
 
+
+@login_required
+def checklist(request):
+    
+
+     return render(request,
+    'Laboratory/checklist.html',
+            {
+                
+            },
+        )

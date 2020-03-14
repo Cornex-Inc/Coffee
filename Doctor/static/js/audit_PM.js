@@ -169,7 +169,7 @@ function search_doctor_profit(page = null) {
                 $('#doctors_table_result').append(str);
             }
             //총 계
-            $("#profit_total_subtotal").html(numberWithCommas(total_subtotal));
+            $("#profit_total_subtotal").html(numberWithCommas(response.amount_sub_total));
             $("#profit_total_discounted").html(numberWithCommas(total_discounted));
             $("#profit_total_total").html(numberWithCommas(total_total));
             

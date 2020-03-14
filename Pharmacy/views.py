@@ -128,9 +128,9 @@ def medicine_search(request):
         }
 
     if string == '' :
-        medicines = Medicine.objects.all()
+        medicines = Medicine.objects.all().order_by('name')
     else:
-        medicines = Medicine.objects.filter(**kwargs).order_by("-id")
+        medicines = Medicine.objects.filter(**kwargs).order_by("code")
 
     datas=[]
     for medicine in medicines:
@@ -227,3 +227,18 @@ def save_data_control(request):
 
     context = {'result':True}
     return JsonResponse(context)
+
+def inventory(request):
+    waiting_search_form = WaitingSearchForm()
+    medicine_search_form = MedicineSearchForm()
+    medicine_control_form = MedicineControl()
+
+    return render(request,
+    'Pharmacy/inventory.html',
+            {
+                'waiting_search':waiting_search_form,
+                'medicinesearch':medicine_search_form,
+                'medicine_control':medicine_control_form,
+
+            },
+        )

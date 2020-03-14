@@ -296,9 +296,15 @@
     <Content Include="Doctor\templates\Doctor\reportwindow.html" />
     <Content Include="Doctor\templates\Doctor\audit.html" />
     <Content Include="Doctor\templates\Doctor\audit_PM.html" />
+    <Content Include="Laboratory\static\css\checklist.css" />
+    <Content Include="Laboratory\static\js\checklist.js" />
+    <Content Include="Laboratory\templates\Laboratory\checklist.html" />
     <Content Include="Manage\static\css\login.css" />
     <Content Include="Manage\static\js\login.js" />
     <Content Include="Manage\templates\Manage\temp_manage.html" />
+    <Content Include="Pharmacy\static\css\inventory.css" />
+    <Content Include="Pharmacy\static\js\inventory.js" />
+    <Content Include="Pharmacy\templates\Pharmacy\inventory.html" />
     <Content Include="physical_therapist\static\css\physical_therapist.css" />
     <Content Include="physical_therapist\static\js\physical_therapist.js" />
     <Content Include="physical_therapist\templates\physical_therapist\index.html" />

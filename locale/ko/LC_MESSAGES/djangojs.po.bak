@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-03-08 14:15+0700\n"
@@ -33,41 +34,41 @@
 #: .\static\js\physical_therapist.js:320 .\static\js\physical_therapist.js:703
 #: .\static\js\physical_therapist.js:922 .\static\js\physical_therapist.js:956
 msgid "Select patient first."
-msgstr ""
+msgstr "먼저 환자를ㅈ 선택하세요."
 
 #: .\Doctor\static\js\doctor.js:729 .\Doctor\static\js\doctor_PM.js:965
 #: .\physical_therapist\static\js\physical_therapist.js:963
 #: .\static\js\doctor.js:729 .\static\js\doctor_PM.js:961
 #: .\static\js\physical_therapist.js:961
 msgid "Diagnosis is empty."
-msgstr ""
+msgstr "진단명은 필수 입니다."
 
 #: .\Doctor\static\js\doctor.js:765 .\Doctor\static\js\doctor_PM.js:1002
 #: .\physical_therapist\static\js\physical_therapist.js:1000
 #: .\static\js\doctor.js:765 .\static\js\doctor_PM.js:998
 #: .\static\js\physical_therapist.js:998
 msgid "amout is empty."
-msgstr ""
+msgstr "수량은 필수 입니다."
 
 #: .\Doctor\static\js\doctor.js:770 .\Doctor\static\js\doctor_PM.js:1007
 #: .\physical_therapist\static\js\physical_therapist.js:1005
 #: .\static\js\doctor.js:770 .\static\js\doctor_PM.js:1003
 #: .\static\js\physical_therapist.js:1003
 msgid "days is empty."
-msgstr ""
+msgstr "일수는 필수 입니다."
 
 #: .\Doctor\static\js\doctor.js:801 .\static\js\doctor.js:801
 msgid ""
 "Failed \n"
 "already settled or is settled."
-msgstr ""
+msgstr "실패 했습니다.\n이미 계산중 이거나 계산 되었습니다."
 
 #: .\Doctor\static\js\doctor.js:803 .\Doctor\static\js\doctor_PM.js:1040
 #: .\physical_therapist\static\js\physical_therapist.js:1038
 #: .\static\js\doctor.js:803 .\static\js\doctor_PM.js:1036
 #: .\static\js\physical_therapist.js:1036
 msgid "Saved"
-msgstr ""
+msgstr "저장 됐습니다."
 
 #: .\Doctor\static\js\doctor_PM.js:1038
 #: .\physical_therapist\static\js\physical_therapist.js:1036
@@ -79,17 +80,17 @@ msgstr ""
 
 #: .\Doctor\static\js\report.js:33 .\static\js\report.js:33
 msgid "Outbreak Day is empty."
-msgstr ""
+msgstr "발생일이 비어있습니다."
 
 #: .\Doctor\static\js\report.js:38 .\Doctor\static\js\report.js:89
 #: .\static\js\report.js:38 .\static\js\report.js:89
 msgid "Opinion is empty."
-msgstr ""
+msgstr "소견이 비어있습니다."
 
 #: .\Doctor\static\js\report.js:43 .\Doctor\static\js\report.js:94
 #: .\static\js\report.js:43 .\static\js\report.js:94
 msgid "Purpose is empty."
-msgstr ""
+msgstr "용도가 비어있습니다."
 
 #: .\Doctor\static\js\report.js:84 .\static\js\report.js:84
 msgid "Outbreak Date is empty."
@@ -97,11 +98,11 @@ msgstr ""
 
 #: .\Doctor\static\js\report.js:312 .\static\js\report.js:312
 msgid "Type a text for searching"
-msgstr ""
+msgstr "발생일이 비어있습니다."
 
 #: .\Laboratory\static\js\laboratory.js:69 .\static\js\laboratory.js:69
 msgid "Select test first."
-msgstr ""
+msgstr "먼저 검사를 선택하세요."
 
 #: .\Laboratory\static\js\laboratory.js:92 .\Pharmacy\static\js\pharmacy.js:64
 #: .\Pharmacy\static\js\pharmacy.js:134
@@ -110,43 +111,43 @@ msgstr ""
 #: .\static\js\pharmacy.js:64 .\static\js\pharmacy.js:134
 #: .\static\js\reception.js:912 .\static\js\reception.js:1435
 msgid "Saved."
-msgstr ""
+msgstr "저장 됐습니다."
 
 #: .\Pharmacy\static\js\pharmacy.js:40 .\static\js\pharmacy.js:40
 msgid "Select medicine first."
-msgstr ""
+msgstr "약을 먼저 선택해주세요."
 
 #: .\Pharmacy\static\js\pharmacy.js:44 .\static\js\pharmacy.js:44
 msgid "Amount should be number"
-msgstr ""
+msgstr "수량은 숫자이어야 합니다."
 
 #: .\Pharmacy\static\js\pharmacy.js:115 .\static\js\pharmacy.js:115
 msgid "Already done."
-msgstr ""
+msgstr "이미 완료 됐습니다."
 
 #: .\Radiation\static\js\radiation.js:34 .\static\js\radiation.js:34
 msgid "Image Select or save First."
-msgstr ""
+msgstr "우선 이미지를 선택하거나 저장 해주세요."
 
 #: .\Radiation\static\js\radiation.js:161 .\static\js\radiation.js:161
 msgid "deleted."
-msgstr ""
+msgstr "삭제 됐습니다."
 
 #: .\Receptionist\static\js\reception.js:505 .\static\js\reception.js:505
 msgid "Question 5 is empty."
-msgstr ""
+msgstr "5번 문항이 비어있습니다."
 
 #: .\Receptionist\static\js\reception.js:537 .\static\js\reception.js:537
 msgid "Question 8 is empty."
-msgstr ""
+msgstr "8번 문항이 비어있습니다."
 
 #: .\Receptionist\static\js\reception.js:544 .\static\js\reception.js:544
 msgid "Question 9 is empty."
-msgstr ""
+msgstr "9번 문항이 비어있습니다."
 
 #: .\Receptionist\static\js\reception.js:848 .\static\js\reception.js:848
 msgid "'Gender' is necessary."
-msgstr ""
+msgstr "'성별'은 필수 입니다."
 
 #: .\Receptionist\static\js\reception.js:859
 #: .\Receptionist\static\js\reception.js:966 .\static\js\reception.js:859
@@ -156,59 +157,59 @@ msgstr ""
 
 #: .\Receptionist\static\js\reception.js:936 .\static\js\reception.js:936
 msgid "Failed."
-msgstr ""
+msgstr "실패했습니다."
 
 #: .\Receptionist\static\js\reception.js:1032 .\static\js\reception.js:1032
-msgid "has been Recepted"
-msgstr ""
+msgid "has been Recepted."
+msgstr "접수됐습니다."
 
 #: .\Receptionist\static\js\reception.js:1057 .\static\js\reception.js:1057
 msgid "failed to recepted."
-msgstr ""
+msgstr "접수에 실패했습니다."
 
 #: .\Receptionist\static\js\reception.js:1114
 msgid "Input search string."
-msgstr ""
+msgstr "검색어를 입력해주세요."
 
 #: .\Receptionist\static\js\reception.js:1171 .\static\js\reception.js:1171
 msgid "Abnormal approach"
-msgstr ""
+msgstr "비정상적인 접근"
 
 #: .\Receptionist\static\js\reception.js:1414 .\static\js\reception.js:1414
 msgid "Select Depart."
-msgstr ""
+msgstr "과를 선택해주세요."
 
 #: .\Receptionist\static\js\reception.js:1418 .\static\js\reception.js:1418
 msgid "Select Doctor."
-msgstr ""
+msgstr "의사를 선택해주세요."
 
 #: .\Receptionist\static\js\reception.js:1447 .\static\js\reception.js:1447
 msgid "Are you sure you want to delete ?"
-msgstr ""
+msgstr "삭제하시겠습니까?"
 
 #: .\Receptionist\static\js\reception.js:1459 .\static\js\reception.js:1459
 msgid "Deleted."
-msgstr ""
+msgstr "삭제 됐습니다."
 
 #: .\Receptionist\static\js\storage_page.js:208
 msgid "Deleted"
-msgstr ""
+msgstr "삭제 됐습니다."
 
 #: .\Receptionist\static\js\storage_page.js:1166
 msgid "Already paid."
-msgstr ""
+msgstr "이미 지불 되었습니다."
 
 #: .\Receptionist\static\js\storage_page.js:1169
 msgid "Payment amount should be lower than remaining."
-msgstr ""
+msgstr "지불금액은 총액보다 높을 수 없습니다."
 
 #: .\Receptionist\static\js\storage_page.js:1171
 msgid "Paid"
-msgstr ""
+msgstr "지불 했습니다."
 
 #: .\app\static\js\main.js:15
 msgid "Right click is not available."
-msgstr ""
+msgstr "우클릭은 불가능 합니다."
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\SelectFilter2.js:47
 #: .\static\admin\js\SelectFilter2.js:47
@@ -325,7 +326,7 @@ msgstr ""
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:14
 #: .\static\admin\js\admin\DateTimeShortcuts.js:14
 msgid "Midnight"
-msgstr ""
+msgstr "새벽"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:15
 #: .\static\admin\js\admin\DateTimeShortcuts.js:15
@@ -335,7 +336,7 @@ msgstr ""
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:16
 #: .\static\admin\js\admin\DateTimeShortcuts.js:16
 msgid "Noon"
-msgstr ""
+msgstr "오후"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:17
 #: .\static\admin\js\admin\DateTimeShortcuts.js:17
@@ -400,104 +401,104 @@ msgstr ""
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:12
 #: .\static\admin\js\calendar.js:12
 msgid "January"
-msgstr ""
+msgstr "1월"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:13
 #: .\static\admin\js\calendar.js:13
 msgid "February"
-msgstr ""
+msgstr "2월"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:14
 #: .\static\admin\js\calendar.js:14
 msgid "March"
-msgstr ""
+msgstr "3월"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:15
 #: .\static\admin\js\calendar.js:15
 msgid "April"
-msgstr ""
+msgstr "4월"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:16
 #: .\static\admin\js\calendar.js:16
 msgid "May"
-msgstr ""
+msgstr "5월"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:17
 #: .\static\admin\js\calendar.js:17
 msgid "June"
-msgstr ""
+msgstr "6월"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:18
 #: .\static\admin\js\calendar.js:18
 msgid "July"
-msgstr ""
+msgstr "7월"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:19
 #: .\static\admin\js\calendar.js:19
 msgid "August"
-msgstr ""
+msgstr "8월"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:20
 #: .\static\admin\js\calendar.js:20
 msgid "September"
-msgstr ""
+msgstr "9월"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:21
 #: .\static\admin\js\calendar.js:21
 msgid "October"
-msgstr ""
+msgstr "10월"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:22
 #: .\static\admin\js\calendar.js:22
 msgid "November"
-msgstr ""
+msgstr "11월"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:23
 #: .\static\admin\js\calendar.js:23
 msgid "December"
-msgstr ""
+msgstr "12월"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:26
 #: .\static\admin\js\calendar.js:26
 msgctxt "one letter Sunday"
 msgid "S"
-msgstr ""
+msgstr "일"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:27
 #: .\static\admin\js\calendar.js:27
 msgctxt "one letter Monday"
 msgid "M"
-msgstr ""
+msgstr "월"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:28
 #: .\static\admin\js\calendar.js:28
 msgctxt "one letter Tuesday"
 msgid "T"
-msgstr ""
+msgstr "화"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:29
 #: .\static\admin\js\calendar.js:29
 msgctxt "one letter Wednesday"
 msgid "W"
-msgstr ""
+msgstr "수"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:30
 #: .\static\admin\js\calendar.js:30
 msgctxt "one letter Thursday"
 msgid "T"
-msgstr ""
+msgstr "목"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:31
 #: .\static\admin\js\calendar.js:31
 msgctxt "one letter Friday"
 msgid "F"
-msgstr ""
+msgstr "금"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:32
 #: .\static\admin\js\calendar.js:32
 msgctxt "one letter Saturday"
 msgid "S"
-msgstr ""
+msgstr "토"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\collapse.js:27
 #: .\obj\Release\Package\PackageTmp\static\admin\js\collapse.js:45

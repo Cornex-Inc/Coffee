@@ -1,0 +1,99 @@
+﻿{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+<div class="checklist_grid">
+    <div class="checklis_database partition">
+        <div class="checklis_table_title">
+            <span class="btn btn-warning">{{ _('Check List') }}</span>
+            <div style="float:right;">
+                <select name="filter" id="medicine_search_select" class="form-control costom-select checklist_search_select" aria-describedby="basic-addon1">
+                    <option value="name">name</option>
+                </select>
+                <input type="text" name="search_input" id="medicine_search_input" class="form-control checklist_search_select" aria-describedby="basic-addon1" required="">
+                <input type="button" class="btn" value="{{ _('Search')}}" onclick="checklist_database_search()" />
+            </div>
+        </div>
+        <div class="checklist_database_list">
+            <div class="checklist_database_table">
+                <table class="table" id="checklist_database_table">
+                    <thead>
+                        <tr>
+                            <th>{{ _('No.') }}</th>
+                            <th>{{ _('Code.') }}</th>
+                            <th>{{ _('Classification') }}</th>
+                            <th>{{ _('Name') }}</th>
+                            <th>{{ _('Test Method') }}</th>
+                            <th>{{ _('Normal Range') }}</th>
+                            <th>{{ _('Price') }}</th>
+                            <th>{{ _('Waiting Time') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <ul class="pagination" id="medicine_pagnation">
+            </ul>
+        </div>
+    </div>
+
+    <div class="database_control partition">
+        <div class="medicine_table_title">
+            <span class="btn btn-danger inventory_table_title_span" id="medicine_new">{{ _('New') }} </span>
+            <span class="btn btn-info inventory_table_title_span" style="background: #39b3d7; border-color: #39b3d7;">{{ _('Add') }} </span>
+            <input class="btn btn-danger" type="button" value="{{ _('Save') }}" onclick="save_data_control()" style="float:right;margin-top: 5px; margin-right: 3px; " />
+        </div>
+        <div class="form-group">
+            <input type="hidden" id="selected_option" />
+            <div class="input-group">
+                <span class="input-group-addon input_span" id="basic-addon1">{{ _('Code') }}</span>
+                <input type="text" class="form-control"/>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon input_span" id="basic-addon1">{{ _('Classification') }}</span>
+                <input type="text" class="form-control" />
+            </div>
+
+            <div class="input-group">
+                <span class="input-group-addon input_span" id="basic-addon1">{{ _('Name') }}</span>
+                <input type="text" class="form-control" />
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon input_span" id="basic-addon1">{{ _('Test Method') }}</span>
+                <input type="text" class="form-control" />
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon input_span" id="basic-addon1">{{ _('Normal Range') }}</span>
+                <input type="text" class="form-control" />
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon input_span" id="basic-addon1">{{ _('Price') }}</span>
+                <input type="text" class="form-control" />
+            </div>
+
+            <div class="input-group">
+                <span class="input-group-addon input_span" id="basic-addon1">{{ _('Waiting Time') }}</span>
+                <input type="text" class="form-control" />
+            </div>
+
+            <input class="btn btn-primary" type="button" value="{{ _('Delete') }}" id="medicine_new" style="float:left;" />
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/checklist.css' %}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<script src="{% static 'js/checklist.js' %}" type="text/javascript"></script>
+{% endblock %}

@@ -122,7 +122,7 @@ class Test(models.Model):
 
     code = models.CharField(
         max_length = 8,
-        null=True,
+        primary_key=True,
         )
 
     price = models.IntegerField(
@@ -217,7 +217,7 @@ class Precedure(models.Model):
     
     code = models.CharField(
         max_length = 8,
-        null=True,
+        primary_key=True,
         )
 
     precedure_class = models.ForeignKey(
@@ -321,7 +321,7 @@ class Medicine(models.Model):
 
     code = models.CharField(
         max_length = 8,
-        null=True,
+        primary_key=True,
         )
 
     price = models.IntegerField(
@@ -390,7 +390,7 @@ class ExamFee(models.Model):
 
     code = models.CharField(
         max_length = 8,
-        null=True,
+        primary_key=True,
         )
 
     price = models.IntegerField(

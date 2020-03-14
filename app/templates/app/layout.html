@@ -93,17 +93,18 @@
                         <li {% if url_name == 'index' %}class="active"{% endif %}><a href="{% url 'Doctor:index'%}">
                             <span style="margin-right:5px;color:blue;">{{ user.doctor.depart.name }} </span> Dr.{{user.doctor.name_short }}</a>
                         </li>
-                    {% if user.doctor.depart.name != 'PM' %}
+
                         <li {% if url_name == 'laboratory_index' %}class="active"{% endif %}><a href="{% url 'Laboratory:laboratory_index'%}">{{ _('Laboratory') }}</a></li>
-                    {% endif %}
                         <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Radiation:radiation_index'%}">{{ _('Radiology') }}</a></li>
                         <li {% if url_name == 'report' %}class="active"{% endif %}><a href="{% url 'Doctor:report'%}">{{ _('Medical Report') }}</a></li>    
                         <li {% if url_name == 'reservation' %}class="active"{% endif %}><a href="{% url 'Receptionist:reservation'%}">{{ _('Reservation') }}</a></li>
                         <li {% if url_name == 'audit' %}class="active"{% endif %}><a href="{% url 'Doctor:audit'%}">{{ _('Audit') }}</a></li>
                     {% elif user.is_pharmacy %}
                         <li {% if url_name == 'pharmacy_index' %}class="active"{% endif %}><a href="{% url 'Pharmacy:pharmacy_index'%}">{{ _('Pharmacy') }}</a></li>
+                        <li {% if url_name == 'inventory' %}class="active"{% endif %}><a href="{% url 'Pharmacy:inventory'%}">{{ _('Inventory') }}</a></li>
                     {% elif user.is_laboratory %}
                         <li {% if url_name == 'laboratory_index' %}class="active"{% endif %}><a href="{% url 'Laboratory:laboratory_index'%}">{{ _('Laboratory') }}</a></li>
+                        <li {% if url_name == 'laboratory_index' %}class="active"{% endif %}><a href="{% url 'Laboratory:checklist'%}">{{ _('Laboratory checklist') }}</a></li>
                     {% elif user.is_radiation %}
                         <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Radiation:radiation_index'%}">{{ _('Radiology') }}</a></li>
                     {% elif user.is_admin %}

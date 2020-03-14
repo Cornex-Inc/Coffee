@@ -68,16 +68,21 @@ def index(request):
 
     #PM 은 별도로 출력
     if request.user.doctor.depart.name == 'PM':
-        tests = Test.objects.filter( use_yn='Y')
-        test_data = []
-        for test in tests:
-            test_data.append({
-                        'id':test.id,
-                        'name':test.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
-                        'name_vie':test.name_vie,
-                        'code':test.code,
-                        'price':format(test.get_price(), ',') + ' VND',
-                    })
+        test_classes = TestClass.objects.all().order_by('name')
+        test_data = {}
+        for test_class in test_classes:
+            tests = Test.objects.filter(test_class = test_class, use_yn='Y')
+            temp = []
+            for test in tests:
+                temp.append({
+                            'id':test.id,
+                            'name':test.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                            'name_vie':test.name_vie,
+                            'code':test.code,
+                            'price':format(test.get_price(), ',') + ' VND',
+                            'upper':test_class.name ,
+                        })
+            test_data.update({ test_class.name : temp})
 
 
 
@@ -135,6 +140,7 @@ def index(request):
                 'diagnosis':diagnosis_form,
 
                 'exam_list':exam_list,
+                'test_class':test_class,
                 'tests':test_data,
                 'precedures':precedure_data,
                 'radiographys':radiography_data,
@@ -155,32 +161,32 @@ def index(request):
     #"P0218"
     #"P0217"
 
-    #test_classes = TestClass.objects.all()
-    #test_data = {}
-    #for test_class in test_classes:
-    #    tests = Test.objects.filter(test_class = test_class, use_yn='Y')
-    #    temp = []
-    #    for test in tests:
-    #        temp.append({
-    #                    'id':test.id,
-    #                    'name':test.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
-    #                    'name_vie':test.name_vie,
-    #                    'code':test.code,
-    #                    'price':format(test.get_price(), ',') + ' VND',
-    #                    'upper':test_class.name ,
-    #                })
-    #    test_data.update({ test_class.name : temp})
+    test_classes = TestClass.objects.all().order_by('name')
+    test_data = {}
+    for test_class in test_classes:
+        tests = Test.objects.filter(test_class = test_class, use_yn='Y')
+        temp = []
+        for test in tests:
+            temp.append({
+                        'id':test.id,
+                        'name':test.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                        'name_vie':test.name_vie,
+                        'code':test.code,
+                        'price':format(test.get_price(), ',') + ' VND',
+                        'upper':test_class.name ,
+                    })
+        test_data.update({ test_class.name : temp})
 
-    tests = Test.objects.filter( use_yn='Y')
-    test_data = []
-    for test in tests:
-        test_data.append({
-                    'id':test.id,
-                    'name':test.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
-                    'name_vie':test.name_vie,
-                    'code':test.code,
-                    'price':format(test.get_price(), ',') + ' VND',
-                })
+    #tests = Test.objects.filter( use_yn='Y')
+    #test_data = []
+    #for test in tests:
+    #    test_data.append({
+    #                'id':test.id,
+    #                'name':test.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+    #                'name_vie':test.name_vie,
+    #                'code':test.code,
+    #                'price':format(test.get_price(), ',') + ' VND',
+    #            })
 
 
     #p_short_filter = PrecedureShort.objects.filter(doctor_id = request.user.doctor.id)
@@ -199,9 +205,13 @@ def index(request):
 
 
     if request.user.doctor.depart.id == 5: #ENT
-        precedure_classes = PrecedureClass.objects.filter( id = 3).values()
-    elif request.user.doctor.depart.id == 2: #ENT
-        precedure_classes = PrecedureClass.objects.filter( Q(id = 2) | Q(id = 4) |Q(id = 6)|Q(id = 8) ).values()
+        precedure_classes = PrecedureClass.objects.filter( Q(id = 3) | Q(id = 5)).values()
+    elif request.user.doctor.depart.id == 2: #IM
+        precedure_classes = PrecedureClass.objects.filter( Q(id = 2) | Q(id = 4) | Q(id = 5) | Q(id = 6)|Q(id = 8) ).values()
+    elif request.user.doctor.depart.id == 6: #DERM
+        precedure_classes = PrecedureClass.objects.filter( id__gte=11,id__lte=30).values().order_by('name')
+    elif request.user.doctor.depart.id == 4: #PS
+        precedure_classes = PrecedureClass.objects.filter( id__gte=31 ,id__lte=40).values()
     else:
         precedure_classes=PrecedureClass.objects.all().exclude(id=10).values()
     
@@ -297,7 +307,7 @@ def index(request):
                 'reception':reception_form,
                 'diagnosis':diagnosis_form,
 
-                #'test_class':test_class,
+                'test_class':test_class,
                 'tests':test_data,
 
                 #'precedure_short':precedure_short,
@@ -1170,8 +1180,8 @@ def report_search(request):
 
 
     #reports = Report.objects.filter(date_of_publication__range = (date_min, date_max),**kwargs )[:20]
-    reports = Report.objects.all()
-
+    reports = Report.objects.filter(doctor_id= request.user.doctor.id)
+     
     kwargs = {}
 
     page_context = request.POST.get('page_context',10)

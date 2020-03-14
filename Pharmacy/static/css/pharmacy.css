@@ -5,8 +5,7 @@
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: 30% 45%;
-    grid-template-rows: 35%;
+    grid-template-columns: 30% ;
 }
 
 
@@ -22,8 +21,6 @@
 .pharmacy_list {
     grid-column-start: 1;
     grid-column-end: 2;
-    grid-row-start: 1;
-    grid-row-end: 3;
     overflow-y:auto;
 }
 
@@ -52,35 +49,16 @@
     .pharmacy_control {
     }
 
-.pharmacy_database {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 2;
-    grid-row-end: 3;
-}
 
-.pharmacy_database_list {
-
-}
-.pharmacy_database_table {
-    height: 380px;
-}
     .pharmacy_database_table > table thead tr td{
         font-weight:bold;
     }
 
-    .database_control {
-        grid-column-start: 4;
-        grid-column-end: 3;
-        grid-row-start: 2;
-        grid-row-end: 3;
-    }
+
 
 .pharmacy_contents {
     grid-column-start: 2;
-    grid-column-end: 4;
-    grid-row-start: 1;
-    grid-row-end: 2;
+    grid-column-end: 3;
 
 }
 .pharmacy_contents_overflow {

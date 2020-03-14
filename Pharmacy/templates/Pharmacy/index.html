@@ -34,80 +34,8 @@
                 </table>
             </div>
         </div>
-        <div class="pharmacy_database partition">
-            <div class="medicine_table_title">
-                <span class="btn btn-danger medicine_table_title_span" >{{ _('Inventory') }}</span>
-                <div style="float:right;">
-
-                {{ medicinesearch.filter }}
-                {{ medicinesearch.search_input }}
-                <input type="button" class="btn" value="{{ _('Search')}}" onclick="pharmacy_database_search()"/>
-                </div>
-            </div>
-            <div class="pharmacy_database_list">
-                <div class="pharmacy_database_table">
-                    <table class="table" id="pharmacy_database_table">
-                        <thead>
-                            <tr>
-                                <td>{{ _('No.') }}</td>
-                                <td>{{ _('Trade Name') }}</td>
-                                <td>{{ _('Company') }}</td>
-                                <td>{{ _('Country') }}</td>
-                                <td>{{ _('Generic Name') }}</td>
-                                <td>{{ _('Unit') }}</td>
-                                <td>{{ _('Price') }}</td>
-                                <td>{{ _('Count') }}</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                    <ul class="pagination" id="medicine_pagnation">
-
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="database_control partition">
-            <div class="medicine_table_title">
-                <span class="btn btn-danger medicine_table_title_span" >{{ _('New | Add') }}</span>
-                
-            </div>
-                <div class="form-group">
-                    <input type="hidden" id="selected_option" />
-                    <div class="input-group">
-                      <span class="input-group-addon input_span" id="basic-addon1">{{ _('Trade Name') }}</span>
-                      {{medicine_control.name}}
-                    </div>
-                    <div class="input-group">
-                      <span class="input-group-addon input_span" id="basic-addon1">{{ _('Company') }}</span>
-                    {{medicine_control.company}}
-                    </div>
-                    <div class="input-group">
-                      <span class="input-group-addon input_span" id="basic-addon1">{{ _('Country') }}</span>
-                    {{medicine_control.country}}
-                    </div>
-                    <div class="input-group">
-                      <span class="input-group-addon input_span" id="basic-addon1">{{ _('Generic Name') }}</span>
-                    {{medicine_control.ingredient}}
-                    </div>
-                    <div class="input-group">
-                      <span class="input-group-addon input_span" id="basic-addon1">{{ _('Unit') }}</span>
-                    {{medicine_control.unit}}
-                    </div>
-                    <div class="input-group">
-                      <span class="input-group-addon input_span" id="basic-addon1">{{ _('Price') }}</span>
-                      {{medicine_control.price}}
-                    </div>
-
-                    <div class="input-group">
-                      <span class="input-group-addon input_span" id="basic-addon1">{{ _('Amount') }}</span>
-                    {{medicine_control.changes}}
-                    </div>
-                    <input class="btn" type="button" value="{{ _('New') }}" id="medicine_new" style="float:left;" />
-                    <input class="btn btn-danger" type="button" value="{{ _('Save') }}" onclick="save_data_control()" style="float:right;"/>
-                </div>
-        </div>
+        
+        
         <div class="pharmacy_contents partition">
             <div class="medicine_table_title">
                 <span class="btn btn-danger medicine_table_title_span" >{{ _('Ordered Medicine') }}</span>

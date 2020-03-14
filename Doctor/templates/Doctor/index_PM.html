@@ -294,7 +294,7 @@
                                 <th style="width:70px;text-align:center; ">{{ _('Price') }}</th>
                             </tr>
                         </thead>
-                        <!--
+                        
                         {% for class, contents in tests.items %}
                         <tbody>
                             <tr class="contents_class" style="cursor:pointer;">
@@ -307,7 +307,7 @@
                             </tr>
                         </tbody>
                             
-                        <tbody class="contents_items">
+                        <tbody class="contents_items" style="display:none;">
                             {% for test in contents %}
                             <tr style="cursor:pointer;">
                                 <td ></td>
@@ -320,8 +320,8 @@
                             {% endfor %}
                             </tbody>
                         {% endfor %}
-                            -->
-
+                            
+                        <!--
                             <tbody class="contents_items">
                             {% for test in tests %}
                             <tr style="cursor:pointer;">
@@ -334,6 +334,7 @@
                         
                             {% endfor %}
                             </tbody>
+                            -->
                     </table>
             </div>
 

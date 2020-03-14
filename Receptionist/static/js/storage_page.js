@@ -134,6 +134,12 @@ $(function () {
 
     });
 
+
+    $('#storage_search_input').keydown(function (key) {
+        if (key.keyCode == 13) {
+            waiting_list();
+        }
+    })
 });
 
 

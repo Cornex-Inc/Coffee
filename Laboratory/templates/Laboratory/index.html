@@ -26,10 +26,10 @@
                             <th>{{ _('Date of Birth') }}</th><!--성별 /나이)-->
                             <th>{{ _('Depart') }}</th> <!--과(의사)-->
                             <th>{{ _('Request') }}</th>
-                            <th>{{ _('Date Ordered') }}</th>
+                            <th>{{ _('Ordered Date') }}</th>
                             <th>{{ _('Reference Interval') }}</th>
                             <th>{{ _('Result') }}</th>
-                            <th>{{ _('Date Expected') }}</th>
+                            <th>{{ _('Expected Date') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,6 +41,7 @@
         <div class="laboratory_control partition">
             <div class="status_table_title">
                 <span class="btn btn-warning" style="margin-bottom:7.5px; font-size: 14px;height: 23px;padding-top: 1px; color:rgb(80,80,80);">{{ _('Result Report') }}</span>
+                <input type="button" class="btn btn-danger" value="{{ _('Save') }}" onclick="laboratory_control_save(true)" style="float:right; margin-right:5px;"/>
             </div>
             <input type="hidden" id="selected_test_manage" />
             <table class="table">
@@ -79,7 +80,7 @@
                 <tr>
                     <td>
                         <div class="input-group lab_control_input-group">
-                            <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Date Ordered') }}</span>
+                            <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Ordered Date') }}</span>
                             <input type="text" class="form-control" aria-describedby="sizing-addon1" id="date_ordered" autocomplete="off"/>
                         </div>
                     </td>
@@ -87,8 +88,8 @@
                 <tr>
                     <td>
                         <div class="input-group lab_control_input-group">
-                            <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Date of Examination') }}</span>
-                            <input type="text" class="form-control" aria-describedby="sizing-addon1" id="date_examination" autocomplete="off"/>
+                            <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Expected Date') }}</span>
+                            <input type="text" class="form-control" aria-describedby="sizing-addon1" id="date_expected" autocomplete="off"/>
                         </div>
                     </td>
                 </tr>
@@ -102,18 +103,10 @@
                         
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <div class="input-group lab_control_input-group">
-                            <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Date Expected') }}</span>
-                            <input type="text" class="form-control" aria-describedby="sizing-addon1" id="date_expected" autocomplete="off"/>
-                        </div>
-                    </td>
-                </tr>
             </table>
-            <div style="width:100%; text-align:center;">
-            <input type="button" class="btn btn-dark"  id="laboratory_control_cancel" value="{{ _('Cancel') }}"/>
-            <input type="button" class="btn btn-danger" value="{{ _('Save') }}" onclick="laboratory_control_save(true)"/>
+            <div style="width:100%; text-align:left;">
+            <input type="button" class="btn btn-primary"  id="laboratory_control_cancel" value="{{ _('Cancel') }}"/>
+            
                 </div>
         </div>
         

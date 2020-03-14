@@ -544,7 +544,8 @@ def doctor_profit(request):
         amount_precedure = 0
         amount_medicine = 0
 
-
+        
+        
         for reception in receptions:
             data = {}
             try:
@@ -556,11 +557,7 @@ def doctor_profit(request):
                 
                 #필터링 없을 때
                 if filter_exam_fee == '' and filter_test == '' and filter_precedure == '' and filter_medicine=='':
-                    query_total = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').select_related('payment').filter(payment__progress='paid').annotate(
-                        sub_total=Sum('payment__sub_total'),
-                        discount=Sum('payment__discounted_amount'),
-                        total=Sum('payment__total')).values('sub_total','discount','total')
-                    query_total['sub_total']
+                   
                     tmp_exam_set = reception.diagnosis.exammanager_set.all()
                     for tmp_exam in tmp_exam_set:
                         exam_fee.append({
@@ -634,16 +631,6 @@ def doctor_profit(request):
                 pass
 
 
-        context.update({
-            'amount_sub_total':query_total.sub_total,
-            'amount_discount':query_total.discount,
-            'amount_total':query_total.total,
-            })
-    
-    
-
-        
-      
         if (date_max - date_min).days == 0:  #단일 날짜는 당일을 Subtotal / 선택된 달의 금액을 Total
              first_day = datetime.datetime.strptime(date_start, "%Y-%m-%d").date().replace(day=1)
              last_day = (first_day + relativedelta.relativedelta(months=1)) - datetime.timedelta(seconds=1)
@@ -656,6 +643,18 @@ def doctor_profit(request):
                 'monthly_total':monthly_total,
                 })
         #else: #범위 날짜는 SubTotal 무시 /범위 계산을 Total로
+
+    query_total = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').select_related('payment').filter(payment__progress='paid').annotate(
+                        sub_total=Sum('payment__sub_total'),
+                        discount=Sum('payment__discounted_amount'),
+                        total=Sum('payment__total')).values('sub_total','discount','total')
+
+    context.update({
+        'amount_sub_total':query_total[0].sub_total,
+        'amount_discount':query_total[0].discount,
+        'amount_total':query_total[0].total,
+        })
+    
 
     paginator = Paginator(datas, page_context)
     try:

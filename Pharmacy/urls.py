@@ -15,5 +15,7 @@ urlpatterns = [
     path('set_data_control/',views.set_data_control,name='set_data_control'),
     path('save_data_control/',views.save_data_control,name='save_data_control'),
     
+
+    path('inventory/',views.inventory, name='inventory'),
     
 ]
