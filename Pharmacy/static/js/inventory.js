@@ -1,3 +1,5 @@
+
+
 jQuery.browser = {};
 $(function () {
     pharmacy_database_search();
@@ -6,31 +8,30 @@ $(function () {
 
     })
 
-    $('#pharmacy_list_calendar').daterangepicker({
-        singleDatePicker: true,
-        showDropdowns: true,
-        locale: {
-            format: 'YYYY-MM-DD'
-        }
-    });
-   
-    $('#pharmacy_list_calendar').on('apply.daterangepicker', function () {
-        today = moment().format('YYYY[-]MM[-]DD');
 
-        date = $('#pharmacy_list_calendar').val();
-        if (date == today) {
-            worker_on(true);
-        } else {
-            worker_on(false);
-        }
+
+
+    //ADD , Edit 
+
+
+    ////Level 자동 계산
+    function set_level_price_multi() {
+        var price_input = $("#add_edit_database_price_input").val();
+        var level = $('#add_edit_database_multiple_level option:selected').val();
+
+        $("#add_edit_database_price_output").val(Math.ceil(price_input * level));
+    }
+    $("#add_edit_database_price_input, #add_edit_database_multiple_level").change(function () {
+        set_level_price_multi();
     });
 
-    $('#medicine_new').click(function () {
-        $('#selected_option').val('new');
-        $('.database_control input[type=text],input[type=number]').each(function () {
-            $(this).val('');
-        })
-    })
+    $("#add_edit_database_price_input, #add_edit_database_multiple_level").keyup(function () {
+        set_level_price_multi();
+    });
+
+    $("#add_edit_database_price_output").keyup(function () {
+        $('#add_edit_database_multiple_level').val("0");
+    });
 
 
 });
@@ -99,15 +100,13 @@ function set_data_control(medicine_id) {
             $('#medicine_control_price').val(response.price);
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
 }
 
-function set_new() {
 
-}
 
 function pharmacy_control_save(Done = false) {
     var diagnosis_id = $('#selected_diagnosis').val();
@@ -145,104 +144,6 @@ function pharmacy_control_save(Done = false) {
 
 }
 
-
-function waiting_selected(diagnosis_id) {
-    $.ajax({
-        type: 'POST',
-        url: '/pharmacy/waiting_selected/',
-        data: {
-            'csrfmiddlewaretoken': $('#csrf').val(),
-            'diagnosis_id': diagnosis_id,
-        },
-        dataType: 'Json',
-        success: function (response) {
-            $('#selected_diagnosis').val(diagnosis_id);
-            $('#selected_diagnosis_status').val(response.status);
-            $('#pharmacy_contents_table > tbody ').empty();
-            for (var i in response.datas) {
-                var str = "<tr><td>" + response.datas[i]['code'] + "</td>" +
-                    "<td>" + response.datas[i]['name'] + "</td>" +
-                    "<td>" + response.datas[i]['depart'] + "</td>" +
-                    "<td>" + response.datas[i]['doctor'] + "</td>" +
-                    "<td>" + response.datas[i]['unit'] + "</td>" +
-                    "<td>" + response.datas[i]['amount'] + "</td>" +
-                    "<td>" + response.datas[i]['days'] + "</td>" +
-                    "<td>" + response.datas[i]['total'] + "</td>" +
-                    "<td>" + response.datas[i]['memo'] + "</td>" +
-                    "<td>" + "-" + "</td></tr>";
-
-                $('#pharmacy_contents_table').append(str);
-            }
-            $('#show_patient_selected').html(response.patient_name);
-        },
-        error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-        },
-    })
-}
-
-function waiting_list(Today = false) {
-    var date, start, end;
-
-    if (Today) {
-        var dt = new Date();
-
-        var recentYear = dt.getFullYear();
-        var recentMonth = dt.getMonth() + 1;
-        var recentDay = dt.getDate();
-
-        if (recentMonth < 10) recentMonth = "0" + recentMonth;
-        if (recentDay < 10) recentDay = "0" + recentDay;
-
-        date = recentYear + "-" + recentMonth + "-" + recentDay;
-        //date = date + ' - ' + date; 
-        $('#pharmacy_list_calendar').val(date);
-    } else {
-        date = $('#pharmacy_list_calendar').val();
-    }
-    start = date.split(' - ')[0];
-    end = date.split(' - ')[1];
-
-
-    $.ajax({
-        type: 'POST',
-        url: '/pharmacy/waiting_list/',
-        data: {
-            'csrfmiddlewaretoken': $('#csrf').val(),
-            'start_date': start,
-            'end_date': end,
-            //'string':string,
-            //'filter':filter,
-        },
-        dataType: 'Json',
-        success: function (response) {
-            $('#pharmacy_list_table > tbody ').empty();
-            for (var i = 0; i < response.datas.length; i++) {
-                var tr_class = "";
-                if (response.datas[i]['status'] == 'new')
-                    tr_class = "class ='success'"
-                else if (response.datas[i]['status'] == 'hold')
-                    tr_class = "class ='warning'"
-                else if (response.datas[i]['status'] == 'done')
-                    tr_class = "class ='danger'"
-
-                var str = "<tr " + tr_class + " onclick='waiting_selected(" + response.datas[i]['diagnosis_id'] + ")'>" +
-                    "<td>" + Number(i + 1) + "</td>" +
-                    "<td>" + response.datas[i]['chart'] + "</td>" +
-                    "<td>" + response.datas[i]['Name'] + "</td>" +
-                    "<td>" + response.datas[i]['Date_of_Birth'] + "</td>" +
-                    "<td>" + response.datas[i]['Depart'] + "</td></tr>";
-
-                $('#pharmacy_list_table').append(str);
-            }
-        },
-        error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-
-        },
-    })
-}
-
 function pharmacy_database_search(page = null) {
     var context_in_page = 30;
 
@@ -265,17 +166,22 @@ function pharmacy_database_search(page = null) {
             for (var i = 0; i < context_in_page; i++) {
                 if (response.datas[i]) {
 
-                    var str = "<tr style='cursor: pointer;' onclick='set_data_control(" + response.datas[i]['id'] + ")'><td>" + response.datas[i]['id'] + "</td>" +
+                    var str = "<tr style='cursor: pointer;' onclick='set_data_control(" + response.datas[i]['id'] + ")'><td>" + response.datas[i]['code'] + "</td>" +
                         "<td>" + response.datas[i]['name'] + "</td>" +
                         "<td title='" + response.datas[i]['ingredient'] + "'>" + response.datas[i]['ingredient'] + "</td>" +
                         "<td title='" + response.datas[i]['company'] +"'>" + response.datas[i]['company'] + "</td>" +
                         "<td>" + response.datas[i]['country'] + "</td>" +
                         "<td>" + response.datas[i]['unit'] + "</td>" +
                         "<td>" + numberWithCommas(response.datas[i]['price']) + "</td>" +
-                        "<td>" + response.datas[i]['count'] + "</td></tr>"
+                        "<td>" + response.datas[i]['count'] + "</td>" +
+                        "<td>" +
+                        "<input type='button' class='database_btn_edit btn btn-default' onclick='edit_database_medicine(" + response.datas[i]['id'] + ")' value='" + gettext('Edit') + "'/>" + 
+                        "<input type='button' class='database_btn_delete btn btn-danger' onclick='delete_database_medicine(" + response.datas[i]['id'] + ")' value='" + 'X' + "'/>" 
 
+                        + "</tr > "
+                        
                 } else {
-                    var str = "<tr><td colspan='8'> </td></tr>";
+                    var str = "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
                 }
                 $('#inventory_database_table > tbody').append(str);
             }
@@ -316,6 +222,201 @@ function pharmacy_database_search(page = null) {
     })
 }
 
+
+function edit_database_medicine(id = null) {
+
+
+
+    $("#add_edit_database_header").html(gettext('New Medicine'));
+    $('#add_edit_database input').val('');
+    $('#add_edit_database input[type=number]').val('0');
+    $("#add_edit_database_class option:first").prop("selected", true);
+    $("#add_edit_database_type option:first").prop("selected", true);
+    $("#add_edit_database_multiple_level option:first").prop("selected", true);
+
+
+    if (id != null) {
+        $("#add_edit_database_header").html(gettext('Edit Data'));
+        $.ajax({
+            type: 'POST',
+            url: '/pharmacy/medicine_add_edit_get/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+                'id': id,
+            },
+            dataType: 'Json',
+            success: function (response) {
+                if (response.result == true) {
+                    $("#add_edit_database_id").val(response.id);
+                    $("#add_edit_database_name").val(response.name);
+                    $("#add_edit_database_name_vie").val(response.name_vie);
+                    $("#add_edit_database_ingredient").val(response.ingredient);
+                    $("#add_edit_database_ingredient_vie").val(response.ingredient_vie);
+                    $("#add_edit_database_unit").val(response.unit);
+                    $("#add_edit_database_unit_vie").val(response.unit_vie);
+                    $("#add_edit_database_country").val(response.country);
+                    $("#add_edit_database_country_vie").val(response.country_vie);
+                    $("#add_edit_database_company").val(response.company);
+                    $("#add_edit_database_name_display").val(response.name_display);
+                    $("#add_edit_database_price_input").val(response.price_input);
+                    $("#add_edit_database_multiple_level option:contains('" + response.multiple_level+ "')").attr("selected", "selected");
+                    $("#add_edit_database_price_output").val(response.price);
+                    $("#add_edit_database_price_dollar").val(response.price_dollar);
+                    $("#add_edit_database_type").val(response.type);
+                    $("#add_edit_database_class").val(response.medicine_class_id);
+
+
+                    
+
+                } else {
+                    alert(gettext('Please Refresh this page.'));
+                }
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+            },
+        })
+    }
+    $('#add_edit_database').modal({ backdrop: 'static', keyboard: false });
+    $('#add_edit_database').modal('show');
+
+
+}
+
+
+function save_database_medicine(id = null) {
+    var id = $("#add_edit_database_id").val();
+    if (id == null || id == '') {
+        id = 0;
+    }
+
+    var name = $("#add_edit_database_name").val();
+    if (name == '' || name == null) {
+        alert(gettext('Name is necessary! '));
+        return;
+    }
+    var name_vie = $("#add_edit_database_name_vie").val();
+    if (name_vie == '' || name_vie == null) {
+        alert(gettext('Name in Vietnamese is necessary! '));
+        return;
+    }
+    var ingredient = $("#add_edit_database_ingredient").val();
+    var ingredient_vie = $("#add_edit_database_ingredient_vie").val();
+    var unit = $("#add_edit_database_unit").val();
+    var unit_vie = $("#add_edit_database_unit_vie").val();
+    var country = $("#add_edit_database_country").val();
+    var country_vie = $("#add_edit_database_country_vie").val();
+    var company = $("#add_edit_database_company").val();
+    var name_display = $("#add_edit_database_name_display").val();
+    var price_input = $("#add_edit_database_price_input").val();
+    var multiple_level = $("#add_edit_database_multiple_level").val();
+    var price = $("#add_edit_database_price_output").val();
+    var price_dollar = $("#add_edit_database_price_dollar").val();
+
+    var medicine_class = $("#add_edit_database_class").val();
+    var type = $("#add_edit_database_type").val();
+
+
+
+    $.ajax({
+        type: 'POST',
+        url: '/pharmacy/medicine_add_edit_set/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'id': id,
+            'type': type,
+            'medicine_class': medicine_class,
+            'name': name,
+            'name_vie': name_vie,
+            'ingredient': ingredient,
+            'ingredient_vie': ingredient_vie,
+            'unit': unit,
+            'unit_vie': unit_vie,
+            'country': country,
+            'country_vie': country_vie,
+            'company': company,
+            'name_display': name_display,
+            'price_input': price_input,
+            'multiple_level': multiple_level,
+            'price': price,
+            'price_dollar': price_dollar,
+
+        },
+        dataType: 'Json',
+        success: function (response) {
+            if (response.result == true) {
+                pharmacy_database_search();
+
+                $("#add_edit_database").modal('hide');
+
+                
+
+            } else {
+                alert(gettext('Please Refresh this page.'));
+            }
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+
+
+    //'inventory_count': medicine.inventory_count,
+    
+    
+
+}
+
+
+
+function delete_database_medicine(id = null) {
+    if (id == null) {
+        alert(gettext('Select Item.'));
+        return;
+    }
+    else {
+        if (confirm(gettext('Are you sure you want to delete ?'))) {
+            //alert("delete");
+
+        }
+
+    }
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function worker_on(path) {
     if ($("input:checkbox[id='pharmacy_list_auto']").is(":checked") == true) {
         if (window.Worker) {
@@ -324,7 +425,7 @@ function worker_on(path) {
                 waiting_list(true);
             };
 
-            $('#pharmacy_list_search').prop('disabled', true);
+            
         } else {
         }
     } else {

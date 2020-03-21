@@ -19,7 +19,7 @@
             </div>
             <div class="pharmacy_database_list">
                 <div class="pharmacy_database_table">
-                    <table class="table" id="inventory_database_table">
+                    <table class="table table-bordered table-hover table-striped" id="inventory_database_table">
                         <thead>
                             <tr>
                                 <th>{{ _('No.') }}</th>
@@ -30,6 +30,7 @@
                                 <th>{{ _('Unit') }}</th>
                                 <th>{{ _('Price') }}</th>
                                 <th>{{ _('Count') }}</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -39,15 +40,19 @@
                 <ul class="pagination" id="medicine_pagnation">
 
                 </ul>
+                <div>
+                    <input type="button" class="btn btn-info" id="medicine_new" value="{{ _('New') }}" onclick="edit_database_medicine()"/>
+                </div>
             </div>
         </div>
 
     <div class="database_control partition">
+        <!--
             <div class="medicine_table_title">
-                <span class="btn btn-danger inventory_table_title_span" id="medicine_new">{{ _('New') }} </span>
                 <span class="btn btn-info inventory_table_title_span" style="background: #39b3d7; border-color: #39b3d7;">{{ _('Add') }} </span>
                 <input class="btn btn-danger" type="button" value="{{ _('Save') }}" onclick="save_data_control()" style="float:right;margin-top: 5px; margin-right: 3px; "/>
             </div>
+        
                 <div class="form-group">
                     <input type="hidden" id="selected_option" />
                     <div class="input-group">
@@ -83,8 +88,186 @@
                     
                     <input class="btn btn-primary" type="button" value="{{ _('Delete') }}" id="medicine_new" style="float:left;" />
                 </div>
+            -->
         </div>
 </div>
+
+
+<div id="add_edit_database" class="modal fade">
+     <div class="modal-dialog add_edit_modal" style="width:800px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4 id="add_edit_database_header"></h4>
+                <div id="modalBody" class="modal-body">
+                    <input type="hidden" id="add_edit_database_id" />
+                    <table class="table" id="add_edit_database_table">
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Type') }}</span>
+                                    <select id="add_edit_database_type" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                        {% for data in type %}
+                                        <option value="{{ data }}">{{ data }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Class') }}</span>
+                                    <select id="add_edit_database_class" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                        {% for class in medicine_class %}
+                                        <option value="{{ class.id }}">{{ class.name_display }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Name') }}*</span>
+                                    <input type="text" id="add_edit_database_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Name in Vietnamese') }}*</span>
+                                    <input type="text" id="add_edit_database_name_vie" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Ingredient') }}</span>
+                                    <input type="text" id="add_edit_database_ingredient" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Ingredient in Vietnamese') }}</span>
+                                    <input type="text" id="add_edit_database_ingredient_vie" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Unit') }}</span>
+                                    <input type="text" id="add_edit_database_unit" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Unit in Vietnamese') }}</span>
+                                    <input type="text" id="add_edit_database_unit_vie" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Country') }}</span>
+                                    <input type="text" id="add_edit_database_country" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Country in Vietnamese') }}</span>
+                                    <input type="text" id="add_edit_database_country_vie" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Company') }}</span>
+                                    <input type="text" id="add_edit_database_company" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Displaying Name') }}</span>
+                                    <input type="text" id="add_edit_database_name_display" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Price for Purchase') }}</span>
+                                    <input type="number" id="add_edit_database_price_input" class="form-control medicine_control_input" aria-describedby="basic-addon1" min="0">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" aria-describedby="basic-addon1">{{ _('Multiple Level') }}</span>
+                                    <select class="form-control medicine_control_input" aria-describedby="basic-addon1" id="add_edit_database_multiple_level">
+                                        {% for level in price_multiple_level %}
+                                        <option value="{{ level.se2 }}">{{ level.se1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <!--<input type="text" id="add_edit_database_multiple_level" class="form-control medicine_control_input" aria-describedby="basic-addon1">-->
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Price for Sale') }}</span>
+                                    <input type="number" id="add_edit_database_price_output" class="form-control medicine_control_input" aria-describedby="basic-addon1" min="0">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Price(Dollar $)') }}</span>
+                                    <input type="number" id="add_edit_database_price_dollar" class="form-control medicine_control_input" aria-describedby="basic-addon1" min="0">
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                        
+                    <a class="btn btn-primary" onclick="save_database_medicine()">{{ _('Save') }}</a>
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 {% endblock %}

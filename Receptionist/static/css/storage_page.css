@@ -206,6 +206,8 @@
 
         .page_bill .chart_table {
             margin: 0 auto;
+            word-break:break-word;
+            table-layout:fixed;
             
         }
 

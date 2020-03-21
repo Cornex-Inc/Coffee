@@ -448,7 +448,7 @@ def doctor_profit(request):
         filter_search = request.POST.get('search')
 
         receptions = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').select_related('payment').filter(payment__progress='paid').order_by("-id")
-
+        
         for reception in receptions:
             exams = []
             precedures = []
@@ -480,7 +480,7 @@ def doctor_profit(request):
                         'value':tmp_exam.exam.name,
                         })
                     sub_total += tmp_exam.exam.get_price(reception.recorded_date)
-
+                    total_amount += sub_total
             for precedure_set in tmp_precedure_set:
                     if 'R' in precedure_set.precedure.code:
                         radiographys.append({
@@ -489,12 +489,14 @@ def doctor_profit(request):
                             'amount':precedure_set.amount,
                             })
                         sub_total += precedure_set.precedure.get_price(reception.recorded_date)
+                        total_amount += sub_total
                     else:
                         precedures.append({
                             'code':precedure_set.precedure.code,
                             'value':precedure_set.precedure.name,
                             })
                         sub_total += precedure_set.precedure.get_price(reception.recorded_date)
+                        total_amount += sub_total
                 
             data.update({
                 'exams':exams,
@@ -524,7 +526,7 @@ def doctor_profit(request):
         context.update({
             'total_amount':total_amount,
             })
-
+        print(context)
     else:
         filter_exam_fee = request.POST.get('exam_fee')
         filter_test = request.POST.get('test')
@@ -644,15 +646,22 @@ def doctor_profit(request):
                 })
         #else: #범위 날짜는 SubTotal 무시 /범위 계산을 Total로
 
-    query_total = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').select_related('payment').filter(payment__progress='paid').annotate(
-                        sub_total=Sum('payment__sub_total'),
-                        discount=Sum('payment__discounted_amount'),
-                        total=Sum('payment__total')).values('sub_total','discount','total')
+    query_total = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').select_related('payment').filter(payment__progress='paid')
+
+
+    
+    query_total = receptions.aggregate(
+        amount_sub_total=Sum('payment__sub_total'),
+        amount_discount = Sum('payment__discounted_amount'),
+        amount_total = Sum('payment__total'),
+        )
+
+    print(query_total['amount_discount'])
 
     context.update({
-        'amount_sub_total':query_total[0].sub_total,
-        'amount_discount':query_total[0].discount,
-        'amount_total':query_total[0].total,
+        'amount_sub_total':query_total['amount_sub_total'] if query_total['amount_sub_total'] is not None else 0,
+        'amount_discount':query_total['amount_discount'] if query_total['amount_discount'] is not None else 0,
+        'amount_total':query_total['amount_total'] if query_total['amount_total'] is not None else 0,
         })
     
 

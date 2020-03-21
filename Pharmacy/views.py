@@ -3,12 +3,19 @@ from django.http import JsonResponse
 import datetime
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from django.contrib.auth.decorators import login_required
+from django.forms.models import model_to_dict
 
 from .models import *
 from .forms import *
 from Doctor.models import *
 from Receptionist.models import *
+from app.models import *
 # Create your views here.
+from django.utils import timezone, translation
+from django.utils.translation import gettext as _
+from django.db.models import Q, Count, F
+
+
 @login_required
 def index(request):
 
@@ -136,6 +143,7 @@ def medicine_search(request):
     for medicine in medicines:
         data = {
                 'id' : medicine.id,
+                'code': medicine.code,
                 'name' : medicine.name,
                 'company' : '' if medicine.company is None else medicine.company,
                 'country' : '' if medicine.country is None else medicine.country,
@@ -224,7 +232,7 @@ def save_data_control(request):
     log.medicine = medicine
     log.changes = int(changes)
     log.save()
-
+     
     context = {'result':True}
     return JsonResponse(context)
 
@@ -233,12 +241,214 @@ def inventory(request):
     medicine_search_form = MedicineSearchForm()
     medicine_control_form = MedicineControl()
 
+    price_multiple_level = COMMCODE.objects.filter(commcode_grp = 'MED_MULTI_CODE').values('commcode','se1','se2').order_by('commcode_grp')
+
+
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        medicine_class = MedicineClass.objects.all().annotate(name_display = F('name_vie')).values('id','name_display')
+    else:
+        medicine_class = MedicineClass.objects.all().annotate(name_display = F('name')).values('id','name_display')
+
+    type = ["Medicine","Injection"]
+    
+
     return render(request,
     'Pharmacy/inventory.html',
             {
                 'waiting_search':waiting_search_form,
                 'medicinesearch':medicine_search_form,
                 'medicine_control':medicine_control_form,
+                'price_multiple_level':price_multiple_level,
+                'medicine_class':medicine_class,
+                'type':type,
 
             },
         )
+
+
+def medicine_add_edit_get(request):
+    id = request.POST.get('id')
+
+    try:
+        medicine = Medicine.objects.get(id=id)
+
+        context = {
+            'result':True,
+            'id':medicine.id,
+            'code':medicine.code,
+            'name':medicine.name,
+            'name_vie':medicine.name_vie,
+            'name_display':medicine.name_display,
+            'country':medicine.country,
+            'country_vie':medicine.country_vie,
+            'ingredient':medicine.ingredient,
+            'ingredient_vie':medicine.ingredient_vie,
+            'unit':medicine.unit,
+            'unit_vie':medicine.unit_vie,
+            'company':medicine.company,
+
+            'type':'Medicine' if 'M' in medicine.code else 'Injection',
+
+            'price':medicine.get_price(),
+            'price_input':medicine.get_price_input(),
+            'price_dollar':medicine.get_price_dollar(),
+            'multiple_level':medicine.multiple_level,
+
+            'inventory_count':medicine.inventory_count,
+            'medicine_class_id':medicine.medicine_class_id,
+
+            }
+    except Medicine.DoesNotExist:
+        context = {'result':False}
+
+
+
+
+    return JsonResponse(context)
+
+
+def medicine_add_edit_set(request):
+    id = int(request.POST.get('id'))
+    code = request.POST.get('code')
+    type = request.POST.get('type')
+    medicine_class = request.POST.get('medicine_class')
+    name = request.POST.get('name')
+    name_vie = request.POST.get('name_vie')
+    ingredient = request.POST.get('ingredient')
+    ingredient_vie = request.POST.get('ingredient_vie')
+    unit = request.POST.get('unit')
+    unit_vie = request.POST.get('unit_vie')
+    country = request.POST.get('country')
+    country_vie = request.POST.get('country_vie')
+    company = request.POST.get('company')
+    name_display = request.POST.get('name_display')
+    price_input = request.POST.get('price_input')
+    multiple_level = request.POST.get('multiple_level')
+    price = request.POST.get('price')   
+    price_dollar = request.POST.get('price_dollar')
+
+    if id == 0 :
+        data = Medicine()
+        if type in 'Medicine':
+            last_code =Medicine.objects.filter(code__icontains="M").last()
+            print(last_code)
+            temp_code = last_code.code.split('M')
+            code = 'M' + str('%04d' % (int(temp_code[1]) + 1))
+
+        elif type in 'Injection':
+            last_code =Medicine.objects.filter(code__icontains="I").last()
+            temp_code = last_code.code.split('I')
+            code = 'M' + str('%04d' % (int(temp_code[1]) + 1))
+        
+        data.code = code
+
+       
+    else:
+        data = Medicine.objects.get(id=id)
+        str_now = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+
+        try: 
+            old_price = Pricechange.objects.get(type="Medicine",country='VI',type2='OUTPUT',code=data.code, date_end="99999999999999")
+            
+            if old_price.price != int(price):
+                old_price.date_end = str_now
+                old_price.save()
+
+                new_price = Pricechange(type="Medicine",country='VI',type2='OUTPUT',code=data.code)
+                new_price.price = price
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
+
+        except Pricechange.DoesNotExist:
+            if data.price != int(price):
+                new_price = Pricechange(type="Medicine",country='VI',type2='OUTPUT',code=data.code)
+                new_price.price = price
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
+
+
+        try:
+            old_price_input = Pricechange.objects.get(type="Medicine",country='VI',type2='INPUT',code=data.code, date_end="99999999999999")
+            
+            if old_price_input.price != int(price_input):
+                old_price_input.date_end = str_now
+                old_price_input.save()
+
+                new_price = Pricechange(type="Medicine",country='VI',type2='INPUT',code=data.code)
+                new_price.price = price_input
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
+
+        except Pricechange.DoesNotExist:
+            if data.price != int(price_input):
+                new_price = Pricechange(type="Medicine",country='VI',type2='INPUT',code=data.code)
+                new_price.price = price_input
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
+
+        try:
+            old_price_dollar = Pricechange.objects.get(type="Medicine",country='US',type2='OUTPUT',code=data.code, date_end="99999999999999")
+            
+            if old_price_dollar.price != int(price_dollar):
+                old_price_dollar.date_end = str_now
+                old_price_dollar.save()
+
+                new_price = Pricechange(type="Medicine",country='US',type2='OUTPUT',code=data.code)
+                new_price.price = price_dollar
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
+
+        except Pricechange.DoesNotExist:
+            if data.price != int(price_dollar):
+                new_price = Pricechange(type="Medicine",country='US',type2='OUTPUT',code=data.code)
+                new_price.price = price_dollar
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
+
+
+    data.medicine_class_id = medicine_class
+    data.name = name
+    data.name_vie = name_vie
+    data.ingredient = ingredient
+    data.ingredient_vie = ingredient_vie
+    data.unit = unit
+    data.unit_vie = unit_vie
+    data.country = country
+    data.country_vie = country_vie
+    data.company = company
+    data.name_display = name_display
+    data.multiple_level = multiple_level
+    
+
+    data.save()
+
+    context = {'result':True}
+
+
+
+
+    return JsonResponse(context)
+
+
+def medicine_add_edit_check_code(request):
+    code = request.POST.get('code')
+    id = request.POST.get('id')
+    try:
+        medicine = Medicine.objects.get(code=code)
+        res = "N"
+        
+        if medicine.id == int(id):
+            res = 'Same'
+            print(res)
+    except Medicine.DoesNotExist:
+        res = "Y"
+
+    context = {'result':res}
+
+    return JsonResponse(context)

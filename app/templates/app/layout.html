@@ -60,7 +60,7 @@
                     location.reload();
                 },
                 error: function (request, status, error) {
-                    alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                    console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                 },
             })
 
@@ -104,7 +104,7 @@
                         <li {% if url_name == 'inventory' %}class="active"{% endif %}><a href="{% url 'Pharmacy:inventory'%}">{{ _('Inventory') }}</a></li>
                     {% elif user.is_laboratory %}
                         <li {% if url_name == 'laboratory_index' %}class="active"{% endif %}><a href="{% url 'Laboratory:laboratory_index'%}">{{ _('Laboratory') }}</a></li>
-                        <li {% if url_name == 'laboratory_index' %}class="active"{% endif %}><a href="{% url 'Laboratory:checklist'%}">{{ _('Laboratory checklist') }}</a></li>
+                        <!--<li {% if url_name == 'checklist' %}class="active"{% endif %}><a href="{% url 'Laboratory:checklist'%}">{{ _('Laboratory checklist') }}</a></li>-->
                     {% elif user.is_radiation %}
                         <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Radiation:radiation_index'%}">{{ _('Radiology') }}</a></li>
                     {% elif user.is_admin %}

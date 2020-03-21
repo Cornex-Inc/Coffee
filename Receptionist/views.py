@@ -36,9 +36,9 @@ def index(request):
     initial_report_q2_option = []
     initial_report_q2 = COMMCODE.objects.filter(commcode_grp = 'PM_IRQ2').values('id','seq','se1','se2','se4','se5')
 
-    initial_report_q2_title = COMMCODE.objects.values('se2','seq','se6','se7','se8').annotate(Count('se2')).extra(select={'tmp_seq':'CAST(seq AS INTERGER)'}).order_by('tmp_seq')
+    initial_report_q2_title = COMMCODE.objects.filter(commcode_grp = 'PM_IRQ2').values('se2','seq','se6','se7','se8').annotate(Count('se2')).extra(select={'tmp_seq':'CAST(seq AS INTERGER)'}).order_by('tmp_seq')
     for title in initial_report_q2_title:
-        item = COMMCODE.objects.values('se2').annotate(Count('se2'))
+        item = COMMCODE.objects.filter(commcode_grp = 'PM_IRQ2').values('se2').annotate(Count('se2'))
                 
     list_depart = Depart.objects.all().values('id','name')
         

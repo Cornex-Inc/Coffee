@@ -209,6 +209,7 @@
     <Folder Include="Pharmacy\static\" />
     <Folder Include="Pharmacy\static\js\" />
     <Folder Include="Pharmacy\static\css\" />
+    <Folder Include="Pharmacy\static\img\" />
     <Folder Include="Pharmacy\templates\" />
     <Folder Include="Pharmacy\templates\Pharmacy\" />
     <Folder Include="physical_therapist\" />
@@ -303,6 +304,8 @@
     <Content Include="Manage\static\js\login.js" />
     <Content Include="Manage\templates\Manage\temp_manage.html" />
     <Content Include="Pharmacy\static\css\inventory.css" />
+    <Content Include="Pharmacy\static\img\database_check_no.png" />
+    <Content Include="Pharmacy\static\img\database_check_ok.png" />
     <Content Include="Pharmacy\static\js\inventory.js" />
     <Content Include="Pharmacy\templates\Pharmacy\inventory.html" />
     <Content Include="physical_therapist\static\css\physical_therapist.css" />

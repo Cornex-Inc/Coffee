@@ -759,11 +759,22 @@ function diagnosis_save(set) {
         temp_data['code'] = $tds.eq(0).text();
         temp_data['id'] = $tds.eq(0).children('input').val();
         temp_data['name']= $tds.eq(1).text();
-        temp_data['volume']= $tds.eq(2).children('input').val();
-        temp_data['amount'] = 1//$tds.eq(3).children('input').val();
+        temp_data['volume'] = 1;
+
+        if (temp_data['type'] == 'Precedure') {
+            temp_data['volume'] = 1;
+            temp_data['amount'] = 1;
+            temp_data['days'] = 1;
+            if (temp_data['amount'] == '') {
+                alert(gettext('amount is empty.'));
+                is_valid = false;
+            }
+        } else {
+        temp_data['amount'] = $tds.eq(3).children('input').val();
         if (temp_data['amount'] == '') {
             alert(gettext('amount is empty.'));
             is_valid = false;
+            }
         }
         temp_data['days'] = $tds.eq(4).children('input').val();
         if (temp_data['days'] == '') {
@@ -771,6 +782,33 @@ function diagnosis_save(set) {
             is_valid = false;
         }
         temp_data['memo'] = $tds.eq(5).children('input').val();
+
+        //temp_data['code'] = $tds.eq(0).text();
+        //temp_data['id'] = $tds.eq(0).children('input').val();
+        //temp_data['name'] = $tds.eq(1).text();
+        //if (temp_data['type'] == 'Precedure') {
+        //    temp_data['volume'] = 1;
+        //    temp_data['amount'] = $tds.eq(2).children('input').val();
+        //    temp_data['days'] = 1;
+        //    if (temp_data['amount'] == '') {
+        //        alert(gettext('amount is empty.'));
+        //        is_valid = false;
+        //    }
+        //}
+        //if (temp_data['type'] == 'Medicine') {
+        //    temp_data['volume'] = 1;
+        //    temp_data['amount'] = $tds.eq(3).children('input').val();
+        //    if (temp_data['amount'] == '') {
+        //        alert(gettext('amount is empty.'));
+        //        is_valid = false;
+        //    }
+        //    temp_data['days'] = $tds.eq(4).children('input').val();
+        //    if (temp_data['days'] == '') {
+        //        alert(gettext('days is empty.'));
+        //        is_valid = false;
+        //    }
+        //    temp_data['memo'] = $tds.eq(5).children('input').val();
+        //}
 
         datas.push(temp_data);
     });

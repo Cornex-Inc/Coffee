@@ -23,7 +23,7 @@ from .forms import *
 # Create your views here.
 from django.utils.translation import gettext as _
 from django.forms.models import model_to_dict
-from django.db.models import Q, Count
+from django.db.models import Q, Count, F
 from django.db.models.functions import Lower
 
 
@@ -109,7 +109,7 @@ def index(request):
                     })
 
         medicines_data = []
-        medicine_s = Medicine.objects.filter( medicine_class_id=1, use_yn='Y').order_by('code')
+        medicine_s = Medicine.objects.filter( Q(id = 1) |Q(id = 71) |Q(id = 137) |Q(id = 168) |Q(id = 172) , use_yn='Y').order_by('code')
         for medicine in medicine_s:
             medicines_data.append({
                         'id':medicine.id,
@@ -122,9 +122,10 @@ def index(request):
 
         initial_report_q2_option = []
         initial_report_q2 = COMMCODE.objects.filter(commcode_grp = 'PM_IRQ2').values('id','seq','se1','se2','se4','se5')
-        initial_report_q2_title = COMMCODE.objects.values('se2','seq','se6','se7','se8').annotate(Count('se2')).extra(select={'tmp_seq':'CAST(seq AS INTERGER)'}).order_by('tmp_seq')
+        initial_report_q2_title = COMMCODE.objects.filter(commcode_grp = 'PM_IRQ2').values('se2','seq','se6','se7','se8').annotate(Count('se2')).extra(select={'tmp_seq':'CAST(seq AS INTERGER)'}).order_by('tmp_seq')
         for title in initial_report_q2_title:
-            item = COMMCODE.objects.values('se2').annotate(Count('se2'))
+            item = COMMCODE.objects.filter(commcode_grp = 'PM_IRQ2').values('se2').annotate(Count('se2'))
+
 
 
         
@@ -205,9 +206,9 @@ def index(request):
 
 
     if request.user.doctor.depart.id == 5: #ENT
-        precedure_classes = PrecedureClass.objects.filter( Q(id = 3) | Q(id = 5)).values()
+        precedure_classes = PrecedureClass.objects.filter( Q(id = 2) | Q(id = 3) | Q(id = 5) | Q(id = 41) ).values()
     elif request.user.doctor.depart.id == 2: #IM
-        precedure_classes = PrecedureClass.objects.filter( Q(id = 2) | Q(id = 4) | Q(id = 5) | Q(id = 6)|Q(id = 8) ).values()
+        precedure_classes = PrecedureClass.objects.filter( Q(id = 2) | Q(id = 4) | Q(id = 5) | Q(id = 6)|Q(id = 8) | Q(id = 41) ).values()
     elif request.user.doctor.depart.id == 6: #DERM
         precedure_classes = PrecedureClass.objects.filter( id__gte=11,id__lte=30).values().order_by('name')
     elif request.user.doctor.depart.id == 4: #PS
@@ -232,6 +233,36 @@ def index(request):
                     })
         precedure_data.update({ precedure_class['name'] : temp})
 
+    if request.user.doctor.depart.id == 4: #PS  성형에 피부 아이템 추가
+        precedures = Precedure.objects.filter( precedure_class_id__gte =11 ,precedure_class_id__lte = 29,use_yn='Y')
+        temp = []
+    
+        for precedure in precedures:
+            temp.append({
+                        'id':precedure.id,
+                        'name':precedure.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                        'name_display':precedure.name_vie,
+                        'code':precedure.code,
+                        'price':format(precedure.get_price(), ',') + ' VND',
+                        #'upper':precedure_class['name'],
+                    })
+        precedure_data.update({ '피부관리' : temp})
+
+        precedures = Precedure.objects.filter( precedure_class_id = 30,use_yn='Y')
+
+        temp = []
+        for precedure in precedures:
+            temp.append({
+                        'id':precedure.id,
+                        'name':precedure.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                        'name_vie':precedure.name_vie,
+                        'code':precedure.code,
+                        'price':format(precedure.get_price(), ',') + ' VND',
+                        #'upper':precedure_class['name'],
+                    })
+        precedure_data.update({ 'IVNT' : temp})
+
+
     
     #m_short_filter = MedicineShort.objects.filter(doctor_id = request.user.doctor.id)
     #medicine_short = []
@@ -245,23 +276,113 @@ def index(request):
     #            'price':format(m_short.medicine.get_price(), ',') + ' VND',
     #        })
 
-    medicine_classes = MedicineClass.objects.all().exclude(id=1).values()
     medicine_data = {}
-    
-    for medicine_class in medicine_classes:
-        medicines = Medicine.objects.filter(medicine_class_id = medicine_class['id'])
+    if request.user.doctor.depart.id == 4: #PS 
+        medicine_classes = ['Medicines','Injections','Ointment','Suppositiry']
+        medicines = Medicine.objects.filter( Q(id=75)|Q(id=167)|Q(id=145)|Q(id=132)|Q(id=71)|Q(id=137)|Q(id=155)|Q(id=95)|Q(id=96),use_yn='Y').order_by('name')
         temp = []
         for medicine in medicines:
             temp.append( {
-                        'id':medicine.id,
-                        'name':medicine.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
-                        'name_vie':medicine.name_vie,
-                        'code':medicine.code,
-                        'unit':'' if medicine.unit is None else medicine.unit,
-                        'price':format(medicine.get_price(), ',') + ' VND',
-                        'upper':medicine_class['name'],
-                    })
-        medicine_data.update({ medicine_class['name'] : temp})
+                            'id':medicine.id,
+                            'name':medicine.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                            'name_vie':medicine.name_vie,
+                            'code':medicine.code,
+                            'unit':'' if medicine.unit is None else medicine.unit,
+                            'price':format(medicine.get_price(), ',') + ' VND',
+                            #'upper':medicine_class['name'],
+                        })
+        medicine_data.update({ 'Medicines' : temp})
+        
+
+        medicines = Medicine.objects.filter( Q(id=244)| Q(id=222)|Q(id=221)|Q(id=220)|Q(id=219)|Q(id=211)|Q(id=213)|Q(id=244) ,use_yn='Y').order_by('name')
+        temp = []
+        for medicine in medicines:
+            temp.append( {
+                            'id':medicine.id,
+                            'name':medicine.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                            'name_vie':medicine.name_vie,
+                            'code':medicine.code,
+                            'unit':'' if medicine.unit is None else medicine.unit,
+                            'price':format(medicine.get_price(), ',') + ' VND',
+                            #'upper':medicine_class['name'],
+                        })
+        medicine_data.update({ 'Injections' : temp})
+
+
+        medicines = Medicine.objects.filter( Q(id=18)|Q(id=22)|Q(id=24)|Q(id=35) ,use_yn='Y').order_by('name')
+        temp = []
+        for medicine in medicines:
+            temp.append( {
+                            'id':medicine.id,
+                            'name':medicine.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                            'name_vie':medicine.name_vie,
+                            'code':medicine.code,
+                            'unit':'' if medicine.unit is None else medicine.unit,
+                            'price':format(medicine.get_price(), ',') + ' VND',
+                            #'upper':medicine_class['name'],
+                        })
+        medicine_data.update({ 'Ointment' : temp})
+
+
+        medicines = Medicine.objects.filter( Q(id=255)|Q(id=181)|Q(id=182) ,use_yn='Y').order_by('name')
+
+        temp = []
+        for medicine in medicines:
+            temp.append( {
+                            'id':medicine.id,
+                            'name':medicine.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                            'name_vie':medicine.name_vie,
+                            'code':medicine.code,
+                            'unit':'' if medicine.unit is None else medicine.unit,
+                            'price':format(medicine.get_price(), ',') + ' VND',
+                            #'upper':medicine_class['name'],
+                        })
+        medicine_data.update({ 'Suppogitory' : temp})
+
+    else:
+        if request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+            medicine_classes = MedicineClass.objects.annotate(
+               dis_name = F('name_vie'),
+               dis_id = F('id'),
+               ).all().exclude(id=1)
+        else:
+            medicine_classes = MedicineClass.objects.annotate(
+                dis_name = F('name'),
+                dis_id = F('id'),
+                ).all().exclude(id=1)
+
+        for medicine_class in medicine_classes:
+            if request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+                medicines = Medicine.objects.annotate(
+                    dis_id = F('id'),
+                    dis_name = F('name_vie'),
+                    dis_name_display = F('name_display'),
+                    dis_code = F('code'),
+                    dis_unit = F('unit_vie'),
+                    dis_ingredient = F('ingredient_vie'),
+                    ).filter(medicine_class_id = medicine_class.dis_id,use_yn='Y')
+            else:
+                medicines = Medicine.objects.annotate(
+                    dis_id = F('id'),
+                    dis_name = F('name'),
+                    dis_name_display = F('name_display'),
+                    dis_code = F('code'),
+                    dis_unit = F('unit'),
+                    dis_ingredient = F('ingredient'),
+                    ).filter(medicine_class_id = medicine_class.dis_id,use_yn='Y')
+
+            temp = []
+            for medicine in medicines:
+                temp.append( {
+                            'id':medicine.dis_id,
+                            'name_display':medicine.dis_name_display,
+                            'name':medicine.dis_name,
+                            'code':medicine.code,
+                            'unit':'' if medicine.dis_unit is None else medicine.dis_unit,
+                            'price':format(medicine.get_price(), ',') + ' VND',
+                            'ingredient':medicine.ingredient,
+                        })
+            medicine_data.update({ medicine_class.dis_name : temp})
 
 
     #medicines = Medicine.objects.filter(use_yn='Y').exclude(medicine_class_id=1).order_by(Lower('name'))
@@ -697,7 +818,7 @@ def diagnosis_save(request):
             result.medicine_id = medicine.id
             result.amount = data['amount']
             result.days = data['days']
-            #result.memo = data['memo']
+            result.memo = data['memo']
             result.save()
             try:
                 medicine_manage = MedicineManage.objects.get(diagnosis_id = diagnosis_result.id)
@@ -905,8 +1026,8 @@ def get_diagnosis(request):
                 'name':data.medicine.name,
                 'amount':data.amount,
                 'days':data.days,
-                'memo':data.memo,
-                'unit':data.medicine.unit,
+                'memo':'' if data.memo is None else data.memo,
+                'unit':'' if data.medicine.unit is None else data.medicine.unit,
                 'price':data.medicine.price,
                 })
             medicines.append(medicine)

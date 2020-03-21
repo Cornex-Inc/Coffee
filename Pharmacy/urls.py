@@ -17,5 +17,8 @@ urlpatterns = [
     
 
     path('inventory/',views.inventory, name='inventory'),
-    
+    path('medicine_search/',views.medicine_search,name='medicine_search'),
+    path('medicine_add_edit_get/',views.medicine_add_edit_get,name='medicine_add_edit_get'),
+    path('medicine_add_edit_set/',views.medicine_add_edit_set,name='medicine_add_edit_set'),
+    path('medicine_add_edit_check_code/',views.medicine_add_edit_check_code,name='medicine_add_edit_check_code'),
 ]

@@ -169,10 +169,16 @@ function search_doctor_profit(page = null) {
                 $('#doctors_table_result').append(str);
             }
             //총 계
-            $("#profit_total_subtotal").html(numberWithCommas(response.amount_sub_total));
-            $("#profit_total_discounted").html(numberWithCommas(total_discounted));
-            $("#profit_total_total").html(numberWithCommas(total_total));
-            
+            if ($('#doctor_search_search option:selected').val() == '') {
+                $("#profit_total_subtotal").html(numberWithCommas(response.amount_sub_total));
+                $("#profit_total_discounted").html(numberWithCommas(response.amount_discount));
+                $("#profit_total_total").html(numberWithCommas(response.amount_total));
+            } else {
+                $("#profit_total_subtotal").html(numberWithCommas(response.total_amount));
+                $("#profit_total_discounted").html(numberWithCommas(0));
+                $("#profit_total_total").html(numberWithCommas(response.total_amount));
+                
+            }
             
 
 
@@ -206,7 +212,7 @@ function search_doctor_profit(page = null) {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })

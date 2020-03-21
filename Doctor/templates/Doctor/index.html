@@ -209,7 +209,11 @@
             
                 <div style="float:right;">
                     <div style="display:inline;">Total Price :</div>
-                    <div id="total_price" style="text-align:right; display:inline;">0 VND</div>
+                    <div id="total_price" style="text-align:right; display:inline;">0 VND</div> 
+                    {% if user.doctor.depart.id == 4%}
+                    | 
+                    <div id="total_price_dollar" style="text-align:right; display:inline;" >0 $</div>
+                    {% endif %}
                 </div>
                 
          </div>
@@ -247,13 +251,13 @@
             <!--diagnosis_select_title-->
 
             <div class="diagnosis_select_contents" id="diagnosis_select_exam_contents">
-                    <table class="table order_list_table" >
+                    <table class="table order_list_table diagnosis_select_contents_talbe" >
                         <thead>
                             <tr>
-                                <th style="width:15px; font-weight:bold;"></th>
-                                <th style="width:37px;">{{ _('Code') }}</th>
-                                <th style="width:90px;">{{ _('Name') }}</th>
-                                <th style="width:70px;text-align:center; ">{{ _('Price') }}</th>
+                                <th></th>
+                                <th>{{ _('Code') }}</th>
+                                <th>{{ _('Name') }}</th>
+                                <th>{{ _('Price') }}</th>
                             </tr>
                         </thead>
                         
@@ -273,13 +277,13 @@
                     </table>
             </div>
             <div class="diagnosis_select_contents" id="diagnosis_select_test_contents">
-                    <table class="table order_list_table" >
+                    <table class="table order_list_table diagnosis_select_contents_talbe" >
                         <thead>
                             <tr>
-                                <th style="width:15px; font-weight:bold;"></th>
-                                <th style="width:37px;">{{ _('Code') }}</th>
-                                <th style="width:90px;">{{ _('Name') }}</th>
-                                <th style="width:70px;text-align:center; ">{{ _('Price') }}</th>
+                                <th></th>
+                                <th>{{ _('Code') }}</th>
+                                <th>{{ _('Name') }}</th>
+                                <th>{{ _('Price') }}</th>
                             </tr>
                         </thead>
                         
@@ -312,13 +316,13 @@
                     </table>
             </div>
             <div class="diagnosis_select_contents" id="diagnosis_select_precedure_contents">
-                <table class="table order_list_table" >
+                <table class="table order_list_table diagnosis_select_contents_talbe" >
                         <thead>
                             <tr>
-                                <th style="width:15px; font-weight:bold;"></th>
-                                <th style="width:37px;">{{ _('Code') }}</th>
-                                <th style="width:90px">{{ _('Name') }}</th>
-                                <th style="width:70px; text-align:center;">{{ _('Price') }}</th>
+                                <th></th>
+                                <th>{{ _('Code') }}</th>
+                                <th>{{ _('Name') }}</th>
+                                <th>{{ _('Price') }}</th>
                             </tr>
                         </thead>
                         <tbody class="contents_items" style="display:none;">
@@ -360,13 +364,13 @@
                     </table>
             </div>
             <div class="diagnosis_select_contents" id="diagnosis_select_medicine_contents">
-                <table class="table" >    
+                <table class="table diagnosis_select_contents_talbe">
                     <thead>
                         <tr>
-                            <th style="width:15px; font-weight:bold;"></th>
-                            <th style="width:37px;">{{ _('Code') }}</th>
-                            <th style="width:90px;">{{ _('Name') }}</th>
-                            <th style="width:70px; text-align:center;">{{ _('Price') }}</th>
+                            <th></th>
+                            <th>{{ _('Code') }}</th>
+                            <th>{{ _('Name') }}</th>
+                            <th>{{ _('Price') }}</th>
                         </tr>
                     </thead>
                     {% for class, contents in medicines.items %}
@@ -381,31 +385,17 @@
                         </tbody>
                         <tbody class="contents_items" id="contents_items_{{class}}" style="display:none;">
                             {% for medicine in contents %}
-                            <tr style="cursor:pointer;">
+                            <tr style="cursor:pointer;" title="Name : {{medicine.name}}&#10;Ingredient : {{medicine.ingredient}}">
                                 <td></td>
                                 <td >{{medicine.code}}</td>
-                                <td >{{medicine.name}}</td>
+                                <td >{{medicine.name_display}}</td>
                                 <td style="text-align:right;">{{medicine.price}}</td>
-                                <td style="display:none;">{{medicine.name.lower}}</td>
+                                <td style="display:none;">{{medicine.name.lower}}|+@#|!${{medicine.name_display.lower}}</td>
                                 <td style="display:none;">{{medicine.unit}}</td>
                             </tr>
-                        
                             {% endfor %}
                             </tbody>
                         {% endfor %}
-                        <!--<tbody class="contents_items" >
-                            {% for medicine in medicines %}
-                            <tr style="cursor:pointer;">
-                                <td ></td>
-                                <td >{{medicine.code}}</td>
-                                <td >{{medicine.name}}</td>
-                                <td style="text-align:right;">{{medicine.price}}</td>
-                                <td style="display:none;">{{medicine.name.lower}}</td>
-                                <td style="display:none;">{{medicine.unit}}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                            -->
                 </table>
             </div>
             <!--

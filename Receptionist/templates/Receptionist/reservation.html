@@ -170,7 +170,8 @@
             defaultTimedEventDuration:'00:10',
             editable:true,
             height: 'parent',
-            hiddenDays: [0],
+            hiddenDays: [1],
+            firstDay:2,
             eventTextColor:'#000000',
             eventBorderColor:'#a9dded',
             eventBackgroundColor:'#d7f0f7',
@@ -268,7 +269,7 @@
         return this;
         }
 
-    function get_doctor(part, depart = null) {
+    function get_doctor(part, depart = null,doctor_id = null) {
         var part_id = part.attr('id');
         var doctor;
         if (part_id == 'reservation_search_depart') {
@@ -296,8 +297,16 @@
             success: function (response) {
                 doctor.empty();
                 doctor.append(new Option('---------', ''));
-                for (var i in response.datas)
-                    doctor.append("<option value='" + response.datas[i] + "'>" + i + "</Option>");
+                for (var i in response.datas){
+
+                    if(doctor_id==response.datas[i]){
+                        console.log("<option value='" + response.datas[i] + "' selected>" + i + "</Option>");
+                        doctor.append("<option value='" + response.datas[i] + "' selected>" + i + "</Option>");
+                    }
+                    else{
+                        doctor.append("<option value='" + response.datas[i] + "'>" + i + "</Option>");
+                    }
+                }
 
             },
             error: function (request, status, error) {
@@ -543,12 +552,22 @@
             return;
         }
         
-        if ($('#reservation_memo').val() == '') {
-            alert(" {{ _('Memo is necessary! ! ') }} ");
+        //if ($('#reservation_memo').val() == '') {
+        //    alert(" {{ _('Memo is necessary! ! ') }} ");
+        //    return;
+        //}
+        var date_pattern = /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/; 
+
+        if ($('#reservation_date_of_birth').val() != '') {
+
+         if ( !date_pattern.test($('#reservation_date_of_birth').val())){
+            alert("{{ _('Date of birth should be 0000(year)-00(month)-00(day)') }}");
             return;
+            }
         }
-        
-        
+    
+    
+
 
         $.ajax({
             type: 'POST',
@@ -568,7 +587,7 @@
             },
             dataType: 'Json',
             success: function (response) {
-                alert({{ _('saved') }});
+                alert("{{ _('saved') }}");
                 location.reload();
             },
             error: function (request, status, error) {
@@ -619,10 +638,13 @@ function set_reservation(reservation_id = null) {
                 $('#reservation_chart_number').val(response.reservation_chart);
                 $('#reservation_date_of_birth').val(response.reservation_date_of_birth);
                 $('#reservation_phone').val(response.reservation_phone);
-                $('#reservation_depart').val(response.reservation_depart);
-                $('#reservation_doctor').val(response.reservation_doctor);
+
                 $('#reservation_memo').val(response.reservation_memo);
 
+
+                $('#reservation_depart').val(response.reservation_depart);
+                get_doctor($("#reservation_depart"),null,response.reservation_doctor);
+                
             },
             error: function (request, status, error) {
                 alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -642,7 +664,7 @@ function set_reservation(reservation_id = null) {
                 },
                 dataType: 'Json',
                 success: function (response) {
-                    alert( {{ _('Deleted') }});
+                    alert(" {{ _('Deleted') }}");
                     location.reload();                
     //info.event.remove();
                 },
