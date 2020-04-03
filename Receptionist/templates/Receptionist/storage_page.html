@@ -12,8 +12,16 @@
         <div class="storage_list partition">
             <div class="storage_list_title">
             <span class="btn btn-danger" >{{ _('Payment Waiting List') }}</span>
-                <div style="text-align:right; display:inline; float:right;">
-            {{ _('Depart') }}:{{today_filter.depart}}
+                <div style="text-align:right; display:inline; float:right; vertical-align:middle;">
+                    <div class="input-group" style="width:115px; display:inline-table;">
+                        <span class="input-group-addon reception_table_title" id="basic-addon1">Depart</span>
+                        <select name="depart" id="depart_select" style="width:85px;" class="form-control costom-select" aria-describedby="basic-addon1">
+                            <option value="">{{ _('All') }}</option>
+                            {% for data in depart %}
+                                <option value="{{ data.id }}">{{ data.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
             </div>
             </div>
 
@@ -43,13 +51,13 @@
                     <td >
                     <div class="input-group ">
                         <span class="input-group-addon storage_contents_table_title" id="basic-addon1">{{ _('Name') }}</span>
-                        <input type="text" id="patient_name" class="form-control" aria-describedby="basic-addon1"/>
+                        <input type="text" id="patient_name" class="form-control" aria-describedby="basic-addon1" autocomplete="off"/>
                         </div>
                     </td>
                     <td >
                     <div class="input-group ">
                         <span class="input-group-addon storage_contents_table_title" id="basic-addon1">{{ _('Doctor') }}</span>
-                        <input type="text" id="patient_doctor" class="form-control" aria-describedby="basic-addon1"/>
+                        <input type="text" id="patient_doctor" class="form-control" aria-describedby="basic-addon1" autocomplete="off"/>
                         </div>
                     </td>
                 </tr>
@@ -57,14 +65,14 @@
                     <td >
                     <div class="input-group ">
                         <span class="input-group-addon storage_contents_table_title" id="basic-addon1">{{ _('Phone Number') }}</span>
-                        <input type="text" id="patient_phone" class="form-control" aria-describedby="basic-addon1"/>
+                        <input type="text" id="patient_phone" class="form-control" aria-describedby="basic-addon1" autocomplete="off"/>
                         </div>
                     </td>
 
                     <td >
                         <div class="input-group ">
                         <span class="input-group-addon storage_contents_table_title" id="basic-addon1">{{ _('Address') }}</span>
-                        <input type="text" id="patient_address" class="form-control" aria-describedby="basic-addon1"/>
+                        <input type="text" id="patient_address" class="form-control" aria-describedby="basic-addon1" autocomplete="off"/>
                         </div>
                     </td>
                 </tr>
@@ -111,9 +119,10 @@
                         </td>
                         <td colspan="2" style="padding-top:1vh; padding-bottom:2vh; text-align:right;">
                             
+                            <input type="button" id="Report" value="{{ _('Print Medical Report') }}" class="btn btn-success" />
+                            <input type="button" id="Bill" value="{{ _('Print Reciept') }}" class="btn btn-warning" />
                             <input type="button" id="Cancel" value="{{ _('Cancel') }}" class="btn btn-default" />
-                            <input type="button" id="save" value="{{ _('Save') }}" class="btn btn-default" onclick="save_storage()"/>
-                            <input type="button" id="Bill" value="{{ _('Print Reciept') }}" class="btn btn-default" />
+                            <input type="button" id="save" value="{{ _('Save') }}" class="btn btn-primary" onclick="save_storage()"/>
                         </td>
                     </tr>
                 </tbody>
@@ -123,17 +132,13 @@
                     <td >
                         <div class="input-group" >
                         <span class="input-group-addon storage_contents_table_title" id="basic-addon1">{{ _('Next Visiting Date') }}</span>
-                        {{storage.follow_update}}
+                        <input type="text" name="follow_update" class="form-control costom-select" aria-describedby="basic-addon1" required="" id="id_follow_update" autocomplete="off">
                         </div>
                     </td>
-                    <td >
-                        <input type="button" id="Report" value="{{ _('Print Medical Report') }}" class="btn btn-default" style="float:right; margin-right:1px;"/>
-                    </td>
-
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <input class="btn btn-default" type="button" value="{{ _('Inform Tax Invoice')}}" id="patient_tax_invoice_click" />
+                        <a class='btn btn-default btn-xs' href='javascript: void (0);' id="patient_tax_invoice_click"><i class='fa fa-lg fa-caret-down'></i> {{ _('Inform Tax Invoice')}}</a>
                         <div id="patient_tax_invoice" style="display:none;">
                             <div class="input-group" style="width:480px">
                                 <span class="input-group-addon storage_contents_table_title" id="basic-addon1">{{ _('Number') }}</span>
@@ -157,7 +162,7 @@
             <div>
                 <div class="input-group">
                     <span class="input-group-addon" id="basic-addon1" style="font-weight:700; color:#449d44;">{{ _('Recommend') }}</span>
-                    <input id="recommendation" class="form-control" style="height:30px; width:100%; font-size:12px;" aria-describedby="basic-addon1"/>
+                    <input id="recommendation" class="form-control" style="height:30px; width:100%; font-size:12px;" aria-describedby="basic-addon1" autocomplete="off"/>
                 </div>
             </div>
             
@@ -167,17 +172,26 @@
         <div class="storage_paid_list partition">
             <div class="storage_list_title" >
             <span class="btn btn-danger" style="margin-bottom:1vh;" >{{_('Paid List')}}</span>
-               
             <div class="status_table_filter">
-                <input id="storage_list_calendar" class="form-control storage_list_calendar" />
-                    <select name="filter" id="storage_search_select" class="form-control storage_search_select" aria-describedby="basic-addon1" autocomplete="off">
-                      <option value="">{{ _('ALL') }}</option>
-                        <option value="name">{{ _('Name') }}</option>
-                      <option value="Chart">{{ _('Chart No') }}</option>
-                      <option value="Depart">{{ _('Depart') }}</option>
-                      <option value="Doctor">{{ _('Doctor') }}</option>
+                <input id="storage_list_calendar_start" class="form-control storage_list_calendar" />
+                ~
+                <input id="storage_list_calendar_end" class="form-control storage_list_calendar" />
+                <div class="input-group" style="width:130px; display:inline-table;">
+                    <span class="input-group-addon reception_table_title" id="basic-addon1">Depart</span>
+                    <select name="depart" id="reception_waiting_depart" class="form-control costom-select reception_waiting_depart" aria-describedby="basic-addon1">
+                        <option value="">{{ _('All') }}</option>
+                        {% for data in depart %}
+                            <option value="{{ data.id }}">{{ data.name }}</option>
+                        {% endfor %}
                     </select>
-                {{storage_search.search_input}}
+                </div>
+
+                <select name="filter" id="storage_search_select" class="form-control storage_search_select" aria-describedby="basic-addon1" autocomplete="off">
+                    <option value="">{{ _('ALL') }}</option>
+                    <option value="name">{{ _('Name') }}</option>
+                    <option value="chart">{{ _('Chart No') }}</option>
+                </select>
+                <input type="text" name="search_input" id="storage_search_input" class="form-control custom-select storage_search_input" aria-describedby="basic-addon1" autocomplete="off">
                 <input type="button" class="btn btn-default" value="Search" onclick="waiting_list()"/>
             </div>
             </div>
@@ -191,7 +205,6 @@
                             <th style="width:76.8px;">{{ _('Date')}}</th>
                             <th style="width:76.8px;">{{ _('Depart')}}</th>
                             <th style="width:76.8px;">{{ _('Paid')}}</th>
-                            <th style="width:76.8px;">{{ _('Unpaid')}}</th>
                             <th style="width:76.8px;">{{ _('Balance')}}</th>
                         </tr>
                     </thead>
@@ -509,7 +522,6 @@
 {% block style %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/storage_page.css' %}" />
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
 {% endblock %}
 
 {% block scripts %}

@@ -172,6 +172,7 @@
     <Folder Include="app\static\app\content\" />
     <Folder Include="app\static\app\fonts\" />
     <Folder Include="app\static\app\scripts\" />
+    <Folder Include="app\static\fonts\" />
     <Folder Include="app\static\js\" />
     <Folder Include="app\static\img\" />
     <Folder Include="app\static\css\" />
@@ -252,6 +253,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Account\templates\Account\index.html" />
+    <Content Include="app\static\css\daterangepicker.min.css" />
+    <Content Include="app\static\css\font-awesome.min.css" />
+    <Content Include="app\static\fonts\fontawesome-webfont.ttf" />
+    <Content Include="app\static\fonts\fontawesome-webfont.woff" />
+    <Content Include="app\static\fonts\fontawesome-webfont.woff2" />
+    <Content Include="app\static\css\jquery-ui.css" />
     <Content Include="app\static\css\main.css" />
     <Content Include="app\static\css\notice.css" />
     <Content Include="app\static\favicon.ico" />
@@ -263,13 +270,17 @@
     <Content Include="app\static\img\Menu_icon.png" />
     <Content Include="app\static\img\tmp_logo.png" />
     <Content Include="app\static\img\vie.png" />
+    <Content Include="app\static\js\daterangepicker.min.js" />
     <Content Include="app\static\js\event_listener.js" />
+    <Content Include="app\static\js\jquery-ui.min.js" />
+    <Content Include="app\static\js\jquery.min.js" />
+    <Content Include="app\static\js\moment.min.js" />
     <Content Include="app\static\js\notice.js" />
     <Content Include="app\static\js\main.js" />
+    <Content Include="app\static\js\printThis.min.js" />
     <Content Include="app\static\obgy 001%28p294%29start.mp4" />
     <Content Include="app\templates\app\notice.html" />
     <Content Include="app\templates\app\notice_edit.html" />
-    <Content Include="app\templates\app\test.html" />
     <Content Include="Doctor\static\css\doctor.css" />
     <Content Include="Doctor\static\css\doctor_PM.css" />
     <Content Include="Doctor\static\css\report_window.css" />
@@ -301,8 +312,14 @@
     <Content Include="Laboratory\static\js\checklist.js" />
     <Content Include="Laboratory\templates\Laboratory\checklist.html" />
     <Content Include="Manage\static\css\login.css" />
+    <Content Include="Manage\static\css\inventory_test.css" />
+    <Content Include="Manage\static\css\inventory_precedure.css" />
+    <Content Include="Manage\static\js\inventory_precedure.js" />
+    <Content Include="Manage\static\js\inventory_test.js" />
     <Content Include="Manage\static\js\login.js" />
+    <Content Include="Manage\templates\Manage\inventory_test.html" />
     <Content Include="Manage\templates\Manage\temp_manage.html" />
+    <Content Include="Manage\templates\Manage\inventory_precedure.html" />
     <Content Include="Pharmacy\static\css\inventory.css" />
     <Content Include="Pharmacy\static\img\database_check_no.png" />
     <Content Include="Pharmacy\static\img\database_check_ok.png" />
@@ -332,10 +349,13 @@
     <Content Include="Receptionist\static\css\storage_page.css" />
     <Content Include="Receptionist\static\css\bill.css" />
     <Content Include="Receptionist\static\css\reservation.css" />
+    <Content Include="Receptionist\static\css\Documents.css" />
     <Content Include="Receptionist\static\img\background_back.png" />
+    <Content Include="Receptionist\static\img\document_top.png" />
     <Content Include="Receptionist\static\img\recepts_top.png" />
     <Content Include="Receptionist\static\js\calendar.js" />
     <Content Include="Receptionist\static\js\ion.rangeSlider.min.js" />
+    <Content Include="Receptionist\static\js\Documents.js" />
     <Content Include="Receptionist\static\js\Question.js" />
     <Content Include="Receptionist\static\js\reservation.js" />
     <Content Include="Receptionist\static\js\storage_page.js" />
@@ -500,6 +520,7 @@
     <Content Include="Receptionist\static\timepicker\jquery.timepicker.css" />
     <Content Include="Receptionist\static\timepicker\jquery.timepicker.js" />
     <Content Include="Receptionist\templates\Receptionist\billform.html" />
+    <Content Include="Receptionist\templates\Receptionist\form_medical_lab.html" />
     <Content Include="Receptionist\templates\Receptionist\Question.html" />
     <Content Include="Receptionist\templates\Receptionist\search.html" />
     <Content Include="Receptionist\templates\Receptionist\Reception.html" />
@@ -508,6 +529,9 @@
     <Content Include="Receptionist\templates\Receptionist\reservation.html" />
     <Content Include="Receptionist\templates\Receptionist\index.html" />
     <Content Include="Receptionist\templates\Receptionist\storage_page.html" />
+    <Content Include="Receptionist\templates\Receptionist\form_medical_report.html" />
+    <Content Include="Receptionist\templates\Receptionist\Documents.html" />
+    <Content Include="Receptionist\templates\Receptionist\form_prescription.html" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
     <Content Include="app\static\app\content\bootstrap.css" />

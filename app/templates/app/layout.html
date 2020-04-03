@@ -10,29 +10,34 @@
 
 
     <title>I-MEDICARE </title>
-    <link rel="Shortcut Icon" href="{% static 'favicon.ico'%}" type="image/x-icon" />
-    <link rel="icon" href="{% static 'favicon.ico'%}" type="image/x-icon" />
+
+
+
+    <script src="{% static 'js/jquery.min.js'%}"></script>
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/daterangepicker.min.js'%} "></script>
+    
+    <script type="text/javascript" src="{% static 'js/printThis.min.js' %}"></script>
+    
+    <script src="{% static 'app/scripts/bootstrap.js' %}"></script>
+    <script src="{% static 'app/scripts/respond.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
 
     <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/wrapper.css' %}" />
     <script src="{% static 'app/scripts/modernizr-2.6.2.js' %}"></script>
     <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" /> 
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}" type="text/css" /> 
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/daterangepicker.min.css' %}" />
+    
+    <link rel="Shortcut Icon" href="{% static 'favicon.ico'%}" type="image/x-icon" />
+    <link rel="icon" href="{% static 'favicon.ico'%}" type="image/x-icon" />
+
     {% block style %}{% endblock %}
-    
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script
-  src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
-  integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
-  crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/printThis/1.15.0/printThis.min.js"></script>
-    
-    <script src="{% static 'app/scripts/bootstrap.js' %}"></script>
-    <script src="{% static 'app/scripts/respond.js' %}"></script>
-    <script src="{% static 'js/main.js' %}"></script>
     {% block scripts %}{% endblock %}
 
     <script>
@@ -89,6 +94,7 @@
                         <li {% if url_name == 'reception_index' %}class="active"{% endif %}><a href="{% url 'Receptionist:reception_index' %}" >{{ _('Registration') }}</a></li>
                         <li {% if url_name == 'storage_page' %}class="active"{% endif %}><a href="{% url 'Receptionist:storage_page'%}">{{ _('Payment') }}</a></li>
                         <li {% if url_name == 'reservation' %}class="active"{% endif %}><a href="{% url 'Receptionist:reservation'%}">{{ _('Reservation') }}</a></li>
+                    <li {% if url_name == 'reservation' %}class="active"{% endif %}><a href="{% url 'Receptionist:Documents'%}">{{ _('Documents') }}</a></li>
                     {% elif user.is_doctor %}
                         <li {% if url_name == 'index' %}class="active"{% endif %}><a href="{% url 'Doctor:index'%}">
                             <span style="margin-right:5px;color:blue;">{{ user.doctor.depart.name }} </span> Dr.{{user.doctor.name_short }}</a>
@@ -98,7 +104,9 @@
                         <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Radiation:radiation_index'%}">{{ _('Radiology') }}</a></li>
                         <li {% if url_name == 'report' %}class="active"{% endif %}><a href="{% url 'Doctor:report'%}">{{ _('Medical Report') }}</a></li>    
                         <li {% if url_name == 'reservation' %}class="active"{% endif %}><a href="{% url 'Receptionist:reservation'%}">{{ _('Reservation') }}</a></li>
-                        <li {% if url_name == 'audit' %}class="active"{% endif %}><a href="{% url 'Doctor:audit'%}">{{ _('Audit') }}</a></li>
+                        {% if user.doctor.depart.id == 7%}
+                            <li {% if url_name == 'audit' %}class="active"{% endif %}><a href="{% url 'Doctor:audit'%}">{{ _('Audit') }}</a></li>
+                        {% endif %}
                     {% elif user.is_pharmacy %}
                         <li {% if url_name == 'pharmacy_index' %}class="active"{% endif %}><a href="{% url 'Pharmacy:pharmacy_index'%}">{{ _('Pharmacy') }}</a></li>
                         <li {% if url_name == 'inventory' %}class="active"{% endif %}><a href="{% url 'Pharmacy:inventory'%}">{{ _('Inventory') }}</a></li>
@@ -108,7 +116,9 @@
                     {% elif user.is_radiation %}
                         <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Radiation:radiation_index'%}">{{ _('Radiology') }}</a></li>
                     {% elif user.is_admin %}
-                        <li><a href="#REVENUE_TOTAL">REVENUE TOTAL</a></li>
+                    <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Manage:manage'%}">{{ _('REVENUE TOTAL') }}</a></li>
+                        <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Manage:inventory_precedure'%}">{{ _('Prodecdures') }}</a></li>
+                        <li {% if url_name == 'inventory' %}class="active"{% endif %}><a href="{% url 'Pharmacy:inventory'%}">{{ _('Medicines') }}</a></li>
                         <!--<li><a href="#DOCTOR_PROFIT">DOCTORS PROFIT</a></li>
                         <li><a href="#MEDICINE_TOTAL">MEDICINE</a></li>-->
                     {% elif user.is_physical_therapist %}

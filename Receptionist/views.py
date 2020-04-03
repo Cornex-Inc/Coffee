@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect
 import datetime ,calendar
 from django.utils import timezone
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
-from django.db.models import Q,Case,When, CharField,Count
+from django.db.models import Q,Case,When, CharField,Count,Sum
 import operator
 import functools
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone, translation
 
 
 from .forms import *
@@ -17,7 +18,7 @@ from Patient.models import Patient,History
 from Account.models import User
 from Doctor.models import *
 from app.models import *
-
+from Laboratory.models import *
 
 # Create your views here.
 
@@ -104,8 +105,10 @@ def save_patient(request):
     #except Patient.DoesNotExist:
     #    patient = Patient(pk = id)
 
-    patient.name_kor = name_kor
-    patient.name_eng = name_eng
+    if name_kor != '' and name_kor != None:
+        patient.name_kor = name_kor
+    if name_eng != '' and name_eng != None:
+        patient.name_eng = name_eng
     patient.date_of_birth = date_of_birth
     patient.phone = phone
     patient.gender = gender
@@ -136,6 +139,12 @@ def save_patient(request):
 
 
     result = True
+
+
+
+
+
+
 
     patient = Patient.objects.get(pk = patient.id)
     context = {'result':result,
@@ -396,11 +405,36 @@ def save_reception(request):
         taxinvoice.save()
 
 
+    vital_ht = request.POST.get('patient_table_vital_ht',None)
+    vital_wt = request.POST.get('patient_table_vital_wt',None)
+    vital_bp = request.POST.get('patient_table_vital_bp',None)
+    vital_bt = request.POST.get('patient_table_vital_bt',None)
+    vital_pr = request.POST.get('patient_table_vital_pr',None)
+    vital_breath = request.POST.get('patient_table_vital_breath',None)
+
+    print(vital_ht)
+    print(vital_wt)
+    print(vital_bp)
+    print(1)
+    print(vital_bt)
+    print(vital_pr)
+    print(vital_breath)
+
+    if vital_ht is '' and vital_wt is '' and vital_bp is '' and vital_bt is '' and vital_pr is '' and vital_breath is '':
+        pass
+    else:
+        vital = Vital()
+        vital.patient = patient
+        vital.weight = vital_wt
+        vital.height = vital_ht
+        vital.blood_pressure = vital_bp
+        vital.blood_temperature = vital_bt
+        vital.breath = vital_breath
+        vital.pulse_rate = vital_breath
+        vital.save()
 
 
     result = True
-
-
 
     patient = Patient.objects.get(pk = patient.id)
     context = {'result':result,
@@ -420,49 +454,48 @@ def patient_search(request):
     category = request.POST.get('category')
     string = request.POST.get('string')
 
-    #kwargs={}
-    if category=='name':
-        patients = Patient.objects.filter( Q(name_kor__icontains=string) | Q(name_eng__icontains=string) ).order_by("-id")
+    argument_list = [] 
+    if category=='':
+        argument_list.append( Q(**{'patient__name_kor__icontains':string} ) )
+        argument_list.append( Q(**{'patient__name_eng__icontains':string} ) )
+        argument_list.append( Q(**{'patient__id__icontains':string} ) ) 
+        argument_list.append( Q(**{'patient__phone__icontains':string} ) ) 
+        argument_list.append( Q(**{'patient__date_of_birth__icontains':string} ) ) 
+    elif category=='name':
+        argument_list.append( Q(**{'patient__name_kor__icontains':string} ) )
+        argument_list.append( Q(**{'patient__name_eng__icontains':string} ) )
     elif category=='chart':
-        if string.isdigit():
-            patients= Patient.objects.annotate(
-                    has_past_id = Case(
-                        When(
-                            past_id = None,
-                            then='id',
-                            ),
-                        default='past_id',
-                        output_field=CharField(),
-                        )
-                    ).filter(has_past_id__contains = string)
-        else:
-            patients= Patient.objects.filter(past_id__icontains = string)
-            
-            #filter(#Q(pk__icontains = string) | Q(past_id__icontains = string) ).order_by("-id")
-    else: 
-        kwargs = {
-            '{0}__{1}'.format(category, 'icontains'): string,
-            }
-        patients = Patient.objects.filter(**kwargs ).order_by("-id")
+        argument_list.append( Q(**{'patient__id__icontains':string} ) ) 
+    elif category=='date_of_birth':
+        argument_list.append( Q(**{'patient__date_of_birth__icontains':string} ) ) 
+    elif category=='phone':
+        argument_list.append( Q(**{'patient__phone__icontains':string} ) ) 
 
+
+
+    receptions = Reception.objects.select_related('patient').values('patient_id','depart_id').filter( functools.reduce(operator.or_, argument_list) ).annotate(c_pt=Count('patient_id'),c_dp=Count('depart_id'))
 
     datas=[]
-    for patient in patients:
-        data = {}
+    for reception in receptions:
+        reception_last = Reception.objects.filter(patient = reception['patient_id'], depart = reception['depart_id']).last()
 
+        data = {}
         data.update({
-            'id':patient.id,
-            'chart':patient.get_chart_no(),
-            'name_kor':patient.name_kor,
-            'name_eng':patient.name_eng,
-            'gender':patient.get_gender_simple(),
-            'date_of_birth':patient.date_of_birth.strftime('%Y-%m-%d'),
-            'phonenumber':patient.phone,
-            'age' : patient.get_age(),
-            'address':patient.address,
-            'has_unpaid':patient.has_unpaid(),
+            'id':reception_last.patient.id,
+            'chart':reception_last.patient.get_chart_no(),
+            'name_kor':reception_last.patient.name_kor,
+            'name_eng':reception_last.patient.name_eng,
+            'gender':reception_last.patient.get_gender_simple(),
+            'date_of_birth':reception_last.patient.date_of_birth.strftime('%Y-%m-%d'),
+            'phonenumber':reception_last.patient.phone,
+            'age' : reception_last.patient.get_age(),
+            'address':reception_last.patient.address,
+            'has_unpaid':reception_last.patient.has_unpaid(),
+            'depart':reception_last.depart.name,
+            'last_visit':reception_last.recorded_date.strftime('%Y-%m-%d'),
             })
         datas.append(data)
+
 
     context = {'datas':datas}
     return JsonResponse(context)
@@ -470,21 +503,22 @@ def patient_search(request):
 
 def reception_search(request):
 
-    date = request.POST.get('date')
+    date_start = request.POST.get('date_start')
+    date_end = request.POST.get('date_end')
     depart_id = request.POST.get('depart')
     doctor_id = request.POST.get('doctor')
     kwargs={}
     if depart_id != '':
-        depart = Depart.objects.get(pk = depart_id)
+        depart = Depart.objects.get(id = depart_id)
         kwargs['depart_id'] = depart
 
     if doctor_id != '':
         doctor = Doctor.objects.get(id = doctor_id)
         kwargs['doctor'] = doctor
+    
 
-
-    date_min = datetime.datetime.combine(datetime.datetime.strptime(date, "%Y-%m-%d").date(), datetime.time.min)
-    date_max = datetime.datetime.combine(datetime.datetime.strptime(date, "%Y-%m-%d").date(), datetime.time.max)
+    date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
+    date_max = datetime.datetime.combine(datetime.datetime.strptime(date_end, "%Y-%m-%d").date(), datetime.time.max)
 
     receptions = Reception.objects.filter(recorded_date__range = (date_min, date_max),**kwargs).exclude(progress='deleted')
 
@@ -495,12 +529,12 @@ def reception_search(request):
     for reception in receptions:
         data={}
         
-        is_new = Reception.objects.filter(patient = reception.patient).count()
-
+        is_new = Reception.objects.filter(patient = reception.patient, depart_id = reception.depart_id).count()
+        print(is_new)
         if is_new == 1:
             data.update({'is_new':'N'})
         else:
-            tmp_rec = Reception.objects.filter(patient = reception.patient).first()
+            tmp_rec = Reception.objects.filter(patient = reception.patient, depart_id = reception.depart_id).first()
             if tmp_rec.id == reception.id:
                 data.update({'is_new':'N'})
             else:
@@ -603,7 +637,7 @@ def reservation_search(request):
     date_max = datetime.datetime.combine(datetime.datetime.strptime(date, "%Y-%m-%d").date(), datetime.time.max)
 
 
-    reservations = Reservation.objects.filter(reservation_date__range = (date_min, date_max),**kwargs)
+    reservations = Reservation.objects.filter(reservation_date__range = (date_min, date_max),**kwargs).order_by('reservation_date')
 
     datas=[]
     for reservation in reservations:
@@ -647,8 +681,7 @@ def storage_page(request):
     storage_search_form = StorageSearchForm()
     storage_form = StorageForm()
         
-    dent_doc = Doctor.objects.filter(depart_id = 1)
-    medi_doc = Doctor.objects.exclude(depart_id = 1)
+    depart = Depart.objects.all()
 
     return render(request,
     'Receptionist/storage_page.html',
@@ -656,8 +689,7 @@ def storage_page(request):
                 'today_filter': today_filter,
                 'storage_search':storage_search_form,
                 'storage':storage_form,
-                'dent_doc':dent_doc,
-                'medi_doc':medi_doc,
+                'depart':depart,
             },
         )
 
@@ -671,17 +703,34 @@ def waiting_list(request):
     date_max = datetime.datetime.combine(datetime.datetime.strptime(date_end, "%Y-%m-%d").date(), datetime.time.max)
 
 
+    argument_list = [] 
+    if filter=='':
+        argument_list.append( Q(**{'patient__name_kor__icontains':string} ) )
+        argument_list.append( Q(**{'patient__name_eng__icontains':string} ) )
+        argument_list.append( Q(**{'patient__id__icontains':string} ) ) 
+        argument_list.append( Q(**{'patient__phone__icontains':string} ) ) 
+        argument_list.append( Q(**{'patient__date_of_birth__icontains':string} ) ) 
+    elif filter=='name':
+        argument_list.append( Q(**{'patient__name_kor__icontains':string} ) )
+        argument_list.append( Q(**{'patient__name_eng__icontains':string} ) )
+    elif filter=='chart':
+        argument_list.append( Q(**{'patient__id__icontains':string} ) ) 
+
+
+
     kwargs={}
-    filter_string=[]
-    if filter == 'name':
-        filter_string.append(Q( ** {'patient__name_kor__icontains' : string } ))
-        filter_string.append(Q( ** {'patient__name_eng__icontains' : string } ))
-        receptions = Reception.objects.select_related('patient').filter( functools.reduce(operator.or_, filter_string), recorded_date__range = (date_min, date_max) )
-    #if doctor_id != '':
-    #    doctor = Doctor.objects.get(id = doctor_id)
-    #    kwargs['doctor'] = doctor
-    else:
-        receptions = Reception.objects.select_related('patient').filter(  recorded_date__range = (date_min, date_max) )
+    receptions = Reception.objects.select_related('patient').exclude(progress='deleted').filter( functools.reduce(operator.or_, argument_list), recorded_date__range = (date_min, date_max) )
+    #if filter == 'name':
+    #    filter_string.append(Q( ** {'patient__name_kor__icontains' : string } ))
+    #    filter_string.append(Q( ** {'patient__name_eng__icontains' : string } ))
+    #    receptions = Reception.objects.select_related('patient').exclude(progress='deleted').filter( functools.reduce(operator.or_, filter_string), recorded_date__range = (date_min, date_max) )
+    ##if doctor_id != '':
+    ##    doctor = Doctor.objects.get(id = doctor_id)
+    ##    kwargs['doctor'] = doctor
+    #else:
+    #    receptions = Reception.objects.select_related('patient').filter(  recorded_date__range = (date_min, date_max) )
+    #
+
 
 
     datas=[]
@@ -705,7 +754,7 @@ def waiting_list(request):
                         'status':'paid' if reception.payment.progress=='paid' else 'unpaid',
                         'has_unpaid':reception.patient.has_unpaid()
                         #'is_unpaid':pay_record.payment.reception.patient.has_unpaid(),
-                        }
+                        }  
                     datas.append(record)
                 else:
                     for pay_record in payment_set:
@@ -763,7 +812,7 @@ def get_today_list(request):
             'Depart':reception.depart.name,
             'Doctor':reception.doctor.name_kor,
             'status':reception.payment.progress,
-            'total_amount':reception.payment.sub_total,
+            'total_amount':reception.payment.total,
             'DateTime':reception.recorded_date.strftime('%H:%M'),
             'has_unpaid':reception.patient.has_unpaid()
             }
@@ -794,7 +843,7 @@ def get_today_selected(request):
         exam.update({
             'code':data.exam.code,
             'name':data.exam.name,
-            'price':data.exam.get_price(reception.recorded_date),
+            'price':data.exam.get_price(),
             })
         exams.append(exam)
 
@@ -804,7 +853,7 @@ def get_today_selected(request):
         test.update({
             'code':data.test.code,
             'name':data.test.name,
-            'price':data.test.get_price(reception.recorded_date),
+            'price':data.test.get_price(),
             })
         tests.append(test)
 
@@ -815,7 +864,7 @@ def get_today_selected(request):
             'code':data.precedure.code,
             'name':data.precedure.name,
             'amount': data.amount,
-            'price':data.precedure.get_price(reception.recorded_date),
+            'price':data.precedure.get_price(),
             })
 
 
@@ -826,7 +875,7 @@ def get_today_selected(request):
         medicine = {}
         quantity = int(data.days) * int(data.amount)
         unit = data.medicine.get_price(reception.recorded_date)
-        price = quantity * int(data.medicine.get_price(reception.recorded_date))
+        price = quantity * int(data.medicine.get_price())
         medicine.update({
             'code':data.medicine.code,
             'name':data.medicine.name,
@@ -840,7 +889,6 @@ def get_today_selected(request):
     records = PaymentRecord.objects.filter(payment = payment)
     for record in records:
         paid += record.paid
-
 
     datas = {
         'chart':reception.patient.get_chart_no(),
@@ -1453,7 +1501,7 @@ def reservation(request):
     today =datetime.datetime.today()
     reservation_dialog_form = ReservationDialogForm()
     reservation_search_form = ReservationSearchControl()
-    datas = Reservation.objects.filter(reservation_date__month = today.month)
+    datas = Reservation.objects.filter(reservation_date__month = today.month).order_by('reservation_date')
     
     reception_form = ReceptionForm()
 
@@ -1709,10 +1757,10 @@ def get_patient_past(request):
                         'name_eng':reception.patient.name_eng,
                         'Depart':reception.depart.name,
                         'Doctor':reception.doctor.name_kor,
-                        'unpaid_total': reception.payment.sub_total,
+                        'unpaid_total': reception.payment.total,
                         'paid':0,
                         'date':reception.recorded_date.strftime('%Y-%m-%d'),
-                        'status':'unpaid',
+                        'status':'paid' if reception.payment.progress=='paid' else 'unpaid',
                         'has_unpaid':reception.patient.has_unpaid()
                         #'is_unpaid':pay_record.payment.reception.patient.has_unpaid(),
                         }
@@ -1726,7 +1774,7 @@ def get_patient_past(request):
                             'name_eng':pay_record.payment.reception.patient.name_eng,
                             'Depart':pay_record.payment.reception.depart.name,
                             'Doctor':pay_record.payment.reception.doctor.name_kor,
-                            'unpaid_total': pay_record.get_rest_total(),
+                            'unpaid_total': pay_record.total,
                             'paid':pay_record.paid,
                             'date':pay_record.date.strftime('%Y-%m-%d'),
                             'status':'paid' if reception.payment.progress=='paid' else 'unpaid',
@@ -1853,3 +1901,168 @@ def Tax_Invoice_save(request):
     tax_invoice.save()
 
     return JsonResponse({'result':True})
+
+
+
+def Documents(request):
+
+    departs = Depart.objects.all()
+
+    return render(request,
+    'Receptionist/Documents.html',
+            {
+                'departs':departs,
+            },
+        )
+
+
+def document_search(request):
+    
+    start = request.POST.get('document_control_start')
+    end = request.POST.get('document_control_end')
+    depart = request.POST.get('document_control_depart')
+    input = request.POST.get('document_control_input')
+
+    
+    
+    kwargs={}
+    if depart != '':
+        kwargs['depart_id'] = depart
+        #argument_list.append( Q(**{'depart_id':depart} ) ) 
+
+    argument_list = [] 
+
+    argument_list.append( Q(**{'patient__name_kor__icontains':input} ) ) 
+    argument_list.append( Q(**{'patient__name_eng__icontains':input} ) ) 
+
+
+    date_min = datetime.datetime.combine(datetime.datetime.strptime(start, "%Y-%m-%d").date(), datetime.time.min)
+    date_max = datetime.datetime.combine(datetime.datetime.strptime(end, "%Y-%m-%d").date(), datetime.time.max)
+
+    datas=[]
+    receptions = Reception.objects.select_related('patient').select_related('depart').select_related('doctor').select_related('diagnosis').prefetch_related('diagnosis__medicinemanager_set').prefetch_related('diagnosis__testmanager_set').order_by('-recorded_date').filter(functools.reduce(operator.or_, argument_list),**kwargs,recorded_date__range = (date_min, date_max) ,progress = 'done')
+    for reception in receptions:
+        data= {
+            'id':reception.id,
+            'chart':reception.patient.get_chart_no(),
+            'name':reception.patient.get_name_kor_eng(),
+            'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),   
+            'age':reception.patient.get_age(),
+            'gender':reception.patient.get_gender_simple(),
+            'depart':reception.depart.name,
+            'doctor':reception.doctor.name_short,
+            'address':reception.patient.address,
+            'phone':reception.patient.phone,
+            'date_time':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),         
+            }
+
+        if reception.diagnosis.medicinemanager_set.count() !=0:
+            data.update({
+                'prescription':True,
+                })
+            
+        if reception.diagnosis.testmanager_set.count() !=0:
+            data.update({
+                'lab_report':True,
+                })
+        datas.append(data)
+    
+
+
+    return JsonResponse({
+        'result':True,
+        'datas':datas,
+        })
+
+
+
+
+def document_lab(request,reception_id):
+    reception = Reception.objects.get(id = reception_id)
+
+    
+    test_res = []
+    manager_set = reception.diagnosis.testmanager_set.all()
+    no = 0
+    for lab in manager_set:
+        test = TestManage.objects.get(manager_id = lab.id)
+        reference_query = TestReferenceInterval.objects.filter(test_id = lab.test_id)
+        list_interval = []
+        for reference in reference_query:
+            list_interval.append({
+                'normal_range':reference.get_range(),
+                'minimum':reference.minimum,
+                'maximum':reference.maximum,
+                'unit':reference.get_unit_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                'name':reference.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                })
+
+        no+=1
+        test_res.append({
+            'no':no,
+            'name':lab.test.name,
+            'name_vie':lab.test.name_vie,
+            'specimens':'',
+            'result':test.result,
+            'normal_range':list_interval,
+            'procedure_method':'',
+            })
+
+
+
+    return render(request,
+    'Receptionist/form_medical_lab.html',
+            {
+                'chart':reception.patient.get_chart_no(),
+                'name':reception.patient.get_name_kor_eng(),
+                'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),   
+                'age':reception.patient.get_age(),
+                'gender':reception.patient.get_gender_simple(),
+                'depart':reception.depart.name,
+                'doctor':reception.doctor.name_short,
+                'address':reception.patient.address,
+                'phone':reception.patient.phone,
+                'date_time':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),    
+                'test_res':test_res,
+            },
+        )
+
+
+def document_prescription(request,reception_id):
+    reception = Reception.objects.get(id = reception_id)
+
+    
+    medicine_res = []
+    manager_set = reception.diagnosis.medicinemanager_set.all()
+    no = 0
+    for manager in manager_set:
+        no+=1
+        medicine_res.append({
+            'no':no,
+            'name':manager.medicine.name,
+            'name_vie':manager.medicine.name_vie,
+            'unit':manager.medicine.unit,
+            'unit_vie':manager.medicine.unit_vie,
+            'quantity':manager.amount * manager.days,
+            'direction_for_use':manager.memo,
+            'note':'',
+            })
+
+    return render(request,
+    'Receptionist/form_prescription.html',
+            {
+                'chart':reception.patient.get_chart_no(),
+                'name':reception.patient.get_name_kor_eng(),
+                'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),   
+                'age':reception.patient.get_age(),
+                'gender':reception.patient.get_gender_simple(),
+                'depart':reception.depart.name,
+                'doctor':reception.doctor.name_short,
+                'address':reception.patient.address,
+                'phone':reception.patient.phone,
+                'date_time':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),    
+                'medicine_res':medicine_res,
+                'reservation_date':'' if reception.reservation_id is None else reception.reservation.reservation_date.strftime('%Y-%m-%d %H:%M'),
+                'doctor':reception.doctor.name_eng
+            },
+        )

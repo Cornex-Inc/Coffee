@@ -1,4 +1,6 @@
-
+body {
+    width: 1920px;
+}
 
 .pharmacy_grid {
     margin: 0 auto;
@@ -25,7 +27,7 @@
 }
 
 .pharmacy_list_control{
-    height:4vh;
+    text-align:right;
 }
 
 .pharmacy_list_control *{
@@ -62,6 +64,7 @@
 
 }
 .pharmacy_contents_overflow {
+    margin-top:15px;
     height: 600px;
     overflow: auto;
 }
@@ -72,7 +75,6 @@
     text-align: left;
 }
 .medicine_table_title_span {
-    margin-bottom: 1.5vh;
     font-size: 1.9vh;
     height: 3.2vh;
     padding-top: 0.1vh;
@@ -85,9 +87,11 @@
     }
 
 
-    .pharmacy_search_select {
-        width: 100px;
-    }
+
+.pharmacy_search_select {
+    width: 70px;
+    padding: 5px;
+}
 
 .pharmacy_search_input{
     width: 120px;
@@ -115,8 +119,9 @@
     margin-bottom:2vh;
 }
 
-.pharmacy_list_calendar{
-    width:90px;
+.pharmacy_list_calendar {
+    width: 75px;
+    padding: 5px;
 }
 
 .show_patient_selected{
@@ -124,8 +129,8 @@
 }
 
 @media ( min-height: 965px ) {
-    .pharmacy_list_calendar{
-        width:100px;
+    .pharmacy_list_calendar {
+        width: 75px;
     }
     .pharmacy_list_table_wrap {
         height: 770px;

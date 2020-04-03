@@ -21,4 +21,15 @@ urlpatterns = [
     path('medicine_add_edit_get/',views.medicine_add_edit_get,name='medicine_add_edit_get'),
     path('medicine_add_edit_set/',views.medicine_add_edit_set,name='medicine_add_edit_set'),
     path('medicine_add_edit_check_code/',views.medicine_add_edit_check_code,name='medicine_add_edit_check_code'),
+    path('medicine_add_edit_delete/',views.medicine_add_edit_delete,name='medicine_add_edit_delete'),
+    
+
+
+    path('get_inventory_history/',views.get_inventory_history,name='get_inventory_history'),
+    path('save_database_add_medicine/',views.save_database_add_medicine,name='save_database_add_medicine'),
+    path('get_expiry_date/',views.get_expiry_date,name='get_expiry_date'),
+    path('get_edit_database_add_medicine/',views.get_edit_database_add_medicine,name='get_edit_database_add_medicine'),
+    path('save_database_disposal_medicine/',views.save_database_disposal_medicine,name='save_database_disposal_medicine'),
+    
+    
 ]

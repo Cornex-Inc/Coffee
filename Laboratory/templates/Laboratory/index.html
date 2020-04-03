@@ -13,7 +13,7 @@
                     <input id="laboratory_list_calendar" class="form-control laboratory_list_calendar"/>
                     {{waiting_search.filter}}
                     {{waiting_search.search_input}}
-                    <input type="button" id="laboratory_list_search" class="btn btn-default" value="Search" onclick="waiting_list()"/>
+                    <input type="button" id="laboratory_list_search" class="btn btn-default" value="{{ _('Search') }}" onclick="waiting_list()"/>
                  </div>
              </div>
             <div class="laboratory_list_table_wrap">
@@ -93,7 +93,11 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tbody id="lab_control_result">
+
+
+                </tbody>
+                <!--<tr>
                     <td>
                         <div class="input-group lab_control_input-group">
                             <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Result') }}<span id="unit"></span></span>
@@ -102,7 +106,7 @@
                         </div>
                         
                     </td>
-                </tr>
+                </tr>-->
             </table>
             <div style="width:100%; text-align:left;">
             <input type="button" class="btn btn-primary"  id="laboratory_control_cancel" value="{{ _('Cancel') }}"/>

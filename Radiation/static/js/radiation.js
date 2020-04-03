@@ -5,7 +5,7 @@ $(function () {
     
 
 
-    $('#patient_date').daterangepicker({
+    $('#patient_date_start, #patient_date_end').daterangepicker({
         singleDatePicker: true,
         showDropdowns: true,
         drops: "down",
@@ -14,7 +14,7 @@ $(function () {
         },
     });
     worker_on(true);
-    $('#patient_date').on('apply.daterangepicker', function () {
+    $('#patient_date_start, #patient_date_end').on('apply.daterangepicker', function () {
         today = moment().format('YYYY[-]MM[-]DD');
 
         date = $('#patient_date').val();
@@ -180,10 +180,10 @@ function delete_image(image_id,li) {
 function waiting_list() {
     var date, start, end;
 
-    date = $('#patient_date').val();
+    date = $('#patient_date_start').val();
     
-    start = date.split(' - ')[0];
-    end = date.split(' - ')[1];
+    start = $('#patient_date_start').val();
+    end = $('#patient_date_end').val();
 
 
     $.ajax({

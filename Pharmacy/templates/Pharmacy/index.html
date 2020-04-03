@@ -9,11 +9,17 @@
                 <span class="btn btn-danger medicine_table_title_span" >{{ _('Patient List') }}</span>
             </div>
             <div class="pharmacy_list_control">
-                {{ _('Date') }}
-                <input id="pharmacy_list_calendar" class="form-control pharmacy_list_calendar" />
-                {{waiting_search.filter}}
+                {{ _('Date') }} : 
+                <input id="pharmacy_list_calendar_start" class="form-control pharmacy_list_calendar" />
+                ~
+                <input id="pharmacy_list_calendar_end" class="form-control pharmacy_list_calendar" />
+                <select name="filter" id="pharmacy_search_select" class="form-control costom-select pharmacy_search_select" aria-describedby="basic-addon1">
+                    <option value="name">{{ _('Name') }}</option>
+                    <option value="Chart">{{ _('Chart') }}</option>
+                    <option value="Doctor">{{ _('Doctor') }}</option>
+                </select>
                 {{waiting_search.search_input}}
-                <input type="button" id="pharmacy_list_search" class="btn" value="{{ _('Search') }}" onclick="waiting_list()"/>
+                <input type="button" id="pharmacy_list_search" class="btn btn-default" value="{{ _('Search') }}" onclick="waiting_list()"/>
                 <br />
 
             </div>

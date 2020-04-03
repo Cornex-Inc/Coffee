@@ -15,6 +15,7 @@ urlpatterns = [
     path('diagnosis_save/',views.diagnosis_save,name='diagnosis_save'),
     path('diagnosis_past/',views.diagnosis_past,name='diagnosis_past'),
     path('get_diagnosis/',views.get_diagnosis,name='get_diagnosis'),
+    path('get_ICD/',views.get_ICD,name='get_ICD'),
 
     path('get_test_contents/',views.get_test_contents, name='get_test_contents'),
 

@@ -8,10 +8,8 @@
             <div class="medicine_table_title">
                 <span class="btn btn-danger inventory_table_title_span" >{{ _('Inventory') }}</span>
                 <div style="float:right;">
-
                 <select name="filter" id="medicine_search_select" class="form-control costom-select inventory_search_select" aria-describedby="basic-addon1">
                   <option value="name">name</option>
-
                 </select>
                 <input type="text" name="search_input" id="medicine_search_input" class="form-control inventory_search_select" aria-describedby="basic-addon1" required="">
                 <input type="button" class="btn" value="{{ _('Search')}}" onclick="pharmacy_database_search()"/>
@@ -40,56 +38,73 @@
                 <ul class="pagination" id="medicine_pagnation">
 
                 </ul>
-                <div>
+                <div style="float:right; margin-top:20px;">
                     <input type="button" class="btn btn-info" id="medicine_new" value="{{ _('New') }}" onclick="edit_database_medicine()"/>
                 </div>
             </div>
         </div>
 
-    <div class="database_control partition">
-        <!--
-            <div class="medicine_table_title">
-                <span class="btn btn-info inventory_table_title_span" style="background: #39b3d7; border-color: #39b3d7;">{{ _('Add') }} </span>
-                <input class="btn btn-danger" type="button" value="{{ _('Save') }}" onclick="save_data_control()" style="float:right;margin-top: 5px; margin-right: 3px; "/>
+    <div class="inventory_history_part1 partition">
+        <div class="medicine_table_title">
+            <span class="btn btn-danger inventory_table_title_span" >{{ _('Inventory History') }}</span>
+            <div style="float:right; font-weight:700; font-size:18px; ">
+                <!--{{ _('Date') }} : <input type="text" class="form-control" id="inventory_history_date"/>-->
             </div>
-        
-                <div class="form-group">
-                    <input type="hidden" id="selected_option" />
-                    <div class="input-group">
-                      <span class="input-group-addon input_span" id="basic-addon1">{{ _('Trade Name') }}</span>
-                      {{medicine_control.name}}
-                    </div>
-                    <div class="input-group">
-                      <span class="input-group-addon input_span" id="basic-addon1">{{ _('Generic Name') }}</span>
-                    {{medicine_control.ingredient}}
-                    </div>
-
-                    <div class="input-group">
-                      <span class="input-group-addon input_span" id="basic-addon1">{{ _('Company') }}</span>
-                    {{medicine_control.company}}
-                    </div>
-                    <div class="input-group">
-                      <span class="input-group-addon input_span" id="basic-addon1">{{ _('Country') }}</span>
-                    {{medicine_control.country}}
-                    </div>
-                    <div class="input-group">
-                      <span class="input-group-addon input_span" id="basic-addon1">{{ _('Unit') }}</span>
-                    {{medicine_control.unit}}
-                    </div>
-                    <div class="input-group">
-                      <span class="input-group-addon input_span" id="basic-addon1">{{ _('Price') }}</span>
-                      {{medicine_control.price}}
-                    </div>
-
-                    <div class="input-group">
-                      <span class="input-group-addon input_span" id="basic-addon1">{{ _('Amount') }}</span>
-                    {{medicine_control.changes}}
-                    </div>
-                    
-                    <input class="btn btn-primary" type="button" value="{{ _('Delete') }}" id="medicine_new" style="float:left;" />
-                </div>
-            -->
         </div>
+        <div>
+            
+            <div style="float:right; font-weight:700; font-size:18px; margin-bottom:-5px;">
+                {{ _('Total') }} : 
+                <span id="inventory_history_total">0</span>
+            </div>
+        </div>
+        <br />
+        <div id="inventory_history_div">
+            <input type="hidden" id="inventory_history_selected" />
+            <table class="table table-bordered table-hover table-striped" id="inventory_history_table">
+                <thead>
+                    <tr>
+                        <th>{{ _('No') }}</th>
+                        <th>{{ _('Date') }}</th>
+                        <th>{{ _('Quantity') }}</th>
+                        <th>{{ _('Type') }}</th>
+                        <th>{{ _('Remark') }}</th>
+                    </tr>
+                </thead>
+                <tbody id="inventory_history_tbody">
+                
+                </tbody>
+            </table>
+        </div>
+
+        <input type="button" value=" {{ _('+ Add') }}" class="btn btn-primary" id="inventory_add"/>
+    </div>
+
+
+
+    <div class="inventory_history_part2 partition">
+        <div class="medicine_table_title">
+            <span class="btn btn-danger inventory_table_title_span" >{{ _('Expiration Date') }}</span>
+            <!--<span class="btn btn-danger inventory_table_title_span" >{{ _('dsds') }}</span>-->
+        </div>
+        <div id="inventory_expiry_div">
+            <table class="table table-bordered table-hover table-striped" id="inventory_expiry_table">
+                <thead>
+                    <tr>
+                        <th>{{ _('No') }}</th>
+                        <th>{{ _('Registration') }}</th>
+                        <th>{{ _('Expiration Date') }}</th>
+                        <th>{{ _('Quantity') }}</th>
+                        <th>{{ _('Days left') }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="inventory_expiry_tbody">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 
@@ -128,13 +143,13 @@
                         <tr>
                             <td>
                                 <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon1">{{ _('Name') }}*</span>
+                                    <span class="input-group-addon" id="basic-addon1">*{{ _('Name') }}</span>
                                     <input type="text" id="add_edit_database_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
                                 </div>
                             </td>
                             <td>
                                 <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon1">{{ _('Name in Vietnamese') }}*</span>
+                                    <span class="input-group-addon" id="basic-addon1">*{{ _('Name') }} {{_('in Vietnamese') }}</span>
                                     <input type="text" id="add_edit_database_name_vie" class="form-control medicine_control_input" aria-describedby="basic-addon1">
                                 </div>
                             </td>
@@ -148,7 +163,7 @@
                             </td>
                             <td>
                                 <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon1">{{ _('Ingredient in Vietnamese') }}</span>
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Ingredient') }} {{_('in Vietnamese') }}</span>
                                     <input type="text" id="add_edit_database_ingredient_vie" class="form-control medicine_control_input" aria-describedby="basic-addon1">
                                 </div>
                             </td>
@@ -162,7 +177,7 @@
                             </td>
                             <td>
                                 <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon1">{{ _('Unit in Vietnamese') }}</span>
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Unit') }} {{_('in Vietnamese') }}</span>
                                     <input type="text" id="add_edit_database_unit_vie" class="form-control medicine_control_input" aria-describedby="basic-addon1">
                                 </div>
                             </td>
@@ -176,7 +191,7 @@
                             </td>
                             <td>
                                 <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon1">{{ _('Country in Vietnamese') }}</span>
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Country') }} {{_('in Vietnamese') }}</span>
                                     <input type="text" id="add_edit_database_country_vie" class="form-control medicine_control_input" aria-describedby="basic-addon1">
                                 </div>
                             </td>
@@ -249,12 +264,100 @@
 
 
 
+<div id="add_medicine_database" class="modal fade">
+     <div class="modal-dialog add_medicine_modal" style="width:400px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4 id="add_medicine_database_h4"><span id="add_medicine_database_header"></span><br/>{{ _('Goods Receipt') }}</h4>
+                <input type="hidden" id="add_medicine_database_id" />
+                <div id="modalBody" class="modal-body">
+                    <table class="table" id="add_medicine_table">
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Date of Registration') }}</span>
+                                    <input type="text" id="add_medicine_reg" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Expiration Date') }}</span>
+                                    <input type="text" id="add_medicine_expiry" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Changes') }}</span>
+                                    <input type="number" id="add_medicine_changes" class="form-control medicine_control_input" aria-describedby="basic-addon1" value="0">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Memo') }}</span>
+                                    <input type="text" id="add_medicine_memo" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" onclick="save_database_add_medicine()">{{ _('Save') }}</a>
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</div>
 
 
 
 
+<div id="disposal_medicine" class="modal fade">
+     <div class="modal-dialog add_medicine_modal" style="width:400px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4 class="add_medicine_database_h4"><span id="disposal_medicine_header"></span><br/>{{ _('Disposal') }}</h4>
+                <input type="hidden" id="disposal_medicine_table_id" />
+                <div id="modalBody" class="modal-body">
+                    <table class="table" id="disposal_medicine_table">
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Changes') }}</span>
+                                    <input type="number" id="disposal_medicine_changes" class="form-control medicine_control_input" aria-describedby="basic-addon1" value="0">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Memo') }}</span>
+                                    <input type="text" id="disposal_medicine_memo" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" onclick="save_database_disposal_medicine()">{{ _('Save') }}</a>
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                </div>
+                
+            </div>
+        </div>
 
-
+    </div>
+</div>
 
 
 
@@ -275,7 +378,6 @@
 {% block style %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/inventory.css' %}" />
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
 {% endblock %}
 
 {% block scripts %}

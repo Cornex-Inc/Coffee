@@ -5,7 +5,7 @@
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: 550px;
+    grid-template-columns: 650px;
     /*grid-template-rows: 15%;*/
 }
 
@@ -15,7 +15,7 @@
     padding-right: 20px;
     background: rgba(180, 180, 180, 0.15);
     border: 3.7px solid white;
-    overflow: auto;
+    overflow: hidden;
 }
 
 .radiation_waiting {
@@ -49,11 +49,12 @@
 .status_table_title_label {
     font-weight: 500;
     font-size:14px;
-    margin-bottom: 10px;
+    margin-bottom:10px;
 }
 
 .radiation_input {
-    width: 140px;
+    width: 80px;
+    padding:5px;
     display: inline;
 }
 
@@ -64,9 +65,9 @@
 }
 
 .radiation_patient_info_iniput {
-    width: 410px;
+    width: 437px;
     display: inline-table;
-    margin-right: 16px;
+    margin-bottom:10px;
 }
     .radiation_patient_info_iniput > span{
         width: 100px;
@@ -84,25 +85,37 @@
     display:inline-block;
 }
 
-
-.radiology_search_select {
-    width: 90px;
-    display: inline;
+.depart_select{
+    width:115px;
+    display:inline-table;
 }
 
-.radiation_waiting_control{
-    text-align:right;
+    .depart_select span, .depart_select select{
+        padding:5px;
+    }
+
+    .radiology_search_select {
+        width: 70px;
+        padding: 5px;
+        display: inline;
+    }
+
+#patient_search {
+    width: 110px;
+    display: inline;
+}
+.radiation_waiting_control {
 }
 
 .radiation_list_table_wrap{
     height:590px;
+    overflow-y:auto;
 }
 
 .radiation_image_wrap {
     border:2px solid black;
     width: 100%;
-    height: 453px;
-    margin-top: 20px;
+    height: 502px;
 }
 
 
@@ -146,7 +159,7 @@
 
 @media ( min-width: 1900px ) {
     .radiation_grid {
-        grid-template-columns: 600px;
+        grid-template-columns: 650px;
         /*grid-template-rows: 15%;*/
     }
 
@@ -155,13 +168,10 @@
     }
 
     .radiation_image_wrap {
-        height: 600px;
+        height: 672px;
     }
     .radiation_patient_info_iniput{
-        width:500px;
-    }
-    .remark_wrap {
-        width:1250px; 
+        width:600px;
     }
 }
 

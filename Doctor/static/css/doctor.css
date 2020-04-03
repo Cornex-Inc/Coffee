@@ -6,7 +6,7 @@
     width: 100%;
     display: grid;
     grid-template-columns: 30% 40%;
-    grid-template-rows: 31% 7% 23% 10%;
+    grid-template-rows: 35% 7% 24% 10%
 }
 
 .partition {
@@ -28,12 +28,20 @@
     grid-row-end: 4;
 }
 
+.ui-autocomplete {
+    height: 300px;
+    width: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* prevent horizontal scrollbar */
+}
+.ui-widget{
+    font-size:11px;
+}
 
-
-
-    .doctor_patient_info input {
-        /* width: 150px; */
-    }
+.doctor_patient_info input {
+    /* width: 150px; */
+}
     .doctor_patient_info input[type=radio] {
         width: auto;
     }
@@ -195,7 +203,7 @@
 }
 
 .diagnosis_history_taking_contents {
-    resize: vertical;
+    resize: none;
     width: 440px !important;
 }
 
@@ -298,7 +306,7 @@
 }
 
 .Rectption_Status_wrap{
-    height:175px;
+    height:150px;
     overflow:auto;
 }
 .diagnosis_table_wrap {
@@ -376,7 +384,6 @@
         height:250px;
     }
     .diagnosis_history_taking_contents {
-        resize: vertical;
         width: 580px !important;
         height: 40px !important;
     }

@@ -4,7 +4,7 @@ from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Count, Sum
-
+from django.utils import timezone, translation
 
 from .forms import *
 from Receptionist.models import *
@@ -390,7 +390,7 @@ def search_payment(request):
         except Diagnosis.DoesNotExist:
             pass
 
-
+    
     paginator = Paginator(datas, page_context)
     try:
         paging_data = paginator.page(page)
@@ -416,12 +416,13 @@ def search_payment(request):
                'payment_total_unpaid':payment_total_unpaid,
 
                }
+    
     return JsonResponse(context)
 
 @login_required
 def doctor_profit(request):
 
-    page_context = 10 # 페이지 컨텐츠 
+    page_context = request.POST.get('page_context',10) # 페이지 컨텐츠 
     kwargs = {}
     datas = []
 
@@ -526,7 +527,6 @@ def doctor_profit(request):
         context.update({
             'total_amount':total_amount,
             })
-        print(context)
     else:
         filter_exam_fee = request.POST.get('exam_fee')
         filter_test = request.POST.get('test')
@@ -655,8 +655,6 @@ def doctor_profit(request):
         amount_discount = Sum('payment__discounted_amount'),
         amount_total = Sum('payment__total'),
         )
-
-    print(query_total['amount_discount'])
 
     context.update({
         'amount_sub_total':query_total['amount_sub_total'] if query_total['amount_sub_total'] is not None else 0,
@@ -810,3 +808,221 @@ def search_patient(request):
 
 
     return JsonResponse(context)
+
+
+
+def inventory_test(request):
+
+    return render(request,
+    'Manage/inventory_test.html',
+            {
+            },
+        )
+
+def inventory_precedure(request):
+
+    class_datas=[]
+    precedure_class = PrecedureClass.objects.all()
+    for tmp_class in precedure_class:
+        class_datas.append({
+            'id':tmp_class.id,
+            'name': tmp_class.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+            })
+
+
+    return render(request,
+    'Manage/inventory_precedure.html',
+            {
+                'precedure_class':class_datas,
+            },
+        )
+
+
+def precedure_search(request):
+
+    string = request.POST.get('string');
+    filter = request.POST.get('filter');
+
+    
+    kwargs = {
+        '{0}__{1}'.format(filter, 'icontains'): string,
+        
+        }
+    datas=[]
+    if string == '' :
+        query_datas = Precedure.objects.all()#.select_related('precedure_class').exclude(use_yn='N').order_by('name')
+    elif filter == 'name':
+        query_datas = Precedure.objects.filter( Q(name__icontains = string) | Q(name_vie__icontains = string)).select_related('precedure_class').exclude(use_yn='N').order_by("name")
+
+    else:
+        query_datas = Precedure.objects.filter(**kwargs).select_related('precedure_class').exclude(use_yn='N').order_by("name")
+
+
+    
+    for query_data in query_datas:
+        data = {
+                'id' : query_data.id,
+                'code': query_data.code,
+                'name' : query_data.name,
+                'name_vie':query_data.name_vie,
+                'class':query_data.precedure_class.name,
+                'price' : query_data.get_price(),
+            }
+
+        datas.append(data)
+
+
+    page = request.POST.get('page',1)
+    context_in_page = request.POST.get('context_in_page');
+    paginator = Paginator(datas, context_in_page)
+    try:
+        paging_data = paginator.page(page)
+    except PageNotAnInteger:
+        paging_data = paginator.page(1)
+    except EmptyPage:
+        paging_data = paginator.page(paginator.num_pages)
+
+    context = {
+        #'datas':datas,
+        'datas':list(paging_data),
+        'page_range_start':paging_data.paginator.page_range.start,
+        'page_range_stop':paging_data.paginator.page_range.stop,
+        'page_number':paging_data.number,
+        'has_previous':paging_data.has_previous(),
+        'has_next':paging_data.has_next(),
+        
+        }
+    return JsonResponse(context)
+
+def precedure_add_edit_get(request):
+    id = request.POST.get('id');
+
+    precedure = Precedure.objects.get(id=id)
+
+
+    return JsonResponse({
+        'id':precedure.id,
+        'name':precedure.name,
+        'name_vie':precedure.name_vie,
+        'price':precedure.get_price(),
+        'price_dollar':precedure.get_price_dollar(),
+        'precedure_class_id':precedure.precedure_class_id,
+        'result':True,
+        })
+
+
+def precedure_add_edit_set(request):
+    id = request.POST.get('id');
+    type = request.POST.get('type');
+    precedure_class = request.POST.get('precedure_class');
+    name = request.POST.get('name');
+    name_vie = request.POST.get('name_vie');
+    price = request.POST.get('price');
+    price_dollar = request.POST.get('price_dollar');
+
+    if int(id) == 0 :
+        data = Precedure()
+        data.price = price
+        data.price_dollar = price_dollar
+        
+
+        last_code = Precedure.objects.filter(precedure_class_id=precedure_class).last()
+        precedure_class = int(precedure_class)
+        if precedure_class ==1: #D
+            CODE = 'D'
+        elif precedure_class == 2: #CT
+            CODE = 'CT'
+        elif precedure_class == 3: #ENT
+            CODE = 'E'
+        elif precedure_class == 4: #GE
+            CODE = 'GE'
+        elif precedure_class == 5: #Radi
+            CODE = 'R'
+        elif precedure_class == 6: #U
+            CODE = 'U'
+        elif precedure_class == 7: #P
+            CODE = 'P'
+        elif precedure_class == 8: #T
+            CODE = 'T'
+        elif precedure_class == 10: #PM
+            CODE = 'PM'
+        elif precedure_class >= 11 or precedure_class <= 30 or precedure_class == 9: #: #DERM
+            CODE = 'DM'
+        elif precedure_class >= 31 or precedure_class <=40 or precedure_class == 42: #PS
+            CODE = 'PS'
+        elif precedure_class == 41: #MRI
+            CODE = 'MRI'
+            
+        if last_code == None:
+           data.code = CODE + str('0001')
+        else:
+            temp_code = last_code.code.split(CODE)
+            data.code = CODE + str('%04d' % (int(temp_code[1]) + 1))
+
+    else:
+        data = Precedure.objects.get(id=id)
+        str_now = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+
+        try: 
+            old_price = Pricechange.objects.get(type="Precedure",country='VI',type2='OUTPUT',code=data.code, date_end="99999999999999")
+            
+            if old_price.price != int(price):
+                old_price.date_end = str_now
+                old_price.save()
+
+                new_price = Pricechange(type="Precedure",country='VI',type2='OUTPUT',code=data.code)
+                new_price.price = price
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
+
+        except Pricechange.DoesNotExist:
+            if data.price != int(price):
+                new_price = Pricechange(type="Precedure",country='VI',type2='OUTPUT',code=data.code)
+                new_price.price = price
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
+                
+        try:
+            old_price_dollar = Pricechange.objects.get(type="Precedure",country='US',type2='OUTPUT',code=data.code, date_end="99999999999999")
+            
+            if old_price_dollar.price != int(price_dollar):
+                old_price_dollar.date_end = str_now
+                old_price_dollar.save()
+
+                new_price = Pricechange(type="Precedure",country='US',type2='OUTPUT',code=data.code)
+                new_price.price = price_dollar
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
+
+        except Pricechange.DoesNotExist:
+            if data.price != int(price_dollar):
+                new_price = Pricechange(type="Precedure",country='US',type2='OUTPUT',code=data.code)
+                new_price.price = price_dollar
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
+
+    data.precedure_class_id = precedure_class
+    data.name = name
+    data.name_vie = name_vie
+    data.save()
+
+
+    return JsonResponse({
+        'result':True,
+        })
+
+
+def precedure_add_edit_delete(request):
+    id = request.POST.get('id')
+    print(1)
+    precedure = Precedure.objects.get(id=id)
+    precedure.use_yn = 'N'
+    precedure.save()
+
+    return JsonResponse({
+        'result':True,
+        })

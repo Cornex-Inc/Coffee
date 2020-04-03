@@ -320,6 +320,17 @@ doctor_patient_info table ul label {
 .medical_exam_pm .hoi {
 }
 
+.ui-autocomplete {
+    height: 300px;
+    width: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* prevent horizontal scrollbar */
+}
+
+.ui-widget {
+    font-size: 11px;
+}
 
 
 .medical_exam_pm #pain_level {

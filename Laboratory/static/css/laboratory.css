@@ -40,6 +40,10 @@
     cursor: pointer;
 }
 
+.laboratory_list_table tbody tr td{
+    vertical-align:middle;
+}
+
 .laboratory_control {
     grid-column-start: 2;
     grid-column-end: 3;

@@ -10,6 +10,68 @@ $(function () {
 
 
 
+    $('#medicine_search_input').keypress(function (key) {
+        if (key.keyCode == 13) {
+            pharmacy_database_search();
+        }
+    });
+
+    //inventory history
+    $("#inventory_history_date").prop("disabled", true);
+    $('#inventory_history_date').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        locale: {
+            format: 'YYYY-MM-DD'
+        }
+    });
+    $('#inventory_history_date').on('apply.daterangepicker', function () {
+        
+        get_inentory_history();
+    });
+
+
+    
+    //expiry date
+    $('#inventory_add').click(function () {
+        id = $('#inventory_history_selected').val();
+        if (id == null || id == '') {
+            alert(gettext('Select Item.'));
+            return;
+        }
+
+
+        $('#add_medicine_database').on('shown.bs.modal', function () {
+            console.log(1);
+            var today = new Date();
+            $('#add_medicine_database_id').val(0);
+            $('#add_medicine_reg').data('daterangepicker').setStartDate(moment(today));
+            $('#add_medicine_expiry').data('daterangepicker').setStartDate(moment(today));
+
+            $("#add_medicine_changes").prop("disabled", false);
+            $("#add_medicine_changes").val(0);
+            $('#add_medicine_memo').val('');
+        })
+
+        $('#add_medicine_database').modal({ backdrop: 'static', keyboard: false });
+        $('#add_medicine_database').modal('show');
+    });
+
+    $('#add_medicine_reg').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        locale: {
+            format: 'YYYY-MM-DD'
+        }
+    });
+    $('#add_medicine_expiry').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        locale: {
+            format: 'YYYY-MM-DD'
+        }
+    });
+
 
     //ADD , Edit 
 
@@ -165,20 +227,23 @@ function pharmacy_database_search(page = null) {
         success: function (response) {
             for (var i = 0; i < context_in_page; i++) {
                 if (response.datas[i]) {
-
-                    var str = "<tr style='cursor: pointer;' onclick='set_data_control(" + response.datas[i]['id'] + ")'><td>" + response.datas[i]['code'] + "</td>" +
+                    if (response.datas[i].alaert_expiry == true) {
+                        var str = "<tr class='danger'"
+                    }
+                    else {
+                        var str = "<tr"
+                    }
+                    str += " style='cursor: pointer;' onclick='get_inentory_history(" + response.datas[i]['id'] + ",\"" + response.datas[i]['name'] + "\");get_expiry_date();'><td>" + response.datas[i]['code'] + "</td>" +
                         "<td>" + response.datas[i]['name'] + "</td>" +
                         "<td title='" + response.datas[i]['ingredient'] + "'>" + response.datas[i]['ingredient'] + "</td>" +
-                        "<td title='" + response.datas[i]['company'] +"'>" + response.datas[i]['company'] + "</td>" +
+                        "<td title='" + response.datas[i]['company'] + "'>" + response.datas[i]['company'] + "</td>" +
                         "<td>" + response.datas[i]['country'] + "</td>" +
                         "<td>" + response.datas[i]['unit'] + "</td>" +
                         "<td>" + numberWithCommas(response.datas[i]['price']) + "</td>" +
                         "<td>" + response.datas[i]['count'] + "</td>" +
                         "<td>" +
-                        "<input type='button' class='database_btn_edit btn btn-default' onclick='edit_database_medicine(" + response.datas[i]['id'] + ")' value='" + gettext('Edit') + "'/>" + 
-                        "<input type='button' class='database_btn_delete btn btn-danger' onclick='delete_database_medicine(" + response.datas[i]['id'] + ")' value='" + 'X' + "'/>" 
-
-                        + "</tr > "
+                        "<a class='btn btn-default btn-xs' style='margin-right:5px;' href='javascript: void (0);' onclick='edit_database_medicine(" + response.datas[i]['id'] + ")' ><i class='fa fa-lg fa-pencil'></i></a>" +
+                        "<a class='btn btn-danger btn-xs' href='javascript: void (0);' onclick='delete_database_medicine(" + response.datas[i]['id'] + ")' ><i class='fa fa-lg fa-trash'></i></a></tr> ";
                         
                 } else {
                     var str = "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
@@ -224,9 +289,6 @@ function pharmacy_database_search(page = null) {
 
 
 function edit_database_medicine(id = null) {
-
-
-
     $("#add_edit_database_header").html(gettext('New Medicine'));
     $('#add_edit_database input').val('');
     $('#add_edit_database input[type=number]').val('0');
@@ -349,9 +411,6 @@ function save_database_medicine(id = null) {
                 pharmacy_database_search();
 
                 $("#add_edit_database").modal('hide');
-
-                
-
             } else {
                 alert(gettext('Please Refresh this page.'));
             }
@@ -371,6 +430,68 @@ function save_database_medicine(id = null) {
 
 
 
+function get_inentory_history(id = null,name=null) {
+
+    if (id == null) {
+        id = $('#inventory_history_selected').val();
+        if (id == '')
+            return;
+    }
+    else {
+        $('#inventory_history_selected').val(id);
+    }
+    $("#inventory_history_date").prop("disabled", false);
+    date = $("#inventory_history_date").val();
+
+    $('#add_medicine_database_header').html(name);
+    $('#add_medicine_database_header').attr("title", name);
+    $.ajax({
+        type: 'POST',
+        url: '/pharmacy/get_inventory_history/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'id': id,
+            'date': date
+
+        },
+        dataType: 'Json',
+        success: function (response) {
+            $("#inventory_history_tbody").empty();
+            $("#inventory_history_total").html(response.count);
+            for (var i = 0; i < response.datas.length; i++) {
+                str = '';
+                if (response.datas[i].type == 'add') {
+                    str = '<tr class="success">'
+                }
+                else if (response.datas[i].type == 'dec') {
+                    str = '<tr class="warning">'
+                }
+                else if (response.datas[i].type == 'del') {
+                    str = '<tr class="danger">'
+                }
+                str += '<td>' + (i + 1) + "</td>" +
+                    "<td>" + response.datas[i].date + "</td>" +
+                    "<td>" + response.datas[i].changes + "</td>" +
+                    "<td>" + response.datas[i].type + "</td>" + 
+                    "<td>" + response.datas[i].memo + "</td></tr>"
+
+                $("#inventory_history_tbody").append(str);  
+                
+                
+            }
+
+            $("#inventory_history_selected").val(id);
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+
+}
+
+
+
 function delete_database_medicine(id = null) {
     if (id == null) {
         alert(gettext('Select Item.'));
@@ -378,28 +499,247 @@ function delete_database_medicine(id = null) {
     }
     else {
         if (confirm(gettext('Are you sure you want to delete ?'))) {
-            //alert("delete");
+            $.ajax({
+                type: 'POST',
+                url: '/pharmacy/medicine_add_edit_delete/',
+                data: {
+                    'csrfmiddlewaretoken': $('#csrf').val(),
+                    'id': id,
 
+                },
+                dataType: 'Json',
+                success: function (response) {
+                    if (response.result == true) {
+                        alert(gettext('Deleted'));
+                        pharmacy_database_search();
+                    }
+                },
+                error: function (request, status, error) {
+                    console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+                },
+            })
         }
 
     }
-
-
 
 }
 
 
 
+function save_database_add_medicine() {
+    id = $('#inventory_history_selected').val();
+    registration_date = $('#add_medicine_reg').val();
+    expiry_date = $('#add_medicine_expiry').val();
+    changes = $('#add_medicine_changes').val();
+    memo = $('#add_medicine_memo').val();
+
+
+
+    $.ajax({
+        type: 'POST',
+        url: '/pharmacy/save_database_add_medicine/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'id': id,
+            'registration_date': registration_date,
+            'expiry_date': expiry_date,
+            'changes': changes,
+            'memo': memo,
+            'check': $("#add_medicine_database_id").val(),
+        },
+        dataType: 'Json',
+        success: function (response) {
+            if (response.result == true) {
+                get_inentory_history();
+                get_expiry_date();
+                pharmacy_database_search();
+                $("#add_medicine_database").modal('hide');
+            }
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+}
+
+
+function get_expiry_date() {
+    id = $('#inventory_history_selected').val();
+
+    $.ajax({
+        type: 'POST',
+        url: '/pharmacy/get_expiry_date/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'id': id,
+        },
+        dataType: 'Json',
+        success: function (response) {
+            if (response.result == true) {
+                $("#inventory_expiry_tbody").empty();
+
+                for (var i = 0; i < response.datas.length; i++) {
+                    str = '';
+                    
+
+                    if (response.datas[i].expiry_date != 0) {
+                        var arr1 = response.datas[i].expiry_date.split('-');
+                        var date1 = new Date(arr1[0], arr1[1] - 1, arr1[2]);
+                       
+                        var now = new Date();
+
+                        var betweenDay = Math.ceil((date1.getTime() - now.getTime()) / (1000 * 3600 * 24));
+                        
+
+                        if (betweenDay > 180) {
+                            str = '<tr class="success">';
+                        }
+                        else if (betweenDay <= 180 || betweenDay > 0) {
+                            str = '<tr class="danger">';
+                        }
+                        else {
+                            str = '<tr>';
+                        }
+                    }
+                    else {
+                        str = '<tr>';
+                        betweenDay = 0;
+                    }
+
+                    str += '<td>' + (i + 1) + "</td>" +
+                        "<td>" + response.datas[i].date + "</td>" +
+                        "<td>" + response.datas[i].expiry_date + "</td>" +
+                        "<td>" + response.datas[i].tmp_count + "</td>" +
+                        "<td>" + betweenDay + "</td>" + 
+                        "<td><a class='btn btn-default btn-xs' style='margin-right:5px;' href='javascript: void (0);' onclick='show_edit_database_add_medicine(" + response.datas[i]['id'] + ")' ><i class='fa fa-lg fa-pencil'></i></a>" +
+                        "<a class='btn btn-danger btn-xs' href='javascript: void (0);' onclick='disposal_edit_database_add_medicine(" + response.datas[i]['id'] + ")' ><i class='fa fa-lg fa-trash'></i></a></tr> "; +"</tr > "
+
+                    $("#inventory_expiry_tbody").append(str);
+                }
+            }
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+}
 
 
 
 
+function show_edit_database_add_medicine(id) {
+    $('#add_medicine_database').on('shown.bs.modal', function () {
+        $.ajax({
+            type: 'POST',
+            url: '/pharmacy/get_edit_database_add_medicine/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+                'id': id,
+            },
+            dataType: 'Json',
+            success: function (response) {
+                console.log(response.data)
+                if (response.result == true) {
+                    $('#add_medicine_database_id').val(response.data.id);
+
+                    $('#add_medicine_reg').data('daterangepicker').setStartDate(response.data.date);
+                    $('#add_medicine_expiry').data('daterangepicker').setStartDate(response.data.expiry_date);
+
+                    $("#add_medicine_changes").prop("disabled", true);
+                    $("#add_medicine_changes").val(response.data.tmp_count);
+                    $('#add_medicine_memo').val(response.data.memo);
+
+                }
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            },
+        })
+    })
+
+    $('#add_medicine_database').modal({ backdrop: 'static', keyboard: false });
+    $('#add_medicine_database').modal('show');
+}
+
+
+function disposal_edit_database_add_medicine(id) {
+    $.ajax({
+        type: 'POST',
+        url: '/pharmacy/get_edit_database_add_medicine/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'id': id,
+        },
+        dataType: 'Json',
+        success: function (response) {
+            console.log(response.data)
+            if (response.result == true) {
+                $('#disposal_medicine_table_id').val(id);
+
+                $("#disposal_medicine_changes").val(response.data.tmp_count);
+                $('#disposal_medicine_memo').val(response.data.memo);
+            }
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+        },
+    })
+
+    $('#disposal_medicine').modal({ backdrop: 'static', keyboard: false });
+    $('#disposal_medicine').modal('show');
+    
+}
+
+function save_database_disposal_medicine() {
+
+
+    if (confirm(gettext('You really want to disposal medicines?'))) {
+        $.ajax({
+            type: 'POST',
+            url: '/pharmacy/save_database_disposal_medicine/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+                'id': $('#disposal_medicine_table_id').val(),
+                'disposial': $('#disposal_medicine_changes').val(),
+                'memo': $('#disposal_medicine_memo').val(),
+            },
+            dataType: 'Json',
+            success: function (response) {
+                console.log(response.data)
+                if (response.result == true) {
+                    alert(gettext('deleted'));
+
+                    get_inentory_history();
+                    get_expiry_date();
+                    pharmacy_database_search();
+
+                    $("#disposal_medicine").modal('hide');
 
 
 
+                }
+                else {
+                    if (response.msg == 1) {
+                        alert(gettext('Count is more than left')); // 삭제 하려는게 남아있는것 보다 많다.
+                    }
+
+                }
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            },
+        })
+    }
+    
+}
 
 
+function edit_database_add_medicine(id) {
 
+}
 
 
 

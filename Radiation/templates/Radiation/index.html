@@ -9,16 +9,31 @@
     <div class="radiation_grid">
         <div class="radiation_waiting partition">
             <div class="status_table_title">
-                <span class="btn btn-success status_table_title_label" style="float:left;">{{ _('Patient List') }}</span>
+                <span class="btn btn-success status_table_title_label">{{ _('Patient List') }}</span>
 
                 <!--<input type="checkbox" id="work_on" onclick="worker_on('{% static 'js/event_listener.js' %}')" />-->    
             </div>
             <div class="radiation_waiting_control">
-                <input type="text" id="patient_date" class="form-control radiation_input" aria-describedby="sizing-addon1" style="width:100px;">
-
-                {{ search.filter }}
-                <input type="text" id="patient_search" class="form-control" style="width:140px; display:inline;"/>
-                <input type="button" id="patient_search_btn" class="btn" value="{{ _('Search') }}" style="display:inline;"/>
+                {{ _('Date') }} :
+                <input type="text" id="patient_date_start" class="form-control radiation_input" aria-describedby="sizing-addon1" >
+                ~
+                <input type="text" id="patient_date_end" class="form-control radiation_input" aria-describedby="sizing-addon1">
+                <div class="input-group depart_select">
+                    <span class="input-group-addon patient_table_title" id="basic-addon1">Depart</span>
+                    <select name="depart" id="depart_select" class="form-control costom-select " aria-describedby="basic-addon1" required="">
+                        <option value="" selected="">---------</option>
+                        {% for data in depart %}
+                        <option value="{{data.id}}">{{ data.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <select name="filter" id="radiology_search_select" class="form-control costom-select radiology_search_select" aria-describedby="basic-addon1">
+                    <option value="">{{ _('All') }}</option>
+                    <option value="name">{{ _('Name') }}</option>
+                    <option value="chart">{{ _('Chart') }}</option>
+                </select>
+                <input type="text" id="patient_search" class="form-control"/>
+                <input type="button" id="patient_search_btn" class="btn btn-default" value="{{ _('Search') }}" style="display:inline;"/>
             </div>
             <div class="radiation_list_table_wrap">
                 <table class="table table-hover radiation_list_table" id="radiation_list_table">

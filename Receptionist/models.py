@@ -150,6 +150,17 @@ class Diagnosis(models.Model):
         null = True,
         )
 
+    ICD = models.CharField(
+        max_length = 512,
+        null = True,
+        )
+
+    ICD_code = models.CharField(
+        max_length = 8,
+        null = True,
+        )
+
+
 
 
 

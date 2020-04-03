@@ -38,7 +38,7 @@ def index(request):
         
     except Doctor.DoesNotExist:
             return redirect('/doctor/information')
-        
+    
 
     patient_form = PatientForm_Doctor()
     history_form = HistoryForm()
@@ -109,7 +109,7 @@ def index(request):
                     })
 
         medicines_data = []
-        medicine_s = Medicine.objects.filter( Q(id = 1) |Q(id = 71) |Q(id = 137) |Q(id = 168) |Q(id = 172) , use_yn='Y').order_by('code')
+        medicine_s = Medicine.objects.filter( Q(id = 1) |Q(id = 71) |Q(id = 137) |Q(id = 168) |Q(id = 172)|Q(id=174), use_yn='Y').order_by('code')
         for medicine in medicine_s:
             medicines_data.append({
                         'id':medicine.id,
@@ -212,7 +212,7 @@ def index(request):
     elif request.user.doctor.depart.id == 6: #DERM
         precedure_classes = PrecedureClass.objects.filter( id__gte=11,id__lte=30).values().order_by('name')
     elif request.user.doctor.depart.id == 4: #PS
-        precedure_classes = PrecedureClass.objects.filter( id__gte=31 ,id__lte=40).values()
+        precedure_classes = PrecedureClass.objects.filter( (Q(id__gte = 31) & Q(id__lte = 40)) | Q(id = 42)).values()
     else:
         precedure_classes=PrecedureClass.objects.all().exclude(id=10).values()
     
@@ -373,15 +373,20 @@ def index(request):
 
             temp = []
             for medicine in medicines:
-                temp.append( {
-                            'id':medicine.dis_id,
-                            'name_display':medicine.dis_name_display,
-                            'name':medicine.dis_name,
-                            'code':medicine.code,
-                            'unit':'' if medicine.dis_unit is None else medicine.dis_unit,
-                            'price':format(medicine.get_price(), ',') + ' VND',
-                            'ingredient':medicine.ingredient,
-                        })
+
+                data={
+                        'id':medicine.dis_id,
+                        'name_display':medicine.dis_name_display,
+                        'name':medicine.name_display,
+                        'code':medicine.code,
+                        'unit':'' if medicine.dis_unit is None else medicine.dis_unit,
+                        'price':format(medicine.get_price(), ',') + ' VND',
+                        'ingredient':medicine.ingredient,
+                    }
+                if medicine.code == 'I0018' or medicine.code =='I0019':
+                    data['name_display'] += '<text style="color:red;"> (AST !!)</text>'
+
+                temp.append(data )
             medicine_data.update({ medicine_class.dis_name : temp})
 
 
@@ -580,6 +585,8 @@ def reception_select(request):
             'objective_data':diagnosis.objective_data,
             'plan':diagnosis.plan,
             'diagnosis':diagnosis.diagnosis,
+            'ICD':diagnosis.ICD,
+            'icd_code':diagnosis.ICD_code,
             'recommendation':diagnosis.recommendation,
             })
     except Diagnosis.DoesNotExist:
@@ -602,12 +609,12 @@ def get_vital(request):
         data={}
         data.update({
             'date':vital.date.strftime('%b-%d'),
-            'weight':vital.weight,
-            'height':vital.height,
-            'blood_pressure':vital.blood_pressure,
-            'blood_temperature':vital.blood_temperature,
-            'breath':vital.breath,
-            'pulse_rate':vital.pulse_rate,
+            'weight':'' if vital.weight is None else vital.weight,
+            'height':'' if vital.height is None else vital.height,
+            'blood_pressure': '' if vital.blood_pressure is None else vital.blood_pressure,
+            'blood_temperature':'' if vital.blood_temperature is None else vital.blood_temperature,
+            'breath':'' if vital.breath is None else vital.breath,
+            'pulse_rate':'' if vital.pulse_rate is None else vital.pulse_rate,
             })
         datas.append(data)
 
@@ -696,6 +703,8 @@ def diagnosis_save(request):
     diagnosis_result.objective_data = request.POST.get('objective_data')
     diagnosis_result.assessment = request.POST.get('assessment')
     diagnosis_result.plan = request.POST.get('plan')
+    diagnosis_result.ICD = request.POST.get('ICD')
+    diagnosis_result.ICD_code = request.POST.get('icd_code')
     diagnosis_result.recommendation = request.POST.get('recommendation')
     
     diagnosis_result.save()
@@ -829,6 +838,8 @@ def diagnosis_save(request):
             total_amount +=  int(result.days) * int(result.amount) * int(result.medicine.get_price())
 
 
+   
+
     for key in exam_dict:
         ExamManager.objects.get(pk = key).delete()
     for key in test_dict:
@@ -855,6 +866,18 @@ def diagnosis_save(request):
         payment.total = total_amount;
         payment.save()
 
+    family_history = request.POST.get('family_history')
+    past_history = request.POST.get('past_history')
+
+    try:
+        patient_history = History.objects.get(patient = reception.patient)
+    except History.DoesNotExist:
+        patient_history = History()
+        patient_history.patient = reception.patient
+    print(past_history)
+    patient_history.family_history = family_history
+    patient_history.past_history = past_history
+    patient_history.save()
 
             
 
@@ -939,6 +962,8 @@ def diagnosis_past(request):
                 'assessment':diagnosis.assessment,
                 'plan':diagnosis.plan,
                 'diagnosis':diagnosis.diagnosis,
+                'ICD': diagnosis.ICD,
+                'icd_code': diagnosis.ICD_code,
                 'recommendation':diagnosis.recommendation,
                 
 
@@ -985,7 +1010,7 @@ def get_diagnosis(request):
                 'id':data.id,
                 'code':data.exam.code,
                 'name':data.exam.name,
-                'price':data.exam.get_price(),
+                'price':data.exam.get_price(diagnosis.recorded_date),
                 })
             exams.append(exam)
 
@@ -999,7 +1024,7 @@ def get_diagnosis(request):
                 'amount':data.amount,
                 'days':data.days,
                 'memo':data.memo,
-                'price':data.test.get_price(),
+                'price':data.test.get_price(diagnosis.recorded_date),
                 })
             tests.append(test)
 
@@ -1013,7 +1038,7 @@ def get_diagnosis(request):
                 'amount':data.amount,
                 'days':data.days,
                 'memo':data.memo,
-                'price':data.precedure.price,
+                'price':data.precedure.get_price(diagnosis.recorded_date),
                 })
             precedures.append(precedure)
 
@@ -1028,7 +1053,7 @@ def get_diagnosis(request):
                 'days':data.days,
                 'memo':'' if data.memo is None else data.memo,
                 'unit':'' if data.medicine.unit is None else data.medicine.unit,
-                'price':data.medicine.price,
+                'price':data.medicine.get_price(diagnosis.recorded_date),
                 })
             medicines.append(medicine)
 
@@ -1471,3 +1496,18 @@ def get_bundle(request):
         
 
     return JsonResponse({'datas':res_datas})
+
+
+def get_ICD(request):
+    
+    string = request.POST.get('string')
+    icd_datas = ICD.objects.filter(Q(code__icontains = string) | Q(name__icontains = string) | Q(name_vie__icontains = string)).values('id','name','code')
+    datas=[]
+    for data in icd_datas:
+        datas.append({
+            'value':data['code'] + ' ' +  data['name'],
+            'label':data['code'] + ' ' +  data['name'],
+            'code':data['code'],
+            })
+
+    return JsonResponse({'datas':datas})

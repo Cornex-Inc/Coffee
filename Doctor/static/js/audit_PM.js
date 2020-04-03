@@ -70,6 +70,8 @@ $(function () {
 
 
 function search_doctor_profit(page = null) {
+    var page_context = 10;
+
 
     $.ajax({
         type: 'POST',
@@ -83,6 +85,7 @@ function search_doctor_profit(page = null) {
             //'precedure': $('#doctor_search_precedure option:selected').val(),
             //'radiography': $('#doctor_search_radiography option:selected').val(),
             'page': page,
+            'page_context': page_context,
         },
         dataType: 'Json',
         success: function (response) {
@@ -90,9 +93,10 @@ function search_doctor_profit(page = null) {
             total_subtotal = 0;
             total_discounted = 0;
             total_total = 0;
-            
-            for (var i = 0; i < 10; i++) {//response.datas) {
-                var str = '<tr>'
+            console.log(response);
+            for (var i = 0; i < page_context; i++) {//response.datas) {
+                
+                var str = '<tr>';
                 if (response.datas[i]) {
                     str += '<td style="vertical-align: middle;">' + response.datas[i]['no'] + '</td>' +
                         '<td style="vertical-align: middle;">' + response.datas[i]['date'] + '</td>' +

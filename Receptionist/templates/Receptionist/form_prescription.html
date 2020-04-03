@@ -1,0 +1,219 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <style>
+        @media print {
+            #wrap {
+                margin: 0px;
+                padding: 45px;
+                font-size: 10px;
+                font-family: "Times New Roman", Times, serif;
+            }
+
+            table {
+                height:100%;
+            }
+                table tr td {
+                    font-size: 12px;
+                }
+
+            #logo {
+                width:100%;
+            }
+
+            .top {
+                
+            
+            }
+
+            .top tr:first-child td:nth-child(2) {
+                font-weight:700;
+            }
+
+            .patient_info {
+                width:100%;
+                margin-top:10px;
+                border-collapse: separate;
+                border-spacing: 0px 5px;
+            }
+            .patient_info tr td{
+                width:50%;
+            }
+
+
+            .title {
+                width: 100%;
+                text-align: center;
+                font-size: 14px;
+                font-weight: 700;
+                margin-top: 15px;
+            }
+
+            .contents {
+                margin-top: 15px;
+                width: 100%;
+                border: 1px solid black;
+                border-collapse: collapse;
+                
+            }
+                .contents tr td, .contents tr th {
+                    border: 1px solid black;
+                }
+
+                .contents thead tr:first-child td {
+                    text-align: center;
+                    vertical-align: middle;
+                }
+
+            #contents tr, #contents td {
+                padding:2px;
+            }
+
+            #contents_datas tr td {
+                text-align: center;
+                        vertical-align: middle;
+            }
+
+            .footer {
+                margin-top:60px;
+                width:100%;
+            }
+                .footer tr td:first-child {
+                width:60%
+                
+                }
+
+                .footer tr td:nth-child(2) {
+                }
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <table class="top">
+            <tr>
+                <td>
+                    <img src="/static/img/document_top.png" id="logo" />
+                </td>
+                <!--<td>Công ty TNHH International Medicare - Phòng khám đa khoa quốc tế I-Medicare</td>
+            </tr>
+            <tr>
+                <td>Địa chỉ : Tầng 1 - Tòa nhà The Garden - đường Mễ Trì - phường Mĩ Đình 1 </td>
+            </tr>
+            <tr>
+                <td>Quận Nam Từ Liêm - Hà Nội</td>
+            </tr>
+            <tr>
+                <td>Hotline : 081.340.0101 - 081.760.0105</td>-->
+            </tr>
+        </table>
+
+
+        <div class="title">
+            <text>PHIẾU KẾT QUẢ XÉT NGHIỆM</text>
+            <br />
+            <text><I>LABORATORY RESULT REPORT</I></text>
+        </div>
+        <br />
+        <table class="patient_info">
+            
+            <tr>
+                <td><b>1. Số hồ sơ</b>/ PID:{{ chart }}</td>
+                <td><b>2. Quốc tịch</b>/ Nationality:</td>
+            </tr>
+            <tr>
+                <td><b>3. Họ và tên</b>/ Fullname: <text id="patient_info_name">{{ name }}</text></td>
+                <td><b>4. Giới tính</b>/ Gender: {{ gender }}</td>
+            </tr>
+            <tr>
+                <td><b>5. Địa chỉ</b>/ Address: {{address}}</td>
+                <td><b>6. Ngày sinh</b>/ D.O.B: {{date_of_birth}}</td>
+            </tr>
+            <tr>
+                <td><b>7. Số điện thoại</b>/Phone number : {{ phone }}</td>
+            </tr>
+            <tr>
+                <td><b>8. Chẩn đoán</b>/ Diagnostic:</td>
+            </tr>
+            <tr>
+                <td><b>9. Khoa Khám bệnh</b>/ Department: {{ depart }}</td>
+            </tr>
+            
+        </table>
+        <table class="contents">
+            <thead>
+                <tr>
+                    <td>
+                        <b>STT</b>
+                        <br /><i>No</i>
+                    </td>
+                    <td>
+                        <b>Tên thuốc</b>
+                        <br /><i>Name</i>
+                    </td>
+                    <td>
+                        <b>Đơn vị</b>
+                        <br /><i>Unit</i>
+                    </td>
+                    <td>
+                        <b>Số lượng</b>
+                        <br /><i>Quality</i>
+                    </td>
+                    <td>
+                        <b>Cách dùng</b>
+                        <br /><i>Direction for use</i>
+                    </td>
+                    <td>
+                        <b>Ghi chú</b>
+                        <br /><i>Note</i>
+                    </td>
+                </tr>
+            </thead>
+            <tbody id="contents_datas">
+                {% for medicine in medicine_res %}
+                <tr>
+                    <td>{{ medicine.no }}</td>
+                    <td>{{ medicine.name }}</td>
+                    <td>{{ medicine.unit_vie }}<br /><i>{{ medicine.unit }}</i></td>
+                    <td>{{ medicine.quantity }}</td>
+                    <td>{{ medicine.direction_for_use }}</td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <table class="footer">
+            <tr>
+                <td>
+                    <b>Lời dặn của bác sĩ/ <i>Advice of Doctor: </i></b>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Ngày tái khám/ <i>Date of re-examination: </i></b>{{ reservation_date }}
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <b>
+                        Ngày/<i>Date:</i>
+                        Bác sĩ/ <i>Doctor</i>{{ doctor }}
+                        (Ký và ghi rõ họ tên)/(Sign)
+                    </b>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

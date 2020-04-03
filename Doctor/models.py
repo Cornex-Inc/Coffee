@@ -135,10 +135,6 @@ class Test(models.Model):
         default=False,
         )
 
-    unit =  models.CharField(
-        max_length = 64,
-        null=True,
-        )
 
     code = models.CharField(
         max_length = 8,
@@ -205,7 +201,7 @@ class Test(models.Model):
 
     
 class TestReferenceInterval(models.Model):
-    test = models.OneToOneField(
+    test = models.ForeignKey(
         to = Test,
         on_delete=models.CASCADE,
         )
@@ -217,6 +213,27 @@ class TestReferenceInterval(models.Model):
     maximum = models.FloatField(
         null= True,
         )
+
+    name = models.CharField(
+        max_length = 24,
+        null=True,
+        )
+
+    name_vie = models.CharField(
+        max_length = 24,
+        null=True,
+        )
+
+    unit = models.CharField(
+        max_length = 12,
+        null=True,
+        )
+
+    unit_vie = models.CharField(
+        max_length = 12,
+        null=True,
+        )
+
 
     def get_range(self):
         range_min = '' if self.minimum is None else str(self.minimum)
@@ -238,6 +255,27 @@ class TestReferenceInterval(models.Model):
 
         return res
 
+    def get_unit_lang(self,lang=None):
+        if lang == 'vi':
+            if self.unit_vie == None:
+                return self.unit
+            else:
+                return self.unit_vie
+        else:
+            return self.unit
+
+    def get_name_lang(self,lang=None):
+        if lang == 'vi':
+            if self.name_vie == None:
+                return self.name
+            else:
+                return self.name_vie
+        else:
+            return self.name
+
+
+
+
 
 class PrecedureClass(models.Model):
     name = models.CharField(
@@ -248,6 +286,15 @@ class PrecedureClass(models.Model):
         max_length = 64,
         null=True,
         )
+
+    def get_name_lang(self,lang=None):
+        if lang == 'vi':
+            if self.name_vie == None:
+                return self.name
+            else:
+                return self.name_vie
+        else:
+            return self.name
 
     def __str__(self):
         return self.name
@@ -325,9 +372,9 @@ class Precedure(models.Model):
                 date_end__gte = date,
                 country='US',
                 )
-            return check.price_dollar
+            return check.price
         except Pricechange.DoesNotExist:
-            return self.price_dollar
+            return self.price
         
     def get_name_lang(self,lang=None):
         if lang == 'vi':
@@ -511,13 +558,19 @@ class Medicine(models.Model):
 
 
     def get_name_lang(self,lang=None):
+        res = ''
         if lang == 'vi':
             if self.name_vie == None:
-                return self.name
+                res =  self.name
             else:
-                return self.name_vie
+                res =  self.name_vie
         else:
-            return self.name
+            res =  self.name
+        print(self.code)
+        if self.code == 'I0018' or self.code =='I0019':
+            res += '<text sylte="color:red;">(AST !!)</text>'
+
+        return res;
 
 
     def get_ingredient_lang(self,lang=None):
@@ -529,14 +582,23 @@ class Medicine(models.Model):
         else:
             return self.ingredient
 
-    def get_ingredient_lang(self,lang=None):
+    def get_unit_lang(self,lang=None):
         if lang == 'vi':
-            if self.ingredient_vie == None:
-                return self.ingredient
+            if self.unit_vie == None:
+                return self.unit
             else:
-                return self.ingredient_vie
+                return self.unit_vie
         else:
-            return self.ingredient
+            return self.unit
+
+    def get_country_lang(self,lang=None):
+        if lang == 'vi':
+            if self.country_vie == None:
+                return self.country
+            else:
+                return self.country_vie
+        else:
+            return self.country
 
 
 class MedicineShort(models.Model):
@@ -654,6 +716,29 @@ class Bundle(models.Model):
         )
 
     days = models.IntegerField(
+        null=True,
+        )
+
+    use_yn = models.CharField(
+        max_length = 1,
+        null=True,
+        default='Y',
+        )
+
+
+class ICD(models.Model):
+    code = models.CharField(
+        max_length = 16,
+        unique=True,
+        )
+
+    name = models.CharField(
+        max_length = 128,
+        null=True,
+        )
+
+    name_vie = models.CharField(
+        max_length = 128,
         null=True,
         )
 

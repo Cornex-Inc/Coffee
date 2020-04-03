@@ -171,3 +171,9 @@ class Vital(models.Model):
         max_length = 8,
         null= True,
         )
+
+    reception = models.CharField(
+        max_length = 8,
+        default=None,
+        null= True,
+        )

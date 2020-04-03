@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <style>
+
+
+        @media print {
+
+
+            #wrap {
+                margin: 0px;
+                padding: 65px;
+                font-size: 10px;
+                font-family: "Times New Roman", Times, serif;
+                
+            }
+
+            table {
+                height:100%;
+            }
+                table tr td {
+                    font-size: 12px;
+                }
+
+            #logo {
+                height:120px;
+                padding-right:20px;
+            }
+
+            .top {
+                
+            
+            }
+
+            .top tr:first-child td:nth-child(2) {
+                font-weight:700;
+            }
+
+            .patient_info {
+                width:100%;
+                margin-top:20px;
+                border-collapse: separate;
+                border-spacing: 0px 5px;
+            }
+            .patient_info tr td{
+                width:50%;
+            }
+
+
+                .title {
+                    width: 100%;
+                    text-align: center;
+                    font-size: 12px;
+                    font-weight: 700;
+                    margin-top: 20px;
+                }
+
+            .contents {
+                margin-top: 20px;
+                width: 100%;
+                border: 1px solid black;
+                border-collapse: collapse;
+                
+            }
+                .contents tr td, .contents tr th {
+                    border: 1px solid black;
+                }
+
+                .contents tr:first-child {
+                    height:60px;
+                }
+
+                    .contents tr:first-child td {
+                        text-align: center;
+                        vertical-align: middle;
+                    }
+
+            .footer {
+                margin-top:60px;
+                width:100%;
+            }
+                .footer tr td:first-child {
+                width:60%
+                
+                }
+
+                .footer tr td:nth-child(2) {
+                }
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <table class="top">
+            <tr>
+                <td rowspan="4">
+                    <img src="http://14.177.234.50:9090/static/img/index_main.png" id="logo" />
+                </td>
+                <td>Công ty TNHH International Medicare - Phòng khám đa khoa quốc tế I-Medicare</td>
+            </tr>
+            <tr>
+                <td>Địa chỉ : Tầng 1 - Tòa nhà The Garden - đường Mễ Trì - phường Mĩ Đình 1 </td>
+            </tr>
+            <tr>
+                <td>Quận Nam Từ Liêm - Hà Nội</td>
+            </tr>
+            <tr>
+                <td>Hotline : 081.340.0101 - 081.760.0105</td>
+            </tr>
+        </table>
+
+
+        <div class="title">
+            <text>PHIẾU KẾT QUẢ XÉT NGHIỆM</text>
+            <br />
+            <text><I>LABORATORY RESULT REPORT</I></text>
+        </div>
+        <br />
+        <table class="patient_info">
+            <tr>
+                <td><b>1. Số hồ sơ</b>/ PID:{{ chart }}</td>
+                <td><b>2. Quốc tịch</b>/ Nationality:</td>
+            </tr>
+            <tr>
+                <td><b>3. Họ và tên</b>/ Fullname: <text id="patient_info_name">{{ name }}</text></td>
+                <td><b>4. Giới tính</b>/ Gender: {{ gender }}</td>
+            </tr>
+            <tr>
+                <td><b>5. Địa chỉ</b>/ Address: {{address}}</td>
+                <td><b>6. Ngày sinh</b>/ D.O.B: {{date_of_birth}}</td>
+            </tr>
+            <tr>
+                <td><b>7. Số điện thoại</b>/Phone number : {{ phone }}</td>
+            </tr>
+            <tr>
+                <td><b>8. Chẩn đoán</b>/ Diagnostic:</td>
+            </tr>
+            <tr>
+                <td><b>9. Thời gian nhận mẫu</b>/ Time : {{ date_time }}</td>
+            </tr>
+            <tr>
+                <td><b>10. Khoa Khám bệnh</b>/ Department: {{ depart }}</td>
+            </tr>
+        </table>
+        <table class="contents">
+            <tr>
+                <td>
+                    <b>STT</b>
+                </td>
+                <td>
+                    <b>Tên xét nghiệm</b>
+                    <br /><i>Test name</i>
+                </td>
+                <td>
+                    <b>Mẫu bệnh phẩm</b>
+                    <br /><i>Specimens</i>
+                </td>
+                <td>
+                    <b>Kết quả</b>
+                    <br /><i>Result</i>
+                </td>
+                <td>
+                    <b>Đơn vị</b>
+                    <br /><i>Unit</i>
+                </td>
+                <td>
+                    <b>Chỉ số bình thường</b>
+                    <br /><i>Normal range</i>
+                </td>
+                <td>
+                    <b>Phương pháp xét nghiệm</b>
+                    <br /><i>Procedure method</i>
+                </td>
+            </tr>
+            <tbody id="contents_datas">
+            </tbody>
+        </table>
+
+        <table class="footer">
+            <tr>
+                <td>
+                    <b>
+                        Bác sĩ chỉ định<br />
+                        <i>Appoiting doctor</i>
+                    </b>
+                </td>
+                <td>
+                    <b>
+                        Ngày / Date<br />
+                        Trưởng đơn vị xét nghiệm<br />
+                        <i>Chef of Laboratory</i>
+                    </b>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

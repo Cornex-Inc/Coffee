@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import datetime
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone, translation
 
 from .models import *
 from .forms import *
@@ -87,8 +88,11 @@ def waiting_list(request):
     
     #if progress != 'all':
     #    kwargs['progress'] = request.POST.get('progress')
-     
-    
+    #if request.user.doctor is not None:
+    #    kwargs['manager__diagnosis__reception__depart_id'] = request.user.doctor.depart.id
+    if hasattr(request.user,'doctor'):
+        kwargs['manager__diagnosis__reception__depart_id'] = request.user.doctor.depart.id
+
     date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
     date_max = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.max)
 
@@ -98,21 +102,37 @@ def waiting_list(request):
     today = datetime.date.today()
 
    
-
+    print(1)
     for test_manage in test_manages:
         data={}
         is_interval = False
         try:
-            reference_query = TestReferenceInterval.objects.get(test_id = test_manage.manager.test_id)
-            reference = reference_query.get_range()
+            reference_query = TestReferenceInterval.objects.filter(test_id = test_manage.manager.test_id)
 
-            if test_manage.result is not None and test_manage.result is not '':
-                is_interval = reference_query.check_interval(test_manage.result)
+            list_interval = []
+            if reference_query.count() == 0:
+                list_interval.append({
+                    'no_interval':True,
+                        })
+            else:
+                for reference in reference_query:
+                    list_interval.append({
+                        'normal_range':reference.get_range(),
+                        'minimum':reference.minimum,
+                        'maximum':reference.maximum,
+                        'unit':reference.get_unit_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                        'name':reference.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                        })
+
+            #reference = reference_query.get_range()
+            #
+            #if test_manage.result is not None and test_manage.result is not '':
+            #    is_interval = reference_query.check_interval(test_manage.result)
 
         except TestReferenceInterval.DoesNotExist:
             reference = ''
 
-
+        print(list_interval)
         if input=='':
             data.update({
                 'chart':test_manage.manager.diagnosis.reception.patient.get_chart_no(),
@@ -128,7 +148,7 @@ def waiting_list(request):
                 'result':'' if test_manage.result is None or '' else test_manage.result,
                 'progress':test_manage.progress,
                 'test_manage_id':test_manage.id,
-                'reference_interval':reference + ' / ' + ('' if test_manage.manager.test.unit is None or '' else '(' + test_manage.manager.test.unit + ')'),
+                'reference_interval':list_interval,
                 'is_interval':is_interval,
                 })
             datas.append(data)

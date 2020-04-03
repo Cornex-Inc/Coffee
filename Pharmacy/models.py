@@ -36,7 +36,7 @@ class MedicineLog(models.Model):
         ('new',_('new')),
         ('add',_('add')),
         ('dec',_('decrese')),
-        ('not',_('notusing')),
+        ('del',_('deleted')),
         )
 
     medicine = models.ForeignKey(
@@ -63,9 +63,16 @@ class MedicineLog(models.Model):
         null=True,
         )
 
+
     type = models.CharField(
         max_length = 4,
         choices=type_chices,
         )
-                            
 
+    expiry_date = models.DateTimeField(
+        null = True,
+        )
+
+    tmp_count = models.IntegerField(
+        null = True,
+        )

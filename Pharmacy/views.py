@@ -13,7 +13,8 @@ from app.models import *
 # Create your views here.
 from django.utils import timezone, translation
 from django.utils.translation import gettext as _
-from django.db.models import Q, Count, F
+from django.db.models import Q, Count, F, Min,Sum
+from django.db.models.query import QuerySet
 
 
 @login_required
@@ -46,7 +47,7 @@ def waiting_selected(request):
             'name':data.medicine.name,
             'depart':diagnosis.reception.depart.name,
             'doctor':diagnosis.reception.doctor.name_kor,
-            'unit':'' if data.medicine.unit is None else data.medicine.unit,
+            'unit':'' if data.medicine.get_unit_lang(request.session[translation.LANGUAGE_SESSION_KEY]) is None else data.medicine.get_unit_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
             'amount':data.amount,
             'days':data.days,
             'total':data.amount * data.days,
@@ -54,23 +55,24 @@ def waiting_selected(request):
             })
         medicines.append(medicine)
 
-    context = {'datas':medicines,
-               'status':diagnosis.medicinemanage.progress,
-               'patient_name':diagnosis.reception.patient.get_name_kor_eng(),
+    context = {
+        'datas':medicines,
+        'status':diagnosis.medicinemanage.progress,
+        'patient_name':diagnosis.reception.patient.get_name_kor_eng(),
                }
     return JsonResponse(context)
 
 def waiting_list(request):
     date_start = request.POST.get('start_date')
-    #date_end = request.POST.get('end_date')
+    date_end = request.POST.get('end_date')
 
     kwargs={}
 
     date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
-    date_max = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.max)
+    date_max = datetime.datetime.combine(datetime.datetime.strptime(date_end, "%Y-%m-%d").date(), datetime.time.max)
 
-    medicine_manages = MedicineManage.objects.filter(date_ordered__range = (date_min, date_max),**kwargs)
-
+    medicine_manages = MedicineManage.objects.filter(date_ordered__range = (date_min, date_max),**kwargs).order_by('date_ordered')
+ 
     datas=[]
     today = datetime.date.today()
 
@@ -111,11 +113,23 @@ def save(request):
             medicine.inventory_count -= data.amount * data.days
             medicine.save()
 
+            changes = data.amount * data.days
+
             log.diagnosis_id = diagnosis_id
-            log.changes = data.amount * data.days
+            log.changes = changes
             log.medicine = medicine
             log.save()
 
+            tmp_log = MedicineLog.objects.filter(medicine = medicine, type='add' ).exclude(tmp_count=0).order_by('expiry_date')
+            for tmp in tmp_log:
+                if tmp.tmp_count < changes :
+                    changes -= tmp.tmp_count
+                    tmp.tmp_count = 0 
+                    tmp.save()
+                else:
+                    tmp.tmp_count -= changes
+                    tmp.save()
+                    break
 
     
     medicinmanage.progress = status
@@ -133,25 +147,49 @@ def medicine_search(request):
     kwargs = {
         '{0}__{1}'.format(filter, 'icontains'): string,
         }
-
-    if string == '' :
-        medicines = Medicine.objects.all().order_by('name')
-    else:
-        medicines = Medicine.objects.filter(**kwargs).order_by("code")
-
     datas=[]
+    if string == '' :
+        expiry_date = datetime.datetime.now() + datetime.timedelta(days=180)
+        #medicine_tmp = MedicineLog.objects.filter(type='add',expiry_date__lte = expiry_date ).select_related('medicine').exclude(medicine__use_yn='N' ,expiry_date=None,tmp_count=0).order_by('expiry_date')
+        medicine_tmp= MedicineLog.objects.filter( type='add', expiry_date__lte = expiry_date, tmp_count__gte= 0 ).select_related('medicine').values(
+            'medicine_id',
+            ).annotate(Count('medicine_id')).order_by('expiry_date')
+        
+        #medicine_tmp = MedicineLog.objects.filter( type='add', expiry_date__lte = expiry_date).exclude(tmp_count__lt = 0,medicine__use_yn='N',expiry_date=None).order_by('expiry_date').select_related('medicine')
+        for tmp in medicine_tmp:
+            medicine = Medicine.objects.get(id = tmp['medicine_id'])
+            data = {
+                    'id' : medicine.id,
+                    'code': medicine.code,
+                    'name' : medicine.name,
+                    'company' : '' if medicine.company is None else medicine.company,
+                    'country' : '' if medicine.get_country_lang(request.session[translation.LANGUAGE_SESSION_KEY]) is None else medicine.get_country_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                    'ingredient' : '' if medicine.get_ingredient_lang(request.session[translation.LANGUAGE_SESSION_KEY]) is None else medicine.get_ingredient_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                    'unit' : '' if medicine.get_unit_lang(request.session[translation.LANGUAGE_SESSION_KEY]) is None else medicine.get_unit_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                    'price' : medicine.get_price(),
+                    'count' : medicine.inventory_count,
+                    'alaert_expiry':True,
+                }
+            datas.append(data)
+
+        medicines = Medicine.objects.all().exclude(use_yn='N').order_by('name')
+    else:
+        medicines = Medicine.objects.filter(**kwargs).exclude(use_yn='N').order_by("name")
+
+    
     for medicine in medicines:
         data = {
                 'id' : medicine.id,
                 'code': medicine.code,
                 'name' : medicine.name,
                 'company' : '' if medicine.company is None else medicine.company,
-                'country' : '' if medicine.country is None else medicine.country,
-                'ingredient' : '' if medicine.ingredient is None else medicine.ingredient,
-                'unit' : '' if medicine.unit is None else medicine.unit,
+                'country' : '' if medicine.get_country_lang(request.session[translation.LANGUAGE_SESSION_KEY]) is None else medicine.get_country_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                'ingredient' : '' if medicine.get_ingredient_lang(request.session[translation.LANGUAGE_SESSION_KEY]) is None else medicine.get_ingredient_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                'unit' : '' if medicine.get_unit_lang(request.session[translation.LANGUAGE_SESSION_KEY]) is None else medicine.get_unit_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
                 'price' : medicine.get_price(),
                 'count' : medicine.inventory_count,
             }
+
         datas.append(data)
 
 
@@ -327,21 +365,21 @@ def medicine_add_edit_set(request):
     price = request.POST.get('price')   
     price_dollar = request.POST.get('price_dollar')
 
-    if id == 0 :
+    if int(id) == 0 :
         data = Medicine()
         if type in 'Medicine':
             last_code =Medicine.objects.filter(code__icontains="M").last()
-            print(last_code)
             temp_code = last_code.code.split('M')
             code = 'M' + str('%04d' % (int(temp_code[1]) + 1))
 
         elif type in 'Injection':
             last_code =Medicine.objects.filter(code__icontains="I").last()
             temp_code = last_code.code.split('I')
-            code = 'M' + str('%04d' % (int(temp_code[1]) + 1))
-        
+            code = 'I' + str('%04d' % (int(temp_code[1]) + 1))
         data.code = code
-
+        data.price = int(price)
+        price_input = int(price_input)
+        data.price_dollar = int(price_dollar)
        
     else:
         data = Medicine.objects.get(id=id)
@@ -383,7 +421,7 @@ def medicine_add_edit_set(request):
                 new_price.save()
 
         except Pricechange.DoesNotExist:
-            if data.price != int(price_input):
+            if data.price_input != int(price_input):
                 new_price = Pricechange(type="Medicine",country='VI',type2='INPUT',code=data.code)
                 new_price.price = price_input
                 new_price.date_start = str_now
@@ -404,7 +442,7 @@ def medicine_add_edit_set(request):
                 new_price.save()
 
         except Pricechange.DoesNotExist:
-            if data.price != int(price_dollar):
+            if data.price_dollar != int(price_dollar):
                 new_price = Pricechange(type="Medicine",country='US',type2='OUTPUT',code=data.code)
                 new_price.price = price_dollar
                 new_price.date_start = str_now
@@ -445,10 +483,158 @@ def medicine_add_edit_check_code(request):
         
         if medicine.id == int(id):
             res = 'Same'
-            print(res)
     except Medicine.DoesNotExist:
         res = "Y"
 
     context = {'result':res}
 
     return JsonResponse(context)
+
+
+def medicine_add_edit_delete(request):
+    id = request.POST.get('id')
+
+    medicine = Medicine.objects.get(id=id)
+    medicine.use_yn = 'N'
+    medicine.save()
+
+    log = MedicineLog()
+    log.medicine = medicine
+    log.type='del'
+    log.save()
+
+
+
+    return JsonResponse({'result':True})
+
+def get_inventory_history(request):
+    id = request.POST.get('id')
+    date = request.POST.get('date')
+
+
+    #date_min = datetime.datetime.combine(datetime.datetime.strptime(date, "%Y-%m-%d").date(), datetime.time.min)
+    #date_max = datetime.datetime.combine(datetime.datetime.strptime(date, "%Y-%m-%d").date(), datetime.time.max)
+
+    #medicine_logs = MedicineLog.objects.filter(date__range = (date_min, date_max), medicine_id = id).values('date','changes','type','memo').order_by('-date')
+    medicine_logs = MedicineLog.objects.filter(medicine_id = id).values('date','changes','type','memo').order_by('-date')
+    datas = []
+    for medicine_log in medicine_logs:
+        data = {
+            'date':medicine_log['date'].strftime('%Y-%m-%d %H:%M:%S'),
+            'changes':medicine_log['changes'],
+            'type':medicine_log['type'],
+            'memo':medicine_log['memo'],
+            }
+        datas.append(data)
+
+    medicine = Medicine.objects.get(id=id)
+    return JsonResponse({
+        'datas':datas,
+        'count':medicine.inventory_count,
+        })
+
+def save_database_add_medicine(request):
+    id = request.POST.get('id')
+    registration_date= request.POST.get('registration_date')
+    expiry_date= request.POST.get('expiry_date')
+    changes= request.POST.get('changes')
+    memo= request.POST.get('memo')
+    check= request.POST.get('check')
+    
+    if int(check)==0 :
+        medicine = Medicine.objects.get(id=id)
+        count = medicine.inventory_count
+        medicine.inventory_count =  count + int(changes)
+        medicine.save()
+
+        medicine_logs = MedicineLog()
+        medicine_logs.changes = changes
+        medicine_logs.medicine = medicine
+    else:
+        medicine_logs = MedicineLog.objects.get(id = check)
+        medicine_logs.date = datetime.datetime.strptime(registration_date, '%Y-%m-%d')
+
+    medicine_logs.memo = memo
+    medicine_logs.expiry_date = datetime.datetime.strptime(expiry_date, '%Y-%m-%d')
+ 
+    medicine_logs.tmp_count = changes
+    medicine_logs.type='add'
+    medicine_logs.save()
+
+
+    return JsonResponse({'result':True})
+
+
+def get_expiry_date(request):
+
+    id = request.POST.get('id')
+    medicine = Medicine.objects.get(id=id)
+
+    medicine_logs = MedicineLog.objects.filter(medicine = medicine, type='add').exclude(tmp_count__lte = 0).order_by('expiry_date').values('id','date','tmp_count','expiry_date')
+    
+    datas = []
+    for medicine_log in medicine_logs:
+        
+        data = {
+            'id':medicine_log['id'],
+            'date':medicine_log['date'].strftime('%Y-%m-%d'),
+            'expiry_date':0 if medicine_log['expiry_date'] is None else medicine_log['expiry_date'].strftime('%Y-%m-%d'),
+            'tmp_count':medicine_log['tmp_count'] if medicine_log['tmp_count'] is not None else 0,
+            }
+        datas.append(data)
+
+    return JsonResponse({
+        'result':True,
+        'datas':datas,
+        })
+
+
+def get_edit_database_add_medicine(request):
+    id = request.POST.get('id')
+
+    data = MedicineLog.objects.values('id','date','expiry_date','memo','tmp_count').get(id=id)
+
+    return JsonResponse({
+        'result':True,
+        'data':{
+            'id':data['id'],
+            'date':data['date'].strftime('%Y-%m-%d'),
+            'expiry_date':data['expiry_date'].strftime('%Y-%m-%d'),
+            'memo':data['memo'],
+            'tmp_count':data['tmp_count'],
+            },
+        })
+
+
+def save_database_disposal_medicine(request):
+    id = request.POST.get('id')
+    disposial = request.POST.get('disposial')
+    memo = request.POST.get('memo')
+
+
+    disposal_data = MedicineLog.objects.get(id=id)
+    if disposal_data.tmp_count < int(disposial):
+        return JsonResponse({
+            'result':False,
+            'msg':1, # tmp 카운트가 더 적을 경우
+                             })
+    else:
+        medicine = Medicine.objects.get(id = disposal_data.medicine_id)
+        disposal_data.tmp_count -= int(disposial)
+        
+        disposal_data.save()
+
+        medicine_log = MedicineLog()
+        medicine_log.type = 'dec'
+        medicine_log.changes = disposial
+        medicine_log.memo = memo
+        medicine_log.medicine_id = disposal_data.medicine_id
+        medicine_log.save()
+
+        
+        medicine.inventory_count -= int(disposial)
+        medicine.save()
+
+
+
+    return JsonResponse({'result':True,})

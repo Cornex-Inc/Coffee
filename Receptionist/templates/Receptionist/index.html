@@ -47,6 +47,7 @@
                     <div class="input-group">
                         <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Gender') }}</span>
                         {{patient.gender}}
+
                         </div>
                     </td>
                 </tr>
@@ -86,6 +87,20 @@
                         </div>
                     </td>
                 </tr>
+                <tr>
+                    <td colspan="2">
+                    <div class="input-group" style="vertical-align:middle; width:100%;" >
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Vital Sign') }}</span>
+                       <text id="patient_vital_first">{{ _('Ht') }}: </text><input type="text" class="form-control" id="patient_table_vital_ht"/>
+                       {{ _('Wt') }}: <input type="text" class="form-control" id="patient_table_vital_wt"/>
+                       {{ _('BP') }}: <input type="text" class="form-control" id="patient_table_vital_bp"/>
+                       {{ _('BT') }}: <input type="text" class="form-control" id="patient_table_vital_bt"/>
+                       {{ _('PR') }}: <input type="text" class="form-control" id="patient_table_vital_pr"/>
+                       {{ _('RR') }}: <input type="text" class="form-control " id="patient_table_vital_breath"/>
+                    </div>
+                    </td>
+                </tr>
+
                 <!--
                 <tr>
                     <td colspan="2">
@@ -106,8 +121,8 @@
                 <tr>
                     <td>
                         <input type="button" value="{{ _('Inform Tax Invoice') }}" class="btn btn-default" id="patient_tax_invoice_click" />
-                        <input type="button" value="{{ _('Initial Report') }}"class="btn btn-success" id="patient_initial_report_click" />
-                        &nbsp;&nbsp;&nbsp;&nbsp;<label class="need_medical_report" ><input type="checkbox" value="" id="need_medical_report" />{{_('Medical Report') }}</label>
+                        <input type="button" value="{{ _('Initial Report') }}" class="btn btn-success" id="patient_initial_report_click" />
+                        <label class="btn btn-warning need_medical_report" ><input type="checkbox" value="" id="need_medical_report" /><text>{{_('Medical Report') }}</text></label>
                     </td>
                     <td >
                         <div style="float:right;">
@@ -125,8 +140,15 @@
             <div class="status_table_title">
             <span class="btn btn-danger" >{{ _('Patient List') }}</span>
                 <div class="status_table_filter">
-                    {{ patientsearch.filter }}
-                    {{ patientsearch.search_input }}
+                    <select name="filter" id="patient_search_select" class="form-control costom-select patient_search_select" aria-describedby="basic-addon1">
+                        <option value="">{{_('All') }}</option>
+                        <option value="name">{{_('Name') }}</option>
+                        <option value="chart">{{_('Chart No') }}</option>
+                        <option value="date_of_birth">{{_('Date of Birth') }}</option>
+                        <option value="phone">{{_('Phone Number') }}</option>
+
+                    </select>
+                    <input type="text" name="search_input" id="patient_search_input" class="form-control patient_search_input" aria-describedby="basic-addon1" required="">
                     <input type="button" value="{{ _('Search') }}" class="btn btn-default" onclick="patient_search()"/>
                 </div>
                 <div style="float:right;">
@@ -142,7 +164,9 @@
                             <th>{{ _('Name')}}</th>
                             <th>{{ _('Date of Birth')}}</th>
                             <th>{{ _('Phone Number')}}</th>
-                            <th>{{ _('Address')}}</th>
+                            <th>{{ _('Depart') }}</th>
+                            <th>{{ _('Last Visit') }}</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody></tbody>            
@@ -155,7 +179,9 @@
                  <span class="btn btn-danger" >{{ _('Reception Status') }}</span>
                 <div class="status_table_filter" style="float:right;">
                     {{ _('Date:') }}
-                    {{ receptionsearch.date }} 
+                    <input type="text" id="reception_waiting_date_start" class="form-control reception_waiting_date" aria-describedby="basic-addon1" required="">
+                     ~ 
+                    <input type="text" id="reception_waiting_date_end" class="form-control reception_waiting_date" aria-describedby="basic-addon1" required="">
                     <div class="input-group" style="width:153px; display:inline-table;">
                         <span class="input-group-addon reception_table_title" id="basic-addon1">{{ _('Depart') }}</span>
                     {{ receptionsearch.depart }} 
@@ -192,7 +218,8 @@
             <span class="btn btn-danger">{{_('Reservation Status') }}</span>
             </div>
             <div class="status_table_filter">
-                <input type="text" class="form-control" style="width:150px; display:inline;" id="reception_reservation_date" />
+                {{ _('Date') }} :
+                <input type="text" class="form-control reception_waiting_date" style=" display:inline;" id="reception_reservation_date" />
                 <div class="input-group" style="width:153px; display:inline-table;">
                     <span class="input-group-addon reception_table_title" id="basic-addon1">{{ _('Depart') }}</span>
                 {{ reservation.depart }} 
@@ -683,11 +710,34 @@
                                 </td>
                             </tr>
                         </table>
+
+
+                        <h5>{{ _('Vital Signs') }}</h5>
+                        <table class="table edit_reception_vital_table">
+                            <tr>
+                                <td>{{ _('Ht') }}:</td>
+                                <td><input type="text" class="form-control" id="edit_reception_vital_ht"/></td>
+                                <td>{{ _('Wt') }}:</td>
+                                <td><input type="text" class="form-control" id="edit_reception_vital_wt"/></td>
+                                <td>{{ _('BP') }}:</td>
+                                <td><input type="text" class="form-control" id="edit_reception_vital_bp"/></td>
+                                <td>{{ _('BT') }}:</td>
+                                <td><input type="text" class="form-control" id="edit_reception_vital_bt"/></td>
+                                <td>{{ _('PR') }}:</td>
+                                <td><input type="text" class="form-control" id="edit_reception_vital_pr"/></td>
+                                <td>{{ _('RR') }}:</td>
+                                <td><input type="text" class="form-control " id="edit_reception_vital_breath"/></td>
+                            </tr>
+                        </table>
                         <div>
-                            &nbsp;&nbsp;&nbsp;&nbsp;<label class="need_medical_report" ><input type="checkbox" value="" id="reception_edit_need_medical_report" />{{_('Medical Report') }}</label>
+
+                            
+                            <label class="btn btn-warning need_medical_report" ><input type="checkbox" value="" id="reception_edit_need_medical_report" /><text>{{_('Medical Report') }}</text></label>
+
+                            
                         </div>
-                        <div>
-                            <input type="button" value="{{ _('Delete') }}" class="btn btn-warning" onclick="edit_reception_del()"/>
+                        <div style="margin-top:10px;">
+                            <input type="button" value="{{ _('Delete') }}" class="btn btn-danger" onclick="edit_reception_del()"/>
                             <div style="text-align:right; float:right;">
                                 <input type="button" value="{{ _('Close') }}" class="btn btn-default" data-dismiss="modal"/>
                                 <input type="button" value="{{ _('Save') }}" class="btn btn-primary" onclick="edit_reception_save()" />
@@ -702,9 +752,9 @@
 
 
 {% block style %}
-   <link rel="stylesheet" type="text/css" href="{% static 'css/reception.css' %}" />
+   
     <link rel="stylesheet" href="{% static 'css/ion.rangeSlider.min.css' %}" />
-    
+    <link rel="stylesheet" type="text/css" href="{% static 'css/reception.css' %}" />
 {% endblock %}
 
 {% block scripts %}

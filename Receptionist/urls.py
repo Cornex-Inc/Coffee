@@ -54,7 +54,7 @@ urlpatterns = [
     #lab
 
     #radiation
-
+    
 
     path('search',views.search,name='search'),
     path('reception/',views.reception, name ='reception'),
@@ -64,5 +64,16 @@ urlpatterns = [
     path('reception_status',views.reception_status, name ='reception_status'),
 
     path('storage/<int:reception_num>',views.storage,name='storage'),
+
+
+    #Documetation
+    path('Documents/',views.Documents,name='Documents'),
+    path('document_search/',views.document_search,name='document_search'),
+
+    
+
+    path('document_lab/<int:reception_id>',views.document_lab,name='document_lab'),
+    path('document_prescription/<int:reception_id>',views.document_prescription,name='document_prescription'),
+
 
 ]

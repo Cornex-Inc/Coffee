@@ -6,12 +6,10 @@ $(function () {
     if ($('#reception_table').length > 0) {
         reservation_search(true);
     }
-    reception_search();
-    new_patient_option(false);
+
     //Patient 
     if ($("#patient_date_of_birth").length > 0) {
         $("#patient_date_of_birth").daterangepicker({
-
             singleDatePicker: true,
             showDropdowns: true,
             locale: {
@@ -27,24 +25,32 @@ $(function () {
     })
 
     //Reception search
-    if ($("#reception_waiting_date").length > 0) {
-        $("#reception_waiting_date").daterangepicker({
+    if ($("#reception_waiting_date_start").length > 0) {
+        $("#reception_waiting_date_start").daterangepicker({
             singleDatePicker: true,
             locale: {
                 format: 'YYYY-MM-DD'
             }
         });
     }
-    $('#reception_waiting_date').on('apply.daterangepicker', function () {
-        today = moment().format('YYYY[-]MM[-]DD');
-        date = $('#reception_waiting_date').val();
-        if (date == today) {
-            reception_waiting_date_worker(true);
-        } else {
-            reception_waiting_date_worker(false);
-            reception_search();
-        }
-    });
+    if ($("#reception_waiting_date_end").length > 0) {
+        $("#reception_waiting_date_end").daterangepicker({
+            singleDatePicker: true,
+            locale: {
+                format: 'YYYY-MM-DD'
+            }
+        });
+    }
+    //$('#reception_waiting_date').on('apply.daterangepicker', function () {
+    //    today = moment().format('YYYY[-]MM[-]DD');
+    //    date = $('#reception_waiting_date').val();
+    //    if (date == today) {
+    //        reception_waiting_date_worker(true);
+    //    } else {
+    //        reception_waiting_date_worker(false);
+    //        reception_search();
+    //    }
+    //});
 
     
 
@@ -55,7 +61,11 @@ $(function () {
         get_doctor($("#edit_reception_depart"));
     });
 
-    
+
+
+    $("#reception_waiting_date_start, #reception_waiting_date_end").change(function () {
+        reception_search();
+    });
 
     $("#reception_waiting_depart").change(function () {
         reception_search();
@@ -64,6 +74,7 @@ $(function () {
     $("#reception_waiting_doctor").change(function () {
         reception_search();
     });
+
 
     $("#reservation_depart_select").change(function () {
         reservation_search();
@@ -684,7 +695,8 @@ $(function () {
     });
 
 
-
+    reception_search();
+    new_patient_option(false);
 
 
 });
@@ -886,6 +898,15 @@ function save_patient() {
     var tax_invoice_company_name = $('#tax_invoice_company_name').val();
     var tax_invoice_address = $('#tax_invoice_address').val();
 
+    var patient_table_vital_ht = $('#patient_table_vital_ht').val();
+    var patient_table_vital_wt = $('#patient_table_vital_wt').val();
+    var patient_table_vital_bmi = $('#patient_table_vital_bmi').val();
+    var patient_table_vital_bp = $('#patient_table_vital_bp').val();
+    var patient_table_vital_bt = $('#patient_table_vital_bt').val();
+    var patient_table_vital_pr = $('#patient_table_vital_pr').val();
+    var patient_table_vital_breath = $('#patient_table_vital_breath').val();
+
+
     $.ajax({
         type: 'POST',
         url: '/receptionist/save_patient/',
@@ -905,6 +926,16 @@ function save_patient() {
             'tax_invoice_number': tax_invoice_number,
             'tax_invoice_company_name': tax_invoice_company_name,
             'tax_invoice_address': tax_invoice_address,
+
+
+            'patient_table_vital_ht': patient_table_vital_ht,
+            'patient_table_vital_wt': patient_table_vital_wt,
+            'patient_table_vital_bmi': patient_table_vital_bmi,
+            'patient_table_vital_bp': patient_table_vital_bp,
+            'patient_table_vital_bt ': patient_table_vital_bt,
+            'patient_table_vital_pr': patient_table_vital_pr,
+            'patient_table_vital_breath': patient_table_vital_breath,
+
         },
         dataType: 'Json',
         success: function (response) {
@@ -935,10 +966,6 @@ function save_patient() {
             } else {
                 alert(gettext('Failed.'));
             }
-
-
-
-
 
         },
         error: function (request, status, error) {
@@ -1001,6 +1028,15 @@ function save_recept() {
 
     var need_medical_report = $('#need_medical_report').prop("checked");
 
+    var patient_table_vital_ht = $('#patient_table_vital_ht').val();
+    var patient_table_vital_wt = $('#patient_table_vital_wt').val();
+    var patient_table_vital_bmi = $('#patient_table_vital_bmi').val();
+    var patient_table_vital_bp = $('#patient_table_vital_bp').val();
+    var patient_table_vital_bt = $('#patient_table_vital_bt').val();
+    var patient_table_vital_pr = $('#patient_table_vital_pr').val();
+    var patient_table_vital_breath = $('#patient_table_vital_breath').val();
+
+
     $.ajax({
         type: 'POST',
         url: '/receptionist/save_reception/',
@@ -1025,6 +1061,14 @@ function save_recept() {
             'tax_invoice_address': tax_invoice_address,
 
             'need_medical_report': need_medical_report,
+
+            'patient_table_vital_ht': patient_table_vital_ht,
+            'patient_table_vital_wt': patient_table_vital_wt,
+            'patient_table_vital_bmi': patient_table_vital_bmi,
+            'patient_table_vital_bp': patient_table_vital_bp,
+            'patient_table_vital_bt': patient_table_vital_bt,
+            'patient_table_vital_pr': patient_table_vital_pr,
+            'patient_table_vital_breath': patient_table_vital_breath,
         },
         dataType: 'Json',
         success: function (response) {
@@ -1140,11 +1184,13 @@ function patient_search(data) {
                         str += "<td>";
                     }
 
-                    str+= response.datas[i]['chart'] + "</td>" +
+                    str += response.datas[i]['chart'] + "</td>" +
                         "<td>" + response.datas[i]['name_kor'] + ' / ' + response.datas[i]['name_eng'] + "</td>" +
                         "<td>" + response.datas[i]['date_of_birth'] + ' (' + response.datas[i]['gender'] + '/' + response.datas[i]['age'] + ")</td>" +
                         "<td>" + response.datas[i]['phonenumber'] + "</td>" +
-                        "<td>" + response.datas[i]['address'] + "</td></tr>";
+                        "<td>" + response.datas[i]['depart'] + "</td>" +
+                        "<td>" + response.datas[i]['last_visit'] + "</td></tr>";
+                        //"<td><a class='btn btn-default btn-xs' href='javascript: void (0);' onclick='delete_database_precedure(" + response.datas[i]['id'] + ")' ><i class='fa fa-lg fa-history'></i></a></td></tr>";
 
                     $('#Patient_Search').append(str);
                 }
@@ -1221,9 +1267,11 @@ function reception_edit(id = null) {
 }
 
 function reception_search() {
-    var date, depart, doctor;
+    var date_start, date_end, depart, doctor;
 
-    date = $('#reception_waiting_date').val().trim();
+    date_start = $('#reception_waiting_date_start').val().trim();
+    date_end = $('#reception_waiting_date_end').val().trim();
+
 
     depart = $('#reception_waiting_depart option:selected').val().trim();
     doctor = $('#reception_waiting_doctor option:selected').val().trim();
@@ -1233,7 +1281,8 @@ function reception_search() {
         url: '/receptionist/reception_search/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
-            'date': date,
+            'date_start': date_start,
+            'date_end': date_end,
             'depart': depart,
             'doctor': doctor,
         },

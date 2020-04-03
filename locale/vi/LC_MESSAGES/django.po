@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-16 17:51+0700\n"
+"POT-Creation-Date: 2020-03-30 15:38+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,12 +69,12 @@ msgstr ""
 #: .\Manage\templates\Manage\Manage.html:181
 #: .\Manage\templates\Manage\temp_manage.html:77 .\Pharmacy\forms.py:11
 #: .\Pharmacy\templates\Pharmacy\index.html:58 .\Receptionist\forms.py:240
-#: .\Receptionist\templates\Receptionist\index.html:76
-#: .\Receptionist\templates\Receptionist\index.html:164
-#: .\Receptionist\templates\Receptionist\index.html:178
-#: .\Receptionist\templates\Receptionist\index.html:201
-#: .\Receptionist\templates\Receptionist\index.html:216
-#: .\Receptionist\templates\Receptionist\index.html:670
+#: .\Receptionist\templates\Receptionist\index.html:77
+#: .\Receptionist\templates\Receptionist\index.html:176
+#: .\Receptionist\templates\Receptionist\index.html:190
+#: .\Receptionist\templates\Receptionist\index.html:214
+#: .\Receptionist\templates\Receptionist\index.html:229
+#: .\Receptionist\templates\Receptionist\index.html:683
 #: .\Receptionist\templates\Receptionist\reservation.html:88
 #: .\Receptionist\templates\Receptionist\storage_page.html:51
 #: .\Receptionist\templates\Receptionist\storage_page.html:178
@@ -104,25 +104,23 @@ msgid "Doctor"
 msgstr "Bác sĩ"
 
 #: .\Account\forms.py:12 .\Account\models.py:36
-#: .\app\templates\app\layout.html:115
+#: .\app\templates\app\layout.html:119
 msgid "Physical Therapist"
 msgstr ""
 
 #: .\Account\forms.py:13 .\Account\models.py:37
-#, fuzzy
-#| msgid "Reception Status"
 msgid "Receptionist"
 msgstr "Trạng Thái Lúc Tiếp Nhận"
 
 #: .\Account\forms.py:14 .\Account\forms.py:112 .\Account\models.py:39
-#: .\app\templates\app\layout.html:103
+#: .\app\templates\app\layout.html:105
 #: .\obj\Release\Package\PackageTmp\Account\forms.py:107
 #: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:96
 msgid "Pharmacy"
 msgstr "Nhà Thuốc"
 
 #: .\Account\forms.py:15 .\Account\forms.py:113 .\Account\models.py:40
-#: .\app\templates\app\layout.html:97 .\app\templates\app\layout.html:106
+#: .\app\templates\app\layout.html:97 .\app\templates\app\layout.html:108
 #: .\obj\Release\Package\PackageTmp\Account\forms.py:108
 #: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:90
 #: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:98
@@ -161,13 +159,11 @@ msgstr "Bác sĩ"
 
 #: .\Account\forms.py:111 .\obj\Release\Package\PackageTmp\Account\forms.py:106
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:107
-#, fuzzy
-#| msgid "Receipt"
 msgid "Reception"
 msgstr "hóa đơn"
 
 #: .\Account\forms.py:114 .\app\templates\app\layout.html:98
-#: .\app\templates\app\layout.html:109
+#: .\app\templates\app\layout.html:111
 #: .\obj\Release\Package\PackageTmp\Account\forms.py:109
 #: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:91
 #: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:100
@@ -179,8 +175,6 @@ msgid "User must have an eamil address"
 msgstr ""
 
 #: .\Account\models.py:38
-#, fuzzy
-#| msgid "Reception Status"
 msgid "Receptionist for Dental"
 msgstr "trạng thái lúc tiếp nhận"
 
@@ -223,11 +217,11 @@ msgstr "Nam"
 #: .\Doctor\templates\Doctor\index.html:25
 #: .\Doctor\templates\Doctor\index.html:129
 #: .\Doctor\templates\Doctor\index.html:184
-#: .\Doctor\templates\Doctor\index.html:255
-#: .\Doctor\templates\Doctor\index.html:281
-#: .\Doctor\templates\Doctor\index.html:320
-#: .\Doctor\templates\Doctor\index.html:368
-#: .\Doctor\templates\Doctor\index.html:418
+#: .\Doctor\templates\Doctor\index.html:259
+#: .\Doctor\templates\Doctor\index.html:285
+#: .\Doctor\templates\Doctor\index.html:324
+#: .\Doctor\templates\Doctor\index.html:372
+#: .\Doctor\templates\Doctor\index.html:408
 #: .\Doctor\templates\Doctor\index_PM.html:28
 #: .\Doctor\templates\Doctor\index_PM.html:133
 #: .\Doctor\templates\Doctor\index_PM.html:199
@@ -243,15 +237,19 @@ msgstr "Nam"
 #: .\Laboratory\templates\Laboratory\checklist.html:26
 #: .\Laboratory\templates\Laboratory\checklist.html:60
 #: .\Laboratory\templates\Laboratory\index.html:25
-#: .\Laboratory\templates\Laboratory\index.html:59 .\Pharmacy\forms.py:9
-#: .\Pharmacy\templates\Pharmacy\index.html:26 .\Radiation\forms.py:42
+#: .\Laboratory\templates\Laboratory\index.html:59
+#: .\Manage\templates\Manage\inventory_precedure.html:24
+#: .\Manage\templates\Manage\inventory_precedure.html:73
+#: .\Manage\templates\Manage\inventory_test.html:145 .\Pharmacy\forms.py:9
+#: .\Pharmacy\templates\Pharmacy\index.html:26
+#: .\Pharmacy\templates\Pharmacy\inventory.html:146 .\Radiation\forms.py:42
 #: .\Radiation\templates\Radiation\index.html:29 .\Receptionist\forms.py:55
 #: .\Receptionist\forms.py:237
-#: .\Receptionist\templates\Receptionist\index.html:142
-#: .\Receptionist\templates\Receptionist\index.html:175
-#: .\Receptionist\templates\Receptionist\index.html:212
-#: .\Receptionist\templates\Receptionist\index.html:566
-#: .\Receptionist\templates\Receptionist\index.html:640
+#: .\Receptionist\templates\Receptionist\index.html:152
+#: .\Receptionist\templates\Receptionist\index.html:187
+#: .\Receptionist\templates\Receptionist\index.html:225
+#: .\Receptionist\templates\Receptionist\index.html:579
+#: .\Receptionist\templates\Receptionist\index.html:653
 #: .\Receptionist\templates\Receptionist\reservation.html:53
 #: .\Receptionist\templates\Receptionist\storage_page.html:26
 #: .\Receptionist\templates\Receptionist\storage_page.html:45
@@ -311,9 +309,14 @@ msgstr ""
 #: .\Manage\templates\Manage\Manage.html:27
 #: .\Manage\templates\Manage\Manage.html:85
 #: .\Manage\templates\Manage\Manage.html:178
+#: .\Manage\templates\Manage\inventory_test.html:51
+#: .\Manage\templates\Manage\inventory_test.html:68
 #: .\Manage\templates\Manage\temp_manage.html:26
 #: .\Manage\templates\Manage\temp_manage.html:74
 #: .\Pharmacy\templates\Pharmacy\index.html:12
+#: .\Pharmacy\templates\Pharmacy\inventory.html:51
+#: .\Pharmacy\templates\Pharmacy\inventory.html:68
+#: .\Receptionist\templates\Receptionist\index.html:207
 #: .\Receptionist\templates\Receptionist\storage_page.html:191
 #: .\app\templates\app\notice.html:16
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\audit.html:33
@@ -336,7 +339,7 @@ msgstr "Ngày"
 #: .\Doctor\templates\Doctor\audit.html:25
 #: .\Doctor\templates\Doctor\audit.html:64
 #: .\Doctor\templates\Doctor\audit_PM.html:78
-#: .\Doctor\templates\Doctor\index.html:241
+#: .\Doctor\templates\Doctor\index.html:245
 #: .\Manage\templates\Manage\Manage.html:46
 #: .\Manage\templates\Manage\Manage.html:139
 #: .\Manage\templates\Manage\temp_manage.html:78
@@ -363,7 +366,6 @@ msgstr ""
 
 #: .\Doctor\templates\Doctor\audit.html:39
 #: .\Doctor\templates\Doctor\audit.html:66
-#: .\Doctor\templates\Doctor\index.html:243
 #: .\Manage\templates\Manage\Manage.html:62
 #: .\Manage\templates\Manage\Manage.html:90
 #: .\Manage\templates\Manage\Manage.html:155
@@ -371,11 +373,11 @@ msgstr ""
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:129
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\audit.html:40
 msgid "Precedure"
-msgstr "Thủ tục"
+msgstr "Thủ thuật"
 
 #: .\Doctor\templates\Doctor\audit.html:46
 #: .\Doctor\templates\Doctor\audit.html:67
-#: .\Doctor\templates\Doctor\index.html:244 .\Manage\forms.py:136
+#: .\Doctor\templates\Doctor\index.html:248 .\Manage\forms.py:136
 #: .\Manage\templates\Manage\Manage.html:70
 #: .\Manage\templates\Manage\Manage.html:91
 #: .\Manage\templates\Manage\Manage.html:163
@@ -385,7 +387,7 @@ msgstr "Thủ tục"
 #: .\obj\Release\Package\PackageTmp\Manage\forms.py:137
 #: .\obj\Release\Package\PackageTmp\Manage\templates\Manage\manage.html:99
 msgid "Medicine"
-msgstr "thuốc"
+msgstr "Thuốc"
 
 #: .\Doctor\templates\Doctor\audit.html:59
 #: .\Doctor\templates\Doctor\audit_PM.html:73
@@ -395,11 +397,12 @@ msgstr "thuốc"
 #: .\Laboratory\templates\Laboratory\checklist.html:23
 #: .\Laboratory\templates\Laboratory\index.html:23
 #: .\Manage\templates\Manage\Manage.html:177
+#: .\Manage\templates\Manage\inventory_test.html:23
 #: .\Manage\templates\Manage\temp_manage.html:73
-#: .\Pharmacy\templates\Pharmacy\inventory.html:25
-#: .\Receptionist\templates\Receptionist\index.html:140
-#: .\Receptionist\templates\Receptionist\index.html:173
-#: .\Receptionist\templates\Receptionist\index.html:210
+#: .\Pharmacy\templates\Pharmacy\inventory.html:23
+#: .\Receptionist\templates\Receptionist\index.html:150
+#: .\Receptionist\templates\Receptionist\index.html:185
+#: .\Receptionist\templates\Receptionist\index.html:223
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:130
 #: .\obj\Release\Package\PackageTmp\Laboratory\templates\Laboratory\index.html:21
 #: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:52
@@ -434,12 +437,12 @@ msgstr "Bệnh nhân"
 #: .\Pharmacy\templates\Pharmacy\index.html:57 .\Radiation\forms.py:44
 #: .\Radiation\templates\Radiation\index.html:31
 #: .\Radiation\templates\Radiation\index.html:60 .\Receptionist\forms.py:239
-#: .\Receptionist\templates\Receptionist\index.html:70
-#: .\Receptionist\templates\Receptionist\index.html:160
-#: .\Receptionist\templates\Receptionist\index.html:177
-#: .\Receptionist\templates\Receptionist\index.html:197
-#: .\Receptionist\templates\Receptionist\index.html:215
-#: .\Receptionist\templates\Receptionist\index.html:658
+#: .\Receptionist\templates\Receptionist\index.html:71
+#: .\Receptionist\templates\Receptionist\index.html:172
+#: .\Receptionist\templates\Receptionist\index.html:189
+#: .\Receptionist\templates\Receptionist\index.html:210
+#: .\Receptionist\templates\Receptionist\index.html:228
+#: .\Receptionist\templates\Receptionist\index.html:671
 #: .\Receptionist\templates\Receptionist\reservation.html:82
 #: .\Receptionist\templates\Receptionist\storage_page.html:16
 #: .\Receptionist\templates\Receptionist\storage_page.html:27
@@ -490,7 +493,9 @@ msgstr "giảm giá"
 #: .\Doctor\templates\Doctor\audit_PM.html:83
 #: .\Manage\templates\Manage\Manage.html:93
 #: .\Manage\templates\Manage\Manage.html:107
+#: .\Manage\templates\Manage\inventory_test.html:57
 #: .\Pharmacy\templates\Pharmacy\index.html:62
+#: .\Pharmacy\templates\Pharmacy\inventory.html:57
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\audit.html:45
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\audit.html:54
 #: .\obj\Release\Package\PackageTmp\Manage\templates\Manage\manage.html:106
@@ -501,20 +506,23 @@ msgstr "tổng số"
 
 #: .\Doctor\templates\Doctor\audit_PM.html:29
 #: .\Doctor\templates\Doctor\index.html:121
-#: .\Doctor\templates\Doctor\index.html:237
+#: .\Doctor\templates\Doctor\index.html:241
 #: .\Doctor\templates\Doctor\index_PM.html:125
 #: .\Doctor\templates\Doctor\index_PM.html:251
 #: .\Laboratory\templates\Laboratory\checklist.html:15
+#: .\Laboratory\templates\Laboratory\index.html:16
+#: .\Manage\templates\Manage\inventory_precedure.html:15
+#: .\Manage\templates\Manage\inventory_test.html:15
 #: .\Manage\templates\Manage\temp_manage.html:29
 #: .\Pharmacy\templates\Pharmacy\index.html:16
-#: .\Pharmacy\templates\Pharmacy\inventory.html:17
+#: .\Pharmacy\templates\Pharmacy\inventory.html:15
 #: .\Radiation\templates\Radiation\index.html:21
-#: .\Receptionist\templates\Receptionist\index.html:130
-#: .\Receptionist\templates\Receptionist\reservation.html:312
+#: .\Receptionist\templates\Receptionist\index.html:140
+#: .\Receptionist\templates\Receptionist\reservation.html:320
 #: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:45
 #: .\physical_therapist\templates\physical_therapist\index.html:89
 msgid "Search"
-msgstr "tìm kiếm"
+msgstr "Tìm Kiếm"
 
 #: .\Doctor\templates\Doctor\audit_PM.html:40
 #: .\Doctor\templates\Doctor\audit_PM.html:80
@@ -524,6 +532,7 @@ msgid "Radiography"
 msgstr "chẩn đoán hình ảnh"
 
 #: .\Doctor\templates\Doctor\audit_PM.html:79
+#: .\Doctor\templates\Doctor\index.html:247
 #: .\Manage\templates\Manage\temp_manage.html:79
 msgid "Procedure"
 msgstr "Thủ tục"
@@ -531,19 +540,19 @@ msgstr "Thủ tục"
 #: .\Doctor\templates\Doctor\index.html:11
 #: .\Doctor\templates\Doctor\index_PM.html:11
 #: .\Radiation\templates\Radiation\index.html:44
-#: .\Receptionist\templates\Receptionist\index.html:551
-#: .\Receptionist\templates\Receptionist\index.html:625
+#: .\Receptionist\templates\Receptionist\index.html:564
+#: .\Receptionist\templates\Receptionist\index.html:638
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:10
 #: .\obj\Release\Package\PackageTmp\Radiation\templates\Radiation\index.html:40
 #: .\physical_therapist\templates\physical_therapist\index.html:11
 msgid "Patient Information"
-msgstr "thông tin bệnh nhân"
+msgstr "Thông Tin Bệnh Nhân"
 
 #: .\Doctor\templates\Doctor\index.html:12
 #: .\Doctor\templates\Doctor\index_PM.html:13
 #: .\Doctor\templates\Doctor\index_PM.html:15
-#: .\Receptionist\templates\Receptionist\index.html:110
-#: .\Receptionist\templates\Receptionist\index.html:687
+#: .\Receptionist\templates\Receptionist\index.html:120
+#: .\Receptionist\templates\Receptionist\index.html:701
 #: .\app\templates\app\layout.html:99
 #: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:92
 #: .\physical_therapist\templates\physical_therapist\index.html:14
@@ -559,11 +568,11 @@ msgstr "Báo Cáo Y Tế"
 #: .\Laboratory\templates\Laboratory\index.html:51
 #: .\Pharmacy\templates\Pharmacy\index.html:25
 #: .\Receptionist\templates\Receptionist\index.html:18
-#: .\Receptionist\templates\Receptionist\index.html:141
-#: .\Receptionist\templates\Receptionist\index.html:174
-#: .\Receptionist\templates\Receptionist\index.html:211
-#: .\Receptionist\templates\Receptionist\index.html:557
-#: .\Receptionist\templates\Receptionist\index.html:631
+#: .\Receptionist\templates\Receptionist\index.html:151
+#: .\Receptionist\templates\Receptionist\index.html:186
+#: .\Receptionist\templates\Receptionist\index.html:224
+#: .\Receptionist\templates\Receptionist\index.html:570
+#: .\Receptionist\templates\Receptionist\index.html:644
 #: .\Receptionist\templates\Receptionist\reservation.html:59
 #: .\Receptionist\templates\Receptionist\storage_page.html:443
 #: .\Receptionist\templates\Receptionist\storage_page.html:481
@@ -594,11 +603,11 @@ msgstr "Số chart"
 #: .\Radiation\templates\Radiation\index.html:54 .\Receptionist\forms.py:57
 #: .\Receptionist\forms.py:84
 #: .\Receptionist\templates\Receptionist\index.html:42
-#: .\Receptionist\templates\Receptionist\index.html:143
-#: .\Receptionist\templates\Receptionist\index.html:176
-#: .\Receptionist\templates\Receptionist\index.html:213
-#: .\Receptionist\templates\Receptionist\index.html:572
-#: .\Receptionist\templates\Receptionist\index.html:646
+#: .\Receptionist\templates\Receptionist\index.html:153
+#: .\Receptionist\templates\Receptionist\index.html:188
+#: .\Receptionist\templates\Receptionist\index.html:226
+#: .\Receptionist\templates\Receptionist\index.html:585
+#: .\Receptionist\templates\Receptionist\index.html:659
 #: .\Receptionist\templates\Receptionist\reservation.html:68
 #: .\Receptionist\templates\Receptionist\storage_page.html:483
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:58
@@ -637,14 +646,14 @@ msgstr "Ngày sinh"
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:49
 #: .\physical_therapist\templates\physical_therapist\index.html:41
 msgid "Gender"
-msgstr "giới tính"
+msgstr "Giới tính"
 
 #: .\Doctor\templates\Doctor\index.html:47
 #: .\Doctor\templates\Doctor\index_PM.html:50
 #: .\Doctor\templates\Doctor\report.html:66
 #: .\Doctor\templates\Doctor\report.html:358
 #: .\Doctor\templates\Doctor\reportwindow.html:93
-#: .\Receptionist\templates\Receptionist\index.html:56
+#: .\Receptionist\templates\Receptionist\index.html:57
 #: .\Receptionist\templates\Receptionist\reservation.html:74
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:54
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\report.html:62
@@ -653,15 +662,15 @@ msgstr "giới tính"
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\reservation.html:92
 #: .\physical_therapist\templates\physical_therapist\index.html:49
 msgid "Phone"
-msgstr "số điện thoại"
+msgstr "Số điện thoại"
 
 #: .\Doctor\templates\Doctor\index.html:53
 #: .\Doctor\templates\Doctor\index_PM.html:56
 #: .\Doctor\templates\Doctor\report.html:76
 #: .\Doctor\templates\Doctor\reportwindow.html:107 .\Patient\forms.py:85
-#: .\Receptionist\templates\Receptionist\index.html:62
-#: .\Receptionist\templates\Receptionist\index.html:145
-#: .\Receptionist\templates\Receptionist\index.html:600
+#: .\Receptionist\templates\Receptionist\index.html:63
+#: .\Receptionist\templates\Receptionist\index.html:155
+#: .\Receptionist\templates\Receptionist\index.html:613
 #: .\Receptionist\templates\Receptionist\storage_page.html:66
 #: .\Receptionist\templates\Receptionist\storage_page.html:148
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:90
@@ -695,10 +704,8 @@ msgid "Familiy history"
 msgstr "tiền sử gia đình"
 
 #: .\Doctor\templates\Doctor\index.html:80
-#: .\Doctor\templates\Doctor\index_PM.html:83
-#: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:87
-msgid "Vital"
-msgstr "dấu hiệu sinh tồn"
+msgid "Vital Signs"
+msgstr "Dấu Hiệu Sinh Tồn"
 
 #: .\Doctor\templates\Doctor\index.html:87
 msgid "Wt(kg)"
@@ -726,16 +733,16 @@ msgstr ""
 
 #: .\Doctor\templates\Doctor\index.html:113
 #: .\Doctor\templates\Doctor\index_PM.html:117
-#: .\Receptionist\templates\Receptionist\index.html:155
+#: .\Receptionist\templates\Receptionist\index.html:165
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:120
 #: .\physical_therapist\templates\physical_therapist\index.html:83
 msgid "Reception Status"
-msgstr "trạng thái lúc tiếp nhận"
+msgstr "Trạng Thái Lúc Tiếp Nhận"
 
 #: .\Doctor\templates\Doctor\index.html:131
 #: .\Doctor\templates\Doctor\index_PM.html:135
-#: .\Receptionist\templates\Receptionist\index.html:179
-#: .\Receptionist\templates\Receptionist\index.html:217
+#: .\Receptionist\templates\Receptionist\index.html:191
+#: .\Receptionist\templates\Receptionist\index.html:230
 #: .\Receptionist\templates\Receptionist\storage_page.html:28
 #: .\env_local\Lib\site-packages\django\db\models\fields\__init__.py:2097
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:134
@@ -743,7 +750,7 @@ msgstr "trạng thái lúc tiếp nhận"
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:25
 #: .\physical_therapist\templates\physical_therapist\index.html:99
 msgid "Time"
-msgstr "thời gian"
+msgstr "Thời gian"
 
 #: .\Doctor\templates\Doctor\index.html:142
 #: .\Doctor\templates\Doctor\index_PM.html:146
@@ -751,36 +758,47 @@ msgstr "thời gian"
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:145
 #: .\physical_therapist\templates\physical_therapist\index.html:111
 msgid "History Taking"
-msgstr "bệnh sử"
+msgstr "Bệnh Sử"
 
 #: .\Doctor\templates\Doctor\index.html:145
 #: .\Doctor\templates\Doctor\index_PM.html:148
-#: .\Laboratory\templates\Laboratory\index.html:108
+#: .\Laboratory\templates\Laboratory\index.html:112
+#: .\Manage\templates\Manage\inventory_precedure.html:104
+#: .\Manage\templates\Manage\inventory_test.html:253
+#: .\Manage\templates\Manage\inventory_test.html:319
 #: .\Pharmacy\templates\Pharmacy\index.html:44
-#: .\Receptionist\templates\Receptionist\index.html:114
-#: .\Receptionist\templates\Receptionist\index.html:607
+#: .\Pharmacy\templates\Pharmacy\inventory.html:254
+#: .\Pharmacy\templates\Pharmacy\inventory.html:312
+#: .\Pharmacy\templates\Pharmacy\inventory.html:353
+#: .\Receptionist\templates\Receptionist\index.html:124
+#: .\Receptionist\templates\Receptionist\index.html:620
 #: .\Receptionist\templates\Receptionist\reservation.html:106
 #: .\Receptionist\templates\Receptionist\storage_page.html:114
 #: .\Receptionist\templates\Receptionist\storage_page.html:460
 #: .\Receptionist\templates\Receptionist\storage_page.html:498
 #: .\physical_therapist\templates\physical_therapist\index.html:113
 msgid "Cancel"
-msgstr "bỏ"
+msgstr "Bỏ"
 
 #: .\Doctor\templates\Doctor\index.html:146
 #: .\Doctor\templates\Doctor\index_PM.html:149
 #: .\Laboratory\templates\Laboratory\checklist.html:46
 #: .\Laboratory\templates\Laboratory\index.html:44
-#: .\Pharmacy\templates\Pharmacy\inventory.html:49
+#: .\Manage\templates\Manage\inventory_precedure.html:103
+#: .\Manage\templates\Manage\inventory_test.html:252
+#: .\Manage\templates\Manage\inventory_test.html:318
+#: .\Pharmacy\templates\Pharmacy\inventory.html:253
+#: .\Pharmacy\templates\Pharmacy\inventory.html:311
+#: .\Pharmacy\templates\Pharmacy\inventory.html:352
 #: .\Radiation\templates\Radiation\index.html:45
-#: .\Receptionist\templates\Receptionist\index.html:115
-#: .\Receptionist\templates\Receptionist\index.html:608
-#: .\Receptionist\templates\Receptionist\index.html:693
+#: .\Receptionist\templates\Receptionist\index.html:125
+#: .\Receptionist\templates\Receptionist\index.html:621
+#: .\Receptionist\templates\Receptionist\index.html:710
 #: .\Receptionist\templates\Receptionist\reservation.html:107
 #: .\Receptionist\templates\Receptionist\storage_page.html:115
 #: .\physical_therapist\templates\physical_therapist\index.html:114
 msgid "Save"
-msgstr "lưu"
+msgstr "Lưu"
 
 #: .\Doctor\templates\Doctor\index.html:147
 #: .\Doctor\templates\Doctor\index_PM.html:150
@@ -788,7 +806,7 @@ msgstr "lưu"
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:115
 #: .\physical_therapist\templates\physical_therapist\index.html:115
 msgid "Done"
-msgstr "hoàn thành"
+msgstr "Hoàn thành"
 
 #: .\Doctor\templates\Doctor\index.html:152
 #: .\Doctor\templates\Doctor\index_PM.html:163
@@ -834,14 +852,14 @@ msgstr "Chẩn đoán"
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:176
 #: .\physical_therapist\templates\physical_therapist\index.html:154
 msgid "Order List"
-msgstr "danh sách"
+msgstr "Danh Sách"
 
 #: .\Doctor\templates\Doctor\index.html:183
-#: .\Doctor\templates\Doctor\index.html:254
-#: .\Doctor\templates\Doctor\index.html:280
-#: .\Doctor\templates\Doctor\index.html:319
-#: .\Doctor\templates\Doctor\index.html:367
-#: .\Doctor\templates\Doctor\index.html:417
+#: .\Doctor\templates\Doctor\index.html:258
+#: .\Doctor\templates\Doctor\index.html:284
+#: .\Doctor\templates\Doctor\index.html:323
+#: .\Doctor\templates\Doctor\index.html:371
+#: .\Doctor\templates\Doctor\index.html:407
 #: .\Doctor\templates\Doctor\index_PM.html:198
 #: .\Doctor\templates\Doctor\index_PM.html:268
 #: .\Doctor\templates\Doctor\index_PM.html:295
@@ -849,6 +867,7 @@ msgstr "danh sách"
 #: .\Doctor\templates\Doctor\index_PM.html:374
 #: .\Doctor\templates\Doctor\index_PM.html:399
 #: .\Laboratory\templates\Laboratory\checklist.html:51 .\Manage\forms.py:169
+#: .\Manage\templates\Manage\inventory_precedure.html:23
 #: .\Pharmacy\templates\Pharmacy\index.html:55
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:104
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:141
@@ -857,31 +876,32 @@ msgstr "danh sách"
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:185
 #: .\physical_therapist\templates\physical_therapist\index.html:163
 msgid "Code"
-msgstr "mã"
+msgstr "Mã"
 
 #: .\Doctor\templates\Doctor\index.html:185
 #: .\Doctor\templates\Doctor\index_PM.html:200
+#: .\Manage\templates\Manage\inventory_test.html:28
+#: .\Manage\templates\Manage\inventory_test.html:173
 #: .\Pharmacy\templates\Pharmacy\index.html:59
-#: .\Pharmacy\templates\Pharmacy\inventory.html:30
-#: .\Pharmacy\templates\Pharmacy\inventory.html:71
+#: .\Pharmacy\templates\Pharmacy\inventory.html:28
+#: .\Pharmacy\templates\Pharmacy\inventory.html:174
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:191
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:187
 #: .\obj\Release\Package\PackageTmp\Pharmacy\forms.py:85
 #: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:57
 msgid "Unit"
-msgstr "đơn vị"
+msgstr "Đơn vị"
 
 #: .\Doctor\templates\Doctor\index.html:186
 #: .\Doctor\templates\Doctor\index_PM.html:201
 #: .\Manage\templates\Manage\temp_manage.html:81
 #: .\Pharmacy\templates\Pharmacy\index.html:60
-#: .\Pharmacy\templates\Pharmacy\inventory.html:80
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:188
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:183
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:214
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:248
 msgid "Amount"
-msgstr "lượng"
+msgstr "Lượng"
 
 #: .\Doctor\templates\Doctor\index.html:187
 #: .\Doctor\templates\Doctor\index_PM.html:202
@@ -891,39 +911,43 @@ msgstr "lượng"
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:219
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:253
 msgid "Days"
-msgstr "số ngày"
+msgstr "Số ngày"
 
 #: .\Doctor\templates\Doctor\index.html:188
 #: .\Doctor\templates\Doctor\index_PM.html:203
 #: .\Pharmacy\templates\Pharmacy\index.html:63
 msgid "Use"
-msgstr "sử dụng"
+msgstr "Sử dụng"
 
 #: .\Doctor\templates\Doctor\index.html:206
 #: .\Doctor\templates\Doctor\index_PM.html:221
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:208
 msgid "Next Visiting Day"
-msgstr "lần hẹn tới"
+msgstr "Lần Hẹn Tới"
 
-#: .\Doctor\templates\Doctor\index.html:220
+#: .\Doctor\templates\Doctor\index.html:211
+msgid "Total Price"
+msgstr "Tổng tiền"
+
+#: .\Doctor\templates\Doctor\index.html:224
 #: .\Doctor\templates\Doctor\index_PM.html:235 .\Patient\forms.py:104
-#: .\Receptionist\templates\Receptionist\index.html:93
+#: .\Receptionist\templates\Receptionist\index.html:103
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:217
 #: .\obj\Release\Package\PackageTmp\Patient\forms.py:104
 #: .\obj\Release\Package\PackageTmp\Patient\models.py:98
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:106
 #: .\physical_therapist\templates\physical_therapist\index.html:186
 msgid "Past History"
-msgstr "tiền sử bệnh"
+msgstr "Tiền Sử Bệnh"
 
-#: .\Doctor\templates\Doctor\index.html:234
+#: .\Doctor\templates\Doctor\index.html:238
 #: .\Doctor\templates\Doctor\index_PM.html:248
 #: .\Laboratory\templates\Laboratory\checklist.html:9
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:231
 msgid "Check List"
-msgstr "bảng kiểm"
+msgstr "Bảng Kiểm"
 
-#: .\Doctor\templates\Doctor\index.html:242 .\Manage\forms.py:144
+#: .\Doctor\templates\Doctor\index.html:246 .\Manage\forms.py:144
 #: .\Manage\templates\Manage\Manage.html:54
 #: .\Manage\templates\Manage\Manage.html:89
 #: .\Manage\templates\Manage\Manage.html:147
@@ -934,15 +958,15 @@ msgstr "bảng kiểm"
 msgid "Lab"
 msgstr "Xét nghiệm"
 
-#: .\Doctor\templates\Doctor\index.html:245
+#: .\Doctor\templates\Doctor\index.html:249
 msgid "Bundle Px"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index.html:256
-#: .\Doctor\templates\Doctor\index.html:282
-#: .\Doctor\templates\Doctor\index.html:321
-#: .\Doctor\templates\Doctor\index.html:369
-#: .\Doctor\templates\Doctor\index.html:419
+#: .\Doctor\templates\Doctor\index.html:260
+#: .\Doctor\templates\Doctor\index.html:286
+#: .\Doctor\templates\Doctor\index.html:325
+#: .\Doctor\templates\Doctor\index.html:373
+#: .\Doctor\templates\Doctor\index.html:409
 #: .\Doctor\templates\Doctor\index_PM.html:270
 #: .\Doctor\templates\Doctor\index_PM.html:297
 #: .\Doctor\templates\Doctor\index_PM.html:351
@@ -950,25 +974,31 @@ msgstr ""
 #: .\Doctor\templates\Doctor\index_PM.html:401
 #: .\Laboratory\templates\Laboratory\checklist.html:29
 #: .\Laboratory\templates\Laboratory\checklist.html:72
+#: .\Manage\templates\Manage\inventory_precedure.html:27
+#: .\Manage\templates\Manage\inventory_test.html:29
 #: .\Pharmacy\templates\Pharmacy\index.html:64
-#: .\Pharmacy\templates\Pharmacy\inventory.html:31
-#: .\Pharmacy\templates\Pharmacy\inventory.html:75
+#: .\Pharmacy\templates\Pharmacy\inventory.html:29
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:153
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:220
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:250
 #: .\obj\Release\Package\PackageTmp\Pharmacy\forms.py:65
 #: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:58
 msgid "Price"
-msgstr "giá"
+msgstr "Giá"
 
 #: .\Doctor\templates\Doctor\index_PM.html:14
 #: .\Doctor\templates\Doctor\index_PM.html:430
-#: .\Receptionist\templates\Receptionist\index.html:109
-#: .\Receptionist\templates\Receptionist\index.html:271
+#: .\Receptionist\templates\Receptionist\index.html:119
+#: .\Receptionist\templates\Receptionist\index.html:284
 #: .\physical_therapist\templates\physical_therapist\index.html:13
 #: .\physical_therapist\templates\physical_therapist\index.html:207
 msgid "Initial Report"
 msgstr "Phỏng vấn ban đầu"
+
+#: .\Doctor\templates\Doctor\index_PM.html:83
+#: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:87
+msgid "Vital"
+msgstr "Dấu Hiệu Sinh Tồn"
 
 #: .\Doctor\templates\Doctor\index_PM.html:183
 #: .\Receptionist\templates\Receptionist\storage_page.html:159
@@ -977,115 +1007,115 @@ msgid "Recommend"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:435
-#: .\Receptionist\templates\Receptionist\index.html:276
+#: .\Receptionist\templates\Receptionist\index.html:289
 #: .\physical_therapist\templates\physical_therapist\index.html:212
 msgid "활력징후"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:439
-#: .\Receptionist\templates\Receptionist\index.html:280
+#: .\Receptionist\templates\Receptionist\index.html:293
 #: .\physical_therapist\templates\physical_therapist\index.html:216
 msgid "키"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:445
-#: .\Receptionist\templates\Receptionist\index.html:286
+#: .\Receptionist\templates\Receptionist\index.html:299
 #: .\physical_therapist\templates\physical_therapist\index.html:222
 msgid "몸무게"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:452
-#: .\Receptionist\templates\Receptionist\index.html:293
+#: .\Receptionist\templates\Receptionist\index.html:306
 #: .\physical_therapist\templates\physical_therapist\index.html:229
 msgid "BMI"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:458
-#: .\Receptionist\templates\Receptionist\index.html:299
+#: .\Receptionist\templates\Receptionist\index.html:312
 #: .\physical_therapist\templates\physical_therapist\index.html:235
 msgid "혈압"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:464
-#: .\Receptionist\templates\Receptionist\index.html:305
+#: .\Receptionist\templates\Receptionist\index.html:318
 #: .\physical_therapist\templates\physical_therapist\index.html:241
 msgid "체온"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:481
-#: .\Receptionist\templates\Receptionist\index.html:322
+#: .\Receptionist\templates\Receptionist\index.html:335
 #: .\physical_therapist\templates\physical_therapist\index.html:258
 msgid "2. 현재 불편한 부위와 증상에 표시하여 주세요."
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:517
-#: .\Receptionist\templates\Receptionist\index.html:358
+#: .\Receptionist\templates\Receptionist\index.html:371
 #: .\physical_therapist\templates\physical_therapist\index.html:294
 msgid "2)방향"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:518
-#: .\Receptionist\templates\Receptionist\index.html:359
+#: .\Receptionist\templates\Receptionist\index.html:372
 #: .\physical_therapist\templates\physical_therapist\index.html:295
 msgid "왼쪽"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:519
-#: .\Receptionist\templates\Receptionist\index.html:360
+#: .\Receptionist\templates\Receptionist\index.html:373
 #: .\physical_therapist\templates\physical_therapist\index.html:296
 msgid "가운데"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:520
-#: .\Receptionist\templates\Receptionist\index.html:361
+#: .\Receptionist\templates\Receptionist\index.html:374
 #: .\physical_therapist\templates\physical_therapist\index.html:297
 msgid "오른쪽"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:526
-#: .\Receptionist\templates\Receptionist\index.html:367
+#: .\Receptionist\templates\Receptionist\index.html:380
 #: .\physical_therapist\templates\physical_therapist\index.html:303
 msgid "3)증상"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:527
-#: .\Receptionist\templates\Receptionist\index.html:368
+#: .\Receptionist\templates\Receptionist\index.html:381
 #: .\physical_therapist\templates\physical_therapist\index.html:304
 msgid "당긴다"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:528
-#: .\Receptionist\templates\Receptionist\index.html:369
+#: .\Receptionist\templates\Receptionist\index.html:382
 #: .\physical_therapist\templates\physical_therapist\index.html:305
 msgid "저리다"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:529
-#: .\Receptionist\templates\Receptionist\index.html:370
+#: .\Receptionist\templates\Receptionist\index.html:383
 #: .\physical_therapist\templates\physical_therapist\index.html:306
 msgid "쑤신다"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:530
-#: .\Receptionist\templates\Receptionist\index.html:371
+#: .\Receptionist\templates\Receptionist\index.html:384
 #: .\physical_therapist\templates\physical_therapist\index.html:307
 msgid "감각이 둔하다"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:531
-#: .\Receptionist\templates\Receptionist\index.html:372
+#: .\Receptionist\templates\Receptionist\index.html:385
 #: .\physical_therapist\templates\physical_therapist\index.html:308
 msgid "마비가 된다"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:534
-#: .\Receptionist\templates\Receptionist\index.html:375
+#: .\Receptionist\templates\Receptionist\index.html:388
 #: .\physical_therapist\templates\physical_therapist\index.html:311
 msgid "발병시기"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:541
-#: .\Receptionist\templates\Receptionist\index.html:382
+#: .\Receptionist\templates\Receptionist\index.html:395
 #: .\physical_therapist\templates\physical_therapist\index.html:318
 msgid ""
 "3. 최근 6개월 내 현재 증상으로 치료 받은 내역을 체크해주세요 (한의원 포함) "
@@ -1093,15 +1123,15 @@ msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:542
 #: .\Doctor\templates\Doctor\index_PM.html:610
-#: .\Receptionist\templates\Receptionist\index.html:383
-#: .\Receptionist\templates\Receptionist\index.html:451
+#: .\Receptionist\templates\Receptionist\index.html:396
+#: .\Receptionist\templates\Receptionist\index.html:464
 #: .\physical_therapist\templates\physical_therapist\index.html:319
 #: .\physical_therapist\templates\physical_therapist\index.html:387
 msgid "없음"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:546
-#: .\Receptionist\templates\Receptionist\index.html:387
+#: .\Receptionist\templates\Receptionist\index.html:400
 #: .\physical_therapist\templates\physical_therapist\index.html:323
 msgid "물리치료"
 msgstr ""
@@ -1110,10 +1140,10 @@ msgstr ""
 #: .\Doctor\templates\Doctor\index_PM.html:550
 #: .\Doctor\templates\Doctor\index_PM.html:554
 #: .\Doctor\templates\Doctor\index_PM.html:557
-#: .\Receptionist\templates\Receptionist\index.html:388
-#: .\Receptionist\templates\Receptionist\index.html:391
-#: .\Receptionist\templates\Receptionist\index.html:395
-#: .\Receptionist\templates\Receptionist\index.html:398
+#: .\Receptionist\templates\Receptionist\index.html:401
+#: .\Receptionist\templates\Receptionist\index.html:404
+#: .\Receptionist\templates\Receptionist\index.html:408
+#: .\Receptionist\templates\Receptionist\index.html:411
 #: .\physical_therapist\templates\physical_therapist\index.html:324
 #: .\physical_therapist\templates\physical_therapist\index.html:327
 #: .\physical_therapist\templates\physical_therapist\index.html:331
@@ -1122,97 +1152,97 @@ msgid "회"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:549
-#: .\Receptionist\templates\Receptionist\index.html:390
+#: .\Receptionist\templates\Receptionist\index.html:403
 #: .\physical_therapist\templates\physical_therapist\index.html:326
 msgid "주사치료"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:553
-#: .\Receptionist\templates\Receptionist\index.html:394
+#: .\Receptionist\templates\Receptionist\index.html:407
 #: .\physical_therapist\templates\physical_therapist\index.html:330
 msgid "약복용"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:556
-#: .\Receptionist\templates\Receptionist\index.html:397
+#: .\Receptionist\templates\Receptionist\index.html:410
 #: .\physical_therapist\templates\physical_therapist\index.html:333
 msgid "침치료"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:563
-#: .\Receptionist\templates\Receptionist\index.html:404
+#: .\Receptionist\templates\Receptionist\index.html:417
 #: .\physical_therapist\templates\physical_therapist\index.html:340
 msgid "4. 통증 정도가 어느정도인지 표시해주세요."
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:577
-#: .\Receptionist\templates\Receptionist\index.html:418
+#: .\Receptionist\templates\Receptionist\index.html:431
 #: .\physical_therapist\templates\physical_therapist\index.html:354
 msgid "5. 한번이라도 수술 받으신 적이 있나요 ?"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:581
 #: .\Doctor\templates\Doctor\index_PM.html:647
-#: .\Receptionist\templates\Receptionist\index.html:422
-#: .\Receptionist\templates\Receptionist\index.html:488
+#: .\Receptionist\templates\Receptionist\index.html:435
+#: .\Receptionist\templates\Receptionist\index.html:501
 #: .\physical_therapist\templates\physical_therapist\index.html:358
 #: .\physical_therapist\templates\physical_therapist\index.html:424
 msgid "예"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:582
-#: .\Receptionist\templates\Receptionist\index.html:423
+#: .\Receptionist\templates\Receptionist\index.html:436
 #: .\physical_therapist\templates\physical_therapist\index.html:359
 msgid "년도"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:584
-#: .\Receptionist\templates\Receptionist\index.html:425
+#: .\Receptionist\templates\Receptionist\index.html:438
 #: .\physical_therapist\templates\physical_therapist\index.html:361
 msgid "수술명"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:586
 #: .\Doctor\templates\Doctor\index_PM.html:649
-#: .\Receptionist\templates\Receptionist\index.html:427
-#: .\Receptionist\templates\Receptionist\index.html:490
+#: .\Receptionist\templates\Receptionist\index.html:440
+#: .\Receptionist\templates\Receptionist\index.html:503
 #: .\physical_therapist\templates\physical_therapist\index.html:363
 #: .\physical_therapist\templates\physical_therapist\index.html:426
 msgid "아니오"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:591
-#: .\Receptionist\templates\Receptionist\index.html:432
+#: .\Receptionist\templates\Receptionist\index.html:445
 #: .\physical_therapist\templates\physical_therapist\index.html:368
 msgid "6. 위 증상과 관련된 어떤 검사를 하셨는지요?"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:594
-#: .\Receptionist\templates\Receptionist\index.html:435
+#: .\Receptionist\templates\Receptionist\index.html:448
 #: .\physical_therapist\templates\physical_therapist\index.html:371
 msgid "MRI"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:595
-#: .\Receptionist\templates\Receptionist\index.html:436
+#: .\Receptionist\templates\Receptionist\index.html:449
 #: .\physical_therapist\templates\physical_therapist\index.html:372
 msgid "CT"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:596
-#: .\Receptionist\templates\Receptionist\index.html:437
+#: .\Receptionist\templates\Receptionist\index.html:450
 #: .\physical_therapist\templates\physical_therapist\index.html:373
 msgid "단순방사선촬영"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:597
-#: .\Receptionist\templates\Receptionist\index.html:438
+#: .\Receptionist\templates\Receptionist\index.html:451
 #: .\physical_therapist\templates\physical_therapist\index.html:374
 msgid "근전도검사"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:598
-#: .\Receptionist\templates\Receptionist\index.html:439
+#: .\Receptionist\templates\Receptionist\index.html:452
 #: .\physical_therapist\templates\physical_therapist\index.html:375
 msgid "척추조영술"
 msgstr ""
@@ -1220,9 +1250,9 @@ msgstr ""
 #: .\Doctor\templates\Doctor\index_PM.html:602
 #: .\Doctor\templates\Doctor\index_PM.html:634
 #: .\Doctor\templates\Doctor\index_PM.html:687
-#: .\Receptionist\templates\Receptionist\index.html:443
-#: .\Receptionist\templates\Receptionist\index.html:475
-#: .\Receptionist\templates\Receptionist\index.html:528
+#: .\Receptionist\templates\Receptionist\index.html:456
+#: .\Receptionist\templates\Receptionist\index.html:488
+#: .\Receptionist\templates\Receptionist\index.html:541
 #: .\physical_therapist\templates\physical_therapist\index.html:379
 #: .\physical_therapist\templates\physical_therapist\index.html:411
 #: .\physical_therapist\templates\physical_therapist\index.html:464
@@ -1230,152 +1260,152 @@ msgid "기타"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:607
-#: .\Receptionist\templates\Receptionist\index.html:448
+#: .\Receptionist\templates\Receptionist\index.html:461
 #: .\physical_therapist\templates\physical_therapist\index.html:384
 msgid "외부에서 가져온 CD나 필름이 있나요 ?"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:611
-#: .\Receptionist\templates\Receptionist\index.html:452
+#: .\Receptionist\templates\Receptionist\index.html:465
 #: .\physical_therapist\templates\physical_therapist\index.html:388
 msgid "필름"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:612
-#: .\Receptionist\templates\Receptionist\index.html:453
+#: .\Receptionist\templates\Receptionist\index.html:466
 #: .\physical_therapist\templates\physical_therapist\index.html:389
 msgid "CD"
 msgstr "thẻ"
 
 #: .\Doctor\templates\Doctor\index_PM.html:618
-#: .\Receptionist\templates\Receptionist\index.html:459
+#: .\Receptionist\templates\Receptionist\index.html:472
 #: .\physical_therapist\templates\physical_therapist\index.html:395
 msgid ""
 "7. 현재 치료중인 질환과 복용약이 있으신가요? (아스피린, 쿠마딘, 와파린 등)"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:621
-#: .\Receptionist\templates\Receptionist\index.html:462
+#: .\Receptionist\templates\Receptionist\index.html:475
 #: .\physical_therapist\templates\physical_therapist\index.html:398
 msgid "고혈압"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:622
-#: .\Receptionist\templates\Receptionist\index.html:463
+#: .\Receptionist\templates\Receptionist\index.html:476
 #: .\physical_therapist\templates\physical_therapist\index.html:399
 msgid "당뇨"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:623
-#: .\Receptionist\templates\Receptionist\index.html:464
+#: .\Receptionist\templates\Receptionist\index.html:477
 #: .\physical_therapist\templates\physical_therapist\index.html:400
 msgid "간질환"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:624
-#: .\Receptionist\templates\Receptionist\index.html:465
+#: .\Receptionist\templates\Receptionist\index.html:478
 #: .\physical_therapist\templates\physical_therapist\index.html:401
 msgid "뇌질환(중풍)"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:625
-#: .\Receptionist\templates\Receptionist\index.html:466
+#: .\Receptionist\templates\Receptionist\index.html:479
 #: .\physical_therapist\templates\physical_therapist\index.html:402
 msgid "폐결핵"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:628
-#: .\Receptionist\templates\Receptionist\index.html:469
+#: .\Receptionist\templates\Receptionist\index.html:482
 #: .\physical_therapist\templates\physical_therapist\index.html:405
 msgid "심장질환"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:629
-#: .\Receptionist\templates\Receptionist\index.html:470
+#: .\Receptionist\templates\Receptionist\index.html:483
 #: .\physical_therapist\templates\physical_therapist\index.html:406
 msgid "관절염"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:630
-#: .\Receptionist\templates\Receptionist\index.html:471
+#: .\Receptionist\templates\Receptionist\index.html:484
 #: .\physical_therapist\templates\physical_therapist\index.html:407
 msgid "신장질환"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:631
-#: .\Receptionist\templates\Receptionist\index.html:472
+#: .\Receptionist\templates\Receptionist\index.html:485
 #: .\physical_therapist\templates\physical_therapist\index.html:408
 msgid "갑상선질환"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:638
-#: .\Receptionist\templates\Receptionist\index.html:479
+#: .\Receptionist\templates\Receptionist\index.html:492
 #: .\physical_therapist\templates\physical_therapist\index.html:415
 msgid "복용약"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:644
-#: .\Receptionist\templates\Receptionist\index.html:485
+#: .\Receptionist\templates\Receptionist\index.html:498
 #: .\physical_therapist\templates\physical_therapist\index.html:421
 msgid "8. 약에 대한 부작용은 있으신가요?"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:657
-#: .\Receptionist\templates\Receptionist\index.html:498
+#: .\Receptionist\templates\Receptionist\index.html:511
 #: .\physical_therapist\templates\physical_therapist\index.html:434
 msgid "9. 임신 가능성이 있으신가요?"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:661
-#: .\Receptionist\templates\Receptionist\index.html:502
+#: .\Receptionist\templates\Receptionist\index.html:515
 #: .\physical_therapist\templates\physical_therapist\index.html:438
 msgid "해당없음"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:665
-#: .\Receptionist\templates\Receptionist\index.html:506
+#: .\Receptionist\templates\Receptionist\index.html:519
 #: .\physical_therapist\templates\physical_therapist\index.html:442
 msgid "임신중"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:669
-#: .\Receptionist\templates\Receptionist\index.html:510
+#: .\Receptionist\templates\Receptionist\index.html:523
 #: .\physical_therapist\templates\physical_therapist\index.html:446
 msgid "계획중"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:675
-#: .\Receptionist\templates\Receptionist\index.html:516
+#: .\Receptionist\templates\Receptionist\index.html:529
 #: .\physical_therapist\templates\physical_therapist\index.html:452
 msgid "10. 내원 동기"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:678
-#: .\Receptionist\templates\Receptionist\index.html:519
+#: .\Receptionist\templates\Receptionist\index.html:532
 #: .\physical_therapist\templates\physical_therapist\index.html:455
 msgid "전단지"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:679
-#: .\Receptionist\templates\Receptionist\index.html:520
+#: .\Receptionist\templates\Receptionist\index.html:533
 #: .\physical_therapist\templates\physical_therapist\index.html:456
 msgid "카카오톡 오픈 채팅"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:680
-#: .\Receptionist\templates\Receptionist\index.html:521
+#: .\Receptionist\templates\Receptionist\index.html:534
 #: .\physical_therapist\templates\physical_therapist\index.html:457
 msgid "페이스북"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:683
-#: .\Receptionist\templates\Receptionist\index.html:524
+#: .\Receptionist\templates\Receptionist\index.html:537
 #: .\physical_therapist\templates\physical_therapist\index.html:460
 msgid "간판"
 msgstr ""
 
 #: .\Doctor\templates\Doctor\index_PM.html:684
-#: .\Receptionist\templates\Receptionist\index.html:525
+#: .\Receptionist\templates\Receptionist\index.html:538
 #: .\physical_therapist\templates\physical_therapist\index.html:461
 msgid "지인소개"
 msgstr ""
@@ -1383,7 +1413,7 @@ msgstr ""
 #: .\Doctor\templates\Doctor\report.html:8
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\report.html:8
 msgid "Search Report"
-msgstr "tìm kiếm report"
+msgstr "Tìm Kiếm Report"
 
 #: .\Doctor\templates\Doctor\report.html:21
 #: .\Doctor\templates\Doctor\report.html:48
@@ -1400,7 +1430,7 @@ msgstr "tìm kiếm report"
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:22
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:183
 msgid "Chart No"
-msgstr "số chart"
+msgstr "Số chart"
 
 #: .\Doctor\templates\Doctor\report.html:23
 #: .\Doctor\templates\Doctor\report.html:71
@@ -1408,40 +1438,40 @@ msgstr "số chart"
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\report.html:67
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\reportwindow.html:99
 msgid "ID Number"
-msgstr "số ID"
+msgstr "Số ID"
 
 #: .\Doctor\templates\Doctor\report.html:41
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\report.html:37
 msgid "Report Context"
-msgstr "nội dung report"
+msgstr "Nội dung report"
 
 #: .\Doctor\templates\Doctor\report.html:61
 #: .\Doctor\templates\Doctor\reportwindow.html:85
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\report.html:57
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\reportwindow.html:85
 msgid "Date Of Birth"
-msgstr "ngày thăng năm sinh"
+msgstr "Ngày thăng năm sinh"
 
 #: .\Doctor\templates\Doctor\report.html:81
 #: .\Doctor\templates\Doctor\reportwindow.html:115
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\report.html:77
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\reportwindow.html:115
 msgid "Outbreak Date"
-msgstr "ngày khởi phát bệnh"
+msgstr "Ngày khởi phát bệnh"
 
 #: .\Doctor\templates\Doctor\report.html:85
 #: .\Doctor\templates\Doctor\reportwindow.html:123
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\report.html:81
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\reportwindow.html:123
 msgid "Medical Opinion"
-msgstr "ý kiến bác sĩ"
+msgstr "Ý kiến bác sĩ"
 
 #: .\Doctor\templates\Doctor\report.html:90
 #: .\Doctor\templates\Doctor\reportwindow.html:131
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\report.html:86
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\reportwindow.html:131
 msgid "Purpose"
-msgstr "mục đích"
+msgstr "Mục đích"
 
 #: .\Doctor\templates\Doctor\report.html:95
 msgid "Publication Date"
@@ -1457,26 +1487,28 @@ msgstr "In (tiếng Anh)"
 
 #: .\Doctor\templates\Doctor\report.html:101
 #: .\Laboratory\templates\Laboratory\checklist.html:44
-#: .\Pharmacy\templates\Pharmacy\inventory.html:47 .\Receptionist\forms.py:98
+#: .\Manage\templates\Manage\inventory_precedure.html:38
+#: .\Manage\templates\Manage\inventory_test.html:42
+#: .\Pharmacy\templates\Pharmacy\inventory.html:42 .\Receptionist\forms.py:98
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:113
 msgid "New"
-msgstr "mới"
+msgstr "Mới"
 
 #: .\Doctor\templates\Doctor\report.html:106
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\report.html:101
 msgid "Preview"
-msgstr "tóm lược"
+msgstr "Tóm Lược"
 
 #: .\Doctor\templates\Doctor\report.html:345
 #: .\Pharmacy\templates\Pharmacy\index.html:9
 #: .\Radiation\templates\Radiation\index.html:12
-#: .\Receptionist\templates\Receptionist\index.html:126
+#: .\Receptionist\templates\Receptionist\index.html:136
 #: .\Receptionist\templates\Receptionist\reservation.html:123
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\report.html:278
 #: .\obj\Release\Package\PackageTmp\Radiation\templates\Radiation\index.html:10
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\reservation.html:139
 msgid "Patient List"
-msgstr "danh sách bệnh nhân"
+msgstr "Danh Sách Bệnh Nhân"
 
 #: .\Doctor\templates\Doctor\reportwindow.html:32
 #: .\Receptionist\templates\Receptionist\storage_page.html:476
@@ -1495,7 +1527,7 @@ msgstr ""
 #: .\Radiation\templates\Radiation\index.html:28
 #: .\obj\Release\Package\PackageTmp\Radiation\templates\Radiation\index.html:25
 msgid "Chart"
-msgstr "chart"
+msgstr "Chart"
 
 #: .\Laboratory\forms.py:21
 #: .\obj\Release\Package\PackageTmp\Laboratory\forms.py:22
@@ -1505,7 +1537,7 @@ msgstr "chart"
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:285
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:296
 msgid "Filter"
-msgstr "lọc"
+msgstr "Lọc"
 
 #: .\Laboratory\forms.py:25 .\Manage\forms.py:97 .\Manage\forms.py:184
 #: .\Pharmacy\forms.py:24 .\Radiation\forms.py:57
@@ -1518,7 +1550,7 @@ msgstr "lọc"
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:107
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:300
 msgid "Input"
-msgstr "đầu vào"
+msgstr "Đầu Vào"
 
 #: .\Laboratory\models.py:11 .\Pharmacy\models.py:10 .\Pharmacy\models.py:36
 #: .\Radiation\models.py:23 .\Radiation\models.py:51
@@ -1529,13 +1561,13 @@ msgstr "đầu vào"
 #: .\obj\Release\Package\PackageTmp\Radiation\models.py:22
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:54
 msgid "new"
-msgstr "mới"
+msgstr "Mới"
 
 #: .\Laboratory\models.py:12 .\Pharmacy\models.py:11
 #: .\obj\Release\Package\PackageTmp\Laboratory\models.py:12
 #: .\obj\Release\Package\PackageTmp\Pharmacy\models.py:11
 msgid "hold"
-msgstr "giữ"
+msgstr "Giữ"
 
 #: .\Laboratory\models.py:13 .\Pharmacy\models.py:12 .\Radiation\models.py:24
 #: .\Receptionist\models.py:56
@@ -1544,11 +1576,11 @@ msgstr "giữ"
 #: .\obj\Release\Package\PackageTmp\Radiation\models.py:23
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:55
 msgid "done"
-msgstr "hoàn thiện"
+msgstr "Hoàn Thiện"
 
 #: .\Laboratory\templates\Laboratory\checklist.html:24
 msgid "Code."
-msgstr "mã"
+msgstr "Mã."
 
 #: .\Laboratory\templates\Laboratory\checklist.html:25
 #: .\Laboratory\templates\Laboratory\checklist.html:55
@@ -1571,13 +1603,12 @@ msgid "Waiting Time"
 msgstr ""
 
 #: .\Laboratory\templates\Laboratory\checklist.html:45
-#: .\Pharmacy\templates\Pharmacy\inventory.html:48
+#: .\Manage\templates\Manage\inventory_test.html:80
 msgid "Add"
 msgstr "địa chỉ"
 
 #: .\Laboratory\templates\Laboratory\checklist.html:81
-#: .\Pharmacy\templates\Pharmacy\inventory.html:84
-#: .\Receptionist\templates\Receptionist\index.html:690
+#: .\Receptionist\templates\Receptionist\index.html:707
 #: .\Receptionist\templates\Receptionist\reservation.html:105
 #: .\env_local\Lib\site-packages\django\forms\formsets.py:375
 msgid "Delete"
@@ -1586,7 +1617,7 @@ msgstr "Xóa bỏ"
 #: .\Laboratory\templates\Laboratory\index.html:10
 #: .\obj\Release\Package\PackageTmp\Laboratory\templates\Laboratory\index.html:10
 msgid "Lab Finding"
-msgstr "tìm kiếm lab"
+msgstr "Tìm Kiếm Lab"
 
 #: .\Laboratory\templates\Laboratory\index.html:28
 #: .\Laboratory\templates\Laboratory\index.html:75
@@ -1605,7 +1636,7 @@ msgid "Reference Interval"
 msgstr "Liên quan"
 
 #: .\Laboratory\templates\Laboratory\index.html:31
-#: .\Laboratory\templates\Laboratory\index.html:99
+#: .\Laboratory\templates\Laboratory\index.html:103
 #: .\obj\Release\Package\PackageTmp\Laboratory\models.py:24
 #: .\obj\Release\Package\PackageTmp\Laboratory\templates\Laboratory\index.html:30
 #: .\obj\Release\Package\PackageTmp\Laboratory\templates\Laboratory\index.html:104
@@ -1634,7 +1665,7 @@ msgstr "Lưu giữ kết quả"
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:94
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:187
 msgid "Paid"
-msgstr "đã trả"
+msgstr "Đã trả"
 
 #: .\Manage\forms.py:13
 #: .\Receptionist\templates\Receptionist\storage_page.html:194
@@ -1644,7 +1675,7 @@ msgstr "đã trả"
 #: .\obj\Release\Package\PackageTmp\Manage\templates\Manage\manage.html:122
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:188
 msgid "Unpaid"
-msgstr "chưa trả"
+msgstr "Chưa trả"
 
 #: .\Manage\forms.py:19 .\Receptionist\forms.py:279
 #: .\Receptionist\models.py:308
@@ -1681,20 +1712,24 @@ msgstr ""
 msgid "Nmae"
 msgstr "tên"
 
-#: .\Manage\forms.py:170 .\obj\Release\Package\PackageTmp\Doctor\models.py:209
+#: .\Manage\forms.py:170 .\Manage\templates\Manage\inventory_test.html:159
+#: .\Pharmacy\templates\Pharmacy\inventory.html:160
+#: .\obj\Release\Package\PackageTmp\Doctor\models.py:209
 #: .\obj\Release\Package\PackageTmp\Pharmacy\forms.py:105
 #: .\obj\Release\Package\PackageTmp\Pharmacy\forms.py:115
 msgid "Ingredient"
 msgstr "Thành phần"
 
-#: .\Manage\forms.py:171 .\Pharmacy\templates\Pharmacy\inventory.html:29
-#: .\Pharmacy\templates\Pharmacy\inventory.html:67
+#: .\Manage\forms.py:171 .\Manage\templates\Manage\inventory_test.html:27
+#: .\Manage\templates\Manage\inventory_test.html:187
+#: .\Pharmacy\templates\Pharmacy\inventory.html:27
+#: .\Pharmacy\templates\Pharmacy\inventory.html:188
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:203
 #: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:55
 msgid "Country"
-msgstr "quốc tịch"
+msgstr "Xuất xứ"
 
-#: .\Manage\templates\Manage\Manage.html:11
+#: .\Manage\templates\Manage\Manage.html:11 .\app\templates\app\layout.html:113
 msgid "REVENUE TOTAL"
 msgstr "tổng doanh thu"
 
@@ -1710,14 +1745,18 @@ msgstr "tình trạng doanh thu"
 #: .\Manage\templates\Manage\Manage.html:149
 #: .\Manage\templates\Manage\Manage.html:157
 #: .\Manage\templates\Manage\Manage.html:165
-#: .\Receptionist\templates\Receptionist\index.html:660
-#: .\Receptionist\templates\Receptionist\index.html:672
+#: .\Receptionist\templates\Receptionist\index.html:673
+#: .\Receptionist\templates\Receptionist\index.html:685
 #: .\Receptionist\templates\Receptionist\storage_page.html:174
 msgid "ALL"
 msgstr "TẤT CẢ"
 
 #: .\Manage\templates\Manage\Manage.html:84
+#: .\Manage\templates\Manage\inventory_test.html:67
+#: .\Manage\templates\Manage\inventory_test.html:94
 #: .\Pharmacy\templates\Pharmacy\index.html:24
+#: .\Pharmacy\templates\Pharmacy\inventory.html:67
+#: .\Pharmacy\templates\Pharmacy\inventory.html:94
 #: .\Radiation\templates\Radiation\index.html:27
 #: .\Receptionist\templates\Receptionist\storage_page.html:24
 #: .\Receptionist\templates\Receptionist\storage_page.html:188
@@ -1743,11 +1782,205 @@ msgstr "Cách chi trả"
 
 #: .\Manage\templates\Manage\Manage.html:122
 msgid "Doctors"
-msgstr "Bác sĩ"
+msgstr "Bác sĩ"m
 
 #: .\Manage\templates\Manage\Manage.html:241
 msgid "MEDICINE"
-msgstr "thuốc"
+msgstr "Thuốc"
+
+#: .\Manage\templates\Manage\inventory_precedure.html:9
+msgid "Procedure Inventory"
+msgstr "Thủ tục"
+
+#: .\Manage\templates\Manage\inventory_precedure.html:25
+#: .\obj\Release\Package\PackageTmp\Doctor\models.py:91
+#: .\obj\Release\Package\PackageTmp\Doctor\models.py:135
+#: .\obj\Release\Package\PackageTmp\Doctor\models.py:178
+msgid "Vietnamese Name"
+msgstr "Tiếng Việt"
+
+#: .\Manage\templates\Manage\inventory_precedure.html:26
+#: .\Manage\templates\Manage\inventory_precedure.html:58
+#: .\Manage\templates\Manage\inventory_test.html:132
+#: .\Pharmacy\templates\Pharmacy\inventory.html:133
+#: .\app\templates\app\login.html:72
+#: .\obj\Release\Package\PackageTmp\app\templates\app\login.html:74
+msgid "Class"
+msgstr ""
+
+#: .\Manage\templates\Manage\inventory_precedure.html:79
+#: .\Manage\templates\Manage\inventory_test.html:151
+#: .\Pharmacy\templates\Pharmacy\inventory.html:152
+msgid "Name in Vietnamese"
+msgstr "Tiếng Việt"
+
+#: .\Manage\templates\Manage\inventory_precedure.html:87
+#: .\Manage\templates\Manage\inventory_test.html:236
+#: .\Pharmacy\templates\Pharmacy\inventory.html:237
+msgid "Price for Sale"
+msgstr ""
+
+#: .\Manage\templates\Manage\inventory_precedure.html:93
+#: .\Manage\templates\Manage\inventory_test.html:242
+#: .\Pharmacy\templates\Pharmacy\inventory.html:243
+msgid "Price(Dollar $)"
+msgstr ""
+
+#: .\Manage\templates\Manage\inventory_test.html:9
+#: .\Pharmacy\templates\Pharmacy\inventory.html:9
+#: .\app\templates\app\layout.html:106
+msgid "Inventory"
+msgstr "Tồn Kho"
+
+#: .\Manage\templates\Manage\inventory_test.html:24
+#: .\Pharmacy\templates\Pharmacy\index.html:56
+#: .\Pharmacy\templates\Pharmacy\inventory.html:24
+#: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:53
+msgid "Trade Name"
+msgstr "tên công ty"
+
+#: .\Manage\templates\Manage\inventory_test.html:25
+#: .\Pharmacy\templates\Pharmacy\inventory.html:25
+#: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:56
+msgid "Generic Name"
+msgstr "Tên chung"
+
+#: .\Manage\templates\Manage\inventory_test.html:26
+#: .\Manage\templates\Manage\inventory_test.html:201
+#: .\Pharmacy\templates\Pharmacy\inventory.html:26
+#: .\Pharmacy\templates\Pharmacy\inventory.html:202
+#: .\obj\Release\Package\PackageTmp\Doctor\models.py:197
+#: .\obj\Release\Package\PackageTmp\Pharmacy\forms.py:95
+#: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:54
+msgid "Company"
+msgstr "Công ty"
+
+#: .\Manage\templates\Manage\inventory_test.html:30
+#: .\Pharmacy\templates\Pharmacy\inventory.html:30
+#: .\obj\Release\Package\PackageTmp\Doctor\models.py:225
+#: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:59
+msgid "Count"
+msgstr "Tính"
+
+#: .\Manage\templates\Manage\inventory_test.html:49
+#: .\Pharmacy\templates\Pharmacy\inventory.html:49
+msgid "Inventory History"
+msgstr "Tồn Kho"
+
+#: .\Manage\templates\Manage\inventory_test.html:69
+#: .\Manage\templates\Manage\inventory_test.html:97
+#: .\Pharmacy\templates\Pharmacy\inventory.html:69
+#: .\Pharmacy\templates\Pharmacy\inventory.html:97
+#: .\Receptionist\templates\Receptionist\storage_page.html:82
+#: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:79
+msgid "Quantity"
+msgstr "Số lượng"
+
+#: .\Manage\templates\Manage\inventory_test.html:70
+#: .\Manage\templates\Manage\inventory_test.html:122
+#: .\Pharmacy\templates\Pharmacy\inventory.html:70
+#: .\Pharmacy\templates\Pharmacy\inventory.html:123
+#: .\obj\Release\Package\PackageTmp\Pharmacy\models.py:71
+msgid "Type"
+msgstr ""
+
+#: .\Manage\templates\Manage\inventory_test.html:71
+#: .\Pharmacy\templates\Pharmacy\inventory.html:71
+#: .\Radiation\templates\Radiation\index.html:97
+#: .\obj\Release\Package\PackageTmp\Radiation\models.py:35
+#: .\obj\Release\Package\PackageTmp\Radiation\templates\Radiation\index.html:76
+msgid "Remark"
+msgstr "Lưu ý"
+
+#: .\Manage\templates\Manage\inventory_test.html:87
+#: .\Manage\templates\Manage\inventory_test.html:96
+#: .\Manage\templates\Manage\inventory_test.html:294
+#: .\Pharmacy\templates\Pharmacy\inventory.html:287
+msgid "Expiry Date"
+msgstr "Ngày trả kết quả"
+
+#: .\Manage\templates\Manage\inventory_test.html:88
+#: .\Pharmacy\templates\Pharmacy\inventory.html:88
+msgid "dsds"
+msgstr ""
+
+#: .\Manage\templates\Manage\inventory_test.html:95
+#: .\Pharmacy\templates\Pharmacy\inventory.html:95
+#: .\Receptionist\templates\Receptionist\index.html:126
+#: .\app\templates\app\layout.html:89
+#: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:82
+msgid "Registration"
+msgstr "Đăng Ký"
+
+#: .\Manage\templates\Manage\inventory_test.html:98
+#: .\Pharmacy\templates\Pharmacy\inventory.html:98
+msgid "Days left"
+msgstr "Số ngày"
+
+#: .\Manage\templates\Manage\inventory_test.html:165
+#: .\Pharmacy\templates\Pharmacy\inventory.html:166
+msgid "Ingredient in Vietnamese"
+msgstr ""
+
+#: .\Manage\templates\Manage\inventory_test.html:179
+#: .\Pharmacy\templates\Pharmacy\inventory.html:180
+msgid "Unit in Vietnamese"
+msgstr "Tiếng Việt"
+
+#: .\Manage\templates\Manage\inventory_test.html:193
+#: .\Pharmacy\templates\Pharmacy\inventory.html:194
+msgid "Country in Vietnamese"
+msgstr "Tiếng Việt"
+
+#: .\Manage\templates\Manage\inventory_test.html:209
+#: .\Pharmacy\templates\Pharmacy\inventory.html:210
+msgid "Displaying Name"
+msgstr ""
+
+#: .\Manage\templates\Manage\inventory_test.html:217
+#: .\Pharmacy\templates\Pharmacy\inventory.html:218
+msgid "Price for Purchase"
+msgstr ""
+
+#: .\Manage\templates\Manage\inventory_test.html:223
+#: .\Pharmacy\templates\Pharmacy\inventory.html:224
+msgid "Multiple Level"
+msgstr ""
+
+#: .\Manage\templates\Manage\inventory_test.html:271
+#: .\Pharmacy\templates\Pharmacy\inventory.html:272
+msgid "Goods Receipt"
+msgstr ""
+
+#: .\Manage\templates\Manage\inventory_test.html:278
+msgid "Name of Medicine"
+msgstr "Tên tiếng hàn"
+
+#: .\Manage\templates\Manage\inventory_test.html:286
+#: .\Pharmacy\templates\Pharmacy\inventory.html:279
+msgid "Date of Registration"
+msgstr "Đăng Ký"
+
+#: .\Manage\templates\Manage\inventory_test.html:302
+#: .\Pharmacy\templates\Pharmacy\inventory.html:295
+#: .\Pharmacy\templates\Pharmacy\inventory.html:336
+#: .\obj\Release\Package\PackageTmp\Pharmacy\forms.py:74
+msgid "Changes"
+msgstr ""
+
+#: .\Manage\templates\Manage\inventory_test.html:310
+#: .\Pharmacy\templates\Pharmacy\inventory.html:303
+#: .\Pharmacy\templates\Pharmacy\inventory.html:344
+#: .\Receptionist\templates\Receptionist\reservation.html:96
+#: .\obj\Release\Package\PackageTmp\Pharmacy\models.py:65
+#: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:349
+#: .\obj\Release\Package\PackageTmp\Receptionist\models.py:194
+#: .\obj\Release\Package\PackageTmp\Receptionist\models.py:225
+#: .\obj\Release\Package\PackageTmp\Receptionist\models.py:259
+#: .\obj\Release\Package\PackageTmp\Receptionist\models.py:300
+#: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\reservation.html:114
+msgid "Memo"
+msgstr "lưu"
 
 #: .\Patient\forms.py:29 .\Receptionist\forms.py:82
 #: .\Receptionist\templates\Receptionist\index.html:28
@@ -1770,7 +2003,7 @@ msgid "Name Eng"
 msgstr "Tên tiếng anh"
 
 #: .\Patient\forms.py:66 .\Receptionist\forms.py:58 .\Receptionist\forms.py:85
-#: .\Receptionist\templates\Receptionist\index.html:144
+#: .\Receptionist\templates\Receptionist\index.html:154
 #: .\Receptionist\templates\Receptionist\storage_page.html:59
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:70
 #: .\obj\Release\Package\PackageTmp\Patient\forms.py:66
@@ -1779,9 +2012,9 @@ msgstr "Tên tiếng anh"
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:162
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:56
 msgid "Phone Number"
-msgstr "số điện thoại"
+msgstr "Số điện thoại"
 
-#: .\Patient\forms.py:118 .\Receptionist\templates\Receptionist\index.html:101
+#: .\Patient\forms.py:118 .\Receptionist\templates\Receptionist\index.html:111
 #: .\obj\Release\Package\PackageTmp\Patient\forms.py:117
 #: .\obj\Release\Package\PackageTmp\Patient\models.py:103
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:114
@@ -1801,45 +2034,26 @@ msgstr "địa chỉ"
 msgid "decrese"
 msgstr ""
 
-#: .\Pharmacy\models.py:39
-msgid "notusing"
-msgstr ""
+#: .\Pharmacy\models.py:39 .\Receptionist\models.py:55
+msgid "deleted"
+msgstr "Xóa bỏ"
 
 #: .\Pharmacy\templates\Pharmacy\index.html:41
 msgid "Ordered Medicine"
-msgstr "thuốc đã kê"
+msgstr "Thuốc sã kê"
 
-#: .\Pharmacy\templates\Pharmacy\index.html:56
-#: .\Pharmacy\templates\Pharmacy\inventory.html:26
-#: .\Pharmacy\templates\Pharmacy\inventory.html:54
-#: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:53
-msgid "Trade Name"
-msgstr "tên công ty"
+#: .\Pharmacy\templates\Pharmacy\inventory.html:80
+msgid "+ Add"
+msgstr ""
 
-#: .\Pharmacy\templates\Pharmacy\inventory.html:9
-#: .\app\templates\app\layout.html:104
-msgid "Inventory"
-msgstr "Tồn Kho"
+#: .\Pharmacy\templates\Pharmacy\inventory.html:87
+#: .\Pharmacy\templates\Pharmacy\inventory.html:96\
+msgid "Expiration Date"
+msgstr "Ngày xuất bản"
 
-#: .\Pharmacy\templates\Pharmacy\inventory.html:27
-#: .\Pharmacy\templates\Pharmacy\inventory.html:58
-#: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:56
-msgid "Generic Name"
-msgstr "Tên chung"
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:28
-#: .\Pharmacy\templates\Pharmacy\inventory.html:63
-#: .\obj\Release\Package\PackageTmp\Doctor\models.py:197
-#: .\obj\Release\Package\PackageTmp\Pharmacy\forms.py:95
-#: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:54
-msgid "Company"
-msgstr "công ty"
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:32
-#: .\obj\Release\Package\PackageTmp\Doctor\models.py:225
-#: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:59
-msgid "Count"
-msgstr "tính"
+#: .\Pharmacy\templates\Pharmacy\inventory.html:329
+msgid "Disposal"
+msgstr ""
 
 #: .\Radiation\templates\Radiation\index.html:50
 msgid "Patient Name"
@@ -1854,12 +2068,6 @@ msgstr "hình ảnh"
 #: .\Radiation\templates\Radiation\index.html:74
 msgid "Viewer"
 msgstr "nhìn tổng quan"
-
-#: .\Radiation\templates\Radiation\index.html:97
-#: .\obj\Release\Package\PackageTmp\Radiation\models.py:35
-#: .\obj\Release\Package\PackageTmp\Radiation\templates\Radiation\index.html:76
-msgid "Remark"
-msgstr "đánh dấu"
 
 #: .\Receptionist\forms.py:99
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:114
@@ -1878,7 +2086,7 @@ msgstr "Tất cả"
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:273
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:267
 msgid "paid"
-msgstr "đã trả"
+msgstr "Đã trả"
 
 #: .\Receptionist\forms.py:159 .\Receptionist\forms.py:246
 #: .\Receptionist\models.py:258
@@ -1886,7 +2094,7 @@ msgstr "đã trả"
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:274
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:268
 msgid "unpaid"
-msgstr "chưa trả"
+msgstr "Chưa trả"
 
 #: .\Receptionist\forms.py:178
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:199
@@ -1897,10 +2105,6 @@ msgstr "có tới khám"
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:200
 msgid "unvisited"
 msgstr "không tới khám"
-
-#: .\Receptionist\models.py:55
-msgid "deleted"
-msgstr "Xóa bỏ"
 
 #: .\Receptionist\models.py:306
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:308
@@ -1916,48 +2120,46 @@ msgstr "THẺ"
 msgid "New Patient"
 msgstr "Bệnh nhân"
 
-#: .\Receptionist\templates\Receptionist\index.html:84
-#: .\Receptionist\templates\Receptionist\index.html:680
+#: .\Receptionist\templates\Receptionist\index.html:85
+#: .\Receptionist\templates\Receptionist\index.html:693
 msgid "C / C"
 msgstr ""
 
-#: .\Receptionist\templates\Receptionist\index.html:108
-#: .\Receptionist\templates\Receptionist\index.html:548
+#: .\Receptionist\templates\Receptionist\index.html:93
+msgid "Vital Sign"
+msgstr "Dấu Hiệu Sinh Tồn"
+
+#: .\Receptionist\templates\Receptionist\index.html:118
+#: .\Receptionist\templates\Receptionist\index.html:561
 #: .\Receptionist\templates\Receptionist\storage_page.html:136
 msgid "Inform Tax Invoice"
-msgstr "thuế"
+msgstr "Thuế"
 
-#: .\Receptionist\templates\Receptionist\index.html:116
-#: .\app\templates\app\layout.html:89
-#: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:82
-msgid "Registration"
-msgstr "Đăng Ký"
-
-#: .\Receptionist\templates\Receptionist\index.html:157
+#: .\Receptionist\templates\Receptionist\index.html:167
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:175
 msgid "Date:"
-msgstr "ngày:"
-
-#: .\Receptionist\templates\Receptionist\index.html:180
-#: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:197
-msgid "New / Repeat"
-msgstr "mới / lặp lại"
+msgstr "Ngày:"
 
 #: .\Receptionist\templates\Receptionist\index.html:192
+#: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:197
+msgid "New / Repeat"
+msgstr "Mới / Lặp lại"
+
+#: .\Receptionist\templates\Receptionist\index.html:204
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:208
 msgid "Reservation Status"
-msgstr "tình trạng đặt hẹn"
+msgstr "Tình Trạng Dặt Hẹn"
 
-#: .\Receptionist\templates\Receptionist\index.html:214
+#: .\Receptionist\templates\Receptionist\index.html:227
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:229
 msgid "PhoneNumber"
-msgstr "số điện thoại"
+msgstr "Số điện thoại"
 
-#: .\Receptionist\templates\Receptionist\index.html:579
+#: .\Receptionist\templates\Receptionist\index.html:592
 msgid "Tax Invoice Information"
 msgstr "thuế"
 
-#: .\Receptionist\templates\Receptionist\index.html:584
+#: .\Receptionist\templates\Receptionist\index.html:597
 #: .\Receptionist\templates\Receptionist\storage_page.html:139
 #: .\obj\Release\Package\PackageTmp\Patient\models.py:117
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:124
@@ -1965,7 +2167,7 @@ msgstr "thuế"
 msgid "Number"
 msgstr "số"
 
-#: .\Receptionist\templates\Receptionist\index.html:592
+#: .\Receptionist\templates\Receptionist\index.html:605
 #: .\Receptionist\templates\Receptionist\storage_page.html:143
 #: .\obj\Release\Package\PackageTmp\Patient\models.py:123
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:128
@@ -1973,15 +2175,15 @@ msgstr "số"
 msgid "Company Name"
 msgstr "tên công ty"
 
-#: .\Receptionist\templates\Receptionist\index.html:623
+#: .\Receptionist\templates\Receptionist\index.html:636
 msgid "Edit Reception"
 msgstr "tiếp nhận"
 
-#: .\Receptionist\templates\Receptionist\index.html:653
+#: .\Receptionist\templates\Receptionist\index.html:666
 msgid "Reception Information"
 msgstr "trạng thái lúc tiếp nhận"
 
-#: .\Receptionist\templates\Receptionist\index.html:692
+#: .\Receptionist\templates\Receptionist\index.html:709
 msgid "Close"
 msgstr "gần"
 
@@ -1990,87 +2192,72 @@ msgstr "gần"
 msgid "Reservation Date"
 msgstr "ngày giờ hẹn"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:96
-#: .\obj\Release\Package\PackageTmp\Pharmacy\models.py:65
-#: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:349
-#: .\obj\Release\Package\PackageTmp\Receptionist\models.py:194
-#: .\obj\Release\Package\PackageTmp\Receptionist\models.py:225
-#: .\obj\Release\Package\PackageTmp\Receptionist\models.py:259
-#: .\obj\Release\Package\PackageTmp\Receptionist\models.py:300
-#: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\reservation.html:114
-msgid "Memo"
-msgstr "lưu"
-
 #: .\Receptionist\templates\Receptionist\reservation.html:180
 msgid "New Reservation"
 msgstr "Đặt chỗ mới"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:451
+#: .\Receptionist\templates\Receptionist\reservation.html:459
 msgid "No Patient"
 msgstr "Bệnh nhân"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:529
+#: .\Receptionist\templates\Receptionist\reservation.html:537
 msgid "selecte Reservation Date ! "
 msgstr "ngày giờ hẹn"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:533
+#: .\Receptionist\templates\Receptionist\reservation.html:541
 msgid "Name is necessary! "
 msgstr ""
 
-#: .\Receptionist\templates\Receptionist\reservation.html:538
+#: .\Receptionist\templates\Receptionist\reservation.html:546
 msgid "Depart is necessary! ! "
 msgstr ""
 
-#: .\Receptionist\templates\Receptionist\reservation.html:543
+#: .\Receptionist\templates\Receptionist\reservation.html:551
 msgid "Doctor is necessary! ! "
 msgstr ""
 
-#: .\Receptionist\templates\Receptionist\reservation.html:548
+#: .\Receptionist\templates\Receptionist\reservation.html:556
 msgid "Memo is necessary! ! "
 msgstr ""
 
-#: .\Receptionist\templates\Receptionist\reservation.html:554
-msgid "Date of Birth is necessary! ! "
-msgstr "Ngày sinh"
-
-#: .\Receptionist\templates\Receptionist\reservation.html:557
+#: .\Receptionist\templates\Receptionist\reservation.html:564
 msgid "Date of birth should be 0000(year)-00(month)-00(day)"
 msgstr ""
 "Ngày tháng năm nên để theo định dạng 0000( Năm ) - 00 ( Tháng ) - 00 "
 "( Ngày )."
 
-#: .\Receptionist\templates\Receptionist\reservation.html:582
+#: .\Receptionist\templates\Receptionist\reservation.html:590
 msgid "saved"
 msgstr "đã lưu"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:601
+#: .\Receptionist\templates\Receptionist\reservation.html:609
 msgid "Add Reservation"
 msgstr "đặt hẹn"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:613
+#: .\Receptionist\templates\Receptionist\reservation.html:621
 msgid "Edit Reservation"
 msgstr "đặt hẹn"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:646
+#: .\Receptionist\templates\Receptionist\reservation.html:657
 msgid "Do you want to delete?"
 msgstr "Bạn có chắc muốn xóa mục này không?"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:656
+#: .\Receptionist\templates\Receptionist\reservation.html:667
 msgid "Deleted"
 msgstr "Xóa bỏ"
 
 #: .\Receptionist\templates\Receptionist\storage_page.html:14
 msgid "Payment Waiting List"
-msgstr "danh sách chờ thanh tóa"
+msgstr "Danh Sách Chờ Thanh Tóa"
 
 #: .\Receptionist\templates\Receptionist\storage_page.html:39
 msgid "Reciept"
-msgstr "hóa đơn"
+msgstr "Hóa Đơn"
 
 #: .\Receptionist\templates\Receptionist\storage_page.html:79
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:76
 msgid "Itemcode / Description"
-msgstr "kê đơn"
+msgstr "Kê đơn"
 
 #: .\Receptionist\templates\Receptionist\storage_page.html:80
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:77
@@ -2082,20 +2269,15 @@ msgstr "tư vấn"
 msgid "Unit price"
 msgstr "đơn vị giá"
 
-#: .\Receptionist\templates\Receptionist\storage_page.html:82
-#: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:79
-msgid "Quantity"
-msgstr "số lượng"
-
 #: .\Receptionist\templates\Receptionist\storage_page.html:83
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:80
 msgid "Amount(VND)"
-msgstr "lượng"
+msgstr "Lượng"
 
 #: .\Receptionist\templates\Receptionist\storage_page.html:94
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:91
 msgid "Medicine in detail"
-msgstr "danh sách chi tiết thuốc"
+msgstr "Danh sách chi tiết thuốc"
 
 #: .\Receptionist\templates\Receptionist\storage_page.html:110
 msgid "Show Past"
@@ -2117,11 +2299,11 @@ msgstr "Ý kiến của bác sĩ"
 #: .\Receptionist\templates\Receptionist\storage_page.html:169
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:170
 msgid "Paid List"
-msgstr "danh sách đã thu"
+msgstr "Danh Sách Đã Thu"
 
 #: .\Receptionist\templates\Receptionist\storage_page.html:195
 msgid "Balance"
-msgstr "phần còn lại"
+msgstr "Phần còn lại"
 
 #: .\Receptionist\templates\Receptionist\storage_page.html:400
 msgid "의사소견"
@@ -2150,14 +2332,22 @@ msgstr "Thanh Toán"
 msgid "Reservation"
 msgstr "Đặt Hẹn"
 
-#: .\app\templates\app\layout.html:101
+#: .\app\templates\app\layout.html:102
 #: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:94
 msgid "Audit"
 msgstr "Kiểm toán"
 
-#: .\app\templates\app\layout.html:107
+#: .\app\templates\app\layout.html:109
 msgid "Laboratory checklist"
 msgstr "Xét Nghiệm"
+
+#: .\app\templates\app\layout.html:114
+msgid "Prodecdures"
+msgstr "Thủ thuật"
+
+#: .\app\templates\app\layout.html:115
+msgid "Medicines"
+msgstr "Thuốc"
 
 #: .\app\templates\app\login.html:24 .\app\templates\app\login.html:60
 #: .\obj\Release\Package\PackageTmp\app\templates\app\login.html:24
@@ -2176,11 +2366,6 @@ msgstr "Đăng nhập"
 #: .\obj\Release\Package\PackageTmp\app\templates\app\login.html:54
 msgid "Register"
 msgstr "ghi danh"
-
-#: .\app\templates\app\login.html:72
-#: .\obj\Release\Package\PackageTmp\app\templates\app\login.html:74
-msgid "Class"
-msgstr ""
 
 #: .\app\templates\app\loginpartial.html:10
 #: .\obj\Release\Package\PackageTmp\app\templates\app\loginpartial.html:10
@@ -2990,8 +3175,6 @@ msgid "sep"
 msgstr "sử dụng"
 
 #: .\env_local\Lib\site-packages\django\utils\dates.py:20
-#, fuzzy
-#| msgid "Doctor"
 msgid "oct"
 msgstr "Bác sĩ"
 
@@ -3024,8 +3207,6 @@ msgid "April"
 msgstr ""
 
 #: .\env_local\Lib\site-packages\django\utils\dates.py:27
-#, fuzzy
-#| msgid "Pay"
 msgctxt "abbrev. month"
 msgid "May"
 msgstr "Thanh toán"
@@ -3076,8 +3257,6 @@ msgid "February"
 msgstr ""
 
 #: .\env_local\Lib\site-packages\django\utils\dates.py:39
-#, fuzzy
-#| msgid "Search"
 msgctxt "alt. month"
 msgid "March"
 msgstr "tìm kiếm"
@@ -3088,8 +3267,6 @@ msgid "April"
 msgstr ""
 
 #: .\env_local\Lib\site-packages\django\utils\dates.py:41
-#, fuzzy
-#| msgid "Pay"
 msgctxt "alt. month"
 msgid "May"
 msgstr "Thanh toán"
@@ -3120,8 +3297,6 @@ msgid "October"
 msgstr ""
 
 #: .\env_local\Lib\site-packages\django\utils\dates.py:47
-#, fuzzy
-#| msgid "Number"
 msgctxt "alt. month"
 msgid "November"
 msgstr "số"
@@ -3247,8 +3422,6 @@ msgstr ""
 #: .\env_local\Lib\site-packages\django\views\generic\dates.py:61
 #: .\env_local\Lib\site-packages\django\views\generic\dates.py:111
 #: .\env_local\Lib\site-packages\django\views\generic\dates.py:208
-#, fuzzy
-#| msgid "Date of Birth"
 msgid "Date out of range"
 msgstr "Ngày sinh"
 
@@ -3413,20 +3586,14 @@ msgid "RADIATION"
 msgstr "chẩn đoán hình ảnh"
 
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:22
-#, fuzzy
-#| msgid "Korean"
 msgid "Korean Name"
 msgstr "Tiếng Hàn"
 
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:26
-#, fuzzy
-#| msgid "English"
 msgid "English Name"
 msgstr "tiếng Anh"
 
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:31
-#, fuzzy
-#| msgid "name"
 msgid "Nickname"
 msgstr "tên"
 
@@ -3435,34 +3602,20 @@ msgid "depart"
 msgstr "Khoa"
 
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:44
-#, fuzzy
-#| msgid "user_role"
 msgid "user"
 msgstr "tên đăng nhập"
 
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:55
-#, fuzzy
-#| msgid "Name_Kor"
 msgid "name_kor"
 msgstr "Tên tiếng hàn"
 
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:61
-#, fuzzy
-#| msgid "Name_Eng"
 msgid "name_eng"
 msgstr "Tên tiếng anh"
 
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:67
 msgid "code"
 msgstr ""
-
-#: .\obj\Release\Package\PackageTmp\Doctor\models.py:91
-#: .\obj\Release\Package\PackageTmp\Doctor\models.py:135
-#: .\obj\Release\Package\PackageTmp\Doctor\models.py:178
-#, fuzzy
-#| msgid "Vietnamese"
-msgid "Vietnamese Name"
-msgstr "Tiếng Việt"
 
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:98
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:148
@@ -3471,8 +3624,6 @@ msgid "Category"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:109
-#, fuzzy
-#| msgid "Price"
 msgid "price"
 msgstr "giá"
 
@@ -3494,8 +3645,6 @@ msgid "Date Ordered"
 msgstr "ngày lưu giữ"
 
 #: .\obj\Release\Package\PackageTmp\Laboratory\models.py:34
-#, fuzzy
-#| msgid "Date of Examination"
 msgid "Date Examination"
 msgstr "ngày thăm khám"
 
@@ -3507,8 +3656,6 @@ msgstr "ngày dự kiến"
 
 #: .\obj\Release\Package\PackageTmp\Laboratory\models.py:45
 #: .\obj\Release\Package\PackageTmp\Radiation\models.py:47
-#, fuzzy
-#| msgid "Name Kor"
 msgid "Name of Service"
 msgstr "Tên tiếng hàn"
 
@@ -3539,27 +3686,19 @@ msgid "Profit Total"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\Patient\models.py:21
-#, fuzzy
-#| msgid "Phone Number"
 msgid "Phone Numer"
-msgstr "số điện thoại"
+msgstr "Số điện thoại"
 
 #: .\obj\Release\Package\PackageTmp\Patient\models.py:34
-#, fuzzy
-#| msgid "Register"
 msgid "Date Registered"
 msgstr "ghi danh"
 
 #: .\obj\Release\Package\PackageTmp\Patient\models.py:39
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:345
-#, fuzzy
-#| msgid "Inform Tax Invoice"
 msgid "Tax Invoice"
 msgstr "thuế"
 
 #: .\obj\Release\Package\PackageTmp\Patient\models.py:45
-#, fuzzy
-#| msgid "Address"
 msgid "Adress"
 msgstr "Địa chỉ"
 
@@ -3587,19 +3726,9 @@ msgstr ""
 msgid "Purse Rate"
 msgstr ""
 
-#: .\obj\Release\Package\PackageTmp\Pharmacy\forms.py:74
-msgid "Changes"
-msgstr ""
-
 #: .\obj\Release\Package\PackageTmp\Pharmacy\models.py:29
-#, fuzzy
-#| msgid "Date Expected"
 msgid "Date Received"
 msgstr "ngày dự kiến"
-
-#: .\obj\Release\Package\PackageTmp\Pharmacy\models.py:71
-msgid "Type"
-msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:20
 msgid "Today "
@@ -3616,8 +3745,6 @@ msgid "Chief Complaint"
 msgstr "triệu chứng chính"
 
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:44
-#, fuzzy
-#| msgid "Chief Complaint"
 msgid "Cheif Complaint"
 msgstr "triệu chứng chính"
 
@@ -3631,8 +3758,6 @@ msgid "Method"
 msgstr "Phương pháp"
 
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:326
-#, fuzzy
-#| msgid "Payment"
 msgid "Payment Info"
 msgstr "Thanh toán"
 
@@ -3656,14 +3781,10 @@ msgid "LEMIT"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:328
-#, fuzzy
-#| msgid "Paid List"
 msgid "Paid Date"
 msgstr "danh sách đã thu"
 
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:370
-#, fuzzy
-#| msgid "Doctor"
 msgid "Doctor Report"
 msgstr "Bác sĩ"
 
@@ -3680,8 +3801,6 @@ msgid "Name_Eng"
 msgstr "Tên tiếng anh"
 
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:189
-#, fuzzy
-#| msgid "Balance"
 msgid "Valance"
 msgstr "phần còn lại"
 
@@ -3690,13 +3809,12 @@ msgid "Doctor's Clinic"
 msgstr ""
 
 #: .\physical_therapist\templates\physical_therapist\index.html:165
-#, fuzzy
-#| msgid "Time"
 msgid "Time(s)"
 msgstr "thời gian"
 
-#, fuzzy
-#~| msgid "Patient Information"
+#~ msgid "Date of Birth is necessary! ! "
+#~ msgstr "Ngày sinh"
+
 #~ msgid "Patient Info"
 #~ msgstr "thông tin bệnh nhân"
 
@@ -3704,13 +3822,10 @@ msgstr "thời gian"
 #~ msgstr "sửa"
 
 #~ msgid "Search Patient"
-#~ msgstr "tìm kiếm bệnh nhân"
+#~ msgstr "Tìm Kiếm Bệnh Nhân"
 
 #~ msgid "ITEMCODE/DESCRIPTION"
-#~ msgstr "kê đơn"
-
-#~ msgid "Unit Price"
-#~ msgstr "đơn vị giá"
+#~ msgstr "Kê đơn"
 
 #~ msgid "nonVAT"
 #~ msgstr "không thuế VAT"

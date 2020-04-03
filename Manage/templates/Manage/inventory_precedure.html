@@ -1,0 +1,148 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+<div class="inventory_precedure_grid">
+    <div class="inventory_precedure_database partition">
+        <div class="medicine_table_title">
+            <span class="btn btn-danger inventory_table_title_span">{{ _('Procedure Inventory') }}</span>
+            <div style="float:right;">
+                <select name="filter" id="precedure_search_select" class="form-control costom-select inventory_search_select" aria-describedby="basic-addon1">
+                    <option value="name">name</option>
+                </select>
+                <input type="text" name="search_input" id="precedure_search_input" class="form-control inventory_search_select" aria-describedby="basic-addon1" required="">
+                <input type="button" class="btn" value="{{ _('Search')}}" onclick="precedure_database_search()" />
+            </div>
+        </div>
+        <div class="precedure_database_list">
+            <div class="precedure_database_table">
+                <table class="table table-bordered table-hover table-striped" id="inventory_database_table">
+                    <thead>
+                        <tr>
+                            <th>{{ _('Code') }}</th>
+                            <th>{{ _('Name') }}</th>
+                            <th>{{ _('Vietnamese Name') }}</th>
+                            <th>{{ _('Class') }}</th>
+                            <th>{{ _('Price') }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <ul class="pagination" id="medicine_pagnation">
+            </ul>
+            <div style="float:right; margin-top:20px;">
+                <input type="button" class="btn btn-info" id="precedure_new" value="{{ _('New') }}" onclick="edit_database_precedure()" />
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div id="add_edit_database" class="modal fade">
+    <div class="modal-dialog add_edit_modal" style="width:800px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4 id="add_edit_database_header"></h4>
+                <div id="modalBody" class="modal-body">
+                    <input type="hidden" id="add_edit_database_id" />
+                    <table class="table" id="add_edit_database_table">
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Class') }}</span>
+                                    <select id="add_edit_database_class" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                        {% for class in precedure_class %}
+                                        <option value="{{ class.id }}">{{ class.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Name') }}*</span>
+                                    <input type="text" id="add_edit_database_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Name')}} {{_('in Vietnamese') }}*</span>
+                                    <input type="text" id="add_edit_database_name_vie" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Price for Sale') }}</span>
+                                    <input type="number" id="add_edit_database_price_output" class="form-control medicine_control_input" aria-describedby="basic-addon1" min="0">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Price(Dollar $)') }}</span>
+                                    <input type="number" id="add_edit_database_price_dollar" class="form-control medicine_control_input" aria-describedby="basic-addon1" min="0">
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+
+                    <a class="btn btn-primary" onclick="save_database_precedure()">{{ _('Save') }}</a>
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/inventory_precedure.css' %}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<script src="{% static 'js/inventory_precedure.js' %}" type="text/javascript"></script>
+{% endblock %}

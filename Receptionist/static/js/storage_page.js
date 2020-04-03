@@ -33,7 +33,7 @@ $(function () {
             hour = 17;
         picker.startDate.set({ hour: hour, });
         $('#id_follow_update').val(picker.startDate.format('YYYY-MM-DD HH:mm:ss'));
-        if (confirm("예약을 변경 하시겠습니까?")) {
+        if (confirm(gettext("예약을 변경 하시겠습니까?"))) {
             var reservation_date = picker.startDate.format('YYYY-MM-DD HH:mm:ss');
             var reception = $('#selected_reception').val();
 
@@ -82,7 +82,15 @@ $(function () {
        
     });
 
-    $('#storage_list_calendar').daterangepicker({
+    $('#storage_list_calendar_start').daterangepicker({
+        singleDatePicker:true,
+        showDropdowns: true,
+        locale: {
+            format: 'YYYY-MM-DD'
+        }
+    });
+    $('#storage_list_calendar_end').daterangepicker({
+        singleDatePicker: true,
         showDropdowns: true,
         locale: {
             format: 'YYYY-MM-DD'
@@ -180,8 +188,7 @@ function get_patient_past(reception_id) {
                     "<td style='vertical-align:middle;' >" + response.datas[i]['date'] + "</td>" +
                     "<td style='vertical-align:middle;' >" + response.datas[i]['Depart'] + '<br/>' + response.datas[i]['Doctor'] + "</td>" +
                     "<td style='vertical-align:middle;' >" + numberWithCommas(response.datas[i]['paid']) + '</td>' +
-                    "<td style='vertical-align:middle;' >" + numberWithCommas(response.datas[i]['unpaid_total']) + '</td>' +
-                    "<td style='vertical-align:middle;' >" + numberWithCommas(Number(response.datas[i]['unpaid_total'] + response.datas[i]['paid'])) + '</td></td>';
+                    "<td style='vertical-align:middle;' >" + numberWithCommas(Number(response.datas[i]['unpaid_total'])) + '</td></td>';
 
                 //"<td>" + numberWithCommas(response.datas[i]['total_amount']) + "VND</td></tr>";
 
@@ -581,7 +588,7 @@ function waiting_selected(paymentrecord_id) {
             $('#recept_date_of_birth').html(response.datas['date_of_birth']);
             $('#recept_depart').html(response.datas['depart']);
 
-
+            $("#id_pay").val(0);
 
             $('#discount_input').keyup(function () {
                 var regex = /[^0-9]/g;
@@ -744,12 +751,9 @@ function waiting_list(Today = false) {
         start = today = moment().format('YYYY[-]MM[-]DD');
         end = today = moment().format('YYYY[-]MM[-]DD');
     } else {
-        date = $('#storage_list_calendar').val();
-        start = date.split(' - ')[0];
-        end = date.split(' - ')[1];
+        start = $('#storage_list_calendar_start').val();
+        end = $('#storage_list_calendar_end').val();
     }
-
-
 
     $.ajax({
         type: 'POST',
@@ -790,9 +794,8 @@ function waiting_list(Today = false) {
                     "<td style='vertical-align:middle;' >" + response.datas[i]['date'] + "</td>" +
                     "<td style='vertical-align:middle;' >" + response.datas[i]['Depart'] + '<br/>' + response.datas[i]['Doctor'] + "</td>" +
                     "<td style='vertical-align:middle;' >" + numberWithCommas( response.datas[i]['paid'] )+ '</td>' +
-                    "<td style='vertical-align:middle;' >" + numberWithCommas( response.datas[i]['unpaid_total'] ) + '</td>' +
-                        "<td style='vertical-align:middle;' >" + numberWithCommas( Number(response.datas[i]['unpaid_total'] + response.datas[i]['paid']) )+ '</td></td>'; 
-
+                        "<td style='vertical-align:middle;' >" + numberWithCommas(Number(response.datas[i]['unpaid_total']) )+ '</td></td>'; 
+                 
                     //"<td>" + numberWithCommas(response.datas[i]['total_amount']) + "VND</td></tr>";
                     
 
@@ -818,7 +821,7 @@ function get_today_list() {
             'doctor': $("#waiting_list_doctor option:selected").val(),
             'depart': $('#depart_select').val(),
         },
-        dataType: 'Json',
+        dataType: 'Json',  
         success: function (response) {
             $('#storage_today_table > tbody ').empty();
             for (var i in response.datas) {
@@ -1169,8 +1172,9 @@ function save_storage() {
         dataType: 'Json',
         success: function (response) {
             if (response.result == 'paid') {
-                alertalert(gettext('Already paid.'));
+                alert(gettext('Already paid.'));
                 waiting_list(true);
+                get_today_list();
             } else if (response.result == 'overflowed') {
                 alert(gettext('Payment amount should be lower than remaining.'));
             } else {

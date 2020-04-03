@@ -235,6 +235,7 @@ $(function () {
         picker.container.find(".hourselect").append('<option value="15">15</option>' );
         picker.container.find(".hourselect").append('<option value="16">16</option>');
         picker.container.find(".hourselect").append('<option value="17">17</option>');
+        picker.container.find(".hourselect").append('<option value="18">18</option>');
     });
 
     $('#reservation_date').on('apply.daterangepicker', function (ev, picker) {
@@ -302,6 +303,73 @@ $(function () {
             $(temp).parent().show();
         }
     })
+
+
+
+    //ICD
+    function split(val) {
+        return val.split(/,\s*/);
+    }
+    function extractLast(term) {
+        return split(term).pop();
+    }
+
+    $("#text_icd")
+        .on("keydown", function (event) {
+            if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+                event.preventDefault();
+            }
+        })
+        .autocomplete({
+            source: function (request, response) {
+                //$.getJSON("search.php", { term: extractLast(request.term) }, response);
+                $.ajax({
+                    type: 'POST',
+                    url: '/doctor/get_ICD/',
+                    data: {
+                        'csrfmiddlewaretoken': $('#csrf').val(),
+                        'string': request.term
+                    },
+                    dataType: 'Json',
+                    success: function (response1) {
+                        response(response1.datas);
+                    },
+                    error: function (request, status, error) {
+                        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                    },
+                })
+            },
+            search: function () {
+                // 최소 입력 길이를 마지막 항목으로 처리합니다.
+                var term = extractLast(this.value);
+                if (term.length < 2) {
+                    return false;
+                }
+            },
+
+            focus: function () {
+                return false;
+            },
+
+            select: function (event, ui) {
+                var terms = split(this.value);
+                // 현재 입력값 제거합니다.
+                terms.pop();
+                // 선택된 아이템을 추가합니다.
+                terms.push(ui.item.value);
+                // 끝에 콤마와 공백을 추가합니다.
+                terms.push("");
+                this.value = terms.join("");
+
+                $("#icd_code").val(ui.item.code);
+
+                return false;
+            }
+
+        });
+
+
+
 
 });
 
@@ -459,6 +527,8 @@ function reception_select(reception_id) {
             $('#objective_data').val(response.objective_data);
             $('#plan').val(response.plan);
             $('#diagnosis').val(response.diagnosis);
+            $('#text_icd').val(response.ICD);
+            $('#icd_code').val(response.icd_code);
             $("#recommendation").val(response.recommendation);
 
 
@@ -828,10 +898,14 @@ function diagnosis_save(set) {
             'objective_data': $('#objective_data').val(),
             'assessment': $('#assessment').val(),
             'plan': $('#plan').val(),
+            'ICD': $("#text_icd").val(),
+            'icd_code':$("#icd_code").val(),
             'recommendation': $('#recommendation').val(),
             'datas': datas,
             'set': set,
             'date': date,
+            'family_history': $("#history_family").val(),
+            'past_history': $("#history_past").val(),
         },
         dataType: 'Json',
         success: function (response) {
@@ -849,6 +923,42 @@ function diagnosis_save(set) {
 
         },
     })
+
+
+
+    var id = $('#patient_id').val();
+    var chart_no = $('#past_history').val();
+    //var name_kor = $('#history_family').val();
+    //var name_eng = $('#patient_name_eng').val();
+    var date_of_birth = $('#patient_date_of_birth').val();
+    var gender = $('input[name="gender"]:checked').val();
+    var address = $('#patient_address').val();
+    var phone = $('#patient_phone').val();
+
+    var past_history = $('#history_past').val();
+    var history_family = $('#history_family').val();
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/save_patient/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'id': id,
+            'cahrt_no': chart_no,
+            'date_of_birth': date_of_birth,
+            'phone': phone,
+            'gender': gender,
+            'address': address,
+            'past_history': past_history,
+            'family_history': history_family,
+        },
+        dataType: 'Json',
+        success: function (response) {
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+        },
+    })
+
 }
 
 function get_test_contents(category_id) {

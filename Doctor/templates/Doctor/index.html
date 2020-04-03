@@ -77,7 +77,7 @@
         <!--Vital-->
         <div class="doctor_vital partition">
             <div class="status_table_title">
-            <span class="btn btn-success" style="margin-bottom:2px;">{{ _('Vital') }}</span>
+            <span class="btn btn-success" style="margin-bottom:2px;">{{ _('Vital Signs') }}</span>
             </div>
             <div class="Vitial_table_warp">
                 <table class="table vital_table" id="Vitial_table">
@@ -111,15 +111,15 @@
         <div class="doctor_waiting partition">
              <div class="status_table_title">
                  <span class="btn btn-success">{{ _('Reception Status') }}</span>
-
-                </div>
-                <div style="text-align:right">
-                  {{ _('Date') }}:
-                 {{ receptionsearch.date }}
-                 {{ receptionsearch.progress }}
+                 <div style="display: inline; float: right;">
+                      {{ _('Date') }}:
+                     {{ receptionsearch.date }}
+                     {{ receptionsearch.progress }}
                      
-                 <input type="button" class="btn btn-default" value="{{ _('Search') }}" onclick="reception_waiting()"/>
-                     </div>
+                     <input type="button" class="btn btn-default" value="{{ _('Search') }}" onclick="reception_waiting()"/>
+                    </div>
+                </div>
+                
             <div class="Rectption_Status_wrap">
                 <table class="table reception_search_table" id="Rectption_Status">
                     <thead>
@@ -168,6 +168,12 @@
                 <span class="input-group-addon diagnosis_history_taking_title" id="basic-addon1">{{ _('Diagnosis') }}</span>
                 <textarea id="diagnosis" class="form-control diagnosis_history_taking_contents" style="height:30px;" aria-describedby="basic-addon1"></textarea>
             </div>
+
+            <div class="input-group" >
+                <span class="input-group-addon diagnosis_history_taking_title" id="basic-addon1">{{ _('ICD') }}</span>
+                <input id="text_icd" class="form-control diagnosis_history_taking_contents" style="height:30px;" aria-describedby="basic-addon1"/>
+                <input type="hidden" id="icd_code" />
+            </div>
             </div>
         <div class="order_list partition">
             <div class="status_table_title" >
@@ -208,7 +214,7 @@
                 </div>
             
                 <div style="float:right;">
-                    <div style="display:inline;">Total Price :</div>
+                    <div style="display:inline;">{{ _('Total Price') }} :</div>
                     <div id="total_price" style="text-align:right; display:inline;">0 VND</div> 
                     {% if user.doctor.depart.id == 4%}
                     | 
@@ -244,7 +250,7 @@
             <div style="display:inline-block; margin-bottom:10px;" class="diagnosis_select_title">
                 <input type="button" class="btn btn-primary" id="diagnosis_select_exam_title" value="{{ _('Exam Fee') }}" style="background:rgb(40,95,145); border-color:rgb(40,95,145)">
                 <input type="button" class="btn btn-info" id="diagnosis_select_test_title" value="{{ _('Lab') }}">
-                <input type="button" class="btn btn-success" id="diagnosis_select_precedure_title" value="{{ _('Precedure') }}">
+                <input type="button" class="btn btn-success" id="diagnosis_select_precedure_title" value="{{ _('Procedure') }}">
                 <input type="button" class="btn btn-primary" id="diagnosis_select_medicine_title" value="{{ _('Medicine') }}">
                 <!--<input type="button" class="btn btn-warning" id="diagnosis_select_bundle_title" value="{{ _('Bundle Px') }}" />-->
             </div>
@@ -373,6 +379,7 @@
                             <th>{{ _('Price') }}</th>
                         </tr>
                     </thead>
+                    {% autoescape off %}
                     {% for class, contents in medicines.items %}
                         <tbody>
                             <tr class="contents_class" style="cursor:pointer;">
@@ -388,14 +395,16 @@
                             <tr style="cursor:pointer;" title="Name : {{medicine.name}}&#10;Ingredient : {{medicine.ingredient}}">
                                 <td></td>
                                 <td >{{medicine.code}}</td>
-                                <td >{{medicine.name_display}}</td>
+                                <td >{{medicine.name_display }}</td>
                                 <td style="text-align:right;">{{medicine.price}}</td>
                                 <td style="display:none;">{{medicine.name.lower}}|+@#|!${{medicine.name_display.lower}}</td>
                                 <td style="display:none;">{{medicine.unit}}</td>
                             </tr>
                             {% endfor %}
+
                             </tbody>
                         {% endfor %}
+                    {% endautoescape %}
                 </table>
             </div>
             <!--

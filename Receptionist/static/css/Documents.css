@@ -1,0 +1,138 @@
+.document_grid {
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    display: grid;
+}
+
+.partition {
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: rgba(180, 180, 180, 0.15);
+    border: 3.7px solid white;
+    overflow: hidden;
+}
+
+.status_table_title {
+    width: 100%;
+    display: inline;
+    margin-bottom: 15px;
+}
+
+    .status_table_title > span {
+        text-align: left;
+        background: #d2322d;
+        font-size: 16px;
+        height: 26.5px;
+        padding-top: 1px;
+        margin-bottom: 5px;
+    }
+
+.reception_patient {
+    width:1500px;
+    height:600px;
+}
+
+.document_contents_div {
+    height: 540px;
+    overflow:auto;
+}
+
+#document_contents_table{
+
+    table-layout:fixed;
+
+}
+
+    #document_contents_table thead  tr th{
+        vertical-align:middle;
+        text-align:center;
+    }
+
+    #document_contents_table thead tr th:nth-child(1) {
+        width:75px;
+    }
+        #document_contents_table thead tr th:nth-child(2) {
+            width: 75px;
+        }
+        #document_contents_table thead tr th:nth-child(3) {
+            width: 250px;
+        }
+        #document_contents_table thead tr th:nth-child(4) {
+            width:120px
+        }
+        #document_contents_table thead tr th:nth-child(5) {
+            width: 75px;
+        }
+        #document_contents_table thead tr th:nth-child(6) {
+            width: 250px;
+        }
+        #document_contents_table thead tr th:nth-child(7) {
+            width: 200px;
+        }
+        #document_contents_table thead tr th:nth-child(8) {
+            width: 130px;
+        }
+
+#document_contents tr td:nth-child(1), #document_contents tr td:nth-child(2), #document_contents tr td:nth-child(4), #document_contents tr td:nth-child(5), #document_contents tr td:nth-child(8), #document_contents tr td:nth-child(9), #document_contents tr td:nth-child(10), #document_contents tr td:nth-child(11 ) {
+    vertical-align: middle;
+    text-align: center;
+}
+      
+
+
+
+    .status_table_filter {
+    float: right;
+}
+.document_control {
+    width: 90px;
+    display: inline;
+}
+
+#document_control_depart_div {
+    width: 160px;
+    display: inline-table;
+}
+#document_control_input {
+    width:200px;
+}
+
+#dynamic_div {
+    display: none;
+}
+@media ( min-width: 1900px ) {
+    .reception_patient {
+        width: 1920px;
+        height: 800px;
+    }
+
+    .document_contents_div {
+        height: 740px;
+    }
+
+}
+
+
+@page {
+    size: A4;
+    margin: 0;
+    page-break-after: always;
+}
+@media print{
+    html, body {
+        min-width: 210mm;
+        max-width: 210mm;
+        /*max-height: 297mm;
+        min-height: 297mm;*/
+    }
+
+    #dynamic_div {
+        display: block;
+    }
+
+}
+
+
+

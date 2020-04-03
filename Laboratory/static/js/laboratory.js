@@ -199,9 +199,44 @@ function waiting_list(Today = false) {
                     "<td>" + response.datas[i]['Date_of_Birth'] + "</td>" +
                     "<td>" + response.datas[i]['Depart'] + "</td>" +
                     "<td>" + response.datas[i]['name_service'] + "</td>" +
-                    "<td>" + response.datas[i]['date_ordered'] + "</td>" +
-                    "<td>" + response.datas[i]['reference_interval'] + '</td>' + //response.datas[i]['date_examination'] + "</td>" +
-                    "<td>" + response.datas[i]['result'] + "</td>" +
+                    "<td>" + response.datas[i]['date_ordered'] + "</td>";
+
+
+                if (response.datas[i]['reference_interval'].length == 0) {
+                    str += "<td></td>";
+                }
+                else {
+                    str += "<td>";
+                    for (var j = 0; j < response.datas[i]['reference_interval'].length; j++) {
+                        
+
+                        //name
+                        if (response.datas[i]['reference_interval'][j]['name'] == undefined || response.datas[i]['reference_interval'][j]['name'] == '') {
+                            str += '';
+                        } else {
+                            str += response.datas[i]['reference_interval'][j]['name'] + ' : ';
+                        }
+                            
+                        //range
+                        if (response.datas[i]['reference_interval'][j]['normal_range'] == undefined || response.datas[i]['reference_interval'][j]['normal_range'] == '') {
+                            str += '';
+                        } else {
+                            str += response.datas[i]['reference_interval'][j]['normal_range'] ;
+                        }
+
+                        //unit
+                        if (response.datas[i]['reference_interval'][j]['unit'] == undefined || response.datas[i]['reference_interval'][j]['unit'] == '') {
+                            str += '<br/>';
+                        } else {
+                            str += ' ' + response.datas[i]['reference_interval'][j]['unit'] + '<br/>';
+                        }
+                    }
+                    str += "</td>";
+                }
+
+                
+                   
+                str += "<td>" + response.datas[i]['result'] + "</td>" +
                     "<td>" + response.datas[i]['date_expected'] + "</td></tr>";
 
                 $('#laboratory_list_table').append(str);
