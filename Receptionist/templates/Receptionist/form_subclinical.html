@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <style>
+        @media print {
+            #wrap {
+                margin: 0px;
+                padding: 45px;
+                font-size: 10px;
+                font-family: "Times New Roman", Times, serif;
+            }
+
+            table {
+                height:100%;
+            }
+                table tr td {
+                    font-size: 12px;
+                }
+
+            #logo {
+                width:100%;
+            }
+
+            .top {
+                
+            
+            }
+
+            .top tr:first-child td:nth-child(2) {
+                font-weight:700;
+            }
+
+            .patient_info {
+                width:100%;
+                border-collapse: separate;
+                border-spacing: 0px 2px;
+            }
+            .patient_info tr td{
+                width:50%;
+            }
+
+
+            .title {
+                width: 100%;
+                text-align: center;
+                font-size: 14px;
+                font-weight: 700;
+                margin-top: 15px;
+            }
+
+            .contents {
+                margin-top: 15px;
+                width: 100%;
+                border-collapse: collapse;
+                table-layout:fixed;
+                
+            }
+                .contents tr td, .contents tr th {
+                    border: 1px solid black;
+                }
+
+
+                .contents thead tr th{
+                    text-align: center;
+                    vertical-align: middle;
+                }
+
+                .contents thead tr th:nth-child(1){
+                    width:35px;
+                }
+                .contents thead tr th:nth-child(2){
+                    width:300px;
+                }
+                .contents thead tr th:nth-child(3){
+                    width:80px;
+                }
+                .contents thead tr th:nth-child(4){
+                    width:160px;
+                }
+
+            #contents_datas tr td:nth-child(1) {
+                text-align:center;
+            }
+            
+            #contents_datas tr td:nth-child(2){
+                    text-align:left;
+                    padding-left:10px;
+                }
+
+            #contents_datas tr td:nth-child(3) {
+                text-align:center;
+                padding-right:10px;
+
+            }
+
+            #contents tr, #contents td {
+                padding:2px;
+            }
+
+            #contents_datas tr th{
+                text-align: center;
+                vertical-align: middle;
+            }
+
+            .footer {
+                margin-top:30px;
+                width:100%;
+            }
+                .footer tr td {
+                font-size:14px;
+                text-align:center;
+                }
+                .footer tr td:first-child {
+                width:60%
+                
+                }
+
+                .footer tr td:nth-child(2) {
+                }
+        }
+    </style>
+
+</head>
+<body>
+    <div id="wrap">
+        <table class="top">
+            <tr>
+                <td>
+                    <img src="/static/img/document_top.png" id="logo" />
+                </td>
+            </tr>
+        </table>
+
+
+        <div class="title">
+            <text>PHIẾU CHỈ ĐỊNH CẬN LÂM SÀNG</text>
+            <br />
+            <text><I>SUBCLINICAL REQUEST FORM</I></text>
+        </div>
+        <br />
+        <table class="patient_info">
+            
+            <tr>
+                <td><b>1. Số hồ sơ</b>/ <i>PID</i> : {{ chart }}</td>
+                <td><b>2. Quốc tịch</b>/ <i>Nationality</i> : </td>
+            </tr>
+            <tr>
+                <td><b>3. Họ và tên</b>/ <i>Fullname</i> : <text id="patient_info_name">{{ name }}</text></td>
+                <td><b>4. Giới tính</b>/ <i>Gender</i> : {{ gender }}</td>
+            </tr>
+            <tr>
+                <td><b>5. Địa chỉ</b>/ <i>Address</i> : {{address}}</td>
+                <td><b>6. Ngày sinh</b>/ <i>D.O.B</i> : {{date_of_birth}}</td>
+            </tr>
+            <tr>
+                <td><b>7. Số điện thoại</b>/<i>Phone number</i> : {{ phone }}</td>
+            </tr>
+            <tr>
+                <td><b>8. Chẩn đoán</b>/ <i>Diagnostic</i> : {{ diagnostic }}</td>
+            </tr>
+            <tr>
+                <td><b>9. Khoa Khám bệnh</b>/ <i>Department</i> : {{ depart_full_vie }}/{{ depart_full }}</td>
+            </tr>
+            
+        </table>
+        <table class="contents">
+            <thead>
+                <tr>
+                    <th>
+                        <b>STT</b>
+                        <br /><i>No</i>
+                    </th>
+                    <th>
+                        <b>Chỉ định cận lâm sàng</b>
+                        <br /><i>Subclinical Order</i>
+                    </th>
+                    <th>
+                        <b>Số lượng</b>
+                        <br /><i>Amount</i>
+                    </th>
+                    <th>
+                        <b>Thời gian trả kết quả</b>
+                        <br /><i>Waiting time for result</i>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="contents_datas">
+                <tr>
+                    <td colspan="4">
+                        <b>Chẩn Đoán Hình Ảnh</b>/ <i>Image Analysation</i>
+                    </td>
+                </tr>
+                {% for item in image_analysations %}
+                <tr>
+                    <td>{{ item.no }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.amount }} </td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="4">
+                        <b>Xét Nghiệm</b>/ <i>Laboratory Test</i>
+                    </td>
+                </tr>
+                {% for item in tests %}
+                <tr>
+                    <td>{{ item.no }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.amount }} </td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="4">
+                        <b>Thủ thuật khác</b>/ <i>Other tests</i>
+                    </td>
+                </tr>
+                {% for item in other_tests %}
+                <tr>
+                    <td>{{ item.no }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.amount }} </td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <table class="footer">
+            <tr>
+                <td></td>
+                <td></td>
+                <td><b>Ngày/<i>Date</i>: {{ date_today }} </b></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td><b>Bác sĩ</b>/ <i>Doctor</i></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>
+                    <i>(Ký và ghi rõ họ tên)/(Sign)</i>
+                </td>
+            </tr>
+            
+        </table>
+    </div>
+</body>
+</html>

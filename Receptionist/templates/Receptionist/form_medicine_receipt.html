@@ -1,0 +1,260 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <style>
+        @media print {
+            #wrap {
+                margin: 0px;
+                padding: 45px;
+                font-size: 10px;
+                font-family: "Times New Roman", Times, serif;
+            }
+
+            table {
+                height:100%;
+            }
+                table tr td {
+                    font-size: 12px;
+                }
+
+            #logo {
+                width:100%;
+            }
+
+            .top {
+                
+            
+            }
+
+            .top tr:first-child td:nth-child(2) {
+                font-weight:700;
+            }
+
+            .patient_info {
+                width:100%;
+                border-collapse: separate;
+                border-spacing: 0px 2px;
+            }
+            .patient_info tr td{
+                width:50%;
+            }
+
+
+            .title {
+                width: 100%;
+                text-align: center;
+                font-size: 14px;
+                font-weight: 700;
+                margin-top: 15px;
+            }
+
+            .contents {
+                margin-top: 15px;
+                width: 100%;
+                border-collapse: collapse;
+                table-layout:fixed;
+                
+            }
+                .contents tr td, .contents tr th {
+                    border: 1px solid black;
+                }
+
+
+                .contents thead tr th{
+                    text-align: center;
+                    vertical-align: middle;
+                }
+
+                .contents thead tr th:nth-child(1){
+                    width:30px;
+                }
+                .contents thead tr th:nth-child(2){
+                    width:170px;
+                }
+                .contents thead tr th:nth-child(3){
+                    width:35px;
+                }
+                .contents thead tr th:nth-child(4){
+                    width:35px;
+                }
+                .contents thead tr th:nth-child(5){
+                    width:60px;
+                }
+                .contents thead tr th:nth-child(6){
+                    width:85px;
+                }
+
+            .contents tbody tr td {
+                text-align: center;
+                vertical-align: middle;
+            }
+
+                .contents tbody tr td:nth-child(2){
+                    text-align:left;
+                    padding-left:10px;
+                }
+                .contents tbody tr td:nth-child(5),.contents tbody tr td:nth-child(6) {
+                    text-align:right;
+                    padding-right:10px;
+                }
+
+            #contents tr, #contents td {
+                padding:2px;
+            }
+
+            #contents_datas tr th{
+                text-align: center;
+                vertical-align: middle;
+            }
+
+            .footer {
+                margin-top:30px;
+                width:100%;
+            }
+                .footer tr td:first-child {
+                    text-align:center;
+                width:33%;
+                
+                }
+
+                .footer tr td:nth-child(2) {
+                    text-align:center;
+                    width:34%;
+                }
+                .footer tr td:nth-child(3) {
+                    text-align:center;
+                    width:33%;
+                }
+
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <table class="top">
+            <tr>
+                <td>
+                    <img src="/static/img/document_top.png" id="logo" />
+                </td>
+                <!--<td>Công ty TNHH International Medicare - Phòng khám đa khoa quốc tế I-Medicare</td>
+            </tr>
+            <tr>
+                <td>Địa chỉ : Tầng 1 - Tòa nhà The Garden - đường Mễ Trì - phường Mĩ Đình 1 </td>
+            </tr>
+            <tr>
+                <td>Quận Nam Từ Liêm - Hà Nội</td>
+            </tr>
+            <tr>
+                <td>Hotline : 081.340.0101 - 081.760.0105</td>-->
+            </tr>
+        </table>
+
+
+        <div class="title">
+            <text>BIÊN LAI BÁN THUỐC</text>
+            <br />
+            <text><I>MEDICINE RECEIPT</I></text>
+        </div>
+        <br />
+        <table class="patient_info">
+            
+            <tr>
+                <td><b>1. Số hồ sơ</b>/ <i>PID</i> : {{ chart }}</td>
+                <td><b>2. Quốc tịch</b>/ <i>Nationality</i> : </td>
+            </tr>
+            <tr>
+                <td><b>3. Họ và tên</b>/ <i>Fullname</i> : <text id="patient_info_name">{{ name }}</text></td>
+                <td><b>4. Giới tính</b>/ <i>Gender</i> : {{ gender }}</td>
+            </tr>
+            <tr>
+                <td><b>5. Địa chỉ</b>/ <i>Address</i> : {{address}}</td>
+                <td><b>6. Ngày sinh</b>/ <i>D.O.B</i> : {{date_of_birth}}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>7. Số điện thoại</b>/<i>Phone number</i> : {{ phone }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>8. Chẩn đoán</b>/ <i>Diagnostic</i> : {{ diagnostic }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>9. Khoa Khám bệnh</b>/ <i>Department</i> : {{ depart_full_vie }}/{{ depart_full }}</td>
+            </tr>
+            
+        </table>
+        <table class="contents">
+            <thead>
+                <tr>
+                    <th>
+                        <b>STT</b>
+                        <br /><i>No</i>
+                    </th>
+                    <th>
+                        <b>Tên thuốc</b>
+                        <br /><i>Medicine</i>
+                    </th>
+                    <th>
+                        <b>Đơn vị</b>
+                        <br /><i>Unit</i>
+                    </th>
+                    <th>
+                        <b>Số lượng</b>
+                        <br /><i>Quality</i>
+                    </th>
+                    <th>
+                        <b>Đơn giá</b>
+                        <br /><i>Unit Price</i>
+                    </th>
+                    <th>
+                        <b>Thành tiền</b>
+                        <br /><i>Amount(VND)</i>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="contents_datas">
+                {% for medicine in medicines%}
+                <tr>
+                    <td>{{ medicine.no }}</td>
+                    <td>{{ medicine.name }}</td>
+                    <td>{{ medicine.unit_vie }}<br />{{ medicine.unit }}</td>
+                    <td>{{ medicine.quantity}}</td>
+                    <td>{{ medicine.unit_price }}</td>
+                    <td>{{ medicine.price}}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td rowspan="3" style="border:none;"></td>
+                    <td colspan="4" style="text-align:center"><b>Tổng trước thuế</b>/<i>Sub Total without VAT</i></td>
+                    <td style="text-align:right; padding-right:10px;">{{ sub_total }}</td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align:center"><b>Thuế GTGT</b>/<i>VAT ( %)</i></td>
+                    <td style="text-align:right; padding-right:10px;">{{ vat }} %</td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align:center"><b>Tổng tiền</b>/<i>Total</i></td>
+                    <td style="text-align:right; padding-right:10px;">{{ total}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="footer">
+            <tr>
+                <td></td>
+                <td></td>
+                <td><b>Ngày/<i>Date</i>:</b>{{ date_reception}} <br /></td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Khách hàng</b><i>Customer</i>
+                </td>
+                <td><b>Thu ngân</b><i>Cashier</i></td>
+                <td>
+                    <b> Người nhận đơn</b>/<i>Reciever</i>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

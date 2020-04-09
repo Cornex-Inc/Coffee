@@ -8,11 +8,17 @@
         <div class="medicine_table_title">
             <span class="btn btn-danger inventory_table_title_span">{{ _('Procedure Inventory') }}</span>
             <div style="float:right;">
-                <select name="filter" id="precedure_search_select" class="form-control costom-select inventory_search_select" aria-describedby="basic-addon1">
-                    <option value="name">name</option>
-                </select>
+                <div class="input-group" id="search_depart_div">
+                    <span class="input-group-addon" id="basic-addon1">{{ _('Class') }}</span>
+                    <select id="search_depart" class="form-control">
+                        <option value="">{{ _('ALL') }}</option>
+                        {% for class in precedure_class %}
+                        <option value="{{ class.id }}">{{ class.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 <input type="text" name="search_input" id="precedure_search_input" class="form-control inventory_search_select" aria-describedby="basic-addon1" required="">
-                <input type="button" class="btn" value="{{ _('Search')}}" onclick="precedure_database_search()" />
+                <input type="button" class="btn btn-default" value="{{ _('Search')}}" onclick="precedure_database_search()" />
             </div>
         </div>
         <div class="precedure_database_list">
@@ -21,11 +27,10 @@
                     <thead>
                         <tr>
                             <th>{{ _('Code') }}</th>
-                            <th>{{ _('Name') }}</th>
-                            <th>{{ _('Vietnamese Name') }}</th>
                             <th>{{ _('Class') }}</th>
+                            <th>{{ _('Name') }}</th>
                             <th>{{ _('Price') }}</th>
-                            <th></th>
+                            <th>{{ _('Edit') }}</th>
                         </tr>
                     </thead>
                     <tbody>

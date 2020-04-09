@@ -52,7 +52,7 @@ $(function () {
 
     //        },
     //        error: function (request, status, error) {
-    //            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+    //            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
     //        },
     //    })
@@ -110,7 +110,7 @@ function waiting_selected(manage_id) {
             
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -140,7 +140,7 @@ function get_image(manage_id) {
             $('#remark').val(response.remark);
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -168,7 +168,7 @@ function delete_image(image_id,li) {
                 }
             },
             error: function (request, status, error) {
-                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
             },
         })
@@ -196,6 +196,7 @@ function waiting_list() {
             'Radiation': 'Radiation',
             'filter': $('#radiology_search_select option:selected').val(),
             'input': $('#patient_search').val(),
+            'depart_id': $("#depart_select").val(),
         },
         dataType: 'Json',
         success: function (response) {
@@ -221,7 +222,7 @@ function waiting_list() {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })

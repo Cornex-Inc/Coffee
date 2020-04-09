@@ -57,7 +57,7 @@ body {
 
 .doctor_search_date {
     display: inline;
-    width: 170px;
+    width: 75px;
 }
 
 .doctors_search_depart {
@@ -72,7 +72,7 @@ body {
 
 .form-control {
     font-size: 12px;
-    padding: 3px 12px;
+    padding: 5px;
 }
 
 .doctor_profit_control {

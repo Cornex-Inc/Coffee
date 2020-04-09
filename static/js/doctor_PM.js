@@ -94,16 +94,24 @@ $(function () {
             //            "<input type='number' min='0' value='1' class='diagnosis_selected_input_number' id='days'/></td><td style='text-align: center;'>" +
             //            "<input type='text' class='diagnosis_selected_input_number' id='memo'/></td>";
             //    }
+
             if (event.target.parentElement.parentElement.parentElement.parentElement.id == 'diagnosis_select_precedure_contents') {
-                str += "<td>" + $(this).find('td:nth-child(3)').text().trim() + "</td><td>" +
-                    "<input type='hidden' min='1' value='1' class='diagnosis_selected_input_number' id='amount'/></td>";
+                str += "<td colspan='2'>" + $(this).find('td:nth-child(3)').text().trim() + "</td><td>" +
+                    "<input type='hidden' min='1' value='1' class='diagnosis_selected_input_number' id='amount'/></td><td></td><td></td>";
             }
             else if(event.target.parentElement.parentElement.parentElement.parentElement.id == 'diagnosis_select_pm_radio_contents' ) {
-                str += "<td>" + $(this).find('td:nth-child(3)').text().trim() + "</td><td>" +
-                    "<input type='number' min='1' value='1' class='diagnosis_selected_input_number' id='amount'/></td>";
+                str += "<td colspan='2'>" + $(this).find('td:nth-child(3)').text().trim() + "</td><td>" +
+                    "<input type='number' min='1' value='1' class='diagnosis_selected_input_number' id='amount'/></td><td></td><td></td>";
+            }
+            else if (event.target.parentElement.parentElement.parentElement.parentElement.id == 'diagnosis_select_medicine_contents') {
+                str += "<td>" + $(this).find('td:nth-child(3)').text().trim() + "<input type='hidden' value=''/></td><td style='text-align: center;'>" +
+                    $(this).find('td:nth-child(6)').text().trim() + "</td><td>" +
+                    "<input type='number' min='0' value='1' class='diagnosis_selected_input_number' id='amount'/></td><td style='text-align: center;'>" +
+                    "<input type='number' min='0' value='1' class='diagnosis_selected_input_number' id='days'/></td><td style='text-align: center;'>" +
+                    "<input type='text' class='diagnosis_selected_input_number' id='memo'/></td>";
             }
             else {
-                str += "<td colspan='2'>" + $(this).find('td:nth-child(3)').text().trim() + "<input type='hidden' value=''/></td>";
+                str += "<td colspan='5'>" + $(this).find('td:nth-child(3)').text().trim() + "<input type='hidden' value=''/></td>";
             }
             str += "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td>";
             str += "<td style='display:none;'>" + $(this).find('td:nth-child(4)').text().replace(/,/g, '').replace('VND', '').trim() + "</td></tr>";
@@ -113,12 +121,12 @@ $(function () {
 
             if (what_class == 'diagnosis_select_exam_contents')
                 $('#diagnosis_selected_exam').append(str);
-            //else if (what_class == 'diagnosis_select_test_contents')
-            //    $('#diagnosis_selected_test').append(str);
+            else if (what_class == 'diagnosis_select_test_contents')
+                $('#diagnosis_selected_test').append(str);
             else if (what_class == 'diagnosis_select_precedure_contents' || what_class == 'diagnosis_select_pm_radio_contents')
                 $('#diagnosis_selected_precedure').append(str);
-            //else if (what_class == 'diagnosis_select_medicine_contents')
-            //    $('#diagnosis_selected_medicine').append(str);
+            else if (what_class == 'diagnosis_select_medicine_contents')
+                $('#diagnosis_selected_medicine').append(str);
 
             $('#diagnosis_selected input').change(function () {
                 show_total_price();
@@ -482,7 +490,7 @@ $(function () {
 
             },
             error: function (request, status, error) {
-                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
             },
         });
 
@@ -490,6 +498,80 @@ $(function () {
         $("#medical_exam_EventModal").scrollTop(0);
         $('#medical_exam_EventModal').modal('show');
     })
+
+
+    //ICD
+    function split(val) {
+        return val.split(/,\s*/);
+    }
+    function extractLast(term) {
+        return split(term).pop();
+    }
+
+    $("#search_icd")
+        .on("keydown", function (event) {
+            if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+                event.preventDefault();
+            }
+        })
+        .autocomplete({
+            source: function (request, response) {
+                //$.getJSON("search.php", { term: extractLast(request.term) }, response);
+                $.ajax({
+                    type: 'POST',
+                    url: '/doctor/get_ICD/',
+                    data: {
+                        'csrfmiddlewaretoken': $('#csrf').val(),
+                        'string': request.term
+                    },
+                    dataType: 'Json',
+                    success: function (response1) {
+                        response(response1.datas);
+                    },
+                    error: function (request, status, error) {
+                        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                    },
+                })
+            },
+            search: function () {
+                // 최소 입력 길이를 마지막 항목으로 처리합니다.
+                var term = extractLast(this.value);
+                if (term.length < 2) {
+                    return false;
+                }
+            },
+
+            focus: function () {
+                return false;
+            },
+
+            select: function (event, ui) {
+                var terms = split(this.value);
+                // 현재 입력값 제거합니다.
+                terms.pop();
+                // 선택된 아이템을 추가합니다.
+                //terms.push(ui.item.value);
+                // 끝에 콤마와 공백을 추가합니다.
+                terms.push("");
+                this.value = terms.join("");
+
+                $("#text_icd").val(ui.item.value)
+
+                $("#icd_code").val(ui.item.code);
+
+                return false;
+            },
+            open: function (event, ui) {
+                var $input = $(event.target),
+                    $results = $input.autocomplete("widget"),
+                    top = $results.position().top,
+                    height = $results.height(),
+                    inputHeight = $input.height(),
+                    newTop = top - height - inputHeight;
+
+                $results.css("top", newTop + "px");
+            }
+        });
 });
 
 function selected_table_title(title) {
@@ -562,7 +644,7 @@ function get_all_diagnosis() {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 
@@ -580,12 +662,19 @@ function show_total_price() {
 
         what_class = $tds.parent().parent().attr('id')
 
-        if (what_class == 'diagnosis_selected_medicine' || what_class == 'diagnosis_selected_precedure') { 
-            var price = parseInt($tds.eq(4).text().trim());
-            var amount = parseInt($tds.eq(2).children('input').val());
-            //var days = parseInt($tds.eq(4).children('input').val());
-            total += price * amount;//* days;
+        if (what_class == 'diagnosis_selected_medicine') { 
+            var price = parseInt($tds.eq(7).text().trim());
+            var amount = parseInt($tds.eq(3).children('input').val());
+            var days = parseInt($tds.eq(4).children('input').val());
+            total += price * amount * days;
         }
+        else if (what_class == 'diagnosis_selected_precedure') {
+            var price = parseInt($tds.eq(6).text().trim());
+            var amount = parseInt($tds.eq(2).children('input').val());
+            
+            total += price * amount// * days;
+        }
+
         else {
             sd = $tds.eq(3).text();
             total += parseInt($tds.eq(3).text().trim());
@@ -646,6 +735,8 @@ function reception_select(reception_id) {
             $('#objective_data').val(response.objective_data);
             $('#plan').val(response.plan);
             $('#diagnosis').val(response.diagnosis);
+            $("#text_icd").val(response.ICD);
+            $("#icd_code").val(response.icd_code);
             $("#recommendation").val(response.recommendation);
 
 
@@ -659,7 +750,7 @@ function reception_select(reception_id) {
             get_all_diagnosis();
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 
@@ -693,7 +784,7 @@ function get_vital() {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 }
@@ -723,7 +814,7 @@ function set_vital() {
             set_vital_clear();
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 }
@@ -753,7 +844,7 @@ function get_diagnosis(reception_no) {
 
             for (var j in response.datas['exams']) {
                 var str = "<tr><td>" + response.datas['exams'][j]['code'] + "<input type='hidden' value='" +
-                    response.datas['exams'][j]['id'] + "'/></td><td colspan='2'>" +
+                    response.datas['exams'][j]['id'] + "'/></td><td colspan='5'>" +
                     response.datas['exams'][j]['name'] + "</td>" +
                     "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td>" +
                     "<td style='display:none;'>" + response.datas['exams'][j]['price'] + "</td></tr > ";
@@ -761,44 +852,40 @@ function get_diagnosis(reception_no) {
                 $('#diagnosis_selected_exam').append(str);
             }
 
-            //for (var j in response.datas['tests']) {
-            //
-            //    var str = "<tr><td>" + response.datas['tests'][j]['code'] + "<input type='hidden' value='" +
-            //        response.datas['tests'][j]['id'] + "'/></td><td colspan='5'>" +
-            //        response.datas['tests'][j]['name'] + "</td>" +
-            //        "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td>" +
-            //        "<td style='display:none;'>" + response.datas['tests'][j]['price'] + "</td></tr > ";
-            //    $('#diagnosis_selected_test').append(str);
-            //}
+            for (var j in response.datas['tests']) {
+
+                var str = "<tr><td>" + response.datas['tests'][j]['code'] + "<input type='hidden' value='" +
+                    response.datas['tests'][j]['id'] + "'/></td><td colspan='5'>" +
+                    response.datas['tests'][j]['name'] + "</td>" +
+                    "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td>" +
+                    "<td style='display:none;'>" + response.datas['tests'][j]['price'] + "</td></tr > ";
+                $('#diagnosis_selected_test').append(str);
+            }
 
             for (var j in response.datas['precedures']) {
                 var str = "<tr><td>" + response.datas['precedures'][j]['code'] + "<input type='hidden' value='" +
-                    response.datas['precedures'][j]['id'] + "'/></td><td>" +
-                    response.datas['precedures'][j]['name'] + "</td>";
-                if (response.datas['precedures'][j]['code'].search('R') != -1) {
-                    str += "<td><input type='number' min='1' value='" + response.datas['precedures'][j]['amount'] + "' class='diagnosis_selected_input_number' id='amount'>";
-                } else {
-                    str += "<td><input type='hidden' min='1' value='" + response.datas['precedures'][j]['amount'] + "' class='diagnosis_selected_input_number' id='amount'>";
-                }
-                str += "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td>" +
+                    response.datas['precedures'][j]['id'] + "'/></td><td colspan='2'>" +
+                    response.datas['precedures'][j]['name'] + "</td><td><input type='hidden' min='1' value='1' class='diagnosis_selected_input_number' id='amount'/></td><td></td><td>" +
+                    "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td></td>" +
                     "<td style='display:none;'>" + response.datas['precedures'][j]['price'] + "</td></tr > ";
                 $('#diagnosis_selected_precedure').append(str);
             }
-            //for (var j in response.datas['medicines']) {
-            //    var str = "<tr><td>" + response.datas['medicines'][j]['code'] + "<input type='hidden' value='" +
-            //        response.datas['medicines'][j]['id'] + "'/></td><td>" +
-            //        response.datas['medicines'][j]['name'] + "</td>" +
-            //        "<td>" + response.datas['medicines'][j]['unit'] + "</td>" +
-            //        "<td><input type='number' class='diagnosis_selected_input_number' id='amount' value='" +
-            //        response.datas['medicines'][j]['amount'] + "'>" + "</td>" +
-            //        "<td><input type='number' class='diagnosis_selected_input_number' id='days' value='" +
-            //        response.datas['medicines'][j]['days'] + "'>" + "</td>" +
-            //        "<td><input type='text' class='diagnosis_selected_input' id='memo' value='" +
-            //        response.datas['medicines'][j]['memo'] + "'>" + "</td>" +
-            //        "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td>" +
-            //        "<td style='display:none;'>" + response.datas['medicines'][j]['price'] + "</td></tr > ";
-            //    $('#diagnosis_selected_medicine').append(str);
-            //}
+
+            for (var j in response.datas['medicines']) {
+                var str = "<tr><td>" + response.datas['medicines'][j]['code'] + "<input type='hidden' value='" +
+                    response.datas['medicines'][j]['id'] + "'/></td><td>" +
+                    response.datas['medicines'][j]['name'] + "</td>" +
+                    "<td>" + response.datas['medicines'][j]['unit'] + "</td>" +
+                    "<td><input type='number' class='diagnosis_selected_input_number' id='amount' value='" +
+                    response.datas['medicines'][j]['amount'] + "'>" + "</td>" +
+                    "<td><input type='number' class='diagnosis_selected_input_number' id='days' value='" +
+                    response.datas['medicines'][j]['days'] + "'>" + "</td>" +
+                    "<td><input type='text' class='diagnosis_selected_input' id='memo' value='" +
+                    response.datas['medicines'][j]['memo'] + "'>" + "</td>" +
+                    "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td>" +
+                    "<td style='display:none;'>" + response.datas['medicines'][j]['price'] + "</td></tr > ";
+                $('#diagnosis_selected_medicine').append(str);
+            }
 
             $('.diagnosis_selected_input_number').change(function () {
                 var regexp = /^[0-9]*$/;
@@ -809,51 +896,10 @@ function get_diagnosis(reception_no) {
 
             })
 
-            $('#diagnosis_selected input').change(function () {
-                show_total_price();
-            })
-            $('#diagnosis_selected input').keyup(function () {
-                show_total_price();
-            })
-
             show_total_price();
-
-            $('.q2_items').hide();
-
-            $.ajax({
-                type: 'POST',
-                url: '/receptionist/Question/get/',
-                data: {
-                    'csrfmiddlewaretoken': $('#csrf').val(),
-                    'patient_id': response.patient_id,
-                },
-                dataType: 'Json',
-                success: function (response) {
-                    //2
-
-                    var q2_item = response.pain_posi_text.split(',');
-                    for (var item in q2_item) {
-                        if (q2_item[item] == "") {
-                        }
-                        else {
-                            var code = q2_item[item].split('-')
-                            if (code.length == 1) {
-                            } else {
-
-                                $('#dx_image_items_' + q2_item[item]).show();
-                                //$('input[class=pain_location_text]:input[value=' + q2_item[item] + ']').prop("checked", true);
-                            }
-                        }
-                    }
-                },
-                error: function (request, status, error) {
-                    alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-                },
-            });
-
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 }
@@ -879,7 +925,7 @@ function reception_waiting(Today = false) {
         success: function (response) {
             $('#Rectption_Status > tbody ').empty();
             if (response.datas.length == 0) {
-                $('#Rectption_Status').append("<tr><td colspan='8'>None Result !!</td></tr>");
+                $('#Rectption_Status').append("<tr><td colspan='8'>" + gettext('No Result !!') + "</td></tr>");
             } else {
                 for (var i in response.datas) {
                     var color;
@@ -910,7 +956,7 @@ function reception_waiting(Today = false) {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -991,19 +1037,33 @@ function diagnosis_save(set) {
         temp_data['code'] = $tds.eq(0).text();
         temp_data['id'] = $tds.eq(0).children('input').val();
         temp_data['name'] = $tds.eq(1).text();
-        //temp_data['volume'] = $tds.eq(2).children('input').val();
-        //temp_data['amount'] = $tds.eq(3).children('input').val();
-        temp_data['amount'] = $tds.eq(2).children('input').val();
-        if (temp_data['amount'] == '') {
-            alert(gettext('amout is empty.'));
-            is_valid = false;
+        if (temp_data['type'] == 'Precedure') {
+            temp_data['volume'] = 1;
+            temp_data['amount'] = $tds.eq(2).children('input').val();
+            temp_data['days'] = 1;
+            if (temp_data['amount'] == '') {
+                alert(gettext('amount is empty.'));
+                is_valid = false;
+            }
         }
-        temp_data['days'] = $tds.eq(4).children('input').val();
-        if (temp_data['days'] == '') {
-            alert(gettext('days is empty.'));
-            is_valid = false;
+        if (temp_data['type'] == 'Medicine') {
+            temp_data['volume'] = 1;
+            temp_data['amount'] = $tds.eq(3).children('input').val();
+            if (temp_data['amount'] == '') {
+                alert(gettext('amount is empty.'));
+                is_valid = false;
+            }
+            temp_data['days'] = $tds.eq(4).children('input').val();
+            if (temp_data['days'] == '') {
+                alert(gettext('days is empty.'));
+                is_valid = false;
+            }
+            temp_data['memo'] = $tds.eq(5).children('input').val();
         }
-        temp_data['memo'] = $tds.eq(5).children('input').val();
+        
+        //temp_data['amount'] = $tds.eq(4).children('input').val();
+        
+        
 
         datas.push(temp_data);
     });
@@ -1023,6 +1083,8 @@ function diagnosis_save(set) {
             'objective_data': $('#objective_data').val(),
             'assessment': $('#assessment').val(),
             'plan': $('#plan').val(),
+            'ICD': $('#text_icd').val(),
+            'icd_code': $("#icd_code").val(),
             'recommendation': $('#recommendation').val(),
             'datas': datas,
             'set': set,
@@ -1038,10 +1100,44 @@ function diagnosis_save(set) {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
+
+    var id = $('#patient_id').val();
+    var chart_no = $('#past_history').val();
+    //var name_kor = $('#history_family').val();
+    //var name_eng = $('#patient_name_eng').val();
+    var date_of_birth = $('#patient_date_of_birth').val();
+    var gender = $('input[name="gender"]:checked').val();
+    var address = $('#patient_address').val();
+    var phone = $('#patient_phone').val();
+
+    var past_history = $('#history_past').val();
+    var history_family = $('#history_family').val();
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/save_patient/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'id': id,
+            'cahrt_no': chart_no,
+            'date_of_birth': date_of_birth,
+            'phone': phone,
+            'gender': gender,
+            'address': address,
+            'past_history': past_history,
+            'family_history': history_family,
+        },
+        dataType: 'Json',
+        success: function (response) {
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+        },
+    });
+
 }
 
 function get_test_contents(category_id) {
@@ -1059,7 +1155,7 @@ function get_test_contents(category_id) {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })

@@ -17,6 +17,11 @@ urlpatterns = [
 
 
     path('inventory_test/',views.inventory_test,name='inventory_test'),
+    path('test_search/',views.test_search,name='test_search'),
+    path('test_add_edit_get/',views.test_add_edit_get,name='test_add_edit_get'),
+    path('test_add_edit_set/',views.test_add_edit_set,name='test_add_edit_set'),
+    path('test_add_edit_delete/',views.test_add_edit_delete,name='test_add_edit_delete'),
+
 
     path('inventory_precedure/',views.inventory_precedure,name='inventory_precedure'),
     path('precedure_search/',views.precedure_search,name='precedure_search'),

@@ -6,7 +6,7 @@
     width: 100%;
     display: grid;
     grid-template-columns: 30% 40%;
-    grid-template-rows: 31% 7% 23% 10%;
+    grid-template-rows: 35% 7% 24% 10%
 }
 
 .partition {
@@ -28,12 +28,20 @@
     grid-row-end: 4;
 }
 
+.ui-autocomplete {
+    height: 300px;
+    width: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* prevent horizontal scrollbar */
+}
+.ui-widget{
+    font-size:11px;
+}
 
-
-
-    .doctor_patient_info input {
-        /* width: 150px; */
-    }
+.doctor_patient_info input {
+    /* width: 150px; */
+}
     .doctor_patient_info input[type=radio] {
         width: auto;
     }
@@ -105,6 +113,16 @@
     border:2px solid #adadad;
 }
 
+#patient_gender {
+    margin-top: 9px;
+}
+
+    #patient_gender input {
+        vertical-align: middle;
+        margin-top: -1px;
+    }
+
+
 .diagnosis_selected_method{
     height: 175px;
     margin-bottom:15px;
@@ -171,7 +189,7 @@
     grid-row-end: 5;
     grid-column-start: 2;
     grid-column-end: 3;
-
+    overflow:hidden;
 }
 
 .status_table_filter {
@@ -195,8 +213,8 @@
 }
 
 .diagnosis_history_taking_contents {
-    resize: vertical;
-    width: 440px !important;
+    resize: none;
+    width: 440px ;
 }
 
 .Vitial_table_warp{
@@ -298,7 +316,7 @@
 }
 
 .Rectption_Status_wrap{
-    height:175px;
+    height:150px;
     overflow:auto;
 }
 .diagnosis_table_wrap {
@@ -306,8 +324,69 @@
     height: 140px;
 }
 
-@-webkit-keyframes blink {
-    0% {
+.diagnosis_select_contents_talbe {
+    table-layout: fixed;
+}
+
+    .diagnosis_select_contents_talbe thead tr th:nth-child(1) {
+        width: 0px;
+    }
+    .diagnosis_select_contents_talbe thead tr th:nth-child(2) {
+        width: 30px;
+        text-align: center;
+    }
+    .diagnosis_select_contents_talbe thead tr th:nth-child(3) {
+        width: 80px;
+    }
+    .diagnosis_select_contents_talbe thead tr th:nth-child(4) {
+        width: 0px;
+        text-align: center;
+    }
+    .diagnosis_select_contents_talbe thead tr th:nth-child(5) {
+        width: 40px;
+        text-align: center;
+    }
+
+    .diagnosis_select_contents_talbe tbody tr td:nth-child(2) {
+        width: 30px;
+        text-align: center;
+    }
+
+
+#diagnosis_select_medicine thead tr th:nth-child(2) {
+    width: 30px;
+}
+#diagnosis_select_medicine thead tr th:nth-child(3) {
+    width: 80px;
+}
+#diagnosis_select_medicine thead tr th:nth-child(4) {
+    width: 15px;
+}
+
+#diagnosis_select_medicine thead tr th:nth-child(5) {
+    width: 30px;
+}
+#diagnosis_select_medicine tbody tr td:nth-child(4){
+    text-align:center;
+}
+
+.contents_items tr td:nth-child(3) {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    padding-right: 5px;
+}
+
+.icd_ul {
+    list-style: none;
+    margin: 0px;
+    padding: 0;
+    width: 100%;
+}
+
+
+    @-webkit-keyframes blink {
+        0% {
         color: red;
     }
 
@@ -324,45 +403,58 @@
     animation-timing-function: step-end;
     animation-iteration-count: infinite;
 }
-
-
-@media ( min-width: 1900px ) {
-    .diagnosis_select_contents {
-        width: 530px;
-        height: 760px;
-    }
-    .Rectption_Status_wrap{
-        height:220px;
-    }
-    .Vitial_table_warp{
-        height:150px;
-    }
-    .diagnosis_selected_method{
-        height:250px;
-    }
-    .diagnosis_history_taking_contents {
-        resize: vertical;
-        width: 600px !important;
-        height: 40px !important;
-    }
-    .diagnosis_history_taking_title {
-        width: 120px;
-        font-weight: bold;
-    }
-    .diagnosis_table_wrap{
-        height:190px;
-    }
-    .doctor_patient_info {
-        font-size:20px;
-    }
-    .doctor_patient_table_title {
-        width: 105px;
-        height:40px;
-    }
-    .doctor_patient_table_contents {
-        height: 40px;
-    }
-    .fu_date {
-        width: 300px;
-    }
+.input-group{
+    width:100%;
 }
+
+
+
+    @media ( min-width: 1900px ) {
+        .diagnosis_select_contents {
+            width: 530px;
+            height: 760px;
+        }
+
+        .Rectption_Status_wrap {
+            height: 220px;
+        }
+
+        .Vitial_table_warp {
+            height: 150px;
+        }
+
+        .diagnosis_selected_method {
+            height: 250px;
+        }
+
+        .diagnosis_history_taking_contents {
+            width: 570px;
+            height: 40px !important;
+        }
+
+        .diagnosis_history_taking_title {
+            width: 140px;
+            font-weight: bold;
+        }
+
+        .diagnosis_table_wrap {
+            height: 190px;
+        }
+
+        .doctor_patient_info {
+            font-size: 20px;
+        }
+
+        .doctor_patient_table_title {
+            width: 105px;
+            height: 40px;
+        }
+
+        .doctor_patient_table_contents {
+            height: 40px;
+        }
+
+        .fu_date {
+            width: 300px;
+        }
+    }

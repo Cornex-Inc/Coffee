@@ -24,7 +24,7 @@ $(function () {
         picker.container.find(".hourselect").append('<option value = "16" > 16</option>');
         picker.container.find(".hourselect").append('<option value = "17" > 17</option>');
     });
-    waiting_list(true);
+    
     $('#id_follow_update').on('apply.daterangepicker', function (ev, picker) {
         var hour = picker.container.find(".hourselect").children("option:selected").val();
         if (hour < 9)
@@ -33,7 +33,7 @@ $(function () {
             hour = 17;
         picker.startDate.set({ hour: hour, });
         $('#id_follow_update').val(picker.startDate.format('YYYY-MM-DD HH:mm:ss'));
-        if (confirm("예약을 변경 하시겠습니까?")) {
+        if (confirm(gettext("Doy you want to change reservation?"))) {
             var reservation_date = picker.startDate.format('YYYY-MM-DD HH:mm:ss');
             var reception = $('#selected_reception').val();
 
@@ -49,13 +49,11 @@ $(function () {
                 success: function (response) {
                 },
                 error: function (request, status, error) {
-                    alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                    console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
                 },
             })
-            
         } 
-        
     });
     $('#id_follow_update').on('cancel.daterangepicker', function (ev, picker) {
         if (confirm("예약을 취소 하시겠습니까?")) {
@@ -73,7 +71,7 @@ $(function () {
 
                 },
                 error: function (request, status, error) {
-                    alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                    console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
                 },
             })
@@ -82,12 +80,25 @@ $(function () {
        
     });
 
-    $('#storage_list_calendar').daterangepicker({
+    $('#storage_list_calendar_start').daterangepicker({
+        singleDatePicker:true,
         showDropdowns: true,
         locale: {
             format: 'YYYY-MM-DD'
         }
     });
+    $('#storage_list_calendar_end').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        locale: {
+            format: 'YYYY-MM-DD'
+        }
+    });
+    $("#storage_list_calendar_start, #storage_list_calendar_end, #reception_waiting_depart").change(function () {
+
+        waiting_list();
+    });
+
 
     $('#patient_tax_invoice_click').click(function () {
         $('#patient_tax_invoice').toggle();
@@ -102,7 +113,7 @@ $(function () {
     $('#showpayments').click(function () {
         var reception_id = $('#selected_reception').val();
         if (reception_id == '') {
-            alert('환자 먼저 선택');
+            alert(gettext('Select patient first.'));
             return;
         }
         payment_record_list();
@@ -116,7 +127,7 @@ $(function () {
     $('#Report').click(function () {
         var reception_id = $('#selected_reception').val();
         if (reception_id == '') {
-            alert('환자 먼저 선택');
+            alert(gettext('Select patient first.'));
             return;
         }
 
@@ -134,6 +145,14 @@ $(function () {
 
     });
 
+
+    $('#storage_search_input').keydown(function (key) {
+        if (key.keyCode == 13) {
+            waiting_list();
+        }
+    })
+
+    waiting_list();
 });
 
 
@@ -174,8 +193,7 @@ function get_patient_past(reception_id) {
                     "<td style='vertical-align:middle;' >" + response.datas[i]['date'] + "</td>" +
                     "<td style='vertical-align:middle;' >" + response.datas[i]['Depart'] + '<br/>' + response.datas[i]['Doctor'] + "</td>" +
                     "<td style='vertical-align:middle;' >" + numberWithCommas(response.datas[i]['paid']) + '</td>' +
-                    "<td style='vertical-align:middle;' >" + numberWithCommas(response.datas[i]['unpaid_total']) + '</td>' +
-                    "<td style='vertical-align:middle;' >" + numberWithCommas(Number(response.datas[i]['unpaid_total'] + response.datas[i]['paid'])) + '</td></td>';
+                    "<td style='vertical-align:middle;' >" + numberWithCommas(Number(response.datas[i]['unpaid_total'])) + '</td></td>';
 
                 //"<td>" + numberWithCommas(response.datas[i]['total_amount']) + "VND</td></tr>";
 
@@ -185,7 +203,7 @@ function get_patient_past(reception_id) {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -205,11 +223,11 @@ function delete_payment(record_id) {
             success: function (response) {
                 
 
-                alert('Deleted');
+                alert(gettext('Deleted'));
                 payment_record_list();
             },
             error: function (request, status, error) {
-                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
             },
         });
@@ -274,7 +292,7 @@ function payment_record_list(page = null) {
             $('#record_pagnation').html(str);
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     });
@@ -338,7 +356,7 @@ function report_list(page = null) {
             $('#report_pagnation').html(str);
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -378,7 +396,7 @@ function report_select(report_id) {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -472,11 +490,11 @@ function waiting_selected(paymentrecord_id) {
 
                     if (response.datas['precedures'][i].code.search('R') == -1) {
                         str += "<td style='text-align:right; vertical-align:middle; padding-right:10px;'></td>";
+                        str += "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['precedures'][i].price) + " VND</td></tr>";
                     } else {
                         str += "<td style='text-align:center; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['precedures'][i].amount) + "</td>";
+                        str += "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['precedures'][i].price * response.datas['precedures'][i].amount) + " VND</td></tr>";
                     }
-
-                    str += "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['precedures'][i].price) + " VND</td></tr>";
 
 
                     recepts_table += '<tr>' +
@@ -489,6 +507,7 @@ function waiting_selected(paymentrecord_id) {
                         recepts_table += '<td style="text-align:center;">' + numberWithCommas(response.datas['precedures'][i].amount) + '</td>';
                         recepts_table += '<td style="text-align:right;">' + numberWithCommas(response.datas['precedures'][i].price * response.datas['precedures'][i].amount) + '</td><td></td></tr>';
                     }
+                    console.log(numberWithCommas(response.datas['precedures'][i].price * response.datas['precedures'][i].amount))
 
                     no += 1;
                 }
@@ -516,7 +535,7 @@ function waiting_selected(paymentrecord_id) {
                     medication_total += response.datas['medicines'][i].unit * response.datas['medicines'][i].quantity
                 }
 
-                recepts_table += '<tr class="chart_table_contents_items_shortcut"><td></td>' +
+                recepts_table += '<tr class="chart_table_contents_items_shortcut">' +
                     '<td colspan="2">Medicine</td>' +
                     '<td></td>' +
                     "<td></td>" +
@@ -575,7 +594,7 @@ function waiting_selected(paymentrecord_id) {
             $('#recept_date_of_birth').html(response.datas['date_of_birth']);
             $('#recept_depart').html(response.datas['depart']);
 
-
+            $("#id_pay").val(0);
 
             $('#discount_input').keyup(function () {
                 var regex = /[^0-9]/g;
@@ -690,7 +709,7 @@ function waiting_selected(paymentrecord_id) {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -725,7 +744,7 @@ function get_bill_list(reception_id) {
             $('#total_outstanding_amount').html(total_outstanding_amount);
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -738,12 +757,9 @@ function waiting_list(Today = false) {
         start = today = moment().format('YYYY[-]MM[-]DD');
         end = today = moment().format('YYYY[-]MM[-]DD');
     } else {
-        date = $('#storage_list_calendar').val();
-        start = date.split(' - ')[0];
-        end = date.split(' - ')[1];
+        start = $('#storage_list_calendar_start').val();
+        end = $('#storage_list_calendar_end').val();
     }
-
-
 
     $.ajax({
         type: 'POST',
@@ -754,6 +770,7 @@ function waiting_list(Today = false) {
             'end_date': end,
             'string': $('#storage_search_input').val(),
             'filter': $('#storage_search_select option:selected').val(),
+            'depart': $('#reception_waiting_depart').val(),
         },
         dataType: 'Json',
         success: function (response) {
@@ -762,8 +779,6 @@ function waiting_list(Today = false) {
                 var tr_class = "";
                 if (response.datas[i]['status'] != 'paid')
                     tr_class = "class ='warning'"
-                //else if (response.datas[i]['status'] == 'paid')
-                //    tr_class = "class ='success'"
 
 
                 var str = "<tr " + tr_class + "style='cursor:pointer;'";
@@ -784,17 +799,15 @@ function waiting_list(Today = false) {
                     "<td style='vertical-align:middle;' >" + response.datas[i]['date'] + "</td>" +
                     "<td style='vertical-align:middle;' >" + response.datas[i]['Depart'] + '<br/>' + response.datas[i]['Doctor'] + "</td>" +
                     "<td style='vertical-align:middle;' >" + numberWithCommas( response.datas[i]['paid'] )+ '</td>' +
-                    "<td style='vertical-align:middle;' >" + numberWithCommas( response.datas[i]['unpaid_total'] ) + '</td>' +
-                        "<td style='vertical-align:middle;' >" + numberWithCommas( Number(response.datas[i]['unpaid_total'] + response.datas[i]['paid']) )+ '</td></td>'; 
-
-                    //"<td>" + numberWithCommas(response.datas[i]['total_amount']) + "VND</td></tr>";
+                        "<td style='vertical-align:middle;' >" + numberWithCommas(Number(response.datas[i]['unpaid_total']) )+ '</td></td>'; 
+                 
                     
 
                 $('#storage_list_table').append(str);
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -812,7 +825,7 @@ function get_today_list() {
             'doctor': $("#waiting_list_doctor option:selected").val(),
             'depart': $('#depart_select').val(),
         },
-        dataType: 'Json',
+        dataType: 'Json',  
         success: function (response) {
             $('#storage_today_table > tbody ').empty();
             for (var i in response.datas) {
@@ -840,7 +853,7 @@ function get_today_list() {
             
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -952,7 +965,7 @@ function get_today_selected(reception_id) {
                         "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['medicines'][i].price) + " VND</td></tr>";
 
 
-                    recepts_table += "<tr class='chart_table_medicine_contents'><td>"/*+ no*/ + "</td>" +
+                    recepts_table += "<tr class='chart_table_medicine_contents'>" +
                         "<td colspan='2'>" + response.datas['medicines'][i].name + "</td>" +
                         "<td style='text-align:right;'>" + numberWithCommas(response.datas['medicines'][i].unit) + "</td>" +
                         "<td>" + response.datas['medicines'][i].quantity + "</td>" +
@@ -962,7 +975,7 @@ function get_today_selected(reception_id) {
                     medication_total += response.datas['medicines'][i].unit * response.datas['medicines'][i].quantity
                 }
 
-                recepts_table += '<tr class="chart_table_contents_items_shortcut"><td></td>' +
+                recepts_table += '<tr class="chart_table_contents_items_shortcut">' +
                     '<td colspan="2">Medicine</td>' +
                     '<td></td>' +
                     "<td></td>" +
@@ -1095,7 +1108,7 @@ function get_today_selected(reception_id) {
             $('#show_medication_contents').prop("checked", false);
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -1137,7 +1150,7 @@ function chage_amount() {
 
 function save_storage() {
     if ($('#selected_reception').val().trim = '') {
-        alert('환자 먼저 선택');
+        alert(gettext('Select patient first.'));
         return;
     }
 
@@ -1163,17 +1176,18 @@ function save_storage() {
         dataType: 'Json',
         success: function (response) {
             if (response.result == 'paid') {
-                alert('already paid.');
+                alert(gettext('Already paid.'));
                 waiting_list(true);
+                get_today_list();
             } else if (response.result == 'overflowed') {
-                alert('Payment amount should be lower than remaining.')
+                alert(gettext('Payment amount should be lower than remaining.'));
             } else {
-                alert('paid')
+                alert(gettext('Paid'));
             }
             
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })

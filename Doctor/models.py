@@ -12,6 +12,16 @@ class Depart(models.Model):
         verbose_name=_('Name'),
         )
 
+    full_name = models.CharField(
+        max_length = 32,
+        null=True,
+        )
+
+    full_name_vie = models.CharField(
+        max_length = 32,
+        null=True,
+        )
+
     def __str__(self):
         return self.name
 
@@ -114,6 +124,16 @@ class TestClass(models.Model):
     def __str__(self):
         return self.name
 
+    def get_name_lang(self,lang=None):
+        if lang == 'vi':
+            if self.name_vie == None:
+                return self.name
+            else:
+                return self.name_vie
+        else:
+            return self.name
+
+
 class Test(models.Model):
     name = models.CharField(
         max_length = 64,
@@ -178,14 +198,14 @@ class Test(models.Model):
     def get_price_dollar(self,get_date = None):
         date = datetime.datetime.now().strftime("%Y%m%d%H%M%S") if get_date is None else get_date.strftime("%Y%m%d%H%M%S")
         try:
-            check = Pricechange.objects.filter(
+            check = Pricechange.objects.get(
                 type = 'Test',
                 code = self.code, 
                 date_start__lte = date,
                 date_end__gte = date,
                 country='US',
-                )[:1]
-            return check.price_dollar
+                )
+            return check.price
         except Pricechange.DoesNotExist:
             return self.price_dollar
 
@@ -232,6 +252,11 @@ class TestReferenceInterval(models.Model):
     unit_vie = models.CharField(
         max_length = 12,
         null=True,
+        )
+
+    use_yn = models.CharField(
+        max_length = 12,
+        default='Y',
         )
 
 

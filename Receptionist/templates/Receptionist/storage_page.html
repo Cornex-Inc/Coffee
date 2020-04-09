@@ -22,7 +22,7 @@
                             {% endfor %}
                         </select>
                     </div>
-            </div>
+                </div>
             </div>
 
             <div class="storage_today_table_wrap">
@@ -119,7 +119,7 @@
                         </td>
                         <td colspan="2" style="padding-top:1vh; padding-bottom:2vh; text-align:right;">
                             
-                            <input type="button" id="Report" value="{{ _('Print Medical Report') }}" class="btn btn-success" />
+                            <!--<input type="button" id="Report" value="{{ _('Print Medical Report') }}" class="btn btn-success" />-->
                             <input type="button" id="Bill" value="{{ _('Print Reciept') }}" class="btn btn-warning" />
                             <input type="button" id="Cancel" value="{{ _('Cancel') }}" class="btn btn-default" />
                             <input type="button" id="save" value="{{ _('Save') }}" class="btn btn-primary" onclick="save_storage()"/>
@@ -186,7 +186,7 @@
                     </select>
                 </div>
 
-                <select name="filter" id="storage_search_select" class="form-control storage_search_select" aria-describedby="basic-addon1" autocomplete="off">
+                <select name="filter" id="storage_search_select" class="form-control storage_search_select" aria-describedby="basic-addon1" autocomplete="off" style="display:none;">
                     <option value="">{{ _('ALL') }}</option>
                     <option value="name">{{ _('Name') }}</option>
                     <option value="chart">{{ _('Chart No') }}</option>

@@ -36,7 +36,7 @@
                     </td>
                     <td>
                         <div class="input-group">
-                            <span class="input-group-addon doctor_patient_table_title" style="width:70px" id="basic-addon1">{{ _('Gender') }}</span>
+                            <span class="input-group-addon doctor_patient_table_title" style="width:70px; border:1px solid #ccc" id="basic-addon1">{{ _('Gender') }}</span>
                             {{patient.gender}}
                         </div>
                     </td>
@@ -170,8 +170,20 @@
             </div>
 
             <div class="input-group" >
-                <span class="input-group-addon diagnosis_history_taking_title" id="basic-addon1">{{ _('ICD') }}</span>
-                <input id="text_icd" class="form-control diagnosis_history_taking_contents" style="height:30px;" aria-describedby="basic-addon1"/>
+                <span class="input-group-addon diagnosis_history_taking_title" id="basic-addon1">{{ _('ICD Code') }}</span>
+                <span>
+                        <ul class="icd_ul" style="">
+                            <li style="float:left; width:47%;"><input id="text_icd" class="form-control diagnosis_history_taking_contents" style="width:100%; height:40px;" aria-describedby="basic-addon1"/>
+                        </li>
+                            <li style="float:left; width:6%; height:40px; vertical-align:middle; border-bottom:1px solid #ccc;border-top:1px solid #ccc">
+                            <div style=" text-align:center; width:100%; margin-top:10px;">
+                                <i class="fa fa-lg fa-search"  ></i>
+                            </div>
+                                </li>
+                            <li style="float:left;  width:47%;">
+                                <input id="search_icd" class="form-control" style="width:100%; height:40px;" aria-describedby="basic-addon1"/>
+                        </li>
+                </span>
                 <input type="hidden" id="icd_code" />
             </div>
             </div>
@@ -263,6 +275,7 @@
                                 <th></th>
                                 <th>{{ _('Code') }}</th>
                                 <th>{{ _('Name') }}</th>
+                                <th></th>
                                 <th>{{ _('Price') }}</th>
                             </tr>
                         </thead>
@@ -274,6 +287,7 @@
                                 <td ><input type="hidden" id="exam_id" value="{{exam.id}}" /></td>
                                 <td >{{exam.code}}</td>
                                 <td >{{exam.name}}</td>
+                                <td></td>
                                 <td style="text-align:right;">{{exam.price}}</td>
                                 <td style="display:none;">{{exam.name.lower}}</td>
                             </tr>
@@ -289,6 +303,7 @@
                                 <th></th>
                                 <th>{{ _('Code') }}</th>
                                 <th>{{ _('Name') }}</th>
+                                <th></th>
                                 <th>{{ _('Price') }}</th>
                             </tr>
                         </thead>
@@ -296,7 +311,7 @@
                         {% for class, contents in tests.items %}
                         <tbody>
                             <tr class="contents_class" style="cursor:pointer;">
-                                <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);" for="order_list_class_{{class}}" > 
+                                <td colspan="5" style="font-weight:bold; color:rgb(20,135,130);" for="order_list_class_{{class}}" > 
                                     <label>+</label>
                                     {{ class }}
                                     <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_{{class}}"/>
@@ -311,6 +326,7 @@
                                 <td ></td>
                                 <td >{{test.code}}</td>
                                 <td >{{test.name}}</td>
+                                <td></td>
                                 <td style="text-align:right;">{{test.price}}</td>
                                 <td style="display:none;">{{test.name.lower}}</td>
                             </tr>
@@ -328,6 +344,7 @@
                                 <th></th>
                                 <th>{{ _('Code') }}</th>
                                 <th>{{ _('Name') }}</th>
+                                <th></th>
                                 <th>{{ _('Price') }}</th>
                             </tr>
                         </thead>
@@ -337,6 +354,7 @@
                                 <td ></td>
                                 <td >{{precedure.code}}</td>
                                 <td >{{precedure.name}}</td>
+                                <td></td>
                                 <td style="text-align:right;">{{precedure.price}}</td>
                                 <td style="display:none;">{{precedure.name.lower}}</td>
                             </tr>
@@ -347,7 +365,7 @@
                         {% for class, contents in precedures.items %}
                         <tbody>
                             <tr class="contents_class" style="cursor:pointer;">
-                                <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);"> 
+                                <td colspan="5" style="font-weight:bold; color:rgb(20,135,130);"> 
                                     <label for="order_list_class_{{class}}" >+</label>
                                     <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_{{class}}"/>
                                     {{ class }}
@@ -356,10 +374,11 @@
                         </tbody>
                         <tbody class="contents_items" style="display:none;">
                             {% for precedure in contents %}
-                            <tr style="cursor:pointer;">
+                            <tr style="cursor:pointer;" title="{{precedure.name}}">
                                 <td ></td>
                                 <td >{{precedure.code}}</td>
                                 <td >{{precedure.name}}</td>
+                                <td></td>
                                 <td style="text-align:right;">{{precedure.price}}</td>
                                 <td style="display:none;">{{precedure.name.lower}}</td>
                             </tr>
@@ -370,20 +389,21 @@
                     </table>
             </div>
             <div class="diagnosis_select_contents" id="diagnosis_select_medicine_contents">
-                <table class="table diagnosis_select_contents_talbe">
+                <table class="table diagnosis_select_contents_talbe" id="diagnosis_select_medicine">
                     <thead>
                         <tr>
                             <th></th>
                             <th>{{ _('Code') }}</th>
                             <th>{{ _('Name') }}</th>
+                            <th>{{ _('Count') }}</th>
                             <th>{{ _('Price') }}</th>
                         </tr>
                     </thead>
                     {% autoescape off %}
                     {% for class, contents in medicines.items %}
                         <tbody>
-                            <tr class="contents_class" style="cursor:pointer;">
-                                <td colspan="4" style="font-weight:bold; color:rgb(20,135,130);"> 
+                            <tr class="contents_class" style="cursor:pointer;" class_id="{{class}}">
+                                <td colspan="5" style="font-weight:bold; color:rgb(20,135,130);"> 
                                     <label for="order_list_class_{{class}}" >+</label>
                                     <input type="checkbox" style="display:none;" class="order_list_class_chk" id="order_list_class_{{class}}"/>
                                     {{ class }}
@@ -396,6 +416,7 @@
                                 <td></td>
                                 <td >{{medicine.code}}</td>
                                 <td >{{medicine.name_display }}</td>
+                                <td class="medicine_count" id="medicine_count_{{ medicine.id }}">{{ medicine.inventory_count }}</td>
                                 <td style="text-align:right;">{{medicine.price}}</td>
                                 <td style="display:none;">{{medicine.name.lower}}|+@#|!${{medicine.name_display.lower}}</td>
                                 <td style="display:none;">{{medicine.unit}}</td>

@@ -78,6 +78,7 @@ body {
 
 .search_wrap {
     text-align: center;
+    margin-top: 35px;
     height: 550px;
     overflow: auto;
 }
@@ -113,69 +114,12 @@ status_table_title span:hover {
 
 
 
-.page {
-    width: 75%;
-    height: 100%;
-    margin: 0 auto;
+
+.report_search_date {
+    display:inline;
+    width:75px;
+    padding:5px;
 }
-     
-    .page .title {
-        width: 100%;
-        text-align: center;
-        margin-top: 0px;
-        margin-bottom: 5px;
-        font-size: 22px;
-        font-weight: bold;
-        top: 0px;
-    }
-
-    .page .chart {
-        margin-bottom: 2.5mm;
-        height: 53px;
-    }
-
-    .page .tr_small {
-        height: 22px;
-    }
-    .page th, .page td{
-        font-size:9px;
-    }
-
-    .page .middle {
-        width:100%;
-    }
-
-    .page .last {
-        vertical-align: baseline;
-        text-align: left;
-        padding: 10px;
-    }
-
-    .page .last_contents {
-        margin-left: 20px;
-        margin-bottom: 10px;
-    }
-
-    .page table {
-        border-collapse: collapse;
-        vertical-align: middle;
-        display: inline-block;
-    }
-
-    .page tbody tr td:first-child {
-        margin: 0 auto;
-        text-align: center;
-    }
-
-    .page tr {
-        margin: 0 auto;
-        padding: 0;
-    }
-
-    .page td {
-        border: 1px solid black;
-        padding-left: 5px;
-    }
 
 .contents_name {
     width: 100%;
@@ -202,6 +146,86 @@ status_table_title span:hover {
 }
 .patient_search_btn {
 }
+.page {
+    width: 85%;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.page #wrap {
+    margin: 0px;
+    font-size: 10px;
+    font-family: "Times New Roman", Times, serif;
+}
+
+    .page table {
+        height: 100%;
+    }
+
+        .page table tr td {
+            font-size: 10px;
+        }
+
+    .page #logo {
+        width: 100%;
+    }
+    .page .top tr:first-child td:nth-child(2) {
+        font-weight: 700;
+    }
+
+    .page .patient_info {
+        width: 100%;
+        margin-top: 10px;
+        border-collapse: separate;
+        border-spacing: 0px 2px;
+    }
+
+        .page .patient_info tr td {
+            width: 50%;
+        }
+
+
+    .page .title {
+        width: 100%;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 700;
+        margin-top: 15px;
+    }
+
+    .page .contents {
+        margin-top: 15px;
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .page .contents tr td, .contents tr th {
+        }
+
+        .page .contents thead tr:first-child td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+    .page #contents tr, #contents td {
+        padding: 2px;
+    }
+
+.page #contents_datas tr td {
+}
+
+.page .footer {
+    margin-top: 45px;
+    width: 100%;
+}
+
+.page .footer tr td:first-child {
+    text-align:center;
+}
+
+.page .footer tr td:nth-child(2) {
+}
+
 
 .page_print{
     display:none;
@@ -239,6 +263,9 @@ status_table_title span:hover {
     width: 46px;
 }
 
+#dynamic_div {
+    display: none;
+}
 
 
 @media ( min-width: 1900px ) {
@@ -247,7 +274,8 @@ status_table_title span:hover {
     }
 
     .search_wrap {
-        height: 720px;
+        height: 680px;
+        margin-top:0px;
     }
 
     .search_input {
@@ -258,9 +286,6 @@ status_table_title span:hover {
         width: 120px;
     }
 
-    .page {
-        width: 80%;
-    }
     .report_view_wrap{
         height:95%;
     }
@@ -269,23 +294,7 @@ status_table_title span:hover {
         width: 620px;
     }
 
-    .page th, .page td {
-        font-size: 12px;
-    }
-
-    .page .title {
-        font-size: 26px;
-        margin-bottom: 10px;
-    }
-
-    .page .chart {
-        height: 70px;
-    }
-
-    .page .tr_small {
-        height: 30px;
-    }
-
+   
 
     .chart_table tbody tr td:first-child {
         width: 90px;
@@ -330,151 +339,15 @@ status_table_title span:hover {
     }
 
 @media print {
-
     html, body {
-        min-width: 169mm;
-        max-width: 169mm;
-        max-height: 253mm;
-        min-height: 253mm;
-        margin: 0 auto;
+        min-width: 210mm;
+        max-width: 210mm;
+        /*max-height: 297mm;
+        min-height: 297mm;*/
     }
-
-
-
-    .page_print {
-        width: 169mm;
-        height: 253mm;
+    
+    #dynamic_div {
         display: block;
     }
-
-        .page_print .title {
-            width: 100%;
-            text-align: center;
-            margin-top: 50px;
-            margin-bottom: 10px;
-            font-size: 30px;
-            font-weight: 500;
-            top: 0px;
-        }
-
-        .page_print .chart {
-            margin-bottom: 2.5mm;
-            height: 22mm;
-        }
-
-        .page_print .tr_small {
-            height: 10mm;
-        }
-
-        .page_print th, .page_print td {
-            font-size: 14px;
-        }
-
-        .page_print .middle {
-            height: 216mm;
-        }
-
-        .page_print .last {
-            height: 79.5mm;
-            vertical-align: baseline;
-            text-align: left;
-            padding: 10px;
-        }
-
-        .page_print .last_contents {
-            margin-left: 20px;
-            margin-bottom: 10px;
-        }
-
-        .page_print table {
-            border-collapse: collapse;
-            font-size: 15px;
-            vertical-align: middle;
-            display: inline-block;
-        }
-
-        .page_print tbody tr td:first-child {
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .page_print tr {
-            margin: 0 auto;
-            padding: 0;
-        }
-
-        .page_print td {
-            border: 1px solid black;
-            padding-left: 5px;
-        }
-
-
-    .page_print_eng {
-        width: 169mm;
-        height: 253mm;
-        display: block;
-    }
-
-        .page_print_eng .title {
-            width: 100%;
-            text-align: center;
-            margin-top: 50px;
-            margin-bottom: 10px;
-            font-size: 30px;
-            font-weight: 500;
-            top: 0px;
-        }
-
-        .page_print_eng .chart {
-            margin-bottom: 2.5mm;
-            height: 22mm;
-        }
-
-        .page_print_eng .tr_small {
-            height: 10mm;
-        }
-
-        .page_print_eng th, .page_print_eng td {
-            font-size: 14px;
-        }
-
-        .page_print_eng .middle {
-            height: 216mm;
-        }
-
-        .page_print_eng .last {
-            height: 79.5mm;
-            vertical-align: baseline;
-            text-align: left;
-            padding: 10px;
-        }
-
-        .page_print_eng .last_contents {
-            margin-left: 20px;
-            margin-bottom: 10px;
-        }
-
-        .page_print_eng table {
-            border-collapse: collapse;
-            font-size: 15px;
-            vertical-align: middle;
-            display: inline-block;
-        }
-
-        .page_print_eng tbody tr td:first-child {
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .page_print_eng tr {
-            margin: 0 auto;
-            padding: 0;
-        }
-
-        .page_print_eng td {
-            border: 1px solid black;
-            padding-left: 5px;
-        }
-
 }
 

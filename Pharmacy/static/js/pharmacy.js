@@ -77,7 +77,7 @@ function save_data_control() {
             })
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -103,7 +103,7 @@ function set_data_control(medicine_id) {
             $('#medicine_control_price').val(response.price);
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -142,7 +142,7 @@ function pharmacy_control_save(Done = false) {
             alert(gettext("Saved."));
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -180,7 +180,7 @@ function waiting_selected(diagnosis_id) {
             $('#show_patient_selected').html(response.patient_name);
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 }
@@ -226,7 +226,7 @@ function waiting_list(Today = false) {
             }
         },
         error: function(request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -299,7 +299,7 @@ function pharmacy_database_search(page = null) {
 
         },
         error: function(request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })

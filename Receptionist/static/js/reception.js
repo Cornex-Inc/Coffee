@@ -3,9 +3,7 @@ jQuery.browser = {};
 var reception_event_count = 0;
 $(function () {
     //init
-    if ($('#reception_table').length > 0) {
-        reservation_search(true);
-    }
+
 
     //Patient 
     if ($("#patient_date_of_birth").length > 0) {
@@ -138,7 +136,7 @@ $(function () {
         });
     }
 
-    $('#reception_reservation_date').daterangepicker({
+    $('#reception_reservation_date_start,#reception_reservation_date_end').daterangepicker({
         singleDatePicker: true,
         drops: "up",
         locale: {
@@ -146,11 +144,11 @@ $(function () {
         }
     });
 
-    $('#reception_reservation_date').on('apply.daterangepicker', function () {
+    $('#reception_reservation_date_start,#reception_reservation_date_end').on('apply.daterangepicker', function () {
         reservation_search();
     });
 
-
+    reservation_search();
 
     //보험
     $('#patient_tax_invoice_click').click(function () {
@@ -185,7 +183,7 @@ $(function () {
 
             },
             error: function (request, status, error) {
-                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
             },
         })
@@ -214,7 +212,7 @@ $(function () {
                     $('#tax_exam_EventModal').modal('hide');
                 },
                 error: function (request, status, error) {
-                    alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                    console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
                 },
             })
@@ -444,7 +442,7 @@ $(function () {
  
             },
             error: function (request, status, error) {
-                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
             },
         });
 
@@ -609,7 +607,7 @@ $(function () {
                 $('#medical_exam_EventModal').modal('hide');
             },
             error: function (request, status, error) {
-                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
             },
         })
@@ -752,7 +750,7 @@ function get_doctor(part, depart = null, selected= null) {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -797,7 +795,7 @@ function check_reservation(data) {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -842,7 +840,7 @@ function set_new_patient() {
             
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
     
         },
     })
@@ -969,7 +967,7 @@ function save_patient() {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -1104,7 +1102,7 @@ function save_recept() {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -1139,7 +1137,7 @@ function set_patient_data(patient_id) {
             $('#tax_invoice_address').val(response.tax_invoice_address);
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -1185,7 +1183,7 @@ function patient_search(data) {
                     }
 
                     str += response.datas[i]['chart'] + "</td>" +
-                        "<td>" + response.datas[i]['name_kor'] + ' / ' + response.datas[i]['name_eng'] + "</td>" +
+                        "<td>" + response.datas[i]['name_kor'] + '<br />' + response.datas[i]['name_eng'] + "</td>" +
                         "<td>" + response.datas[i]['date_of_birth'] + ' (' + response.datas[i]['gender'] + '/' + response.datas[i]['age'] + ")</td>" +
                         "<td>" + response.datas[i]['phonenumber'] + "</td>" +
                         "<td>" + response.datas[i]['depart'] + "</td>" +
@@ -1197,7 +1195,7 @@ function patient_search(data) {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -1253,7 +1251,7 @@ function reception_edit(id = null) {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     });
@@ -1274,7 +1272,7 @@ function reception_search() {
 
 
     depart = $('#reception_waiting_depart option:selected').val().trim();
-    doctor = $('#reception_waiting_doctor option:selected').val().trim();
+   //doctor = $('#reception_waiting_doctor option:selected').val().trim();
 
     $.ajax({
         type: 'POST',
@@ -1314,7 +1312,7 @@ function reception_search() {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -1369,7 +1367,7 @@ function payment_search(Today = false,show_all_unpaid=false) {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -1381,7 +1379,8 @@ function reservation_search(Today = false) {
     var date, depart, doctor, status;
 
     //date = today = moment().format('YYYY[-]MM[-]DD');
-    date = $('#reception_reservation_date').val();
+    date_start = $('#reception_reservation_date_start').val();
+    date_end = $('#reception_reservation_date_end').val();
     if (date == '')
         date = today = moment().format('YYYY[-]MM[-]DD');
     depart = $('#reservation_depart_select option:selected').val();
@@ -1392,7 +1391,8 @@ function reservation_search(Today = false) {
         url: '/receptionist/reservation_search/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
-            'date': date,
+            'date_start': date_start,
+            'date_end': date_end,
             'depart': depart,
             'doctor': doctor,
             'status': status,
@@ -1426,7 +1426,7 @@ function reservation_search(Today = false) {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -1487,7 +1487,7 @@ function edit_reception_save() {
             $('#Edit_Reception_EventModal').modal('hide');
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 
@@ -1511,7 +1511,7 @@ function edit_reception_del() {
                 $('#Edit_Reception_EventModal').modal('hide');
             },
             error: function (request, status, error) {
-                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
             },
         })
     }

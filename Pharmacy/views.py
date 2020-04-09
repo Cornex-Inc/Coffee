@@ -15,6 +15,8 @@ from django.utils import timezone, translation
 from django.utils.translation import gettext as _
 from django.db.models import Q, Count, F, Min,Sum
 from django.db.models.query import QuerySet
+import operator
+import functools
 
 
 @login_required
@@ -122,14 +124,15 @@ def save(request):
 
             tmp_log = MedicineLog.objects.filter(medicine = medicine, type='add' ).exclude(tmp_count=0).order_by('expiry_date')
             for tmp in tmp_log:
-                if tmp.tmp_count < changes :
-                    changes -= tmp.tmp_count
-                    tmp.tmp_count = 0 
-                    tmp.save()
-                else:
-                    tmp.tmp_count -= changes
-                    tmp.save()
-                    break
+                if tmp.tmp_count is not None:
+                    if tmp.tmp_count < changes :
+                        changes -= tmp.tmp_count
+                        tmp.tmp_count = 0 
+                        tmp.save()
+                    else:
+                        tmp.tmp_count -= changes
+                        tmp.save()
+                        break
 
     
     medicinmanage.progress = status
@@ -140,21 +143,24 @@ def save(request):
 
 
 def medicine_search(request):
-
-    string = request.POST.get('string');
-    filter = request.POST.get('filter');
+    string = request.POST.get('string')
+    filter = request.POST.get('filter')
+    class_id = request.POST.get('class_id')
     
-    kwargs = {
-        '{0}__{1}'.format(filter, 'icontains'): string,
-        }
+
+    kwargs = {}
+    if class_id != '':
+        kwargs.update({
+            'medicine_class_id':class_id,
+            })
     datas=[]
-    if string == '' :
+    if string == '':
         expiry_date = datetime.datetime.now() + datetime.timedelta(days=180)
         #medicine_tmp = MedicineLog.objects.filter(type='add',expiry_date__lte = expiry_date ).select_related('medicine').exclude(medicine__use_yn='N' ,expiry_date=None,tmp_count=0).order_by('expiry_date')
         medicine_tmp= MedicineLog.objects.filter( type='add', expiry_date__lte = expiry_date, tmp_count__gte= 0 ).select_related('medicine').values(
             'medicine_id',
             ).annotate(Count('medicine_id')).order_by('expiry_date')
-        
+       
         #medicine_tmp = MedicineLog.objects.filter( type='add', expiry_date__lte = expiry_date).exclude(tmp_count__lt = 0,medicine__use_yn='N',expiry_date=None).order_by('expiry_date').select_related('medicine')
         for tmp in medicine_tmp:
             medicine = Medicine.objects.get(id = tmp['medicine_id'])
@@ -171,10 +177,16 @@ def medicine_search(request):
                     'alaert_expiry':True,
                 }
             datas.append(data)
-
-        medicines = Medicine.objects.all().exclude(use_yn='N').order_by('name')
+            
+        medicines = Medicine.objects.filter(**kwargs).exclude(use_yn='N').order_by('name')
     else:
-        medicines = Medicine.objects.filter(**kwargs).exclude(use_yn='N').order_by("name")
+        argument_list = [] 
+        argument_list.append( Q(**{'name__icontains':string} ) )
+        argument_list.append( Q(**{'name_vie__icontains':string} ) )
+        argument_list.append( Q(**{'name_display__icontains':string} ) )
+
+        medicines = Medicine.objects.filter(functools.reduce(operator.or_, argument_list),**kwargs)#.select_related('medicine_class').exclude(use_yn = 'N').order_by("name")
+
 
     
     for medicine in medicines:
@@ -523,7 +535,7 @@ def get_inventory_history(request):
             'date':medicine_log['date'].strftime('%Y-%m-%d %H:%M:%S'),
             'changes':medicine_log['changes'],
             'type':medicine_log['type'],
-            'memo':medicine_log['memo'],
+            'memo':'' if medicine_log['memo'] is None else medicine_log['memo'],
             }
         datas.append(data)
 

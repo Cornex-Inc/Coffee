@@ -482,7 +482,7 @@ $(function () {
 
             },
             error: function (request, status, error) {
-                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
             },
         });
 
@@ -562,7 +562,7 @@ function get_all_diagnosis() {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 
@@ -659,7 +659,7 @@ function reception_select(reception_id) {
             get_all_diagnosis();
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 
@@ -693,7 +693,7 @@ function get_vital() {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 }
@@ -723,7 +723,7 @@ function set_vital() {
             set_vital_clear();
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 }
@@ -847,19 +847,21 @@ function get_diagnosis(reception_no) {
                     }
                 },
                 error: function (request, status, error) {
-                    alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                    console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                 },
             });
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 }
 
 
 function reception_waiting(Today = false) {
+    //юс╫ц
+    return;
     var date;
 
     progress = $('#reception_progress').val();
@@ -879,7 +881,7 @@ function reception_waiting(Today = false) {
         success: function (response) {
             $('#Rectption_Status > tbody ').empty();
             if (response.datas.length == 0) {
-                $('#Rectption_Status').append("<tr><td colspan='8'>None Result !!</td></tr>");
+                $('#Rectption_Status').append("<tr><td colspan='8'>" + gettext('No Result !!') + "</td></tr>");
             } else {
                 for (var i in response.datas) {
                     var color;
@@ -910,7 +912,7 @@ function reception_waiting(Today = false) {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -940,7 +942,7 @@ function worker_on(path) {
         }
     } else {
         w.terminate();
-        w = undefined;
+        w = undefined;  
     }
 }
 
@@ -995,7 +997,7 @@ function diagnosis_save(set) {
         //temp_data['amount'] = $tds.eq(3).children('input').val();
         temp_data['amount'] = $tds.eq(2).children('input').val();
         if (temp_data['amount'] == '') {
-            alert(gettext('amout is empty.'));
+            alert(gettext('amount is empty.'));
             is_valid = false;
         }
         temp_data['days'] = $tds.eq(4).children('input').val();
@@ -1038,7 +1040,7 @@ function diagnosis_save(set) {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -1059,7 +1061,7 @@ function get_test_contents(category_id) {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })

@@ -12,7 +12,7 @@
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: 77%;
+    grid-template-columns: 33% 46% 21%
 }
 
 .partition {
@@ -24,15 +24,67 @@
     height: 100%;
     overflow: auto;
 }
-
-.laboratory_list {
-    grid-column-start: 1;
+.laboratory_patient_list {
+    grid-column-start:1;
     grid-column-end: 2;
 }
+.laboratory_list {
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+#laboratory_test_list_div {
+    margin-top: 0px;
+}
+
+#laboratory_list_table thead tr th{
+    vertical-align:middle;
+    text-align:center;
+}
+    #laboratory_list_table tbody tr td:nth-child(3), #laboratory_list_table tbody tr td:nth-child(5) {
+        text-align:left;
+    }
 
 
+#laboratory_test_list_table {
+    table-layout: fixed;
+}
+
+    #laboratory_test_list_table thead tr th {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    #laboratory_test_list_table thead tr th:nth-child(1) {
+        width: 30px;
+    }
+        #laboratory_test_list_table thead tr th:nth-child(2) {
+            width: 130px;
+        }
+    #laboratory_test_list_table thead tr th:nth-child(3) {
+        width: 75px;
+    }
+        #laboratory_test_list_table thead tr th:nth-child(4) {
+            width: 170px;
+        }
+        #laboratory_test_list_table thead tr th:nth-child(5) {
+            width: 70px;
+        }
+        #laboratory_test_list_table thead tr th:nth-child(6) {
+            width: 70px;
+        }
+
+    #laboratory_test_list_table tbody tr td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+        #laboratory_test_list_table tbody tr td:nth-child(2), #laboratory_test_list_table tbody tr td:nth-child(4), #laboratory_test_list_table tbody tr td:nth-child(5) {
+        text-align:left;
+        }
 .laboratory_list_table_wrap {
-    overflow: auto;
+    margin-top: 35px;
+    overflow-y: auto;
     height: 620px;
 }
 
@@ -45,8 +97,8 @@
 }
 
 .laboratory_control {
-    grid-column-start: 2;
-    grid-column-end: 3;
+    grid-column-start: 3;
+    grid-column-end: 4;
 }
 
 
@@ -62,7 +114,8 @@
 }
 
 .laboratory_list_calendar{
-    width:100px;
+    width:75px;
+    padding:5px;
     display:inline-block;
 }
 
@@ -72,14 +125,33 @@
 }
 
 .laboratory_search_input {
-    width: 140px;
+    width: 120px;
     display: inline-block;
 }
 
-@media ( min-width: 1900px ) {
 
-    .laboratory_list_table_wrap {
-        height: 800px;
+.lab_control_div input{
+    display:inline;
+}
+
+.depart_select{
+    display:inline-table;
+    width:115px;
+}
+
+    .depart_select span, .depart_select select {
+    padding:5px;
+    
     }
 
-}
+    @media ( min-width: 1900px ) {
+        .laboratory_list_table_wrap {
+        height: 760px;
+    }
+
+        .laboratory_search_input {
+            width:140px;
+
+        }
+
+        }

@@ -24,6 +24,9 @@ from Laboratory.models import *
 
 @login_required
 def index(request):
+
+
+
     #reception
     patient_form = PatientForm()
     reception_form = ReceptionForm()
@@ -412,13 +415,6 @@ def save_reception(request):
     vital_pr = request.POST.get('patient_table_vital_pr',None)
     vital_breath = request.POST.get('patient_table_vital_breath',None)
 
-    print(vital_ht)
-    print(vital_wt)
-    print(vital_bp)
-    print(1)
-    print(vital_bt)
-    print(vital_pr)
-    print(vital_breath)
 
     if vital_ht is '' and vital_wt is '' and vital_bp is '' and vital_bt is '' and vital_pr is '' and vital_breath is '':
         pass
@@ -512,9 +508,9 @@ def reception_search(request):
         depart = Depart.objects.get(id = depart_id)
         kwargs['depart_id'] = depart
 
-    if doctor_id != '':
-        doctor = Doctor.objects.get(id = doctor_id)
-        kwargs['doctor'] = doctor
+    #if doctor_id != '':
+    #    doctor = Doctor.objects.get(id = doctor_id)
+    #    kwargs['doctor'] = doctor
     
 
     date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
@@ -530,7 +526,6 @@ def reception_search(request):
         data={}
         
         is_new = Reception.objects.filter(patient = reception.patient, depart_id = reception.depart_id).count()
-        print(is_new)
         if is_new == 1:
             data.update({'is_new':'N'})
         else:
@@ -609,33 +604,28 @@ def payment_search(request):
 
 
 def reservation_search(request):
-    date = request.POST.get('date')
+    date_start = request.POST.get('date_start')
+    date_end = request.POST.get('date_end')
     status = request.POST.get('status')
-
     kwargs={}
+    depart_id = request.POST.get('depart')
     
-    
-    if request.POST.get('doctor') != '':
-        doctor = Doctor.objects.get(pk = request.POST.get('doctor'))
-        kwargs['doctor'] = doctor
-    elif request.POST.get('depart') != '':
-        depart = Doctor.objects.filter(depart_id = request.POST.get('depart'))
-        
-        temp_list=[]
-        for i in depart:
-            temp_list.append(i.id)
-        
-        kwargs['doctor_id__in'] = temp_list 
+    #if request.POST.get('doctor') != '':
+    #    doctor = Doctor.objects.get(pk = request.POST.get('doctor'))
+    #    kwargs['doctor'] = doctor
+    if depart_id != '':
+        depart = Depart.objects.get(id = depart_id)
+        kwargs['depart_id'] = depart
 
-    if status != 'all':
-        if status == 'no':
-            kwargs['is_visited']=False
-        elif status == 'yes':
-            kwargs['is_visited']=True
+    #if status != 'all':
+    #    if status == 'no':
+    #        kwargs['is_visited']=False
+    #    elif status == 'yes':
+    #        kwargs['is_visited']=True
 
-    date_min = datetime.datetime.combine(datetime.datetime.strptime(date, "%Y-%m-%d").date(), datetime.time.min)
-    date_max = datetime.datetime.combine(datetime.datetime.strptime(date, "%Y-%m-%d").date(), datetime.time.max)
-
+   
+    date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
+    date_max = datetime.datetime.combine(datetime.datetime.strptime(date_end, "%Y-%m-%d").date(), datetime.time.max)
 
     reservations = Reservation.objects.filter(reservation_date__range = (date_min, date_max),**kwargs).order_by('reservation_date')
 
@@ -646,18 +636,19 @@ def reservation_search(request):
             'start':reservation.reservation_date.strftime('%Y-%m-%d %H:%M:00'),
             'depart': reservation.depart.name,
             'doctor': reservation.doctor.name_kor,
-            'time':reservation.reservation_date.strftime('%H:%M:00'),
+            'time':reservation.reservation_date.strftime('%Y-%m-%d %H:%M:00'),
             }
-
+      
         try:
             patient = Patient.objects.get(pk = reservation.patient_id)
             data.update({
                     'chart':reservation.patient.get_chart_no(),
-                    'name':reservation.patient.get_name_kor_eng(),
+                    'name':reservation.patient.name_kor + '<br />' + reservation.patient.name_eng,
                     'date_of_birth':reservation.patient.date_of_birth.strftime('%Y-%m-%d'),
                     'phone':reservation.patient.phone,
                     'has_unpaid':reservation.patient.has_unpaid(),
                 })
+            
         except Patient.DoesNotExist:
             data.update({
                     'chart':'',
@@ -665,7 +656,7 @@ def reservation_search(request):
                     'date_of_birth':reservation.date_of_birth.strftime('%Y-%m-%d'),
                     'phone':reservation.phone,
                 })
-
+            
 
 
         datas.append(data)
@@ -696,6 +687,7 @@ def storage_page(request):
 def waiting_list(request):
     date_start = request.POST.get('start_date')
     date_end = request.POST.get('end_date')
+    depart_id = request.POST.get('depart')
     filter = request.POST.get('filter')
     string = request.POST.get('string')
  
@@ -708,8 +700,6 @@ def waiting_list(request):
         argument_list.append( Q(**{'patient__name_kor__icontains':string} ) )
         argument_list.append( Q(**{'patient__name_eng__icontains':string} ) )
         argument_list.append( Q(**{'patient__id__icontains':string} ) ) 
-        argument_list.append( Q(**{'patient__phone__icontains':string} ) ) 
-        argument_list.append( Q(**{'patient__date_of_birth__icontains':string} ) ) 
     elif filter=='name':
         argument_list.append( Q(**{'patient__name_kor__icontains':string} ) )
         argument_list.append( Q(**{'patient__name_eng__icontains':string} ) )
@@ -719,7 +709,11 @@ def waiting_list(request):
 
 
     kwargs={}
-    receptions = Reception.objects.select_related('patient').exclude(progress='deleted').filter( functools.reduce(operator.or_, argument_list), recorded_date__range = (date_min, date_max) )
+    
+    if depart_id != '' :
+        kwargs['depart_id'] = depart_id
+
+    receptions = Reception.objects.select_related('patient').exclude(progress='deleted').filter( functools.reduce(operator.or_, argument_list), **kwargs, recorded_date__range = (date_min, date_max) )
     #if filter == 'name':
     #    filter_string.append(Q( ** {'patient__name_kor__icontains' : string } ))
     #    filter_string.append(Q( ** {'patient__name_eng__icontains' : string } ))
@@ -874,7 +868,7 @@ def get_today_selected(request):
     for data in medicine_set:
         medicine = {}
         quantity = int(data.days) * int(data.amount)
-        unit = data.medicine.get_price(reception.recorded_date)
+        unit = data.medicine.get_price()
         price = quantity * int(data.medicine.get_price())
         medicine.update({
             'code':data.medicine.code,
@@ -1917,7 +1911,6 @@ def Documents(request):
 
 
 def document_search(request):
-    
     start = request.POST.get('document_control_start')
     end = request.POST.get('document_control_end')
     depart = request.POST.get('document_control_depart')
@@ -1940,7 +1933,28 @@ def document_search(request):
     date_max = datetime.datetime.combine(datetime.datetime.strptime(end, "%Y-%m-%d").date(), datetime.time.max)
 
     datas=[]
-    receptions = Reception.objects.select_related('patient').select_related('depart').select_related('doctor').select_related('diagnosis').prefetch_related('diagnosis__medicinemanager_set').prefetch_related('diagnosis__testmanager_set').order_by('-recorded_date').filter(functools.reduce(operator.or_, argument_list),**kwargs,recorded_date__range = (date_min, date_max) ,progress = 'done')
+    receptions = Reception.objects.select_related(
+                    'patient'
+                ).select_related(
+                    'depart'
+                ).select_related(
+                    'doctor'
+                ).select_related(
+                    'diagnosis'
+                ).select_related(
+                    'payment'
+                ).prefetch_related(
+                    'diagnosis__medicinemanager_set'
+                ).prefetch_related(
+                    'diagnosis__testmanager_set'
+                ).order_by(
+                    '-recorded_date'
+                ).filter(
+                    functools.reduce(operator.or_, argument_list),
+                    **kwargs,
+                    recorded_date__range = (date_min, date_max) 
+                    ,progress = 'done'
+                ).exclude(progress='deleted')
     for reception in receptions:
         data= {
             'id':reception.id,
@@ -1956,15 +1970,47 @@ def document_search(request):
             'date_time':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),         
             }
 
+
         if reception.diagnosis.medicinemanager_set.count() !=0:
             data.update({
                 'prescription':True,
+                'medicine_receipt':True,
                 })
             
         if reception.diagnosis.testmanager_set.count() !=0:
             data.update({
                 'lab_report':True,
                 })
+
+        check = False
+        for check in reception.diagnosis.preceduremanager_set.all():
+            #2,4,5,6,8
+            class_id = check.precedure.precedure_class_id 
+            if class_id is 2 or class_id is 4 or class_id is 5 or class_id is 6 or class_id is 8 :
+                check = True
+            elif class_id is 10:
+                if 'R' in check.precedure.code:
+                    check = True
+
+        if reception.diagnosis.testmanager_set.count() !=0 or check is True:
+            data.update({
+                'subclinical':True,
+                })
+        try:
+            report = Report.objects.get(reception_id = reception.id)
+            data.update({
+                'medical_report':True,
+                })
+
+        except Report.DoesNotExist:
+            pass
+
+        if reception.payment is not None:
+            data.update({
+                'medical_receipt':True,
+                })
+        
+
         datas.append(data)
     
 
@@ -1988,14 +2034,17 @@ def document_lab(request,reception_id):
         test = TestManage.objects.get(manager_id = lab.id)
         reference_query = TestReferenceInterval.objects.filter(test_id = lab.test_id)
         list_interval = []
+        unit = ''
+        unit_vie = ''
         for reference in reference_query:
             list_interval.append({
                 'normal_range':reference.get_range(),
                 'minimum':reference.minimum,
                 'maximum':reference.maximum,
-                'unit':reference.get_unit_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
-                'name':reference.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                'name':'' if reference.name is None else reference.name + ' : ',
                 })
+            unit = reference.unit
+            unit_vie = reference.unit_vie
 
         no+=1
         test_res.append({
@@ -2006,10 +2055,12 @@ def document_lab(request,reception_id):
             'result':test.result,
             'normal_range':list_interval,
             'procedure_method':'',
+            'unit':unit,
+            'unit_vie':unit_vie,
             })
 
 
-
+    diagnostic = reception.diagnosis.diagnosis
     return render(request,
     'Receptionist/form_medical_lab.html',
             {
@@ -2018,12 +2069,17 @@ def document_lab(request,reception_id):
                 'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),   
                 'age':reception.patient.get_age(),
                 'gender':reception.patient.get_gender_simple(),
-                'depart':reception.depart.name,
+                'depart_full':reception.depart.full_name,
+                'depart_full_vie':reception.depart.full_name_vie,
                 'doctor':reception.doctor.name_short,
                 'address':reception.patient.address,
                 'phone':reception.patient.phone,
                 'date_time':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),    
                 'test_res':test_res,
+
+                'date_today':datetime.datetime.now().strftime('%Y-%m-%d'),
+
+                'diagnostic':diagnostic,
             },
         )
 
@@ -2041,13 +2097,15 @@ def document_prescription(request,reception_id):
             'no':no,
             'name':manager.medicine.name,
             'name_vie':manager.medicine.name_vie,
-            'unit':manager.medicine.unit,
-            'unit_vie':manager.medicine.unit_vie,
+            'unit':'' if manager.medicine.unit is None else manager.medicine.unit,
+            'unit_vie':'' if manager.medicine.unit_vie is None else manager.medicine.unit_vie,
             'quantity':manager.amount * manager.days,
             'direction_for_use':manager.memo,
             'note':'',
             })
 
+
+    diagnostic = reception.diagnosis.diagnosis
     return render(request,
     'Receptionist/form_prescription.html',
             {
@@ -2056,13 +2114,350 @@ def document_prescription(request,reception_id):
                 'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),   
                 'age':reception.patient.get_age(),
                 'gender':reception.patient.get_gender_simple(),
-                'depart':reception.depart.name,
+                'depart_full':reception.depart.full_name,
+                'depart_full_vie':reception.depart.full_name_vie,
                 'doctor':reception.doctor.name_short,
                 'address':reception.patient.address,
                 'phone':reception.patient.phone,
                 'date_time':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),    
                 'medicine_res':medicine_res,
                 'reservation_date':'' if reception.reservation_id is None else reception.reservation.reservation_date.strftime('%Y-%m-%d %H:%M'),
-                'doctor':reception.doctor.name_eng
+                'doctor':reception.doctor.name_eng,
+
+                'date_today':datetime.datetime.now().strftime('%Y-%m-%d'),
+
+                'diagnostic':diagnostic
+            },
+        )
+
+
+def document_medical_receipt(request,reception_id):
+
+    reception = Reception.objects.get(id = reception_id)
+
+    exam_set = ExamManager.objects.filter(diagnosis_id = reception.diagnosis.id)
+    test_set = TestManager.objects.filter(diagnosis_id = reception.diagnosis.id)
+    precedure_set = PrecedureManager.objects.filter(diagnosis_id = reception.diagnosis.id)
+    medicine_set = MedicineManager.objects.filter(diagnosis_id = reception.diagnosis.id)
+
+
+    amount_consult = 0
+    amount_image = 0
+    amount_test = 0
+    aount_other_exam = 0
+
+    total = 0
+    sub_total = 0
+    discount = 0 if reception.payment.discounted_amount is None else reception.payment.discounted_amount
+
+    exams = []
+    no = 1
+    for data in exam_set:
+        #exam = {}
+        #exam.update({
+        #    'no':no,
+        #    'name':data.exam.name,
+        #    'price':f"{data.exam.get_price(reception.recorded_date):,}",
+        #    })
+        #no += 1
+        #exams.append(exam)
+        amount_consult += data.exam.get_price(reception.recorded_date)
+
+    tests = []
+    for data in test_set:
+        #test = {}
+        #test.update({
+        #    'no':no,
+        #    'name':data.test.name,
+        #    'price':f"{data.test.get_price(reception.recorded_date):,}",
+        #    })
+        #no += 1
+        #tests.append(test)
+        amount_test += data.test.get_price(reception.recorded_date)
+
+    #2,4,5,6,10(pm 의 R)
+    no = 1
+    no_other = 1
+    for precedure in precedure_set:
+        #if precedure.precedure.precedure_class_id == 8:
+        #    other_tests.append({
+        #        'no':no_other,
+        #        'name':precedure.precedure.name,
+        #        'amount':f"{precedure.precedure.get_price(reception.recorded_date):,}",
+        #        'waiting_time':''
+        #        })
+        #    no_other += 1
+        #8
+        if precedure.precedure.precedure_class_id == 2 or precedure.precedure.precedure_class_id == 4 or precedure.precedure.precedure_class_id == 5 or precedure.precedure.precedure_class_id == 6 or precedure.precedure.precedure_class_id == 8:
+            #image_analysations.append({
+            #    'no':no,
+            #    'name':precedure.precedure.name,
+            #    'amount':f"{precedure.precedure.get_price(reception.recorded_date):,}",
+            #    'waiting_time':''
+            #    })
+            #no += 1
+            amount_image+= precedure.precedure.get_price(reception.recorded_date) * precedure.amount
+        elif precedure.precedure.precedure_class_id == 10:
+            if 'R' in precedure.precedure.code:
+               #image_analysations.append({
+               #'no':no,
+               #'name':precedure.precedure.name,
+               #'amount':f"{precedure.precedure.get_price(reception.recorded_date):,}",
+               #'waiting_time':''
+               #})
+               #no += 1
+               amount_image+= precedure.precedure.get_price(reception.recorded_date) * precedure.amount
+            else:
+                aount_other_exam += precedure.precedure.get_price(reception.recorded_date)
+        else:
+            aount_other_exam += precedure.precedure.get_price(reception.recorded_date)
+
+    sub_total +=amount_consult
+    sub_total +=amount_image
+    sub_total +=amount_test
+    sub_total +=aount_other_exam
+
+    
+    total = sub_total - discount
+
+    print(sub_total)
+    print(discount)
+    print(total)
+    return render(request,
+    'Receptionist/form_medical_receipt.html',
+            {
+                'chart':reception.patient.get_chart_no(),
+                'name':reception.patient.get_name_kor_eng(),
+                'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),   
+                'age':reception.patient.get_age(),
+                'gender':reception.patient.get_gender_simple(),
+                'depart_full':reception.depart.full_name,
+                'depart_full_vie':reception.depart.full_name_vie,
+                'doctor':reception.doctor.name_short,
+                'address':reception.patient.address,
+                'phone':reception.patient.phone,
+                'date_time':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),    
+                'doctor':reception.doctor.name_eng,
+                'diagnostic':reception.diagnosis.diagnosis,
+
+
+                #'exams':exams,
+                #'tests':tests,
+                #'precedures':precedures,
+                #'medicines':medicines,
+                'amount_consult':f"{amount_consult:,}",
+                'amount_image':f"{amount_image:,}",
+                'amount_test':f"{amount_test:,}",
+                'aount_other_exam':f"{aount_other_exam:,}",
+
+                'sub_total':f"{sub_total:,}",
+                #'discount':discount,#'' if reception.payment.discounted is None else reception.payment.discounted,
+                'discount_amount':f"{discount:,}",
+                'total_payment':f"{total:,}",
+
+                'date_today':reception.recorded_date.strftime('%Y-%m-%d'),
+            },
+        )
+
+
+def document_medicine_receipt(request,reception_id):
+    reception = Reception.objects.get(id = reception_id)
+
+    medicine_set = MedicineManager.objects.filter(diagnosis_id = reception.diagnosis.id)
+
+    no=1
+    medicines = []
+    
+    
+    sub_total = 0
+    vat = 0
+    total = 0
+
+    diagnostic = reception.diagnosis.diagnosis
+    for data in medicine_set:
+        medicine = {}
+        quantity = int(data.days) * int(data.amount)
+        price = quantity * int(data.medicine.get_price(reception.recorded_date))
+        medicine.update({
+            'no':no,
+            'name':data.medicine.name,
+            'quantity':quantity,
+            'price':f"{price:,}",
+            'unit':data.medicine.unit,
+            'unit_vie':data.medicine.unit_vie,
+            'unit_price':f"{data.medicine.get_price(reception.recorded_date):,}",
+            })
+        no += 1
+        sub_total += price
+
+        medicines.append(medicine)
+
+    total = sub_total + (sub_total * vat / 100 )
+    return render(request,
+    'Receptionist/form_medicine_receipt.html',
+            {
+                'chart':reception.patient.get_chart_no(),
+                'name':reception.patient.get_name_kor_eng(),
+                'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),   
+                'age':reception.patient.get_age(),
+                'gender':reception.patient.get_gender_simple(),
+                'depart_full':reception.depart.full_name,
+                'depart_full_vie':reception.depart.full_name_vie,
+                'doctor':reception.doctor.name_short,
+                'address':reception.patient.address,
+                'phone':reception.patient.phone,
+                'date_time':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),    
+                'doctor':reception.doctor.name_eng,
+
+                'date_reception':reception.recorded_date.strftime('%Y-%m-%d'),
+
+                'medicines':medicines,
+                
+                'sub_total':f"{sub_total:,}",
+                'vat':vat,
+                'total':f"{int(total):,}",
+
+                'diagnostic':diagnostic
+            },
+        )
+
+
+def document_subclinical(request,reception_id):
+    reception = Reception.objects.get(id = reception_id)
+
+    test_set = TestManager.objects.filter(diagnosis_id = reception.diagnosis.id)
+    precedure_set = PrecedureManager.objects.filter(diagnosis_id = reception.diagnosis.id)
+
+    
+
+    tests = []
+
+    no = 1
+    for test in test_set:
+        tests.append({
+            'no':no,
+            'name':test.test.name,
+            'amount':1,
+            'waiting_time':''
+            })
+        no += 1
+
+
+
+    image_analysations = []
+    other_tests = []
+    #2,4,5,6,10(pm 의 R)
+    no = 1
+    no_other = 1
+    for precedure in precedure_set:
+        if precedure.precedure.precedure_class_id == 8:
+            other_tests.append({
+                'no':no_other,
+                'name':precedure.precedure.name,
+                'amount':precedure.amount,
+                'waiting_time':''
+                })
+            no_other += 1
+        #8
+        elif precedure.precedure.precedure_class_id == 2 or precedure.precedure.precedure_class_id == 4 or precedure.precedure.precedure_class_id == 5 or precedure.precedure.precedure_class_id == 6 or precedure.precedure.precedure_class_id == 8:
+            image_analysations.append({
+                'no':no,
+                'name':precedure.precedure.name,
+                'amount':precedure.amount,
+                'waiting_time':''
+                })
+            no += 1
+        elif precedure.precedure.precedure_class_id == 10:
+            if 'R' in precedure.precedure.code:
+                image_analysations.append({
+                'no':no,
+                'name':precedure.precedure.name,
+                'amount':precedure.amount,
+                'waiting_time':''
+                })
+                no += 1
+
+
+    print(reception.diagnosis.diagnosis,)
+
+    return render(request,
+    'Receptionist/form_subclinical.html',
+            {
+                'chart':reception.patient.get_chart_no(),
+                'name':reception.patient.get_name_kor_eng(),
+                'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),   
+                'age':reception.patient.get_age(),
+                'gender':reception.patient.get_gender_simple(),
+                'depart_full':reception.depart.full_name,
+                'depart_full_vie':reception.depart.full_name_vie,
+                'doctor':reception.doctor.name_short,
+                'address':reception.patient.address,
+                'phone':reception.patient.phone,
+                'date_time':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),    
+                'doctor':reception.doctor.name_eng,
+                'diagnostic':reception.diagnosis.diagnosis,
+
+                'date_today':reception.recorded_date.strftime('%Y-%m-%d'),
+
+                'tests':tests,
+                'image_analysations':image_analysations,
+                'other_tests':other_tests,
+            },
+        )
+
+
+def document_medical_report(request,reception_id):
+    reception = Reception.objects.get(id = reception_id)
+    report = Report.objects.get(reception_id = reception_id)
+
+    next_visit = '' if reception.reservation is None else reception.reservation.reservation_date.strftime("%Y-%m-%d %H:%M")
+    ICD_code_vie =''
+    ICD_ =''
+    ICD_code_en =''
+    try:
+        icd_code = ICD.objects.get(code = reception.diagnosis.ICD_code )
+        ICD_code_vie =icd_code.name_vie
+        ICD_ =icd_code.code
+        ICD_code_en =icd_code.name
+
+    except ICD.DoesNotExist:
+        ICD_code_vie =''
+        ICD_ =''
+        ICD_code_en =''
+
+
+    return render(request,
+    'Receptionist/form_medical_report.html',
+            {
+                'chart':reception.patient.get_chart_no(),
+                'name':reception.patient.get_name_kor_eng(),
+                'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),   
+                'age':reception.patient.get_age(),
+                'gender':reception.patient.get_gender_simple(),
+                'depart_full':reception.depart.full_name,
+                'depart_full_vie':reception.depart.full_name_vie,
+                'doctor':reception.doctor.name_short,
+                'address':reception.patient.address,
+                'phone':reception.patient.phone,
+                'date_time':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),    
+                'doctor':reception.doctor.name_eng,
+
+                'date_today':reception.recorded_date.strftime('%Y-%m-%d'),
+
+                'chief_complaint':'<br />' if reception.chief_complaint is None else reception.chief_complaint,
+                'past_history':reception.patient.history.past_history,
+                'assessment':'<br />' if reception.diagnosis.assessment is None else reception.diagnosis.assessment,
+                'object':'<br />' if reception.diagnosis.objective_data is None else reception.diagnosis.objective_data,
+                'diagnosis':'<br />' if reception.diagnosis.diagnosis is None else reception.diagnosis.diagnosis,
+                'icd_code':ICD_ ,
+                'ICD_code_vie':ICD_code_vie,
+                'ICD_code_en':ICD_code_en,
+
+
+                'plan':'<br />'if reception.diagnosis.plan is None else reception.diagnosis.plan,
+                'doctor_reommend':report.report,
+
+                'recorded_date':reception.recorded_date.strftime('%Y-%m-%d'),
+                'next_visit':next_visit,
             },
         )

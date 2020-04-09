@@ -1,14 +1,21 @@
 
 $(function () {
-    search_report();
+    
     $('.input_part_contorl input, .input_part_contorl textarea').keyup(function () {
         set_print_html();
     })
 
-    $('#search_date').daterangepicker({
+    $('#report_search_date_start').daterangepicker({
         singleDatePicker: true,
         showDropdowns: true,
-        drops: "up",
+        locale: {
+            format: 'YYYY-MM-DD',
+        },
+    });
+
+    $('#report_search_date_end').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
         locale: {
             format: 'YYYY-MM-DD',
         },
@@ -26,101 +33,14 @@ $(function () {
     });
 
 
-    $('#btnPrint_eng').click(function () {
-        set_print_html();
-
-        if ($('#date_of_hospitalization').val().trim() == '') {
-            alert(gettext('Outbreak Day is empty.'));
-            return;
-        }
-
-        if ($('#reception_report').val().trim() == '') {
-            alert(gettext('Opinion is empty.'));
-            return;
-        }
-
-        if ($('#reception_usage').val().trim() == '') {
-            alert(gettext('Purpose is empty.'));
-            return;
-        }
-
-        $.ajax({
-            type: 'POST',
-            url: '/doctor/medical_report_save/',
-            data: {
-                'csrfmiddlewaretoken': $('#csrf').val(),
-                'selected_patient': $('#selected_patient').val(),
-                'report': $('#reception_report').val(),
-                'usage': $('#reception_usage').val(),
-                'hospitalization': $('#date_of_hospitalization').val(),
-                'publication': $('#publication_date').val(),
-                'selected_report': $('#selected_report').val(),
-                'doctor': $('#doctor_id').val(),
-            },
-            dataType: 'Json',
-            success: function (response) {
-                $('#patient_serial_print_eng').html(response.serial);
-                $('.page_print_eng').printThis({
-                    importCSS: true,
-                    loadCSS: "/static/css/report.css",
-                });
-
-            },
-            error: function (request, status, error) {
-                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-
-            },
-        })
-
-
+    $('#btn_print').click(function () {
+        report_save('print')
     });
 
 
 
-    $('#btnPrint').click(function () {
-        set_print_html();
-
-        if ($('#date_of_hospitalization').val().trim() == '') {
-            alert(gettext('Outbreak Date is empty.'));
-            return;
-        }
-
-        if ($('#reception_report').val().trim() == '') {
-            alert(gettext('Opinion is empty.'));
-            return;
-        }
-
-        if ($('#reception_usage').val().trim() == '') {
-            alert(gettext('Purpose is empty.'));
-            return;
-        }
-
-        $.ajax({
-            type: 'POST',
-            url: '/doctor/medical_report_save/',
-            data: {
-                'csrfmiddlewaretoken': $('#csrf').val(),
-                'selected_patient': $('#selected_patient').val(),
-                'report': $('#reception_report').val(),
-                'usage': $('#reception_usage').val(),
-                'hospitalization': $('#date_of_hospitalization').val(),
-                'publication': $('#publication_date').val(),
-                'selected_report': $('#selected_report').val(),
-                'doctor': $('#doctor_id').val(),
-            },
-            dataType: 'Json',
-            success: function (response) {
-                $('#patient_serial_print').html(response.serial);
-                $('.page_print').printThis({
-                    importCSS: true,
-                    loadCSS: "/static/css/report.css",
-                });
-            },
-            error: function (request, status, error) {
-                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-
-            },
-        })
+    $('#btn_save').click(function () {
+        report_save();
     });
 
     $('#btnNew').click(function () {
@@ -148,18 +68,62 @@ $(function () {
 
 
     });
+
+    search_report();
 });
 
 
+function report_save(option) {
+    selected_reception_id = $('#selected_reception_id').val(),
+
+    $.ajax({
+        type: 'POST',
+        url: '/doctor/medical_report_save/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'selected_reception_id': selected_reception_id,
+            'recommmed_and_follow': $('#reception_report').val(),
+        },
+        dataType: 'Json',
+        success: function (response) {
+
+
+            if (option == 'print') {
+                $("#dynamic_div").html('');
+                $('#dynamic_div').load('/receptionist/document_medical_report/' + selected_reception_id);
+
+                $('#dynamic_div').printThis({
+                });
+            }
+            else {
+                alert(gettext('Saved.'))
+            }
+            
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+
+
+}
+
 function search_report(page = null) {
     var page_context = 11;
+
+    date_start = $('#report_search_date_start').val().trim();
+    date_end = $('#report_search_date_end').val().trim();
+
     $.ajax({
         type: 'POST',
         url: '/doctor/report_search/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
             'filter': $('#search_select').val(),
-            'input': $('#search_input').val(),
+            'input': $("#search_input").val(),
+            'start': date_start,
+            'end': date_end,
             'page_context': page_context,
             'page': page,
         },
@@ -169,7 +133,7 @@ function search_report(page = null) {
             for (var i = 0; i < page_context; i++) {
                 var str = ""
                 if (response.datas[i]) {
-                    str += '<tr style="cursor:pointer; height:40px;" onclick="set_report(' + response.datas[i].report_id + ')"><td>' + response.datas[i].No + '</td>' +
+                    str += '<tr style="cursor:pointer; height:40px;" onclick="set_report(' + response.datas[i].reception_id + ')"><td>' + response.datas[i].No + '</td>' +
                         '<td>' + response.datas[i].chart + '</td>' +
                         '<td>' + response.datas[i].patient_name_eng + '<br/>' + response.datas[i].patient_name_kor + '</td>' +
                         '<td>' + response.datas[i].ID + '</td>' +
@@ -209,20 +173,20 @@ function search_report(page = null) {
             $('#payment_pagnation').html(str);
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
 }
 
 
-function set_report(report_id) {
+function set_report(reception_id) {
     $.ajax({
         type: 'POST',
         url: '/doctor/show_medical_report/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
-            'report_id': report_id,
+            'reception_id': reception_id,
         },
         dataType: 'Json',
         success: function (response) {
@@ -233,22 +197,45 @@ function set_report(report_id) {
             $('#patient_age').val(response.patient_age);
             $('#patient_date_of_birth').val(response.patient_date_of_birth);
             $('#patient_address').val(response.patient_address);
-            $('#patient_phone').val(response.patient_phone)
-            $('#reception_report').val(response.reception_report);
+            $('#patient_phone').val(response.patient_phone);
             $('#reception_usage').val(response.reception_usage);
 
             $('#publication_date').val(response.publication_date);
             $('#date_of_hospitalization').val(response.date_of_hospitalization);
 
-            $('#selected_reception_id').val(response.reception_id);
+            $('#selected_reception_id').val(response.id);
             $('#selected_report').val(response.selected_report);
 
             $('#doctor_name_screen').html(response.doctor);
             $("#doctor_name_print").html(response.doctor);
-            set_print_html();
+
+            $("#reception_report").val(response.reception_report);
+            console.log(response.reception_report);
+            //preview
+            $("#preview_pid").html(response.patient_chart);
+            $("#preview_name").html(response.patient_name_eng + ' ' + response.patient_name);
+            $("#preview_address").html(response.patient_address);
+            $("#preview_gender").html(response.patient_gender);
+            $("#preview_date_of_birth").html(response.patient_date_of_birth);
+            $("#preview_phone").html(response.patient_phone)
+            $("#preview_date_visit").html(response.recorded_date);
+            $("#preview_depart").html(response.depart);
+            $("#preview_chief_complaint").html(response.chief_complaint);
+            $("#preview_medical_history").html(response.past_history);
+            $("#preview_clinical_examations").html(response.assessment);
+            $("#preview_sub_clinical_examination").html(response.object);
+            $("#preview_diagnosis").html(response.diagnosis);
+            $("#preview_icd").html(response.icd);
+            $("#preview_treatment_plan").html(response.plan);
+            $("#preview_recommendation").html(response.reception_report);
+            $("#preview_re_examination").html(response.next_visit);
+
+
+            $("#preview_recommendation").html(response.preview_recommendation);
+            //set_print_html();
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -256,6 +243,45 @@ function set_report(report_id) {
 
 
 function set_print_html() {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     $('#patient_chart_screen').html($('#patient_chart').val());
     $('#patient_name_screen').html($('#patient_name').val());
@@ -340,7 +366,7 @@ function patient_search(data) {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -385,7 +411,7 @@ function set_patient_data(patient_id) {
             set_print_html();
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })

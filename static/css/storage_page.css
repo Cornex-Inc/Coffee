@@ -56,16 +56,17 @@
         text-align: left;
         background: #d2322d;
         font-size: 16px;
-        height: 26.5px;
-        padding-top: 1px;
     }
 
-
+    .status_table_filter{
+    display:inline;
+    float:right;
+}
 
 .storage_contents_table_title {
-    width:115px;
-    text-align:left;
-    font-weight:bold;
+    width: 115px;
+    text-align: left;
+    font-weight: bold;
 }
 
 .storage_item_table_control{
@@ -81,18 +82,25 @@
         display: inline-block;
     }
 
-.storage_list_calendar{
-    width:160px;
-    display:inline;
-}
-
-.storage_search_select {
-    width: 80px;
+.storage_list_calendar {
     display: inline;
+    padding: 5px;
+    width: 75px;
+}
+#reception_waiting_depart{
+    width:85px;
+}
+.storage_search_select {
+    width: 85px;
+    display: inline;
+    padding: 5px;
+}
+.reception_table_title {
+    padding:5px;
 }
 
 .storage_search_input {
-    width: 123px;
+    width: 110px;
     display: inline;
 }
 
@@ -115,7 +123,8 @@
 }
 
 .storage_list_table_wrap {
-    height: 590px;
+    margin-top: 30px;
+    height:615px;
     overflow-y: auto;
 }
 
@@ -125,16 +134,10 @@
 }
 
 .storage_today_table_wrap{
-    height:620px;
+    height:650px;
     width: 100%;
     overflow-y:auto;
 }
-
-#depart_select {
-    width: 90px;
-    display: inline;
-}
-
 
 
 @media ( min-width: 1900px ) {
@@ -148,9 +151,7 @@
         width: 160px
     }
 
-    .storage_list_calendar {
-        width: 160px;
-    }
+
 
     #id_payment_info {
         width: 100%;
@@ -160,6 +161,7 @@
         width: 120px;
     }
     .storage_list_table_wrap {
+        margin-top:0px;
         height: 800px;
     }
 
@@ -206,6 +208,8 @@
 
         .page_bill .chart_table {
             margin: 0 auto;
+            word-break:break-word;
+            table-layout:fixed;
             
         }
 

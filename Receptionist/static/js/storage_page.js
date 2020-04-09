@@ -24,7 +24,7 @@ $(function () {
         picker.container.find(".hourselect").append('<option value = "16" > 16</option>');
         picker.container.find(".hourselect").append('<option value = "17" > 17</option>');
     });
-    waiting_list(true);
+    
     $('#id_follow_update').on('apply.daterangepicker', function (ev, picker) {
         var hour = picker.container.find(".hourselect").children("option:selected").val();
         if (hour < 9)
@@ -33,7 +33,7 @@ $(function () {
             hour = 17;
         picker.startDate.set({ hour: hour, });
         $('#id_follow_update').val(picker.startDate.format('YYYY-MM-DD HH:mm:ss'));
-        if (confirm(gettext("예약을 변경 하시겠습니까?"))) {
+        if (confirm(gettext("Doy you want to change reservation?"))) {
             var reservation_date = picker.startDate.format('YYYY-MM-DD HH:mm:ss');
             var reception = $('#selected_reception').val();
 
@@ -49,13 +49,11 @@ $(function () {
                 success: function (response) {
                 },
                 error: function (request, status, error) {
-                    alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                    console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
                 },
             })
-            
         } 
-        
     });
     $('#id_follow_update').on('cancel.daterangepicker', function (ev, picker) {
         if (confirm("예약을 취소 하시겠습니까?")) {
@@ -73,7 +71,7 @@ $(function () {
 
                 },
                 error: function (request, status, error) {
-                    alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                    console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
                 },
             })
@@ -96,6 +94,11 @@ $(function () {
             format: 'YYYY-MM-DD'
         }
     });
+    $("#storage_list_calendar_start, #storage_list_calendar_end, #reception_waiting_depart").change(function () {
+
+        waiting_list();
+    });
+
 
     $('#patient_tax_invoice_click').click(function () {
         $('#patient_tax_invoice').toggle();
@@ -148,6 +151,8 @@ $(function () {
             waiting_list();
         }
     })
+
+    waiting_list();
 });
 
 
@@ -198,7 +203,7 @@ function get_patient_past(reception_id) {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -222,7 +227,7 @@ function delete_payment(record_id) {
                 payment_record_list();
             },
             error: function (request, status, error) {
-                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
             },
         });
@@ -287,7 +292,7 @@ function payment_record_list(page = null) {
             $('#record_pagnation').html(str);
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     });
@@ -351,7 +356,7 @@ function report_list(page = null) {
             $('#report_pagnation').html(str);
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -391,7 +396,7 @@ function report_select(report_id) {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -485,11 +490,11 @@ function waiting_selected(paymentrecord_id) {
 
                     if (response.datas['precedures'][i].code.search('R') == -1) {
                         str += "<td style='text-align:right; vertical-align:middle; padding-right:10px;'></td>";
+                        str += "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['precedures'][i].price) + " VND</td></tr>";
                     } else {
                         str += "<td style='text-align:center; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['precedures'][i].amount) + "</td>";
+                        str += "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['precedures'][i].price * response.datas['precedures'][i].amount) + " VND</td></tr>";
                     }
-
-                    str += "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['precedures'][i].price) + " VND</td></tr>";
 
 
                     recepts_table += '<tr>' +
@@ -502,6 +507,7 @@ function waiting_selected(paymentrecord_id) {
                         recepts_table += '<td style="text-align:center;">' + numberWithCommas(response.datas['precedures'][i].amount) + '</td>';
                         recepts_table += '<td style="text-align:right;">' + numberWithCommas(response.datas['precedures'][i].price * response.datas['precedures'][i].amount) + '</td><td></td></tr>';
                     }
+                    console.log(numberWithCommas(response.datas['precedures'][i].price * response.datas['precedures'][i].amount))
 
                     no += 1;
                 }
@@ -703,7 +709,7 @@ function waiting_selected(paymentrecord_id) {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -738,7 +744,7 @@ function get_bill_list(reception_id) {
             $('#total_outstanding_amount').html(total_outstanding_amount);
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -764,6 +770,7 @@ function waiting_list(Today = false) {
             'end_date': end,
             'string': $('#storage_search_input').val(),
             'filter': $('#storage_search_select option:selected').val(),
+            'depart': $('#reception_waiting_depart').val(),
         },
         dataType: 'Json',
         success: function (response) {
@@ -772,8 +779,6 @@ function waiting_list(Today = false) {
                 var tr_class = "";
                 if (response.datas[i]['status'] != 'paid')
                     tr_class = "class ='warning'"
-                //else if (response.datas[i]['status'] == 'paid')
-                //    tr_class = "class ='success'"
 
 
                 var str = "<tr " + tr_class + "style='cursor:pointer;'";
@@ -796,14 +801,13 @@ function waiting_list(Today = false) {
                     "<td style='vertical-align:middle;' >" + numberWithCommas( response.datas[i]['paid'] )+ '</td>' +
                         "<td style='vertical-align:middle;' >" + numberWithCommas(Number(response.datas[i]['unpaid_total']) )+ '</td></td>'; 
                  
-                    //"<td>" + numberWithCommas(response.datas[i]['total_amount']) + "VND</td></tr>";
                     
 
                 $('#storage_list_table').append(str);
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -849,7 +853,7 @@ function get_today_list() {
             
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -1104,7 +1108,7 @@ function get_today_selected(reception_id) {
             $('#show_medication_contents').prop("checked", false);
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -1183,7 +1187,7 @@ function save_storage() {
             
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })

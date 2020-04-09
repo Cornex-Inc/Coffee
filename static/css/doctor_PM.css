@@ -114,13 +114,21 @@ doctor_patient_info table ul label {
 }
 
 .diagnosis_selected_input {
-    width: 120px;
+    width: 90px;
 }
 
 .diagnosis_selected_input_number {
-    width: 60px;
+    width: 45px;
 }
 
+#patient_gender {
+    margin-top: 9px;
+}
+
+    #patient_gender input {
+        vertical-align: middle;
+        margin-top: -1px;
+    }
 
 .diagnosis_select_method {
     grid-row-start: 1;
@@ -160,13 +168,13 @@ doctor_patient_info table ul label {
 
 
 .diagnosis_history_taking_title {
-    width: 120px;
+    width: 140px;
     font-weight: bold;
 }
 
 .diagnosis_history_taking_contents {
     resize: vertical;
-    width: 440px !important;
+    width: 411px !important;
     height: 45px !important;
 }
 
@@ -223,6 +231,12 @@ doctor_patient_info table ul label {
     font-weight: bold;
     width: 100px;
     text-align: left;
+}
+.icd_ul {
+    list-style: none;
+    margin: 0px;
+    padding: 0;
+    width: 100%;
 }
 
 .vital_input {
@@ -320,6 +334,17 @@ doctor_patient_info table ul label {
 .medical_exam_pm .hoi {
 }
 
+.ui-autocomplete {
+    height: 300px;
+    width: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* prevent horizontal scrollbar */
+}
+
+.ui-widget {
+    font-size: 11px;
+}
 
 
 .medical_exam_pm #pain_level {
@@ -444,12 +469,12 @@ doctor_patient_info table ul label {
 
     .diagnosis_history_taking_contents {
         resize: vertical;
-        width: 600px !important;
+        width: 580px !important;
         height: 55px !important;
     }
 
     .diagnosis_history_taking_title {
-        width: 120px;
+        width: 140px;
         font-weight: bold;
     }
 

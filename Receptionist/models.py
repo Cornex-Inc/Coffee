@@ -349,10 +349,6 @@ class PaymentRecord(models.Model):
         
 
         
-
-
-
-
 class Report(models.Model):
     patient = models.ForeignKey(
         to = Patient,
@@ -370,7 +366,8 @@ class Report(models.Model):
     
     serial = models.CharField(
         max_length = 12,
-        null=False)
+        null=True
+        )
 
     report = models.TextField(
         max_length=2048,
@@ -384,10 +381,17 @@ class Report(models.Model):
 
 
     date_of_hospitalization = models.DateTimeField(
-        
+        null=True
         )
 
     date_of_publication = models.DateTimeField(
+        null=True
+        )
+
+    reception = models.ForeignKey(
+        to = Reception,
+        on_delete=models.DO_NOTHING,
+        null=True,
         )
 
     

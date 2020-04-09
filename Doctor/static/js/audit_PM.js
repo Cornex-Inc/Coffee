@@ -6,19 +6,9 @@ function numberWithCommas(x) {
 $(function () {
 
 
-    $('#doctor_search_date').daterangepicker({
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-            'This Year': [moment().startOf('year'), moment().endOf('year')],
-            'Last Year': [moment().subtract(1, 'year').add(1, 'day'), moment()],
-        },
+    $('#doctor_search_date_start, #doctor_search_date_end').daterangepicker({
         drops: "down",
-        "alwaysShowCalendars": true,
+        singleDatePicker: true,
         locale: {
             format: 'YYYY-MM-DD',
         },
@@ -27,7 +17,7 @@ $(function () {
 
 
     search_doctor_profit();
-    $('#doctor_search_date').change(function () {
+    $('#doctor_search_date_start, #doctor_search_date_end').change(function () {
         search_doctor_profit();
     })
     $('#doctor_search_search').change(function () {
@@ -78,7 +68,8 @@ function search_doctor_profit(page = null) {
         url: '/manage/doctor_profit/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
-            'start_end_date': $('#doctor_search_date').val(),
+            'start_date': $('#doctor_search_date_start').val(),
+            'end_date': $('#doctor_search_date_end').val(),
             'doctor': $('#doctors_search_doctor').val(),
             'search': $('#doctor_search_search').val(),
             //'exam': $('#doctor_search_exam option:selected').val(),

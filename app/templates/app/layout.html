@@ -29,7 +29,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/wrapper.css' %}" />
     <script src="{% static 'app/scripts/modernizr-2.6.2.js' %}"></script>
     <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
-    <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}" type="text/css" /> 
+    <link rel="stylesheet" href="{% static 'jquery-ui-1.8.18/themes/base/jquery-ui.css' %}" type="text/css" /> 
     <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'css/daterangepicker.min.css' %}" />
@@ -112,12 +112,13 @@
                         <li {% if url_name == 'inventory' %}class="active"{% endif %}><a href="{% url 'Pharmacy:inventory'%}">{{ _('Inventory') }}</a></li>
                     {% elif user.is_laboratory %}
                         <li {% if url_name == 'laboratory_index' %}class="active"{% endif %}><a href="{% url 'Laboratory:laboratory_index'%}">{{ _('Laboratory') }}</a></li>
-                        <!--<li {% if url_name == 'checklist' %}class="active"{% endif %}><a href="{% url 'Laboratory:checklist'%}">{{ _('Laboratory checklist') }}</a></li>-->
+                        <li {% if url_name == 'inventory_test' %}class="active"{% endif %}><a href="{% url 'Manage:inventory_test'%}">{{ _('Lab Inventory') }}</a></li>
                     {% elif user.is_radiation %}
                         <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Radiation:radiation_index'%}">{{ _('Radiology') }}</a></li>
                     {% elif user.is_admin %}
                     <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Manage:manage'%}">{{ _('REVENUE TOTAL') }}</a></li>
-                        <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Manage:inventory_precedure'%}">{{ _('Prodecdures') }}</a></li>
+                    <li {% if url_name == 'inventory_test' %}class="active"{% endif %}><a href="{% url 'Manage:inventory_test'%}">{{ _('Tests') }}</a></li>
+                        <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Manage:inventory_precedure'%}">{{ _('Procedures') }}</a></li>
                         <li {% if url_name == 'inventory' %}class="active"{% endif %}><a href="{% url 'Pharmacy:inventory'%}">{{ _('Medicines') }}</a></li>
                         <!--<li><a href="#DOCTOR_PROFIT">DOCTORS PROFIT</a></li>
                         <li><a href="#MEDICINE_TOTAL">MEDICINE</a></li>-->

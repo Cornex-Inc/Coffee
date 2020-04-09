@@ -508,7 +508,7 @@ $(function () {
         return split(term).pop();
     }
 
-    $("#text_icd")
+    $("#search_icd")
         .on("keydown", function (event) {
             if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
                 event.preventDefault();
@@ -550,11 +550,15 @@ $(function () {
                 // 현재 입력값 제거합니다.
                 terms.pop();
                 // 선택된 아이템을 추가합니다.
-                terms.push(ui.item.value);
+                //terms.push(ui.item.value);
                 // 끝에 콤마와 공백을 추가합니다.
                 terms.push("");
                 this.value = terms.join("");
+
+                $("#text_icd").val(ui.item.value)
+
                 $("#icd_code").val(ui.item.code);
+
                 return false;
             },
             open: function (event, ui) {
@@ -640,7 +644,7 @@ function get_all_diagnosis() {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 
@@ -746,7 +750,7 @@ function reception_select(reception_id) {
             get_all_diagnosis();
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 
@@ -780,7 +784,7 @@ function get_vital() {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 }
@@ -810,7 +814,7 @@ function set_vital() {
             set_vital_clear();
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 }
@@ -895,7 +899,7 @@ function get_diagnosis(reception_no) {
             show_total_price();
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 }
@@ -952,7 +956,7 @@ function reception_waiting(Today = false) {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -1096,7 +1100,7 @@ function diagnosis_save(set) {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -1151,7 +1155,7 @@ function get_test_contents(category_id) {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })

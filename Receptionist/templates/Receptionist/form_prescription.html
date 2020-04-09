@@ -81,11 +81,13 @@
                 width:100%;
             }
                 .footer tr td:first-child {
-                width:60%
+                width:50%;
                 
                 }
 
                 .footer tr td:nth-child(2) {
+                    width:50%;
+                    text-align:center;
                 }
         }
     </style>
@@ -112,33 +114,33 @@
 
 
         <div class="title">
-            <text>PHIẾU KẾT QUẢ XÉT NGHIỆM</text>
+            <text>ĐƠN THUỐC	</text>
             <br />
-            <text><I>LABORATORY RESULT REPORT</I></text>
+            <text><I>PRESCRIPTION</I></text>
         </div>
         <br />
         <table class="patient_info">
             
             <tr>
-                <td><b>1. Số hồ sơ</b>/ PID:{{ chart }}</td>
-                <td><b>2. Quốc tịch</b>/ Nationality:</td>
+                <td><b>1. Số hồ sơ</b>/ <i>PID</i> : {{ chart }}</td>
+                <td><b>2. Quốc tịch</b>/ <i>Nationality</i> : </td>
             </tr>
             <tr>
-                <td><b>3. Họ và tên</b>/ Fullname: <text id="patient_info_name">{{ name }}</text></td>
-                <td><b>4. Giới tính</b>/ Gender: {{ gender }}</td>
+                <td><b>3. Họ và tên</b>/ <i>Fullname</i> : <text id="patient_info_name">{{ name }}</text></td>
+                <td><b>4. Giới tính</b>/ <i>Gender</i> : {{ gender }}</td>
             </tr>
             <tr>
-                <td><b>5. Địa chỉ</b>/ Address: {{address}}</td>
-                <td><b>6. Ngày sinh</b>/ D.O.B: {{date_of_birth}}</td>
+                <td><b>5. Địa chỉ</b>/ <i>Address</i> : {{address}}</td>
+                <td><b>6. Ngày sinh</b>/ <i>D.O.B</i> : {{date_of_birth}}</td>
             </tr>
             <tr>
-                <td><b>7. Số điện thoại</b>/Phone number : {{ phone }}</td>
+                <td colspan="2"><b>7. Số điện thoại</b>/<i>Phone number</i> : {{ phone }}</td>
             </tr>
             <tr>
-                <td><b>8. Chẩn đoán</b>/ Diagnostic:</td>
+                <td colspan="2"><b>8. Chẩn đoán</b>/ <i>Diagnostic</i> : {{ diagnostic }}</td>
             </tr>
             <tr>
-                <td><b>9. Khoa Khám bệnh</b>/ Department: {{ depart }}</td>
+                <td colspan="2"><b>9. Khoa Khám bệnh</b>/ <i>Department</i> : {{ depart_full_vie }}/{{ depart_full }}</td>
             </tr>
             
         </table>
@@ -188,7 +190,7 @@
         <table class="footer">
             <tr>
                 <td>
-                    <b>Lời dặn của bác sĩ/ <i>Advice of Doctor: </i></b>
+                    <b>Lời dặn của bác sĩ</b> / <i>Advice of Doctor: </i><br />
                 </td>
                 <td></td>
             </tr>
@@ -197,7 +199,7 @@
             </tr>
             <tr>
                 <td>
-                    <b>Ngày tái khám/ <i>Date of re-examination: </i></b>{{ reservation_date }}
+                    <b>Ngày tái khám</b> / <i>Date of re-examination: </i>{{ reservation_date }}<br />
                 </td>
                 <td></td>
             </tr>
@@ -206,9 +208,9 @@
                 </td>
                 <td>
                     <b>
-                        Ngày/<i>Date:</i>
-                        Bác sĩ/ <i>Doctor</i>{{ doctor }}
-                        (Ký và ghi rõ họ tên)/(Sign)
+                        <b>Ngày</b>/<i>Date:</i><br />
+                        <b>Bác sĩ</b>/ <i>Doctor</i><br />
+                        <i>(Ký và ghi rõ họ tên)/(Sign)</i>
                     </b>
 
                 </td>

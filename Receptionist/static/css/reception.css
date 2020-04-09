@@ -125,9 +125,10 @@
 }
 
 #patient_table_vital_ht, #patient_table_vital_wt, #patient_table_vital_bmi, #patient_table_vital_bp, #patient_table_vital_bt, #patient_table_vital_pr, #patient_table_vital_breath {
-    width: 65px;
+    width: 60px;
     display: inline;
     height:20px;
+    padding:5px;
 }
 #patient_table_vital_ht, #patient_table_vital_wt, #patient_table_vital_bmi, #patient_table_vital_bp, #patient_table_vital_bt, #patient_table_vital_pr {
     margin-right: -5px;
@@ -191,6 +192,25 @@
     grid-column-end: 3;
 }
 
+
+#vital_sign {
+    width: 100%;
+}
+    #vital_sign input{
+        margin-right:10px;
+    }
+        #vital_sign input:last-child{
+            margin-right:0px;
+        }
+        #patient_vital_first {
+            margin-left: 12px;
+        }
+
+#vital_sign_control {
+    display: table-cell;
+    vertical-align: middle;
+}
+
 .reservation_depart_select {
     width: 77px;
 }
@@ -202,7 +222,7 @@
 }
 
 .reception_wait_table_wrap {
-    height: 290px;
+    height: 358px;;
     overflow:auto;
 }
 
@@ -223,18 +243,18 @@
         text-align:center;
         vertical-align:middle;
     }
-.patient_search_table tr th:nth-child(1) {
-    width:40px;
-}
-.patient_search_table tr th:nth-child(2) {
-    width: 80px;
-}
-    .patient_search_table tr th:nth-child(3) {
-        width: 300px;
+    .patient_search_table tr th:nth-child(1) {
+        width:40px;
     }
-.patient_search_table tr th:nth-child(4) {
-    width: 130px;
-}
+    .patient_search_table tr th:nth-child(2) {
+        width: 70px;
+    }
+    .patient_search_table tr th:nth-child(3) {
+        
+    }
+    .patient_search_table tr th:nth-child(4) {
+        width: 120px;
+    }
     .patient_search_table tr th:nth-child(5) {
         width: 130px;
     }
@@ -242,16 +262,54 @@
         width: 50px;
     }
     .patient_search_table tr th:nth-child(7) {
-        width: 120px;
+        width: 110px;
+    }
+    .patient_search_table tr th:nth-child(8) {
+        width: 10px;
     }
 
-    .patient_search_table tr td:nth-child(3){
+#Reservation_Status thead tr th:nth-child(3) {
+    width:auto;
+}
+#Reservation_Status thead tr th:nth-child(4) {
+    width: 100px;
+}
+#Reservation_Status thead tr th:nth-child(5) {
+    width: 110px;
+}
+#Reservation_Status thead tr th:nth-child(7) {
+    width: 70px;
+}
+#Reservation_Status thead tr th:nth-child(8) {
+    width: 85px;
+}
+
+#Reservation_Status thead tr th:nth-child(8) {
+    width: 140px;
+}
+
+#Reservation_Status tbody tr {
+    height:47px;
+}
+    #Rectption_Status thead tr th {
+    vertical-align: middle;
+    text-align: center;
+}
+
+#Rectption_Status tbody tr td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+    #Rectption_Status tbody tr td:nth-child(3), #Rectption_Status tbody tr td:nth-child(1) ,{
         text-align: left;
+
     }
+
 
 
 .input-group-long {
-    width: 675px;
+    width: 681px;
 }
 
 .need_medical_report {
@@ -403,7 +461,7 @@
         grid-template-rows: 380px;
     }
     #patient_vital_first {
-        margin-left: 5px;
+        margin-left: 20px;
     }
 
     #patient_table_vital_ht, #patient_table_vital_wt, #patient_table_vital_bmi, #patient_table_vital_bp, #patient_table_vital_bt, #patient_table_vital_pr, #patient_table_vital_breath {
@@ -441,15 +499,65 @@
     }
 
     .reception_wait_table_wrap {
-        height: 290px;
+        height: 325px;
         
     }
 
     .input-group-long {
-        width: 877px;
+        width: 885px;
+    }
+    .patient_search_table tr th:nth-child(1) {
+        width: 40px;
+    }
+
+    .patient_search_table tr th:nth-child(2) {
+        width: 70px;
     }
 
 
+    .patient_search_table tr th:nth-child(4) {
+        width: 140px;
+    }
+
+    .patient_search_table tr th:nth-child(5) {
+        width: 140px;
+    }
+
+    .patient_search_table tr th:nth-child(6) {
+        width: 50px;
+    }
+
+    .patient_search_table tr th:nth-child(7) {
+        width: 120px;
+    }
+
+    .patient_search_table tr th:nth-child(8) {
+        width: 10px;
+    }
+
+    #Reservation_Status thead tr th:nth-child(4) {
+        width: 100px;
+    }
+
+    #Reservation_Status thead tr th:nth-child(7) {
+        width: 100px;
+    }
+
+    #Reservation_Status thead tr th:nth-child(8) {
+        width: 85px;
+    }
+
+    #Reservation_Status thead tr th:nth-child(8) {
+        width: 140px;
+    }
+
+    #Reservation_Status tbody tr td:nth-child(3) {
+        text-align: left;
+    }
+
+    #vital_sign input{
+        margin-right:21px;
+    }
 }
 
 .Edit_Reception_modal-dialog{

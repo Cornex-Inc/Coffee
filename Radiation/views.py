@@ -1,6 +1,10 @@
 from django.shortcuts import render,redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+import functools
+import operator
+from django.db.models import Q,Case,When, CharField,Count,Sum
+
 
 from .forms import *
 from Laboratory.forms import *
@@ -101,96 +105,70 @@ def waiting_list(request):
     date_end = request.POST.get('end_date')
     filter = request.POST.get('filter')
     input = request.POST.get('input').lower() 
-    #date_end = request.POST.get('end_date')
+    depart_id = request.POST.get('depart_id')
 
    
     kwargs={}
-
-    
-    #if progress != 'all':
-    #    kwargs['progress'] = request.POST.get('progress')
-     
-    
     date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
     date_max = datetime.datetime.combine(datetime.datetime.strptime(date_end, "%Y-%m-%d").date(), datetime.time.max)
-
-    #radi_manages = RadiationManage.objects.filter(date_ordered__range = (date_min, date_max),**kwargs)#.values('manager_id').distinct()
-    #radi_manages = RadiationManage.objects.raw('select * from Radiation_radiationmanage where substr(DATE(date_ordered),1,10) == substr(date("now"),1,10)  group by manager_id')
     
+    argument_list = [] 
+    kwargs={}
+    if depart_id != '' :
+        kwargs['diagnosis__reception__depart_id'] = depart_id
+
+    if input !='':
+        argument_list.append( Q(**{'diagnosis__reception__patient__name_kor__icontains':input} ) )
+        argument_list.append( Q(**{'diagnosis__reception__patient__name_eng__icontains':input} ) )
+        argument_list.append( Q(**{'diagnosis__reception__patient__id__icontains':input} ) ) 
+
+
+        radios =PrecedureManager.objects.select_related(
+            'diagnosis__reception__patient'
+                ).select_related(
+                    'precedure'
+                 ).filter( 
+                    functools.reduce(operator.or_, argument_list), 
+                    **kwargs,
+                    precedure__code__icontains='R',
+                    diagnosis__recorded_date__range= (date_min,date_max),
+                ).exclude(diagnosis__reception__progress='deleted')
+
+    else:
+        radios =PrecedureManager.objects.select_related(
+            'diagnosis__reception__patient'
+                ).select_related(
+                    'precedure'
+                 ).filter( 
+                     **kwargs,
+                    precedure__code__icontains='R',
+                    diagnosis__recorded_date__range= (date_min,date_max),
+                ).exclude(diagnosis__reception__progress='deleted')
+
     datas = []
+    for radio in radios:
+        data= {
+                'chart':radio.diagnosis.reception.patient.get_chart_no(),
+                'name_kor':radio.diagnosis.reception.patient.name_kor,
+                'name_eng':radio.diagnosis.reception.patient.name_eng,
+                'Depart':radio.diagnosis.reception.depart.name,
+                'Doctor':radio.diagnosis.reception.doctor.name_kor,
+                'Date_of_Birth': radio.diagnosis.reception.patient.date_of_birth.strftime('%Y-%m-%d'),
+                'Gender/Age':'(' + radio.diagnosis.reception.patient.get_gender_simple() +
+                                '/' + str(radio.diagnosis.reception.patient.get_age()) + ')',
+                'name_service':radio.precedure.name if radio.precedure.name else radio.precedure.name_vie,
+                'date_ordered':'' if radio.diagnosis.reception.recorded_date is None else radio.diagnosis.reception.recorded_date.strftime('%Y-%m-%d %H:%M'),
+                'precedure_manage_id':radio.id,#radi_manage_id
+                }
+        
+        check_done = RadiationManage.objects.filter(manager_id = radio.id).count()
+        if check_done == 0:
+            data.update({ 'progress':'new', })
+        else:
+            data.update({ 'progress':'done', })
+        datas.append(data)
 
-    radios = RadiationManage.objects.select_related('manager__diagnosis__reception__patient').filter(
-       manager__diagnosis__recorded_date__range = (date_min, date_max) 
-       ).values(
-           'manager__diagnosis__reception__patient',
-           'manager__diagnosis__reception__depart_id',
-           'manager__diagnosis__recorded_date',
-           )
-    
 
-
-
-
-
-    precedures = Precedure.objects.filter(code__icontains='R')
-    diagnosiss = Diagnosis.objects.filter(recorded_date__range = (date_min, date_max))
-    
-    for diagnosis in diagnosiss:
-        manager_datas = PrecedureManager.objects.filter(precedure__in=precedures,diagnosis = diagnosis).select_related('diagnosis__reception').exclude(diagnosis__reception__progress='deleted')
-        for manager_data in manager_datas:
-            
-            if filter=='':
-                data= {
-                    'chart':diagnosis.reception.patient.get_chart_no(),
-                    'name_kor':diagnosis.reception.patient.name_kor,
-                    'name_eng':diagnosis.reception.patient.name_eng,
-                    'Depart':diagnosis.reception.depart.name,
-                    'Doctor':diagnosis.reception.doctor.name_kor,
-                    'Date_of_Birth': diagnosis.reception.patient.date_of_birth.strftime('%Y-%m-%d'),
-                    'Gender/Age':'(' + diagnosis.reception.patient.get_gender_simple() +
-                                    '/' + str(diagnosis.reception.patient.get_age()) + ')',
-                    'name_service':manager_data.precedure.name if manager_data.precedure.name else manager_data.precedure.name_vie,
-                    'date_ordered':'' if diagnosis.reception.recorded_date is None else diagnosis.reception.recorded_date.strftime('%Y-%m-%d %H:%M'),
-                    'precedure_manage_id':manager_data.id,#radi_manage_id
-                    }
-            elif filter == 'name':
-                if input in reception.patient.name_kor.lower()  or input in reception.patient.name_eng.lower() :
-                    data= {
-                        'chart':diagnosis.reception.patient.get_chart_no(),
-                        'name_kor':diagnosis.reception.patient.name_kor,
-                        'name_eng':diagnosis.reception.patient.name_eng,
-                        'Depart':diagnosis.reception.depart.name,
-                        'Doctor':diagnosis.reception.doctor.name_kor,
-                        'Date_of_Birth': diagnosis.reception.patient.date_of_birth.strftime('%Y-%m-%d'),
-                        'Gender/Age':'(' + diagnosis.reception.patient.get_gender_simple() +
-                                        '/' + str(diagnosis.reception.patient.get_age()) + ')',
-                        'name_service':manager_data.precedure.name if manager_data.precedure.name else manager_data.precedure.name_vie,
-                        'date_ordered':'' if diagnosis.reception.recorded_date is None else diagnosis.reception.recorded_date.strftime('%Y-%m-%d %H:%M'),
-                        'precedure_manage_id':manager_data.id,#radi_manage_id
-                        }
-            elif filter == 'chart':
-                if input in reception.patient.get_chart_no():
-                    data= {
-                        'chart':diagnosis.reception.patient.get_chart_no(),
-                        'name_kor':diagnosis.reception.patient.name_kor,
-                        'name_eng':diagnosis.reception.patient.name_eng,
-                        'Depart':diagnosis.reception.depart.name,
-                        'Doctor':diagnosis.reception.doctor.name_kor,
-                        'Date_of_Birth': diagnosis.reception.patient.date_of_birth.strftime('%Y-%m-%d'),
-                        'Gender/Age':'(' + diagnosis.reception.patient.get_gender_simple() +
-                                        '/' + str(diagnosis.reception.patient.get_age()) + ')',
-                        'name_service':manager_data.precedure.name if manager_data.precedure.name else manager_data.precedure.name_vie,
-                        'date_ordered':'' if diagnosis.reception.recorded_date is None else diagnosis.reception.recorded_date.strftime('%Y-%m-%d %H:%M'),
-                        'precedure_manage_id':manager_data.id,#radi_manage_id
-                        }
-                    datas.append(data)
-            check_done = RadiationManage.objects.filter(manager_id = manager_data.id).count()
-            if check_done == 0:
-                data.update({ 'progress':'new', })
-            else:
-                data.update({ 'progress':'done', })
-            datas.append(data)
-    
     context = {'datas':datas}
     return JsonResponse(context)
 

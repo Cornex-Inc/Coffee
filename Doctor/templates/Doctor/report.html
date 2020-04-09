@@ -8,7 +8,11 @@
                 <span class="btn" style="margin-bottom:10px;">{{ _('Search Report') }}</span>
                 
                 <div style="float:right;">
-                {{ report_search.filter }}
+                    {{ _('Date') }} :
+                <input type="text" class="form-control report_search_date" id="report_search_date_start" />
+                ~
+                <input type="text" class="form-control report_search_date" style=" display:inline;" id="report_search_date_end" />
+
                 {{ report_search.search_input }}
                 <input type="button" class="btn" id="search" value="Search" onclick="search_report() "/>
                 </div>
@@ -43,7 +47,7 @@
             <div class="input_part_contorl">
                 <input type="hidden" id="doctor_id" value="{{ user.doctor.id }}"/>
                 <input type="hidden" id="selected_report" /> 
-                <input type="hidden" id="selected_patient" />
+                <input type="hidden" id="selected_reception_id" />
                 <div class="input-group">
                     <span class="input-group-addon report_table_title"  id="basic-addon1">{{ _('Chart No') }}</span>
                     <input type="text" class="form-control" aria-describedby="basic-addon1" id="patient_chart"/>
@@ -76,16 +80,17 @@
                     <span class="input-group-addon report_table_title" id="basic-addon1">{{ _('Address') }}</span>
                     <input type="text" class="form-control" aria-describedby="basic-addon1" id="patient_address" autocomplete="off"/>
                 </div>
-
+                <!--
                 <div class="input-group" >
                     <span class="input-group-addon report_table_title"  id="basic-addon1">{{ _('Outbreak Date') }}</span>
                     <input type="text" class="form-control" aria-describedby="basic-addon1" id="date_of_hospitalization" autocomplete="off"/>
                 </div>
+                    -->
                 <div class="input-group" >
-                    <span class="input-group-addon report_table_title"  id="basic-addon1">{{ _('Medical Opinion') }}</span>
+                    <span class="input-group-addon report_table_title"  id="basic-addon1">{{ _('Recommendation <br/> and Follow-up:') }}</span>
                     <textarea type="text" style="resize:none; height:17.2vh;" class="form-control" aria-describedby="basic-addon1" id="reception_report"></textarea>
                 </div>
-
+                <!--
                 <div class="input-group" >
                     <span class="input-group-addon report_table_title" id="basic-addon1" >{{ _('Purpose') }}</span>
                     <input type="text" class="form-control" aria-describedby="basic-addon1" id="reception_usage" autocomplete="off"/>
@@ -95,10 +100,14 @@
                     <span class="input-group-addon report_table_title"  id="basic-addon1">{{ _('Publication Date') }}</span>
                     <input type="text" class="form-control" aria-describedby="basic-addon1" id="publication_date" autocomplete="off"/>
                 </div>
+                    -->
                 <input type="hidden" id="patient_age" />
-                <input type="button" value="{{ _('Save + Print') }}" id="btnPrint"  class="btn btn-default"/>
+                <!--<input type="button" value="{{ _('Save + Print') }}" id="btnPrint"  class="btn btn-default"/>
                 <input type="button" value="{{ _('Print(English)') }}" id="btnPrint_eng"  class="btn btn-default"/>
                 <input type="button" value="{{ _('New') }}" id="btnNew"  style="float:right;" class="btn btn-default"/>
+                    -->
+                <input type="button" value="{{ _('Print') }}" id="btn_print"  style="float:right;" class="btn btn-default"/>
+                <input type="button" value="{{ _('Save') }}" id="btn_save"  style="float:right;" class="btn btn-default"/>
             </div>
         </div>
         <div class="partition print_preview_part">
@@ -109,6 +118,131 @@
 
 
     <div class="report_view_wrap">
+        <div class="report_view">
+            <div class="page">
+                <div id="wrap">
+        <table class="top">
+            <tr>
+                <td>
+                    <img src="/static/img/document_top.png" id="logo" />
+                </td>
+            </tr>
+        </table>
+
+
+        <div class="title">
+            <text>BÁO CÁO Y TẾ</text>
+            <br />
+            <text><I>MEDICAL REPORT</I></text>
+        </div>
+        <br />
+        <table class="patient_info">
+            
+            <tr>
+                <td><b>1. Số hồ sơ</b>/ PID:<span id="preview_pid"></span></td>
+                <td><b>2. Quốc tịch</b>/ Nationality:</td>
+            </tr>
+            <tr>
+                <td><b>3. Họ và tên</b>/ Fullname: <span id="preview_name"></span></td>
+                <td><b>4. Giới tính</b>/ Gender: <span id="preview_gender"></span></td>
+            </tr>
+            <tr>
+                <td><b>5. Địa chỉ</b>/ Address: <span id="preview_address"></span></td>
+                <td><b>6. Ngày sinh</b>/ D.O.B: <span id="preview_date_of_birth"></span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>7. Số điện thoại</b>/Phone number : <span id="preview_phone"></span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>8. Thời gian đến khám bệnh</b>/ Date to visit clinic: <span id="preview_date_visit"></span></td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>9. Khoa khám bệnh</b>/ Department: <span id="preview_depart"></span></td>
+            </tr>
+            
+
+        </table>
+        <table class="contents">
+            <tbody id="contents_datas">
+                <tr>
+                    <td><b>II. THÔNG TIN KHÁM BỆNH / <i>MEDICAL INFORMATION </i></b></td>
+                </tr>
+                <tr>
+                    <td><b>1. Lý do khám bệnh </b>/ <i>Chief Complaint </i> : 
+                    <br/>
+                    <span id="preview_chief_complaint"></span>
+                    </td>
+                    
+                </tr>
+                <tr>
+                    <td><b>2. Bệnh sử </b>/ <i>Medical History </i>:
+                    <span id="preview_medical_history">{{ past_history }}</span>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td><b>3.Khám lâm sàng </b>/ <i>Clinical examinations</i>:
+                    <br />
+                    <span id="preview_clinical_examations"></span></td>
+                </tr>
+                <tr>
+                    <td><b>4. Khám cận lâm sàng </b>/ <i>Sub - Clinical examination </i>:
+                    <br />
+                    <span id="preview_sub_clinical_examination"></span></td>
+                </tr>
+                <tr>
+                    <td><b>5. Chẩn đoán </b>/ <i>Diagnosis </i>:
+                    <br />
+                    <span id="preview_diagnosis"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>6. Chẩn đoán ICD </b>/<i>ICD Diagnosis </i>:
+                    <br />
+                    <span id="preview_icd"></span></td>
+                </tr>
+                <tr>
+                    <td><b>7. Hướng điều trị </b>/  <i>Treatment plans: </i>:
+                    <br />
+                    <span id="preview_treatment_plan"></span></td>
+                </tr>
+                <tr>
+                    <td><b>8. Dặn dò </b>/: <i>Recommendation and Follow-up </i>:
+                    <br />
+                    <span id="preview_recommendation"></span></td>
+                </tr>
+                <tr>
+                    <td><b>9.Ngày hẹn tái khám </b>/ <i>Date of re-examination </i>:
+                    <span id="preview_re_examination"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="footer">
+            <tr>
+                <td style="padding-left:370px;">
+                    <b>
+                        Ngày / Date : {{ date }}<br />
+                        Bác sĩ/ Doctor<br />
+                        <i>(Ký và ghi rõ họ tên)/(Sign)</i>
+                    </b>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+    <div class="report_view_wrap" style="display:none;" >
         <div class="report_view">
             <div class="page">
                 <div class="title">진&nbsp;료&nbsp;확&nbsp;인&nbsp;서</div>
@@ -151,12 +285,7 @@
                                 <td>통&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;원</td>
                                 <td colspan="5"></td>
                             </tr>
-                            <!--
-                    <tr>
-                        <td style="height:49mm">실 통원 일자</td>
-                        <td colspan="5"></td>
-                    </tr>
-                        -->
+
                             <tr>
                                 <td style="height:18vh">의사소견</td>
                                 <td colspan="5" id="reception_report_screen"></td>
@@ -190,7 +319,6 @@
     </div>
 </div>
         </div>
-
 
 <div style="height:5000px;"></div>
 <div class="page_print" >
@@ -375,6 +503,11 @@
         </div>
 
     </div>
+</div>
+
+
+<div id="dynamic_div">
+
 </div>
 {% endblock %}
 

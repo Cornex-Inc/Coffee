@@ -1,0 +1,43 @@
+
+.checklist_grid {
+    margin: 0 auto;
+    height: 100%;
+    width: 1920px;
+    display: grid;
+    grid-template-columns: 75%;
+}
+
+
+.partition {
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: rgba(180, 180, 180, 0.15);
+    border: 3.7px solid white;
+    overflow: hidden;
+}
+
+
+
+.checklist_table_title_span {
+    margin-bottom: 15px;
+    font-size: 15px;
+    padding-top: 1px;
+    background: rgb(90,64,129);
+    border-color: rgb(90,64,129);
+    margin-bottom: 7.5px;
+    font-size: 14px;
+    height: 23px;
+    color: rgb(80,80,80);
+}
+
+    .checklist_table_title_span:hover {
+        background: rgb(90,64,129);
+        border-color: rgb(90,64,129);
+    }
+
+.database_control {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    overflow-y: hidden;
+}

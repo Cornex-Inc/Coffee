@@ -121,7 +121,7 @@ $(function () {
                         }
                     },
                     error: function (request, status, error) {
-                        alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                     },
                 })
                 return;
@@ -142,7 +142,7 @@ $(function () {
                 }
                 else {
                     str += "<td>" + $(this).find('td:nth-child(3)').text().trim() + "<input type='hidden' value=''/></td><td style='text-align: center;'>" +
-                        $(this).find('td:nth-child(6)').text().trim() + "</td><td>" +
+                        $(this).find('td:nth-child(7)').text().trim() + "</td><td>" +
                         "<input type='number' min='0' value='1' class='diagnosis_selected_input_number' id='amount'/></td><td style='text-align: center;'>" +
                         "<input type='number' min='0' value='1' class='diagnosis_selected_input_number' id='days'/></td><td style='text-align: center;'>" +
                         "<input type='text' class='diagnosis_selected_input_number' id='memo'/></td>";
@@ -151,7 +151,7 @@ $(function () {
                 str += "<td colspan='5'>" + $(this).find('td:nth-child(3)').text().trim() + "<input type='hidden' value=''/></td>";
             } 
             str += "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td>";
-            str += "<td style='display:none;'>" + $(this).find('td:nth-child(4)').text().replace(/,/g, '').replace('VND', '').trim() + "</td></tr>";
+            str += "<td style='display:none;'>" + $(this).find('td:nth-child(5)').text().replace(/,/g, '').replace('VND', '').trim() + "</td></tr>";
             
             what_class = $(event.target.parentElement.parentElement.parentElement.parentElement).attr('id');
 
@@ -235,6 +235,7 @@ $(function () {
         picker.container.find(".hourselect").append('<option value="15">15</option>' );
         picker.container.find(".hourselect").append('<option value="16">16</option>');
         picker.container.find(".hourselect").append('<option value="17">17</option>');
+        picker.container.find(".hourselect").append('<option value="18">18</option>');
     });
 
     $('#reservation_date').on('apply.daterangepicker', function (ev, picker) {
@@ -275,6 +276,8 @@ $(function () {
     })
     
     $('.contents_class').click(function () {
+        get_medicine_count();
+
         $(this).parent().next('.contents_items').toggle()
         if ($(this).parent().next('.contents_items').is(':visible')) {
             $(this).children().children('label').html('-');
@@ -286,6 +289,8 @@ $(function () {
     });
 
     $('#order_search').keyup(function () {
+        get_medicine_count();
+
         var k = $(this).val();
         $('.contents_class').children().children('label').not($(this).children().children('label')).html('+');
         if (k == '') {
@@ -295,15 +300,113 @@ $(function () {
         }
         else {
             $(".contents_items, .contents_items tr").hide();
-            var temp = $(".contents_items > tr > td:nth-child(5):contains('" + k.toLowerCase() + "')");
+            var temp = $(".contents_items > tr > td:nth-child(6):contains('" + k.toLowerCase() + "')");
             
             $(temp).parent().parent().show();
             $(temp).parent().parent().prev().children().children().children('label').html('-');
             $(temp).parent().show();
         }
+
+        get_medicine_count();
     })
 
+
+
+    //ICD
+    function split(val) {
+        return val.split(/,\s*/);
+    }
+    function extractLast(term) {
+        return split(term).pop();
+    }
+
+    $("#search_icd")
+        .on("keydown", function (event) {
+            if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+                event.preventDefault();
+            }
+        })
+        .autocomplete({
+            source: function (request, response) {
+                //$.getJSON("search.php", { term: extractLast(request.term) }, response);
+                $.ajax({
+                    type: 'POST',
+                    url: '/doctor/get_ICD/',
+                    data: {
+                        'csrfmiddlewaretoken': $('#csrf').val(),
+                        'string': request.term
+                    },
+                    dataType: 'Json',
+                    success: function (response1) {
+                        response(response1.datas);
+                    },
+                    error: function (request, status, error) {
+                        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                    },
+                })
+            },
+            search: function () {
+                // 최소 입력 길이를 마지막 항목으로 처리합니다.
+                var term = extractLast(this.value);
+                if (term.length < 2) {
+                    return false;
+                }
+            },
+
+            focus: function () {
+                return false;
+            },
+
+            select: function (event, ui) {
+                var terms = split(this.value);
+                // 현재 입력값 제거합니다.
+                terms.pop();
+                // 선택된 아이템을 추가합니다.
+                //terms.push(ui.item.value);
+                // 끝에 콤마와 공백을 추가합니다.
+                terms.push("");
+                this.value = terms.join("");
+
+                $("#text_icd").val(ui.item.value)
+
+                $("#icd_code").val(ui.item.code);
+
+                return false;
+            }
+
+        });
+
+
+    get_medicine_count();
+
 });
+
+ //메디슨 클래스 혹은 약 아이템 클릭 시 갯수 동기화
+function get_medicine_count(id = null) {
+
+    $.ajax({
+        type: 'POST',
+        url: '/doctor/get_medicine_count/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'id': id,
+        },
+        dataType: 'Json',
+        success: function (response) {
+            for (var i in response.datas) {
+                $("#medicine_count_" + response.datas[i]['id']).html(response.datas[i]['inventory_count'])
+            }
+                
+
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+        },
+    })
+
+
+
+}
 
 function selected_table_title(title) {
     //off
@@ -375,7 +478,7 @@ function get_all_diagnosis() {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 
@@ -459,6 +562,8 @@ function reception_select(reception_id) {
             $('#objective_data').val(response.objective_data);
             $('#plan').val(response.plan);
             $('#diagnosis').val(response.diagnosis);
+            $('#text_icd').val(response.ICD);
+            $('#icd_code').val(response.icd_code);
             $("#recommendation").val(response.recommendation);
 
 
@@ -472,7 +577,7 @@ function reception_select(reception_id) {
             get_all_diagnosis();
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 
@@ -506,7 +611,7 @@ function get_vital() {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 }
@@ -536,7 +641,7 @@ function set_vital() {
             set_vital_clear();
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 }
@@ -621,7 +726,7 @@ function get_diagnosis(reception_no) {
             show_total_price();
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 }
@@ -647,7 +752,7 @@ function reception_waiting(Today = false) {
         success: function (response) {
             $('#Rectption_Status > tbody ').empty();
             if (response.datas.length == 0) {
-                $('#Rectption_Status').append("<tr><td colspan='8'>None Result !!</td></tr>");
+                $('#Rectption_Status').append("<tr><td colspan='8'>" + gettext('No Result !!') + "</td></tr>");
             } else {
                 for (var i in response.datas) {
                     var color;
@@ -678,7 +783,7 @@ function reception_waiting(Today = false) {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -759,11 +864,22 @@ function diagnosis_save(set) {
         temp_data['code'] = $tds.eq(0).text();
         temp_data['id'] = $tds.eq(0).children('input').val();
         temp_data['name']= $tds.eq(1).text();
-        temp_data['volume']= $tds.eq(2).children('input').val();
+        temp_data['volume'] = 1;
+
+        if (temp_data['type'] == 'Precedure') {
+            temp_data['volume'] = 1;
+            temp_data['amount'] = 1;
+            temp_data['days'] = 1;
+            if (temp_data['amount'] == '') {
+                alert(gettext('amount is empty.'));
+                is_valid = false;
+            }
+        } else {
         temp_data['amount'] = $tds.eq(3).children('input').val();
         if (temp_data['amount'] == '') {
-            alert(gettext('amout is empty.'));
+            alert(gettext('amount is empty.'));
             is_valid = false;
+            }
         }
         temp_data['days'] = $tds.eq(4).children('input').val();
         if (temp_data['days'] == '') {
@@ -771,6 +887,33 @@ function diagnosis_save(set) {
             is_valid = false;
         }
         temp_data['memo'] = $tds.eq(5).children('input').val();
+
+        //temp_data['code'] = $tds.eq(0).text();
+        //temp_data['id'] = $tds.eq(0).children('input').val();
+        //temp_data['name'] = $tds.eq(1).text();
+        //if (temp_data['type'] == 'Precedure') {
+        //    temp_data['volume'] = 1;
+        //    temp_data['amount'] = $tds.eq(2).children('input').val();
+        //    temp_data['days'] = 1;
+        //    if (temp_data['amount'] == '') {
+        //        alert(gettext('amount is empty.'));
+        //        is_valid = false;
+        //    }
+        //}
+        //if (temp_data['type'] == 'Medicine') {
+        //    temp_data['volume'] = 1;
+        //    temp_data['amount'] = $tds.eq(3).children('input').val();
+        //    if (temp_data['amount'] == '') {
+        //        alert(gettext('amount is empty.'));
+        //        is_valid = false;
+        //    }
+        //    temp_data['days'] = $tds.eq(4).children('input').val();
+        //    if (temp_data['days'] == '') {
+        //        alert(gettext('days is empty.'));
+        //        is_valid = false;
+        //    }
+        //    temp_data['memo'] = $tds.eq(5).children('input').val();
+        //}
 
         datas.push(temp_data);
     });
@@ -790,10 +933,14 @@ function diagnosis_save(set) {
             'objective_data': $('#objective_data').val(),
             'assessment': $('#assessment').val(),
             'plan': $('#plan').val(),
+            'ICD': $("#text_icd").val(),
+            'icd_code':$("#icd_code").val(),
             'recommendation': $('#recommendation').val(),
             'datas': datas,
             'set': set,
             'date': date,
+            'family_history': $("#history_family").val(),
+            'past_history': $("#history_past").val(),
         },
         dataType: 'Json',
         success: function (response) {
@@ -807,10 +954,46 @@ function diagnosis_save(set) {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
+
+
+
+    var id = $('#patient_id').val();
+    var chart_no = $('#past_history').val();
+    //var name_kor = $('#history_family').val();
+    //var name_eng = $('#patient_name_eng').val();
+    var date_of_birth = $('#patient_date_of_birth').val();
+    var gender = $('input[name="gender"]:checked').val();
+    var address = $('#patient_address').val();
+    var phone = $('#patient_phone').val();
+
+    var past_history = $('#history_past').val();
+    var history_family = $('#history_family').val();
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/save_patient/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'id': id,
+            'cahrt_no': chart_no,
+            'date_of_birth': date_of_birth,
+            'phone': phone,
+            'gender': gender,
+            'address': address,
+            'past_history': past_history,
+            'family_history': history_family,
+        },
+        dataType: 'Json',
+        success: function (response) {
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+        },
+    })
+
 }
 
 function get_test_contents(category_id) {
@@ -828,7 +1011,7 @@ function get_test_contents(category_id) {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })

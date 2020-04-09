@@ -18,6 +18,8 @@ from Manage.forms import DoctorsSearchForm
 
 from .models import *
 from app.models import *
+import operator
+import functools
 
 from .forms import *
 # Create your views here.
@@ -117,6 +119,8 @@ def index(request):
                         'name_vie':medicine.name_vie,
                         'code':medicine.code,
                         'price':format(medicine.get_price(), ',') + ' VND',
+                        'inventory_count':medicine.inventory_count,
+                        'class_id':medicine.medicine_class_id,
                     })
 
 
@@ -210,7 +214,7 @@ def index(request):
     elif request.user.doctor.depart.id == 2: #IM
         precedure_classes = PrecedureClass.objects.filter( Q(id = 2) | Q(id = 4) | Q(id = 5) | Q(id = 6)|Q(id = 8) | Q(id = 41) ).values()
     elif request.user.doctor.depart.id == 6: #DERM
-        precedure_classes = PrecedureClass.objects.filter( id__gte=11,id__lte=30).values().order_by('name')
+        precedure_classes = PrecedureClass.objects.filter(Q(id = 11) | Q(id = 21) | Q(id = 30) | Q(id = 28)|Q(id = 27) |  Q(id = 23) | Q(id = 43) |Q(id = 14)).values().order_by('name')
     elif request.user.doctor.depart.id == 4: #PS
         precedure_classes = PrecedureClass.objects.filter( (Q(id__gte = 31) & Q(id__lte = 40)) | Q(id = 42)).values()
     else:
@@ -229,9 +233,9 @@ def index(request):
                         'name_vie':precedure.name_vie,
                         'code':precedure.code,
                         'price':format(precedure.get_price(), ',') + ' VND',
-                        'upper':precedure_class['name'],
+                        'upper':precedure_class['name_vie'] if request.session[translation.LANGUAGE_SESSION_KEY] == 'vi' else precedure_class['name'],
                     })
-        precedure_data.update({ precedure_class['name'] : temp})
+        precedure_data.update({ precedure_class['name_vie'] if request.session[translation.LANGUAGE_SESSION_KEY] == 'vi' else precedure_class['name'] : temp})
 
     if request.user.doctor.depart.id == 4: #PS  성형에 피부 아이템 추가
         precedures = Precedure.objects.filter( precedure_class_id__gte =11 ,precedure_class_id__lte = 29,use_yn='Y')
@@ -258,6 +262,7 @@ def index(request):
                         'name_vie':precedure.name_vie,
                         'code':precedure.code,
                         'price':format(precedure.get_price(), ',') + ' VND',
+
                         #'upper':precedure_class['name'],
                     })
         precedure_data.update({ 'IVNT' : temp})
@@ -289,6 +294,8 @@ def index(request):
                             'code':medicine.code,
                             'unit':'' if medicine.unit is None else medicine.unit,
                             'price':format(medicine.get_price(), ',') + ' VND',
+                        'inventory_count':medicine.inventory_count,
+                        'class_id':medicine.medicine_class_id,
                             #'upper':medicine_class['name'],
                         })
         medicine_data.update({ 'Medicines' : temp})
@@ -304,6 +311,8 @@ def index(request):
                             'code':medicine.code,
                             'unit':'' if medicine.unit is None else medicine.unit,
                             'price':format(medicine.get_price(), ',') + ' VND',
+                        'inventory_count':medicine.inventory_count,
+                        'class_id':medicine.medicine_class_id,
                             #'upper':medicine_class['name'],
                         })
         medicine_data.update({ 'Injections' : temp})
@@ -319,6 +328,8 @@ def index(request):
                             'code':medicine.code,
                             'unit':'' if medicine.unit is None else medicine.unit,
                             'price':format(medicine.get_price(), ',') + ' VND',
+                        'inventory_count':medicine.inventory_count,
+                        'class_id':medicine.medicine_class_id,
                             #'upper':medicine_class['name'],
                         })
         medicine_data.update({ 'Ointment' : temp})
@@ -335,6 +346,9 @@ def index(request):
                             'code':medicine.code,
                             'unit':'' if medicine.unit is None else medicine.unit,
                             'price':format(medicine.get_price(), ',') + ' VND',
+                        'inventory_count':medicine.inventory_count,
+                        'class_id':medicine.medicine_class_id,
+
                             #'upper':medicine_class['name'],
                         })
         medicine_data.update({ 'Suppogitory' : temp})
@@ -382,6 +396,8 @@ def index(request):
                         'unit':'' if medicine.dis_unit is None else medicine.dis_unit,
                         'price':format(medicine.get_price(), ',') + ' VND',
                         'ingredient':medicine.ingredient,
+                        'inventory_count':medicine.inventory_count,
+                        'class_id':medicine.medicine_class_id,
                     }
                 if medicine.code == 'I0018' or medicine.code =='I0019':
                     data['name_display'] += '<text style="color:red;"> (AST !!)</text>'
@@ -460,6 +476,10 @@ def report(request):
     patient_search_form = PatientSearchForm()
 
 
+
+
+
+
     return render(request,
     'Doctor/report.html',
             {
@@ -470,52 +490,70 @@ def report(request):
 
 
 @login_required
-def show_medical_report(request,reception_id=None):
+def show_medical_report(request):
 
-    report_id = request.POST.get('report_id')
+    reception_id = request.POST.get('reception_id')
     context = {}
+    reception = Reception.objects.get(id=reception_id)
 
-
-    report = Report.objects.get(pk=report_id)
-        
-    if report is not None:
+    
+    try:
+        report = Report.objects.get(reception_id = reception.id)
+        print(report)
         context.update({
                 'selected_report':report.id,
                 'reception_report':report.report,
                 'reception_usage':report.usage,
                 'serial':report.serial,
-                'publication_date':report.date_of_publication.strftime('%Y-%m-%d'),
-                'date_of_hospitalization':report.date_of_hospitalization.strftime('%Y-%m-%d'),
-                
+                'publication_date':'' if report.date_of_publication is None else report.date_of_publication.strftime('%Y-%m-%d'),
+                'date_of_hospitalization':'' if report.date_of_hospitalization is None else report.date_of_hospitalization.strftime('%Y-%m-%d'),
             })
-
-
+    except Report.DoesNotExist:
+        context.update({
+                'selected_report':0,
+                })
+    
     today = datetime.date.today()
     
+    if hasattr(reception,'reservation') == False:
+        next_visit = '' if reception.reservation.reservation_date is None else reception.reservation.reservation_date.strftime("%Y-%m-%d")
+    else:
+        next_visit =''
+
 
     context.update({
-                'patient_chart':report.patient.get_chart_no(),
-                'patient_name':report.patient.name_kor,
-                'patient_name_eng':report.patient.name_eng,
-                'patient_gender':report.patient.gender,
-                'patient_age':report.patient.get_age(),
-                'patient_ID':report.patient.getID(),
-                'patient_date_of_birth':report.patient.date_of_birth.strftime('%Y-%m-%d'),
-                'patient_address':report.patient.address,
-                'patient_phone':report.patient.phone,
-
+                'id':reception.id,
+                'patient_chart':reception.patient.get_chart_no(),
+                'patient_name':reception.patient.name_kor,
+                'patient_name_eng':reception.patient.name_eng,
+                'patient_gender':reception.patient.gender,
+                'patient_age':reception.patient.get_age(),
+                'patient_ID':reception.patient.getID(),
+                'patient_date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),
+                'patient_address':reception.patient.address,
+                'patient_phone':reception.patient.phone,
+   
                 'report_today':today,
                 'recept_date': today.strftime('%d/%m/%Y'),
                 'lang': request.session['_language'],
-                'doctor':report.doctor.name_kor,
+                'doctor':reception.doctor.name_kor,
+
+                'chief_complaint':'<br />' if reception.chief_complaint is None else reception.chief_complaint,
+                'past_history':reception.patient.history.past_history,
+                'assessment':'<br />' if reception.diagnosis.assessment is None else reception.diagnosis.assessment,
+                'object':'<br />' if reception.diagnosis.objective_data is None else reception.diagnosis.objective_data,
+                'diagnosis':'<br />' if reception.diagnosis.diagnosis is None else reception.diagnosis.diagnosis,
+                'icd':'<br />' if reception.diagnosis.ICD is None else reception.diagnosis.ICD,
+                'plan':'<br />'if reception.diagnosis.plan is None else reception.diagnosis.plan,
+
+                'recorded_date':reception.recorded_date.strftime('%Y-%m-%d'),
+                'depart':reception.depart.name,
+                'next_visit':next_visit,
                 })
 
-    if request.POST.get('report_id') is None :
-        return render(request,
-            'Doctor/reportwindow.html',context
-            )
-    else:
-        return JsonResponse(context)
+
+
+    return JsonResponse(context)
 
 def reception_waiting(request):
     date = request.POST.get('date')
@@ -874,7 +912,6 @@ def diagnosis_save(request):
     except History.DoesNotExist:
         patient_history = History()
         patient_history.patient = reception.patient
-    print(past_history)
     patient_history.family_history = family_history
     patient_history.past_history = past_history
     patient_history.save()
@@ -1077,11 +1114,24 @@ def get_diagnosis(request):
     return JsonResponse(context)
 
 def show_medical_report_save(request):
-    reception_no = request.POST.get('reception_no')
+    selected_reception_id = request.POST.get('selected_reception_id')
+    recommmed_and_follow = request.POST.get('recommmed_and_follow')
     
 
+    reception = Reception.objects.get(id = selected_reception_id)
 
-    context = {'datas':datas}
+    try:
+        report = Report.objects.get(reception_id = selected_reception_id)
+
+
+    except Report.DoesNotExist:
+        report = Report()
+        report.reception_id = selected_reception_id
+
+    report.report = recommmed_and_follow
+    report.save()
+
+    context = {'result':True}
     return JsonResponse(context)
 
 def waiting(request):
@@ -1284,85 +1334,98 @@ def set_patient_data(request):
 
 def medical_report_save(request):
     
-    doctor_id = request.POST.get('doctor')
-    str_report = request.POST.get('report')
-    usage = request.POST.get('usage')
-    hospitalization = request.POST.get('hospitalization')
-    publication = request.POST.get('publication')
-    selected_report = request.POST.get('selected_report')
-    selected_patient = request.POST.get('selected_patient')
-    if selected_report == 'new':
-        report = Report(patient_id = selected_patient)
-
-        today = datetime.date.today().strftime('%Y%m%d')
-
-        num = Report.objects.filter(serial__icontains = today).count() + 1
-        serial = str(today) + "{:04d}".format(num)
-        report.serial = serial
-        report.doctor_id = doctor_id
-    else:
-        report = Report.objects.get(pk = selected_report)
-
-    report.report = str_report
-    report.usage = usage
-    report.date_of_hospitalization = datetime.datetime.combine(datetime.datetime.strptime(hospitalization, "%Y-%m-%d").date(), datetime.time.min)
-    report.date_of_publication = datetime.datetime.combine(datetime.datetime.strptime(publication, "%Y-%m-%d").date(), datetime.time.min)
+    selected_reception_id = request.POST.get('selected_reception_id')
+    recommmed_and_follow = request.POST.get('recommmed_and_follow')
     
 
+    reception = Reception.objects.get(id = selected_reception_id)
+
+    try:
+        report = Report.objects.get(reception_id = selected_reception_id)
+
+
+    except Report.DoesNotExist:
+        report = Report()
+        report.reception_id = selected_reception_id
+
+    report.report = recommmed_and_follow
     report.save()
 
+    context = {'result':True}
+    return JsonResponse(context)
 
-    return JsonResponse({'serial':report.serial})
+
+
+
+
+
+
+
+    #doctor_id = request.POST.get('doctor')
+    #str_report = request.POST.get('report')
+    #
+    #if selected_report == 'new':
+    #    report = Report(patient_id = selected_patient)
+    #
+    #    today = datetime.date.today().strftime('%Y%m%d')
+    #
+    #    num = Report.objects.filter(serial__icontains = today).count() + 1
+    #    serial = str(today) + "{:04d}".format(num)
+    #    report.serial = serial
+    #    report.doctor_id = doctor_id
+    #else:
+    #    report = Report.objects.get(pk = selected_report)
+    #
+    #report.report = str_report
+    #report.usage = usage
+    #report.date_of_hospitalization = datetime.datetime.combine(datetime.datetime.strptime(hospitalization, "%Y-%m-%d").date(), datetime.time.min)
+    #report.date_of_publication = datetime.datetime.combine(datetime.datetime.strptime(publication, "%Y-%m-%d").date(), datetime.time.min)
+    
+
+    #report.save()
+
+
+    #return JsonResponse({'serial':report.serial})
 
 def report_search(request):
-    #date = request.POST.get('date')
-    filter = request.POST.get('filter')
-    input = request.POST.get('input').lower()
+    date_start = request.POST.get('start')
+    date_end = request.POST.get('end')
+    input = request.POST.get('input')
 
-    #date_start = date.split(' - ')[0]
-    #date_end = date.split(' - ')[1]
-    #date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
-    #date_max = datetime.datetime.combine(datetime.datetime.strptime(date_end, "%Y-%m-%d").date(), datetime.time.max)
+    kwargs={}
+    date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
+    date_max = datetime.datetime.combine(datetime.datetime.strptime(date_end, "%Y-%m-%d").date(), datetime.time.max)
+    
+    argument_list = [] 
+    kwargs={}
+    if hasattr(request.user,'depart'):
+        kwargs['depart'] = request.user.doctor.depart.id
 
+    argument_list = [] 
+    if input !='':
+        argument_list.append( Q(**{'patient__name_kor__icontains':input} ) )
+        argument_list.append( Q(**{'patient__name_eng__icontains':input} ) )
+        receptions = Reception.objects.select_related('patient').filter(functools.reduce(operator.or_, argument_list),recorded_date__range = (date_min, date_max),**kwargs).exclude(progress='deleted').order_by('recorded_date')
+    else:
+        receptions = Reception.objects.select_related('patient').filter(recorded_date__range = (date_min, date_max),**kwargs).exclude(progress='deleted').order_by('recorded_date')
 
-    #reports = Report.objects.filter(date_of_publication__range = (date_min, date_max),**kwargs )[:20]
-    reports = Report.objects.filter(doctor_id= request.user.doctor.id)
-     
-    kwargs = {}
 
     page_context = request.POST.get('page_context',10)
     page = request.POST.get('page',1)
     datas = []
-    for report in reports:
-        if input == '':
-            pass
-        elif filter == 'all':
-            if (input in report.patient.name_kor.lower() or
-                input in report.patient.name_eng.lower() or
-                input in report.doctor.name_kor.lower() or 
-                input in report.doctor.name_eng.lower() or
-                input in report.doctor.depart.name.lower()) is False:
-                continue
+    no = 1
+    for reception in receptions:
+        datas.append({
+            'reception_id':reception.id,
+            'chart':reception.patient.get_chart_no(),
+            'No':no,
+            'patient_name_eng':reception.patient.name_eng,
+            'patient_name_kor':reception.patient.name_kor,
+            'ID':reception.patient.getID(),
+            'Doctor':reception.doctor.name_kor,
+            })
+        no +=1
 
-        elif filter =='patient':
-            if (input in report.patient.name_kor.lower() or input in report.patient.name_eng.lower()) is False:
-                continue
-        elif filter == 'doctor':
-            if (input in report.doctor.name_kor.lower() or input in report.doctor.name_eng.lower() or input in report.doctor.depart.name.lower()) is False:
-                continue
-        data={
-            'report_id':report.id,
-            'chart':report.patient.get_chart_no(),
-            'No':report.id,
-            'patient_name_eng':report.patient.name_eng,
-            'patient_name_kor':report.patient.name_kor,
-            'ID':report.patient.getID(),
-            'Doctor':report.doctor.name_kor,
-            'PublicationDate':report.date_of_publication.strftime('%Y-%m-%d'),
-            }
-        datas.append(data)
-
-    datas.reverse()
     paginator = Paginator(datas, page_context)
     try:
         paging_data = paginator.page(page)
@@ -1501,13 +1564,21 @@ def get_bundle(request):
 def get_ICD(request):
     
     string = request.POST.get('string')
-    icd_datas = ICD.objects.filter(Q(code__icontains = string) | Q(name__icontains = string) | Q(name_vie__icontains = string)).values('id','name','code')
+    
+    icd_datas = ICD.objects.filter(Q(code__icontains = string) | Q(name__icontains = string) | Q(name_vie__icontains = string)).values('id','name','code','name_vie')
+    print(request.session[translation.LANGUAGE_SESSION_KEY])
     datas=[]
     for data in icd_datas:
         datas.append({
-            'value':data['code'] + ' ' +  data['name'],
-            'label':data['code'] + ' ' +  data['name'],
+            'value':data['code'] + ' ' + ( data['name_vie'] if request.session[translation.LANGUAGE_SESSION_KEY] == 'vi' else data['name']),
+            'label':data['code'] + ' ' + ( data['name_vie'] if request.session[translation.LANGUAGE_SESSION_KEY] == 'vi' else data['name']),
             'code':data['code'],
             })
 
     return JsonResponse({'datas':datas})
+
+
+def get_medicine_count(request):
+    list_medicine = Medicine.objects.values('id','inventory_count').all()
+
+    return JsonResponse({'datas':list(list_medicine)})

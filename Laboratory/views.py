@@ -4,6 +4,10 @@ import datetime
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone, translation
 
+import functools
+import operator
+from django.db.models import Q,Case,When, CharField,Count,Sum
+
 from .models import *
 from .forms import *
 from Doctor.models import *
@@ -15,39 +19,40 @@ from Receptionist.models import *
 def index(request):
 
     waiting_search_form = TestManageForm()
+    depart = Depart.objects.all()
+
 
     return render(request,
     'Laboratory/index.html',
             {
                 'waiting_search':waiting_search_form,
+                'depart':depart,
             },
         )
 
 
 def get_test_manage(request):
     test_manage_id = request.POST.get('test_manage_id')
-
+    
     test_manage = TestManage.objects.get(pk = test_manage_id)
-    patient = Patient.objects.get(pk = test_manage.manager.diagnosis.reception.patient.id)
-
-    today = datetime.date.today()
-
-    datas= {}
-    datas.update({
-        'test_result':test_manage.result,
-        'test_reservation':test_manage.date_reservation,
-        'test_examination':test_manage.date_examination,
-        'test_expected':test_manage.date_expected,
-        'test_name':test_manage.manager.test.name,
-        'test_ordered':test_manage.date_ordered.strftime('%Y-%m-%d %H:%M:%S'),
-        'patient_chart':patient.get_chart_no(),
-        'patient_name':patient.name_kor,
-        'patient_age':today.year - patient.date_of_birth.year - ((today.month, today.day) < (patient.date_of_birth.month, patient.date_of_birth.day)),
-        'patient_gender':patient.gender,
-        })
+    
 
 
-    context = {'datas':datas}
+    context = {
+            'chart':test_manage.manager.diagnosis.reception.patient.get_chart_no(),
+            'Name':test_manage.manager.diagnosis.reception.patient.name_kor + ' ' + test_manage.manager.diagnosis.reception.patient.name_eng,
+            'Date_of_birth':test_manage.manager.diagnosis.reception.patient.date_of_birth.strftime('%Y-%m-%d') +
+                            '(' + test_manage.manager.diagnosis.reception.patient.get_gender_simple() +
+                            '/' + str(test_manage.manager.diagnosis.reception.patient.get_age()) + ')',
+
+            'Lab':test_manage.name_service,
+            'date_ordered':'' if test_manage.date_ordered is None else test_manage.date_ordered.strftime('%Y-%m-%d %H:%M') ,
+            'date_examination':'' if test_manage.date_examination is None else test_manage.date_examination.strftime('%Y-%m-%d %H:%M:%S') ,
+            'date_expected':'' if test_manage.date_expected is None else test_manage.date_expected.strftime('%Y-%m-%d') ,
+            'result':test_manage.result,
+            'unit': '' ,#if test_manage.manager.test.unit is None else '(' + test_manage.manager.test.unit + ')',
+        }
+
     return JsonResponse(context)
 
 def waiting_selected(request):
@@ -61,160 +66,77 @@ def waiting_selected(request):
             'Name':test_manage.manager.diagnosis.reception.patient.name_kor + ' ' + test_manage.manager.diagnosis.reception.patient.name_eng,
             'Date_of_birth':test_manage.manager.diagnosis.reception.patient.date_of_birth.strftime('%Y-%m-%d') +
                             '(' + test_manage.manager.diagnosis.reception.patient.get_gender_simple() +
-                            '/' + str(test_manage.manager.diagnosis.reception.patient.get_age()) + ')',};
-    
+                            '/' + str(test_manage.manager.diagnosis.reception.patient.get_age()) + ')',
 
-    if 'L' in test_manage.manager.test.code:
-        context.update({
             'Lab':test_manage.name_service,
             'date_ordered':'' if test_manage.date_ordered is None else test_manage.date_ordered.strftime('%Y-%m-%d %H:%M') ,
             'date_examination':'' if test_manage.date_examination is None else test_manage.date_examination.strftime('%Y-%m-%d %H:%M:%S') ,
             'date_expected':'' if test_manage.date_expected is None else test_manage.date_expected.strftime('%Y-%m-%d') ,
             'result':test_manage.result,
-            'unit': '' if test_manage.manager.test.unit is None else '(' + test_manage.manager.test.unit + ')',
-            'Depart':test_manage.manager.diagnosis.reception.depart.name + ' ( ' + test_manage.manager.diagnosis.reception.doctor.name_kor + ' )',
-        })
+            'unit': '' ,#if test_manage.manager.test.unit is None else '(' + test_manage.manager.test.unit + ')',
+        }
     return JsonResponse(context)
+
+
 
 def waiting_list(request):
     date_start = request.POST.get('start_date')
+    date_end = request.POST.get('end_date')
     filter = request.POST.get('filter')
     input = request.POST.get('input').lower() 
-    #date_end = request.POST.get('end_date')
+    depart_id = request.POST.get('depart_id')
 
    
     kwargs={}
-
-    
-    #if progress != 'all':
-    #    kwargs['progress'] = request.POST.get('progress')
-    #if request.user.doctor is not None:
-    #    kwargs['manager__diagnosis__reception__depart_id'] = request.user.doctor.depart.id
-    if hasattr(request.user,'doctor'):
-        kwargs['manager__diagnosis__reception__depart_id'] = request.user.doctor.depart.id
-
     date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
-    date_max = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.max)
+    date_max = datetime.datetime.combine(datetime.datetime.strptime(date_end, "%Y-%m-%d").date(), datetime.time.max)
+    
+    argument_list = [] 
+    kwargs={}
+    if depart_id != '' :
+        kwargs['depart_id'] = depart_id
 
-    test_manages = TestManage.objects.filter(date_ordered__range = (date_min, date_max),**kwargs).select_related('manager__diagnosis__reception').exclude(manager__diagnosis__reception__progress='deleted').order_by('-date_ordered')
+    if hasattr(request.user,'doctor'):
+        kwargs['depart_id'] = request.user.doctor.depart.id
 
-    datas=[]
-    today = datetime.date.today()
+    if input !='':
+        argument_list.append( Q(**{'patient__name_kor__icontains':input} ) )
+        argument_list.append( Q(**{'patient__name_eng__icontains':input} ) )
+        argument_list.append( Q(**{'patient__id__icontains':input} ) ) 
 
-   
-    print(1)
-    for test_manage in test_manages:
-        data={}
-        is_interval = False
-        try:
-            reference_query = TestReferenceInterval.objects.filter(test_id = test_manage.manager.test_id)
 
-            list_interval = []
-            if reference_query.count() == 0:
-                list_interval.append({
-                    'no_interval':True,
-                        })
-            else:
-                for reference in reference_query:
-                    list_interval.append({
-                        'normal_range':reference.get_range(),
-                        'minimum':reference.minimum,
-                        'maximum':reference.maximum,
-                        'unit':reference.get_unit_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
-                        'name':reference.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
-                        })
+        test_patient_list = Reception.objects.select_related('diagnosis').filter(
+                            functools.reduce(operator.or_, argument_list), 
+                            **kwargs,
+                            recorded_date__range= (date_min,date_max),
+                        ).exclude(
+                            progress='deleted',
+                        ).order_by('-recorded_date')
 
-            #reference = reference_query.get_range()
-            #
-            #if test_manage.result is not None and test_manage.result is not '':
-            #    is_interval = reference_query.check_interval(test_manage.result)
+    else:
+        test_patient_list =  Reception.objects.select_related('diagnosis').filter(
+                            **kwargs,
+                            recorded_date__range= (date_min,date_max),
+                        ).exclude(
+                            progress='deleted',
+                        ).order_by('-recorded_date')
 
-        except TestReferenceInterval.DoesNotExist:
-            reference = ''
-
-        print(list_interval)
-        if input=='':
-            data.update({
-                'chart':test_manage.manager.diagnosis.reception.patient.get_chart_no(),
-                'Name':test_manage.manager.diagnosis.reception.patient.name_kor + ' ' + test_manage.manager.diagnosis.reception.patient.name_eng,
-                'Depart':test_manage.manager.diagnosis.reception.depart.name + ' ( ' + test_manage.manager.diagnosis.reception.doctor.name_kor + ' )',
-                'Date_of_Birth': test_manage.manager.diagnosis.reception.patient.date_of_birth.strftime('%Y-%m-%d') +
-                                '(' + test_manage.manager.diagnosis.reception.patient.get_gender_simple() +
-                                '/' + str(test_manage.manager.diagnosis.reception.patient.get_age()) + ')',
-                'name_service':test_manage.name_service,
-                'date_ordered':'' if test_manage.date_ordered is None else test_manage.date_ordered.strftime('%Y-%m-%d'),
-                'date_examination':'' if test_manage.date_examination is None else test_manage.date_examination.strftime('%Y-%m-%d') ,
-                'date_expected':'' if test_manage.date_expected is None else test_manage.date_expected.strftime('%Y-%m-%d') ,
-                'result':'' if test_manage.result is None or '' else test_manage.result,
-                'progress':test_manage.progress,
-                'test_manage_id':test_manage.id,
-                'reference_interval':list_interval,
-                'is_interval':is_interval,
+    datas=[] 
+    for test_patient in test_patient_list:
+        if hasattr(test_patient,'diagnosis') is False:
+            continue
+        
+        if test_patient.diagnosis.testmanager_set.count() !=0:
+            datas.append({
+                'id':test_patient.diagnosis.id,
+                'chart':test_patient.diagnosis.reception.patient.get_chart_no(),
+                'Name':test_patient.diagnosis.reception.patient.name_kor + ' ' + test_patient.diagnosis.reception.patient.name_eng,
+                'Depart':test_patient.diagnosis.reception.depart.name + ' ( ' + test_patient.diagnosis.reception.doctor.name_kor + ' )',
+                'Date_of_Birth': test_patient.diagnosis.reception.patient.date_of_birth.strftime('%Y-%m-%d') +
+                                '(' + test_patient.diagnosis.reception.patient.get_gender_simple() +
+                                '/' + str(test_patient.diagnosis.reception.patient.get_age()) + ')',
                 })
-            datas.append(data)
-        elif filter == 'name':
-            if input in test_manage.manager.diagnosis.reception.patient.name_kor.lower()  or input in test_manage.manager.diagnosis.reception.patient.name_eng.lower() :
-                data.update({
-                    'chart':test_manage.manager.diagnosis.reception.patient.get_chart_no(),
-                    'Name':test_manage.manager.diagnosis.reception.patient.name_kor + ' ' + test_manage.manager.diagnosis.reception.patient.name_eng,
-                    'Depart':test_manage.manager.diagnosis.reception.depart.name + ' ( ' + test_manage.manager.diagnosis.reception.doctor.name_kor + ' )',
-                    'Date_of_Birth': test_manage.manager.diagnosis.reception.patient.date_of_birth.strftime('%Y-%m-%d') +
-                                    '(' + test_manage.manager.diagnosis.reception.patient.get_gender_simple() +
-                                    '/' + str(test_manage.manager.diagnosis.reception.patient.get_age()) + ')',
-                    'name_service':test_manage.name_service,
-                    'date_ordered':'' if test_manage.date_ordered is None else test_manage.date_ordered.strftime('%Y-%m-%d'),
-                    'date_examination':'' if test_manage.date_examination is None else test_manage.date_examination.strftime('%Y-%m-%d') ,
-                    'date_expected':'' if test_manage.date_expected is None else test_manage.date_expected.strftime('%Y-%m-%d') ,
-                    'result':'' if test_manage.result is None or '' else test_manage.result,
-                    'progress':test_manage.progress,
-                    'test_manage_id':test_manage.id,
-                    'reference_interval':reference + ' / ' + ('' if test_manage.manager.test.unit is None or '' else '(' + test_manage.manager.test.unit + ')'),
-                    'is_interval':is_interval,
-                    })
-                datas.append(data)
-        elif filter == 'depart':
-            if input in test_manage.manager.diagnosis.reception.doctor.name_kor.lower()  or input in test_manage.manager.diagnosis.reception.doctor.name_eng.lower()  or input in test_manage.manager.diagnosis.reception.doctor.depart.name.lower() :
-                
-                data.update({
-                    'chart':test_manage.manager.diagnosis.reception.patient.get_chart_no(),
-                    'Name':test_manage.manager.diagnosis.reception.patient.name_kor + ' ' + test_manage.manager.diagnosis.reception.patient.name_eng,
-                    'Depart':test_manage.manager.diagnosis.reception.depart.name + ' ( ' + test_manage.manager.diagnosis.reception.doctor.name_kor + ' )',
-                    'Date_of_Birth': test_manage.manager.diagnosis.reception.patient.date_of_birth.strftime('%Y-%m-%d') +
-                                    '(' + test_manage.manager.diagnosis.reception.patient.get_gender_simple() +
-                                    '/' + str(test_manage.manager.diagnosis.reception.patient.get_age()) + ')',
-                    'name_service':test_manage.name_service,
-                    'date_ordered':'' if test_manage.date_ordered is None else test_manage.date_ordered.strftime('%Y-%m-%d'),
-                    'date_examination':'' if test_manage.date_examination is None else test_manage.date_examination.strftime('%Y-%m-%d') ,
-                    'date_expected':'' if test_manage.date_expected is None else test_manage.date_expected.strftime('%Y-%m-%d') ,
-                    'result':'' if test_manage.result is None or '' else test_manage.result,
-                    'progress':test_manage.progress,
-                    'test_manage_id':test_manage.id,
-                    'reference_interval':reference + ' / ' + ('' if test_manage.manager.test.unit is None or '' else '(' + test_manage.manager.test.unit + ')'),
-                    'is_interval':is_interval,
-                    })
-                datas.append(data)
-        elif filter == 'chart':
-            if input in test_manage.manager.diagnosis.reception.patient.get_chart_no():
-                data.update({
-                    'chart':test_manage.manager.diagnosis.reception.patient.get_chart_no(),
-                    'Name':test_manage.manager.diagnosis.reception.patient.name_kor + ' ' + test_manage.manager.diagnosis.reception.patient.name_eng,
-                    'Depart':test_manage.manager.diagnosis.reception.depart.name + ' ( ' + test_manage.manager.diagnosis.reception.doctor.name_kor + ' )',
-                    'Date_of_Birth': test_manage.manager.diagnosis.reception.patient.date_of_birth.strftime('%Y-%m-%d') +
-                                    '(' + test_manage.manager.diagnosis.reception.patient.get_gender_simple() +
-                                    '/' + str(test_manage.manager.diagnosis.reception.patient.get_age()) + ')',
-                    'name_service':test_manage.name_service,
-                    'date_ordered':'' if test_manage.date_ordered is None else test_manage.date_ordered.strftime('%Y-%m-%d'),
-                    'date_examination':'' if test_manage.date_examination is None else test_manage.date_examination.strftime('%Y-%m-%d') ,
-                    'date_expected':'' if test_manage.date_expected is None else test_manage.date_expected.strftime('%Y-%m-%d') ,
-                    'result':'' if test_manage.result is None or '' else test_manage.result,
-                    'progress':test_manage.progress,
-                    'test_manage_id':test_manage.id,
-                    'reference_interval':reference + ' / ' + ('' if test_manage.manager.test.unit is None or '' else '(' + test_manage.manager.test.unit + ')'),
-                    'is_interval':is_interval,
-                    })
-                datas.append(data)
 
-            
 
     context = {'datas':datas}
     return JsonResponse(context)
@@ -249,6 +171,40 @@ def save(request):
     context = {'result':True}
     return JsonResponse(context)
 
+
+def get_test_list(request):
+
+    diagnosis_id = request.POST.get('diagnosis_id')
+
+
+    test_query = TestManager.objects.select_related('testmanage').select_related('diagnosis').filter(diagnosis_id = diagnosis_id)
+    datas=[]
+    for test in test_query:
+        intervals = TestReferenceInterval.objects.filter(use_yn='Y',test_id = test.test.id).values('minimum','maximum','unit','unit_vie','name','name_vie')
+        list_interval = []
+        for interval in intervals:
+            list_interval.append({
+                'minimum':interval['minimum'],
+                'maximum':interval['maximum'],
+                'unit':interval['unit_vie'] if request.session[translation.LANGUAGE_SESSION_KEY] == 'vi' else interval['unit'],
+                'name':interval['name_vie'] if request.session[translation.LANGUAGE_SESSION_KEY] == 'vi' else interval['name'],
+                })
+
+
+        datas.append({
+            'id':test.testmanage.id,
+                'name_service':test.testmanage.name_service,
+                'date_ordered':'' if test.testmanage.date_ordered is None else test.testmanage.date_ordered.strftime('%Y-%m-%d'),
+                'date_examination':'' if test.testmanage.date_examination is None else test.testmanage.date_examination.strftime('%Y-%m-%d') ,
+                'date_expected':'' if test.testmanage.date_expected is None else test.testmanage.date_expected.strftime('%Y-%m-%d') ,
+                'result':'' if test.testmanage.result is None or '' else test.testmanage.result,
+                'progress':test.testmanage.progress,
+                'test_manage_id':test.testmanage.id,   
+                'list_interval':list_interval,
+            })
+
+      
+    return JsonResponse({'datas':datas})
 
 
 @login_required

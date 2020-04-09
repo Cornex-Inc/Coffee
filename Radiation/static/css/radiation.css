@@ -105,9 +105,11 @@
     display: inline;
 }
 .radiation_waiting_control {
+    float:right;
 }
 
 .radiation_list_table_wrap{
+  
     height:590px;
     overflow-y:auto;
 }

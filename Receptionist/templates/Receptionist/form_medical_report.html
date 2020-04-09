@@ -4,17 +4,12 @@
 <head>
     <meta charset="utf-8" />
     <style>
-
-
         @media print {
-
-
             #wrap {
                 margin: 0px;
-                padding: 65px;
+                padding: 45px;
                 font-size: 10px;
                 font-family: "Times New Roman", Times, serif;
-                
             }
 
             table {
@@ -25,8 +20,7 @@
                 }
 
             #logo {
-                height:120px;
-                padding-right:20px;
+                width:100%;
             }
 
             .top {
@@ -40,45 +34,45 @@
 
             .patient_info {
                 width:100%;
-                margin-top:20px;
                 border-collapse: separate;
-                border-spacing: 0px 5px;
+                border-spacing: 0px 2px;
             }
             .patient_info tr td{
                 width:50%;
             }
 
 
-                .title {
-                    width: 100%;
-                    text-align: center;
-                    font-size: 12px;
-                    font-weight: 700;
-                    margin-top: 20px;
-                }
+            .title {
+                width: 100%;
+                text-align: center;
+                font-size: 14px;
+                font-weight: 700;
+                margin-top: 15px;
+            }
 
             .contents {
-                margin-top: 20px;
+                margin-top: 15px;
                 width: 100%;
-                border: 1px solid black;
                 border-collapse: collapse;
+                table-layout:fixed;
                 
             }
-                .contents tr td, .contents tr th {
-                    border: 1px solid black;
-                }
+              
+             
 
-                .contents tr:first-child {
-                    height:60px;
-                }
 
-                    .contents tr:first-child td {
-                        text-align: center;
-                        vertical-align: middle;
-                    }
+
+            #contents tr, #contents td {
+                padding:2px;
+            }
+
+            #contents_datas tr th{
+                text-align: center;
+                vertical-align: middle;
+            }
 
             .footer {
-                margin-top:60px;
+                margin-top:30px;
                 width:100%;
             }
                 .footer tr td:first-child {
@@ -92,105 +86,114 @@
     </style>
 </head>
 <body>
-    <div id="wrap">
+<div id="wrap">
         <table class="top">
             <tr>
-                <td rowspan="4">
-                    <img src="http://14.177.234.50:9090/static/img/index_main.png" id="logo" />
+                <td>
+                    <img src="/static/img/document_top.png" id="logo" />
                 </td>
-                <td>Công ty TNHH International Medicare - Phòng khám đa khoa quốc tế I-Medicare</td>
-            </tr>
-            <tr>
-                <td>Địa chỉ : Tầng 1 - Tòa nhà The Garden - đường Mễ Trì - phường Mĩ Đình 1 </td>
-            </tr>
-            <tr>
-                <td>Quận Nam Từ Liêm - Hà Nội</td>
-            </tr>
-            <tr>
-                <td>Hotline : 081.340.0101 - 081.760.0105</td>
             </tr>
         </table>
 
 
         <div class="title">
-            <text>PHIẾU KẾT QUẢ XÉT NGHIỆM</text>
+            <text>BÁO CÁO Y TẾ</text>
             <br />
-            <text><I>LABORATORY RESULT REPORT</I></text>
+            <text><I>MEDICAL REPORT</I></text>
         </div>
         <br />
         <table class="patient_info">
+            
             <tr>
-                <td><b>1. Số hồ sơ</b>/ PID:{{ chart }}</td>
-                <td><b>2. Quốc tịch</b>/ Nationality:</td>
+                <td><b>1. Số hồ sơ</b>/ <i>PID</i> : {{ chart }}</td>
+                <td><b>2. Quốc tịch</b>/ <i>Nationality</i> :</td>
             </tr>
             <tr>
-                <td><b>3. Họ và tên</b>/ Fullname: <text id="patient_info_name">{{ name }}</text></td>
-                <td><b>4. Giới tính</b>/ Gender: {{ gender }}</td>
+                <td><b>3. Họ và tên</b>/ <i>Fullname</i> : <text id="patient_info_name">{{ name }}</text></td>
+                <td><b>4. Giới tính</b>/ <i>Gender</i> : {{ gender }}</td>
             </tr>
             <tr>
-                <td><b>5. Địa chỉ</b>/ Address: {{address}}</td>
-                <td><b>6. Ngày sinh</b>/ D.O.B: {{date_of_birth}}</td>
+                <td><b>5. Địa chỉ</b>/ <i>Address</i> : {{address}}</td>
+                <td><b>6. Ngày sinh</b>/ <i>D.O.B</i> : {{date_of_birth}}</td>
             </tr>
             <tr>
-                <td><b>7. Số điện thoại</b>/Phone number : {{ phone }}</td>
+                <td colspan="2"><b>7. Số điện thoại</b>/<i>Phone number</i> : {{ phone }}</td>
             </tr>
             <tr>
-                <td><b>8. Chẩn đoán</b>/ Diagnostic:</td>
+                <td colspan="2"><b>8. Thời gian đến khám bệnh</b>/ <i>Date to Visit Clinic</i> : {{ recorded_date }}</td>
             </tr>
             <tr>
-                <td><b>9. Thời gian nhận mẫu</b>/ Time : {{ date_time }}</td>
+                <td colspan="2"><b>9. Khoa Khám bệnh</b>/ <i>Department</i> : {{ depart_full_vie }}/{{ depart_full }}</td>
             </tr>
-            <tr>
-                <td><b>10. Khoa Khám bệnh</b>/ Department: {{ depart }}</td>
-            </tr>
+            
+
         </table>
         <table class="contents">
-            <tr>
-                <td>
-                    <b>STT</b>
-                </td>
-                <td>
-                    <b>Tên xét nghiệm</b>
-                    <br /><i>Test name</i>
-                </td>
-                <td>
-                    <b>Mẫu bệnh phẩm</b>
-                    <br /><i>Specimens</i>
-                </td>
-                <td>
-                    <b>Kết quả</b>
-                    <br /><i>Result</i>
-                </td>
-                <td>
-                    <b>Đơn vị</b>
-                    <br /><i>Unit</i>
-                </td>
-                <td>
-                    <b>Chỉ số bình thường</b>
-                    <br /><i>Normal range</i>
-                </td>
-                <td>
-                    <b>Phương pháp xét nghiệm</b>
-                    <br /><i>Procedure method</i>
-                </td>
-            </tr>
             <tbody id="contents_datas">
+                <tr>
+                    <td><b>II. THÔNG TIN KHÁM BỆNH / <i>MEDICAL INFORMATION </i></b></td>
+                </tr>
+                <tr>
+                    <td><b>1. Lý do khám bệnh </b>/ <i>Chief Complaint </i> : 
+                    <br/>
+                    &emsp;<span id="preview_chief_complaint">{{ chief_complaint }}</span>
+                    </td>
+                    
+                </tr>
+                <tr>
+                    <td><b>2. Bệnh sử </b>/ <i>Medical History </i>:
+                    &emsp;<span id="preview_medical_history">{{ past_history }}</span>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td><b>3.Khám lâm sàng </b>/ <i>Clinical examinations</i>:
+                    <br />
+                    &emsp;<span id="preview_clinical_examations"></span>{{ assessment }}</td>
+                </tr>
+                <tr>
+                    <td><b>4. Khám cận lâm sàng </b>/ <i>Sub - Clinical examination </i>:
+                    <br />
+                    &emsp;<span id="preview_sub_clinical_examination"></span>{{ objective }}</td>
+                </tr>
+                <tr>
+                    <td><b>5. Chẩn đoán </b>/ <i>Diagnosis </i>:
+                    <br />
+                    &emsp;<span id="preview_diagnosis">{{ diagnosis }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>6. Chẩn đoán ICD </b>/<i>ICD Diagnosis </i>:
+                    <br />
+                    &emsp;<span id="preview_icd">{{ icd_code }} {{ ICD_code_en }} <br />
+                    &emsp;&emsp; - {{ ICD_code_vie }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>7. Hướng điều trị </b>/  <i>Treatment plans: </i>:
+                    <br />
+                    &emsp;<span id="preview_treatment_plan"></span>{{ plan }}</td>
+                </tr>
+                <tr>
+                    <td><b>8. Dặn dò </b>/: <i>Recommendation and Follow-up </i>:
+                    <br />
+                    &emsp;<span id="preview_recommendation"></span>{{ doctor_reommend }}</td>
+                </tr>
+                <tr>
+                    <td><b>9.Ngày hẹn tái khám </b>/ <i>Date of re-examination </i>:
+                    <span id="preview_re_examination">{{ next_visit }}</span>
+                    </td>
+                </tr>
             </tbody>
         </table>
 
         <table class="footer">
             <tr>
-                <td>
+                <td style="padding-left:370px;">
                     <b>
-                        Bác sĩ chỉ định<br />
-                        <i>Appoiting doctor</i>
-                    </b>
-                </td>
-                <td>
-                    <b>
-                        Ngày / Date<br />
-                        Trưởng đơn vị xét nghiệm<br />
-                        <i>Chef of Laboratory</i>
+                        Ngày / Date : {{ date_today }}<br />
+                        Bác sĩ/ Doctor<br />
+                        <i>(Ký và ghi rõ họ tên)/(Sign)</i>
                     </b>
 
                 </td>

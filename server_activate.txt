@@ -1,0 +1,4 @@
+@echo off
+cd "C:\Users\khm43\source\repos\Coffee 1.0\Coffee\Coffee\"
+"C:\Users\khm43\source\repos\Coffee 1.0\Coffee\Coffee\env_local\Scripts\activate.bat"
+@echo on

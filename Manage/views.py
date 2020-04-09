@@ -4,6 +4,9 @@ from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Count, Sum
+import operator
+import functools
+
 from django.utils import timezone, translation
 
 from .forms import *
@@ -428,8 +431,8 @@ def doctor_profit(request):
 
     doctor = request.POST.get('doctor')
 
-    date_start = request.POST.get('start_end_date').split(' - ')[0]
-    date_end = request.POST.get('start_end_date').split(' - ')[1]
+    date_start = request.POST.get('start_date')
+    date_end = request.POST.get('end_date')
 
 
     date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
@@ -812,12 +815,200 @@ def search_patient(request):
 
 
 def inventory_test(request):
+    class_datas=[]
+    test_class = TestClass.objects.all()
+    for tmp_class in test_class:
+        class_datas.append({
+            'id':tmp_class.id,
+            'name': tmp_class.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+            })
+
 
     return render(request,
     'Manage/inventory_test.html',
             {
+                'test_class':class_datas,
             },
         )
+
+
+
+def test_search(request):
+    string = request.POST.get('string')
+    filter = request.POST.get('filter')
+    class_id = request.POST.get('class_id')
+
+    kwargs = {}
+    if class_id != '':
+        kwargs.update({
+            'test_class_id':class_id,
+            })
+
+    argument_list = [] 
+    if string !='':
+        argument_list.append( Q(**{'name__icontains':string} ) )
+        argument_list.append( Q(**{'name_vie__icontains':string} ) )
+   
+
+
+    if string == '' :
+        query_datas = Test.objects.filter(**kwargs).select_related('test_class').exclude(use_yn = 'N').order_by("name")
+    #elif filter == 'name':
+    #    query_datas = Test.objects.filter( Q(name__icontains = string) | Q(name_vie__icontains = string)).select_related('test_class').exclude(use_yn = 'N').order_by("name")
+    else:
+        query_datas = Test.objects.filter(functools.reduce(operator.or_, argument_list),**kwargs).select_related('test_class').exclude(use_yn = 'N').order_by("name")
+
+
+    datas=[]
+    for query_data in query_datas:
+        data = {
+                'id' : query_data.id,
+                'code': query_data.code,
+                'name' : query_data.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
+                'class':query_data.test_class.name,
+                'price' : query_data.get_price(),
+                'price_dollar' : query_data.get_price_dollar(),
+            }
+        datas.append(data)
+
+
+    page = request.POST.get('page',1)
+    context_in_page = request.POST.get('context_in_page');
+    paginator = Paginator(datas, context_in_page)
+    try:
+        paging_data = paginator.page(page)
+    except PageNotAnInteger:
+        paging_data = paginator.page(1)
+    except EmptyPage:
+        paging_data = paginator.page(paginator.num_pages)
+
+    context = {
+        #'datas':datas,
+        'datas':list(paging_data),
+        'page_range_start':paging_data.paginator.page_range.start,
+        'page_range_stop':paging_data.paginator.page_range.stop,
+        'page_number':paging_data.number,
+        'has_previous':paging_data.has_previous(),
+        'has_next':paging_data.has_next(),
+        
+        }
+    return JsonResponse(context)
+
+
+def test_add_edit_get(request):
+    id = request.POST.get('id');
+
+    test = Test.objects.get(id=id)
+
+
+    return JsonResponse({
+        'id':test.id,
+        'name':test.name,
+        'name_vie':test.name_vie,
+        'price':test.get_price(),
+        'price_dollar':test.get_price_dollar(),
+        'precedure_class_id':test.test_class_id,
+        'result':True,
+        })
+
+
+def test_add_edit_set(request):
+    id = request.POST.get('id');
+    type = request.POST.get('type');
+    test_class = request.POST.get('test_class');
+    name = request.POST.get('name');
+    name_vie = request.POST.get('name_vie');
+    price = request.POST.get('price');
+    price_dollar = request.POST.get('price_dollar');
+
+    if int(id) == 0 :
+        data = Test()
+        data.price = price
+        
+
+        last_code = Test.objects.last()
+        print(last_code.code)
+        test_class = int(test_class)
+        CODE = 'L'
+            
+        if last_code == None:
+           data.code = CODE + str('0001')
+        else:
+            temp_code = last_code.code.split(CODE)
+            data.code = CODE + str('%04d' % (int(temp_code[1]) + 1))
+            print(data.code)
+    else:
+        data = Test.objects.get(id=id)
+        now = datetime.datetime.now()
+        now = now - datetime.timedelta(seconds = 1) 
+        str_now = now.strftime('%Y%m%d%H%M%S')
+        try: 
+            old_price = Pricechange.objects.get(type="Test",country='VI',type2='OUTPUT',code=data.code, date_end="99999999999999")
+            
+            if old_price.price != int(price):
+                old_price.date_end = str_now
+                old_price.save()
+
+                new_price = Pricechange(type="Test",country='VI',type2='OUTPUT',code=data.code)
+                new_price.price = price
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
+
+        except Pricechange.DoesNotExist:
+            if data.price != int(price):
+                new_price = Pricechange(type="Test",country='VI',type2='OUTPUT',code=data.code)
+                new_price.price = price
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
+                
+        try:
+            old_price_dollar = Pricechange.objects.get(type="Test",country='US',type2='OUTPUT',code=data.code, date_end="99999999999999")
+            
+            if old_price_dollar.price != int(price_dollar):
+                old_price_dollar.date_end = str_now
+                old_price_dollar.save()
+
+                new_price = Pricechange(type="Test",country='US',type2='OUTPUT',code=data.code)
+                new_price.price = price_dollar
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
+
+        except Pricechange.DoesNotExist:
+            if data.price != int(price_dollar):
+                new_price = Pricechange(type="Test",country='US',type2='OUTPUT',code=data.code)
+                new_price.price = price_dollar
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
+
+    data.test_class_id = test_class
+    data.name = name
+    data.name_vie = name_vie
+    data.save()
+
+
+    return JsonResponse({
+        'result':True,
+        })
+
+
+
+    return JsonResponse({})
+
+def test_add_edit_delete(request):
+
+    id = request.POST.get('id')
+    test = Test.objects.get(id=id)
+    test.use_yn = 'N'
+    test.save()
+
+    return JsonResponse({
+        'result':True,
+        })
+
 
 def inventory_precedure(request):
 
@@ -839,32 +1030,38 @@ def inventory_precedure(request):
 
 
 def precedure_search(request):
+    string = request.POST.get('string')
+    filter = request.POST.get('filter')
+    class_id = request.POST.get('class_id')
 
-    string = request.POST.get('string');
-    filter = request.POST.get('filter');
+    kwargs = {}
+    if class_id != '':
+        kwargs.update({
+            'precedure_class_id':class_id,
+            })
 
-    
-    kwargs = {
-        '{0}__{1}'.format(filter, 'icontains'): string,
-        
-        }
-    datas=[]
+    argument_list = [] 
+    if string !='':
+        argument_list.append( Q(**{'name__icontains':string} ) )
+        argument_list.append( Q(**{'name_vie__icontains':string} ) )
+   
+
+
     if string == '' :
-        query_datas = Precedure.objects.all()#.select_related('precedure_class').exclude(use_yn='N').order_by('name')
-    elif filter == 'name':
-        query_datas = Precedure.objects.filter( Q(name__icontains = string) | Q(name_vie__icontains = string)).select_related('precedure_class').exclude(use_yn='N').order_by("name")
-
+        query_datas = Precedure.objects.filter(**kwargs).select_related('precedure_class').exclude(use_yn = 'N').order_by("name")
+    #elif filter == 'name':
+    #    query_datas = Test.objects.filter( Q(name__icontains = string) | Q(name_vie__icontains = string)).select_related('test_class').exclude(use_yn = 'N').order_by("name")
     else:
-        query_datas = Precedure.objects.filter(**kwargs).select_related('precedure_class').exclude(use_yn='N').order_by("name")
+        query_datas = Precedure.objects.filter(functools.reduce(operator.or_, argument_list),**kwargs).select_related('precedure_class').exclude(use_yn = 'N').order_by("name")
 
 
-    
+
+    datas=[]
     for query_data in query_datas:
         data = {
                 'id' : query_data.id,
                 'code': query_data.code,
-                'name' : query_data.name,
-                'name_vie':query_data.name_vie,
+                'name' : query_data.get_name_lang(request.session[translation.LANGUAGE_SESSION_KEY]),
                 'class':query_data.precedure_class.name,
                 'price' : query_data.get_price(),
             }
@@ -1018,7 +1215,6 @@ def precedure_add_edit_set(request):
 
 def precedure_add_edit_delete(request):
     id = request.POST.get('id')
-    print(1)
     precedure = Precedure.objects.get(id=id)
     precedure.use_yn = 'N'
     precedure.save()

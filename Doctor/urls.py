@@ -19,8 +19,7 @@ urlpatterns = [
 
     path('get_test_contents/',views.get_test_contents, name='get_test_contents'),
 
-    path('show_medical_report/<int:reception_id>',views.show_medical_report,name='show_medical_report'),
-    path('show_medical_report/',views.show_medical_report,),
+    path('show_medical_report/',views.show_medical_report,name='show_medical_report'),
 
     path('report/',views.report,name='report'),
     path('patient_search/',views.patient_search,name='patient_search'),
@@ -34,4 +33,6 @@ urlpatterns = [
     path('diagnosis/',views.diagnosis,name='diagnosis'),
     path('diagnosis/<int:reception_num>',views.diagnosis),
     path('information',views.information,name ='information'),
+
+    path('get_medicine_count/',views.get_medicine_count,name ='get_medicine_count'),
 ]

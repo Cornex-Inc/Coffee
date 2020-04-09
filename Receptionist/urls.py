@@ -74,6 +74,9 @@ urlpatterns = [
 
     path('document_lab/<int:reception_id>',views.document_lab,name='document_lab'),
     path('document_prescription/<int:reception_id>',views.document_prescription,name='document_prescription'),
-
+    path('document_medical_receipt/<int:reception_id>',views.document_medical_receipt,name='document_medical_receipt'),
+    path('document_medicine_receipt/<int:reception_id>',views.document_medicine_receipt,name='document_medicine_receipt'),
+    path('document_subclinical/<int:reception_id>',views.document_subclinical,name='document_subclinical'),
+    path('document_medical_report/<int:reception_id>',views.document_medical_report,name='document_medical_report'),
 
 ]

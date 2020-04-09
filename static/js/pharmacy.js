@@ -1,12 +1,19 @@
-﻿jQuery.browser = {};
+jQuery.browser = {};
 $(function () {
-
+    
     $('.database_control input[type=text],input[type=number]').each(function () {
         //this.className += 'form-control';
 
     })
 
-    $('#pharmacy_list_calendar').daterangepicker({
+    $('#pharmacy_list_calendar_start').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        locale: {
+            format: 'YYYY-MM-DD'
+        }
+    });
+    $('#pharmacy_list_calendar_end').daterangepicker({
         singleDatePicker: true,
         showDropdowns: true,
         locale: {
@@ -14,11 +21,12 @@ $(function () {
         }
     });
     worker_on(true);
-    $('#pharmacy_list_calendar').on('apply.daterangepicker', function () {
+    $('#pharmacy_list_calendar_start, #pharmacy_list_calendar_end').on('apply.daterangepicker', function () {
         today = moment().format('YYYY[-]MM[-]DD');
 
-        date = $('#pharmacy_list_calendar').val();
-        if (date == today) {
+        start = $('#pharmacy_list_calendar_start').val();
+        end = $('#pharmacy_list_calendar_end').val();
+        if (start == today || end == today  ) {
             worker_on(true);
         } else {
             worker_on(false);
@@ -69,7 +77,7 @@ function save_data_control() {
             })
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -95,7 +103,7 @@ function set_data_control(medicine_id) {
             $('#medicine_control_price').val(response.price);
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -134,7 +142,7 @@ function pharmacy_control_save(Done = false) {
             alert(gettext("Saved."));
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -172,7 +180,7 @@ function waiting_selected(diagnosis_id) {
             $('#show_patient_selected').html(response.patient_name);
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 }
@@ -180,25 +188,10 @@ function waiting_selected(diagnosis_id) {
 function waiting_list(Today = false) {
     var date, start, end;
 
-    if (Today) {
-        var dt = new Date();
-
-        var recentYear = dt.getFullYear();
-        var recentMonth = dt.getMonth() + 1;
-        var recentDay = dt.getDate();
-
-        if (recentMonth < 10) recentMonth = "0" + recentMonth;
-        if (recentDay < 10) recentDay = "0" + recentDay;
-
-        date = recentYear + "-" + recentMonth + "-" + recentDay;
-        //date = date + ' - ' + date; 
-        $('#pharmacy_list_calendar').val(date);
-    } else {
-        date = $('#pharmacy_list_calendar').val();
-    }
-    start = date.split(' - ')[0];
-    end = date.split(' - ')[1];
-
+    start = $('#pharmacy_list_calendar_start').val();
+    end = $('#pharmacy_list_calendar_end').val();
+    
+  
    
     $.ajax({
         type: 'POST',
@@ -233,7 +226,7 @@ function waiting_list(Today = false) {
             }
         },
         error: function(request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -306,7 +299,7 @@ function pharmacy_database_search(page = null) {
 
         },
         error: function(request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })

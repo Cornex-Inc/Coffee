@@ -2,7 +2,7 @@
 $(function () {
 
 
-    $('#laboratory_list_calendar').daterangepicker({
+    $('#laboratory_list_calendar_start,#laboratory_list_calendar_end').daterangepicker({
         singleDatePicker: true,
         showDropdowns: true,
         locale: {
@@ -10,9 +10,18 @@ $(function () {
         }
     });
     worker_on(true);
-    $('#laboratory_list_calendar').on('apply.daterangepicker', function () {
+    $('#laboratory_list_calendar_start').on('apply.daterangepicker', function () {
         today = moment().format('YYYY[-]MM[-]DD');
-        date = $('#laboratory_list_calendar').val();
+        date = $('#laboratory_list_calendar_start').val();
+        if (date == today) {
+            worker_on(true);
+        } else {
+            worker_on(false);
+        }
+    });
+    $('#laboratory_list_calendar_end').on('apply.daterangepicker', function () {
+        today = moment().format('YYYY[-]MM[-]DD');
+        date = $('#laboratory_list_calendar_end').val();
         if (date == today) {
             worker_on(true);
         } else {
@@ -94,7 +103,7 @@ function laboratory_control_save(Done = false) {
             waiting_list();
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -111,22 +120,24 @@ function get_test_manage(test_manage_id) {
         },
         dataType: 'Json',
         success: function (response) {
+            $('.laboratory_control_table input').val('');
+
             $('#selected_test_manage').val(test_manage_id);
-            $('#laboratory_control input ').empty();
-            for (var i in response.datas) {
-                $('#lab_control_chart').val(response.datas['patient_chart']);
-                $('#lab_control_name').val(response.datas['patient_name']);
-                $('#lab_control_age').val(response.datas['patient_age']);
-                $('#lab_control_gender').val(response.datas['patient_gender']);
-                $('#date_ordered').val(response.datas['test_ordered']);
-                $('#date_examination').val(response.datas['test_examination']);
-                $('#date_reservation').val(response.datas['test_reservation']);
-                $('#date_expected').val(response.datas['test_expected']);
-                $('#lab_control_result').val(response.datas['test_result']);
-            }
+
+
+            $('#lab_control_chart').val(response['chart']);
+            $('#lab_control_name').val(response['Name']);
+            $('#lab_control_date_of_birth').val(response['Date_of_birth']);
+            $('#lab_control_labname').val(response['Lab']);
+            $('#date_ordered').val(response['date_ordered']);
+            $('#date_expected').val(response['date_expected']);
+            //$('#date_examination').val(response['test_examination']);
+            //$('#date_reservation').val(response['test_reservation']);
+            
+            $('#lab_control_result').val(response['result']);
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -142,6 +153,7 @@ function waiting_selected(manage_id) {
         },
         dataType: 'Json',
         success: function (response) {
+            console.log(response);
             $('#laboratory_control input ').empty();
 
             $('#lab_control_chart').val(response.chart);
@@ -154,9 +166,10 @@ function waiting_selected(manage_id) {
             $('#lab_control_result').val(response.result);
             $('#unit').html(response.unit)
             $('#selected_test_manage').val(manage_id);
+
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -165,10 +178,8 @@ function waiting_selected(manage_id) {
 function waiting_list(Today = false) {
     var date, start, end;
 
-    date = $('#laboratory_list_calendar').val();
-
-    start = date.split(' - ')[0];
-    end = date.split(' - ')[1];
+    start = $('#laboratory_list_calendar_start').val();
+    end = $('#laboratory_list_calendar_end').val();
 
 
     $.ajax({
@@ -178,6 +189,7 @@ function waiting_list(Today = false) {
             'csrfmiddlewaretoken': $('#csrf').val(),
             'start_date': start,
             'end_date': end,
+            'depart_id': $('#depart_select').val(),
             'filter': $('#laboratory_search_select option:selected').val(),
             'input': $('#laboratory_search_input').val(),
         },
@@ -185,34 +197,74 @@ function waiting_list(Today = false) {
         success: function (response) {
             $('#laboratory_list_table > tbody ').empty();
             for (var i in response.datas) {
-                var tr_class = "";
-                if (response.datas[i]['progress'] == 'done')
-                    if (response.datas[i]['is_interval'] == true)
-                        tr_class = "class ='success'"
-                    else
-                        tr_class = "class ='danger'"
-
-                var str = "<tr " + tr_class + " onclick='waiting_selected(" + response.datas[i]['test_manage_id'] + ")'>" +
+                var str = "<tr  onclick='get_test_list(" + response.datas[i]['id'] + ")'>" +
                     "<td>" + (parseInt(i) + 1) + "</td>" +
                     "<td>" + response.datas[i]['chart'] + "</td>" +
                     "<td>" + response.datas[i]['Name'] + "</td>" +
                     "<td>" + response.datas[i]['Date_of_Birth'] + "</td>" +
-                    "<td>" + response.datas[i]['Depart'] + "</td>" +
-                    "<td>" + response.datas[i]['name_service'] + "</td>" +
-                    "<td>" + response.datas[i]['date_ordered'] + "</td>" +
-                    "<td>" + response.datas[i]['reference_interval'] + '</td>' + //response.datas[i]['date_examination'] + "</td>" +
-                    "<td>" + response.datas[i]['result'] + "</td>" +
-                    "<td>" + response.datas[i]['date_expected'] + "</td></tr>";
+                    "<td>" + response.datas[i]['Depart'] + "</td></tr>";
+
 
                 $('#laboratory_list_table').append(str);
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
 }
+
+function get_test_list(diagnosis_id) {
+
+    $.ajax({
+        type: 'POST',
+        url: '/laboratory/get_test_list/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'diagnosis_id': diagnosis_id,
+        },
+        dataType: 'Json',
+        success: function (response) {
+            $('#laboratory_test_list_table > tbody ').empty();
+            for (var i in response.datas) {
+                var str = "<tr  onclick='get_test_manage(" + response.datas[i]['id'] + ")'>" +
+                    "<td>" + (parseInt(i) + 1) + "</td>" +
+                    "<td>" + response.datas[i]['name_service'] + "</td>" +
+                    "<td>" + response.datas[i]['date_ordered'] + "</td>";
+
+                str += "<td>";
+                for (var j = 0; j < response.datas[i]['list_interval'].length; j++) {
+                    if (response.datas[i]['list_interval'][j]['name'] != '') {
+                        str += response.datas[i]['list_interval'][j]['name'] + ' : ';
+                    }
+                    str += response.datas[i]['list_interval'][j]['minimum'] + ' < ';
+                    str += response.datas[i]['list_interval'][j]['maximum'] + ' ' ;
+                    str += '( ' + response.datas[i]['list_interval'][j]['unit'] + ' )';
+
+                    console.log(response.datas[i]['list_interval'][j]);
+
+                    if (response.datas[i]['list_interval'].length != i + 1) {
+                        str += "<br />";
+                    }
+                   
+                }
+                str += "</td>";
+                str += "<td>" + response.datas[i]['result'] + "</td>" +
+                    "<td>" + response.datas[i]['date_expected'] + "</td></tr>";
+
+                
+                $('#laboratory_test_list_table').append(str);
+            }
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+
+}
+
 
 function worker_on(path) {
     if ($("input:checkbox[id='laboratory_list_auto']").is(":checked") == true) {

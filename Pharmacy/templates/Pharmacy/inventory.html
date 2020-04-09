@@ -5,44 +5,52 @@
 {% csrf_token %}
 <div class="pharmacy_grid">
     <div class="pharmacy_database partition">
-            <div class="medicine_table_title">
-                <span class="btn btn-danger inventory_table_title_span" >{{ _('Inventory') }}</span>
-                <div style="float:right;">
-                <select name="filter" id="medicine_search_select" class="form-control costom-select inventory_search_select" aria-describedby="basic-addon1">
-                  <option value="name">name</option>
+        <div class="medicine_table_title">
+            <span class="btn btn-danger inventory_table_title_span" >{{ _('Inventory') }}</span>
+            <div style="float:right;">
+            <!--
+            <select name="filter" id="medicine_search_select" class="form-control costom-select inventory_search_select" aria-describedby="basic-addon1">
+                <option value="name">name</option>
+            </select>
+            -->
+            <div class="input-group" id="search_depart_div">
+                <span class="input-group-addon" id="basic-addon1">{{ _('Class') }}</span>
+                <select id="search_depart" class="form-control">
+                    <option value="">{{ _('ALL') }}</option>
+                    {% for class in medicine_class %}
+                    <option value="{{ class.id }}">{{ class.name_display }}</option>
+                    {% endfor %}
                 </select>
-                <input type="text" name="search_input" id="medicine_search_input" class="form-control inventory_search_select" aria-describedby="basic-addon1" required="">
-                <input type="button" class="btn" value="{{ _('Search')}}" onclick="pharmacy_database_search()"/>
-                </div>
             </div>
-            <div class="pharmacy_database_list">
-                <div class="pharmacy_database_table">
-                    <table class="table table-bordered table-hover table-striped" id="inventory_database_table">
-                        <thead>
-                            <tr>
-                                <th>{{ _('No.') }}</th>
-                                <th>{{ _('Trade Name') }}</th>
-                                <th>{{ _('Generic Name') }}</th>
-                                <th>{{ _('Company') }}</th>
-                                <th>{{ _('Country') }}</th>
-                                <th>{{ _('Unit') }}</th>
-                                <th>{{ _('Price') }}</th>
-                                <th>{{ _('Count') }}</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-                <ul class="pagination" id="medicine_pagnation">
-
-                </ul>
-                <div style="float:right; margin-top:20px;">
-                    <input type="button" class="btn btn-info" id="medicine_new" value="{{ _('New') }}" onclick="edit_database_medicine()"/>
-                </div>
+            <input type="text" name="search_input" id="medicine_search_input" class="form-control inventory_search_select" aria-describedby="basic-addon1" required="">
+            <input type="button" class="btn btn-default" value="{{ _('Search')}}" onclick="pharmacy_database_search()"/>
             </div>
         </div>
+        <div class="pharmacy_database_list">
+            <div class="pharmacy_database_table">
+                <table class="table table-bordered table-hover table-striped" id="inventory_database_table">
+                    <thead>
+                        <tr>
+                            <th>{{ _('No.') }}</th>
+                            <th>{{ _('Trade Name') }}</th>
+                            <th>{{ _('Generic Name') }}</th>
+                            <th>{{ _('Company') }}</th>
+                            <th>{{ _('Country') }}</th>
+                            <th>{{ _('Unit') }}</th>
+                            <th>{{ _('Price') }}</th>
+                            <th>{{ _('Count') }}</th>
+                            <th>{{ _('Edit') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <ul class="pagination" id="medicine_pagnation">
+
+            </ul>
+        </div>
+    </div>
 
     <div class="inventory_history_part1 partition">
         <div class="medicine_table_title">
@@ -76,7 +84,9 @@
                 </tbody>
             </table>
         </div>
-
+        <div style="float:left;">
+            <input type="button" class="btn btn-info" id="medicine_new" value="{{ _('New') }}" onclick="edit_database_medicine()"/>
+        </div>
         <input type="button" value=" {{ _('+ Add') }}" class="btn btn-primary" id="inventory_add"/>
     </div>
 
@@ -95,8 +105,8 @@
                         <th>{{ _('Registration') }}</th>
                         <th>{{ _('Expiration Date') }}</th>
                         <th>{{ _('Quantity') }}</th>
-                        <th>{{ _('Days left') }}</th>
-                        <th></th>
+                        <th>{{ _('Remained Date') }}</th>
+                        <th>{{ _('Edit') }}</th>
                     </tr>
                 </thead>
                 <tbody id="inventory_expiry_tbody">

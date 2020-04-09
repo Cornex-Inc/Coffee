@@ -45,9 +45,8 @@
                     </td>
                     <td >
                     <div class="input-group">
-                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Gender') }}</span>
+                        <span class="input-group-addon patient_table_title" id="basic-addon1" style="border:1px solid #ccc">{{ _('Gender') }}</span>
                         {{patient.gender}}
-
                         </div>
                     </td>
                 </tr>
@@ -89,14 +88,16 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                    <div class="input-group" style="vertical-align:middle; width:100%;" >
-                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Vital Sign') }}</span>
+                    <div class="input-group" id="vital_sign">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1" style="border:1px solid #ccc">{{ _('Vital Sign') }}</span>
+                        <div id="vital_sign_control">
                        <text id="patient_vital_first">{{ _('Ht') }}: </text><input type="text" class="form-control" id="patient_table_vital_ht"/>
                        {{ _('Wt') }}: <input type="text" class="form-control" id="patient_table_vital_wt"/>
                        {{ _('BP') }}: <input type="text" class="form-control" id="patient_table_vital_bp"/>
                        {{ _('BT') }}: <input type="text" class="form-control" id="patient_table_vital_bt"/>
                        {{ _('PR') }}: <input type="text" class="form-control" id="patient_table_vital_pr"/>
                        {{ _('RR') }}: <input type="text" class="form-control " id="patient_table_vital_breath"/>
+                            </div>
                     </div>
                     </td>
                 </tr>
@@ -186,10 +187,11 @@
                         <span class="input-group-addon reception_table_title" id="basic-addon1">{{ _('Depart') }}</span>
                     {{ receptionsearch.depart }} 
                     </div>
-                    <div class="input-group" style="width:153px; display:inline-table;">
+                    <!--<div class="input-group" style="width:153px; display:inline-table;">
                         <span class="input-group-addon reception_table_title" id="basic-addon1">{{ _('Doctor') }}</span>
                     {{ receptionsearch.doctor }} 
                     </div>
+                        -->
                 </div>
             </div>
             <div class="reception_wait_table_wrap">
@@ -199,10 +201,10 @@
                         <th style="width:50px;">{{_('No.') }}</th>
                         <th style="width:90px;">{{_('Chart No.') }}</th>
                         <th style="width:160px;">{{_('Name') }}</th>
-                        <th style="width:160px;"> {{_('Date of Birth') }}</th>
+                        <th style="width:135px;"> {{_('Date of Birth') }}</th>
                         <th style="width:80px">{{_('Depart') }}</th>
                         <th style="width:80px">{{_('Doctor') }}</th>
-                        <th style="width:50px">{{_('Time') }}</th>
+                        <th style="width:115px">{{_('Date Time') }}</th>
                         <th style='width:113px; text-align:center'>{{_('New / Repeat') }}</th>
                         <th style="width:50px;"></th>
                     </tr>
@@ -219,15 +221,18 @@
             </div>
             <div class="status_table_filter">
                 {{ _('Date') }} :
-                <input type="text" class="form-control reception_waiting_date" style=" display:inline;" id="reception_reservation_date" />
+                <input type="text" class="form-control reception_waiting_date" style=" display:inline;" id="reception_reservation_date_start" />
+                ~
+                <input type="text" class="form-control reception_waiting_date" style=" display:inline;" id="reception_reservation_date_end" />
                 <div class="input-group" style="width:153px; display:inline-table;">
                     <span class="input-group-addon reception_table_title" id="basic-addon1">{{ _('Depart') }}</span>
                 {{ reservation.depart }} 
                 </div>
-                <div class="input-group" style="width:153px; display:inline-table;">
+                <!--<div class="input-group" style="width:153px; display:inline-table;">
                     <span class="input-group-addon reception_table_title" id="basic-addon1">{{ _('Doctor') }}</span>
                 {{ reservation.doctor }} 
                 </div>
+                    -->
             </div>
 
             <div class="patient_search_table_wrap">
@@ -241,7 +246,7 @@
                         <th>{{_('PhoneNumber')}}</th>
                         <th>{{_('Depart')}}</th>
                         <th>{{_('Doctor')}}</th>
-                        <th>{{_('Time')}}</th>
+                        <th>{{_('Date Time')}}</th>
                     </tr>
                 </thead>
                 <tbody></tbody>

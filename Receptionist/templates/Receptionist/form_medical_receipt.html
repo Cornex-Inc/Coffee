@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <style>
+        @media print {
+            #wrap {
+                margin: 0px;
+                padding: 45px;
+                font-size: 10px;
+                font-family: "Times New Roman", Times, serif;
+            }
+
+            table {
+                height:100%;
+            }
+                table tr td {
+                    font-size: 12px;
+                }
+
+            #logo {
+                width:100%;
+            }
+
+            .top {
+                
+            
+            }
+
+            .top tr:first-child td:nth-child(2) {
+                font-weight:700;
+            }
+
+            .patient_info {
+                width:100%;
+                border-collapse: separate;
+                border-spacing: 0px 2px;
+            }
+            .patient_info tr td{
+                width:50%;
+            }
+
+
+            .title {
+                width: 100%;
+                text-align: center;
+                font-size: 14px;
+                font-weight: 700;
+                margin-top: 15px;
+            }
+
+            .contents {
+                margin-top: 15px;
+                width: 100%;
+                border-collapse: collapse;
+                table-layout:fixed;
+                
+            }
+                .contents tr td, .contents tr th {
+                    border: 1px solid black;
+                }
+
+
+                .contents thead tr th{
+                    text-align: center;
+                    vertical-align: middle;
+                }
+
+                .contents thead tr th:nth-child(1){
+                    width:15px;
+                }
+                .contents thead tr th:nth-child(2){
+                    width:160px;
+                }
+                .contents thead tr th:nth-child(3){
+                    width:45px;
+                }
+
+            #contents_datas tr td:nth-child(1) {
+                text-align:center;
+            }
+            
+            #contents_datas tr td:nth-child(2){
+                    text-align:left;
+                    padding-left:10px;
+                }
+
+            #contents_datas tr td:nth-child(3) {
+                text-align:right;
+                padding-right:10px;
+
+            }
+
+            #contents tr, #contents td {
+                padding:2px;
+            }
+
+            #contents_datas tr th{
+                text-align: center;
+                vertical-align: middle;
+            }
+
+            .footer {
+                margin-top:30px;
+                width:100%;
+            }
+                .footer tr td {
+                font-size:14px;
+                }
+                .footer tr td:first-child {
+                width:50%;
+                text-align:center;
+                }
+
+                .footer tr td:nth-child(2) {
+                    width:50%;
+                text-align:center;
+                }
+        }
+    </style>
+
+</head>
+<body>
+    <div id="wrap">
+        <table class="top">
+            <tr>
+                <td>
+                    <img src="/static/img/document_top.png" id="logo" />
+                </td>
+            </tr>
+        </table>
+
+
+        <div class="title">
+            <text>BIÊN LAI THU TIỀN</text>
+            <br />
+            <text><I>MEDICAL RECEIPT</I></text>
+        </div>
+        <br />
+        <table class="patient_info">
+            
+            <tr>
+                <td><b>1. Số hồ sơ</b>/ <i>PID</i> : {{ chart }}</td>
+                <td><b>2. Quốc tịch</b>/ <i>Nationality</i> : </td>
+            </tr>
+            <tr>
+                <td><b>3. Họ và tên</b>/ <i>Fullname</i> : <text id="patient_info_name">{{ name }}</text></td>
+                <td><b>4. Giới tính</b>/ <i>Gender</i> : {{ gender }}</td>
+            </tr>
+            <tr>
+                <td><b>5. Địa chỉ</b>/ <i>Address</i> : {{address}}</td>
+                <td><b>6. Ngày sinh</b>/ <i>D.O.B</i> : {{date_of_birth}}</td>
+            </tr>
+            <tr>
+                <td><b>7. Số điện thoại</b>/<i>Phone number</i> : {{ phone }}</td>
+            </tr>
+            <tr>
+                <td><b>8. Chẩn đoán</b>/ <i>Diagnostic</i> : {{ diagnostic }}</td>
+            </tr>
+            <tr>
+                <td><b>9. Khoa Khám bệnh</b>/ <i>Department</i> : {{ depart_full_vie }}/{{ depart_full }}</td>
+            </tr>
+            
+        </table>
+        <table class="contents">
+            <thead>
+                <tr>
+                    <th>
+                        <b>STT</b>
+                        <br /><i>No</i>
+                    </th>
+                    <th>
+                        <b>Nội dung</b>
+                        <br /><i>Items</i>
+                    </th>
+                    <th>
+                        <b>Thành tiền</b>
+                        <br /><i>Amount(VND)</i>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="contents_datas">
+                <tr>
+                    <td>1</td>
+                    <td>Phí khám & tư vấn/ <i>Consultation fee</i></td>
+                    <td>{{ amount_consult }}</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Chẩn đoán hình ảnh/ <i>Image Analysis</i></td>
+                    <td>{{ amount_image }}</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Xét nghiệm/ <i>Test</i></td>
+                    <td>{{ amount_test }}</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Chỉ định khác/ <i>Other examination</i></td>
+                    <td>{{ aount_other_exam}}</td>
+                </tr>
+
+
+                <tr >
+                    <td rowspan="3" style="border: none;"></td>
+                    <td style="text-align:left; padding-left:10px;"><b>Tổng tiền</b>/<i>Total</i></td>
+                    <td style="text-align:right; padding-right:10px;">{{ sub_total }}</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; padding-left:10px;"><b>Giảm trừ</b>/<i>Discount</i></td>
+                    <td style="text-align:right; padding-right:10px;">{{discount}}</td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; padding-left:10px;"><b>Thành tiền</b>/<i>Amount due</i></td>
+                    <td style="text-align:right; padding-right:10px;">{{total_payment}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="footer">
+            <tr>
+                <td></td>
+                <td><b>Ngày/<i>Date</i>: {{ date_today }} </b></td>
+            </tr>
+            
+            <tr>
+                <td>
+                    <br />
+                    <b>Khách hàn/</b>/<i>Customer</i>
+                    
+                </td>
+                <td>
+                    <b>Thu ngân</b>/<i>Cashier</i>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

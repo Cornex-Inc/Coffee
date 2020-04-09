@@ -121,7 +121,7 @@ $(function () {
                         }
                     },
                     error: function (request, status, error) {
-                        alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                     },
                 })
                 return;
@@ -142,7 +142,7 @@ $(function () {
                 }
                 else {
                     str += "<td>" + $(this).find('td:nth-child(3)').text().trim() + "<input type='hidden' value=''/></td><td style='text-align: center;'>" +
-                        $(this).find('td:nth-child(6)').text().trim() + "</td><td>" +
+                        $(this).find('td:nth-child(7)').text().trim() + "</td><td>" +
                         "<input type='number' min='0' value='1' class='diagnosis_selected_input_number' id='amount'/></td><td style='text-align: center;'>" +
                         "<input type='number' min='0' value='1' class='diagnosis_selected_input_number' id='days'/></td><td style='text-align: center;'>" +
                         "<input type='text' class='diagnosis_selected_input_number' id='memo'/></td>";
@@ -151,7 +151,7 @@ $(function () {
                 str += "<td colspan='5'>" + $(this).find('td:nth-child(3)').text().trim() + "<input type='hidden' value=''/></td>";
             } 
             str += "<td style='cursor:pointer' onclick='delete_this_td(this)'>" + "x" + "</td>";
-            str += "<td style='display:none;'>" + $(this).find('td:nth-child(4)').text().replace(/,/g, '').replace('VND', '').trim() + "</td></tr>";
+            str += "<td style='display:none;'>" + $(this).find('td:nth-child(5)').text().replace(/,/g, '').replace('VND', '').trim() + "</td></tr>";
             
             what_class = $(event.target.parentElement.parentElement.parentElement.parentElement).attr('id');
 
@@ -276,6 +276,8 @@ $(function () {
     })
     
     $('.contents_class').click(function () {
+        get_medicine_count();
+
         $(this).parent().next('.contents_items').toggle()
         if ($(this).parent().next('.contents_items').is(':visible')) {
             $(this).children().children('label').html('-');
@@ -287,6 +289,8 @@ $(function () {
     });
 
     $('#order_search').keyup(function () {
+        get_medicine_count();
+
         var k = $(this).val();
         $('.contents_class').children().children('label').not($(this).children().children('label')).html('+');
         if (k == '') {
@@ -296,12 +300,14 @@ $(function () {
         }
         else {
             $(".contents_items, .contents_items tr").hide();
-            var temp = $(".contents_items > tr > td:nth-child(5):contains('" + k.toLowerCase() + "')");
+            var temp = $(".contents_items > tr > td:nth-child(6):contains('" + k.toLowerCase() + "')");
             
             $(temp).parent().parent().show();
             $(temp).parent().parent().prev().children().children().children('label').html('-');
             $(temp).parent().show();
         }
+
+        get_medicine_count();
     })
 
 
@@ -314,7 +320,7 @@ $(function () {
         return split(term).pop();
     }
 
-    $("#text_icd")
+    $("#search_icd")
         .on("keydown", function (event) {
             if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
                 event.preventDefault();
@@ -356,10 +362,12 @@ $(function () {
                 // 현재 입력값 제거합니다.
                 terms.pop();
                 // 선택된 아이템을 추가합니다.
-                terms.push(ui.item.value);
+                //terms.push(ui.item.value);
                 // 끝에 콤마와 공백을 추가합니다.
                 terms.push("");
                 this.value = terms.join("");
+
+                $("#text_icd").val(ui.item.value)
 
                 $("#icd_code").val(ui.item.code);
 
@@ -369,9 +377,36 @@ $(function () {
         });
 
 
-
+    get_medicine_count();
 
 });
+
+ //메디슨 클래스 혹은 약 아이템 클릭 시 갯수 동기화
+function get_medicine_count(id = null) {
+
+    $.ajax({
+        type: 'POST',
+        url: '/doctor/get_medicine_count/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'id': id,
+        },
+        dataType: 'Json',
+        success: function (response) {
+            for (var i in response.datas) {
+                $("#medicine_count_" + response.datas[i]['id']).html(response.datas[i]['inventory_count'])
+            }
+                
+
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+        },
+    })
+
+
+
+}
 
 function selected_table_title(title) {
     //off
@@ -443,7 +478,7 @@ function get_all_diagnosis() {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 
@@ -542,7 +577,7 @@ function reception_select(reception_id) {
             get_all_diagnosis();
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 
@@ -576,7 +611,7 @@ function get_vital() {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 }
@@ -606,7 +641,7 @@ function set_vital() {
             set_vital_clear();
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 }
@@ -691,7 +726,7 @@ function get_diagnosis(reception_no) {
             show_total_price();
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
 }
@@ -748,7 +783,7 @@ function reception_waiting(Today = false) {
             }
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -919,7 +954,7 @@ function diagnosis_save(set) {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
@@ -976,7 +1011,7 @@ function get_test_contents(category_id) {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })

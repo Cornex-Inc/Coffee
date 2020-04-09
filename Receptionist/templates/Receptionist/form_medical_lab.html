@@ -75,22 +75,27 @@
                     width:160px;
                 }
                 .contents thead tr th:nth-child(3){
-                    width:95px;
+                    width:110px;
                 }
                 .contents thead tr th:nth-child(4){
-                    width:100px;
+                    width:60px;
                 }
                 .contents thead tr th:nth-child(5){
-                    width:40px;
+                    width:140px;
                 }
                 .contents thead tr th:nth-child(6){
-                    width:110px;
+                    width:130px;
                 }
                 .contents thead tr th:nth-child(7){
                     width:140px;
                 }
 
-                #contents_datas tr td:nth-child(1), #contents_datas tr td:nth-child(5),#contents_datas tr td:nth-child(6) {
+
+            #contents_datas tr td:nth-child(2) {
+                padding-left:10px;
+            }
+
+                #contents_datas tr td:nth-child(1),#contents_datas tr td:nth-child(3), #contents_datas tr td:nth-child(4),#contents_datas tr td:nth-child(5) {
                     text-align:center;
                 }
 
@@ -108,11 +113,14 @@
                 width:100%;
             }
                 .footer tr td:first-child {
-                width:60%
+                width:50%;
+                text-align:center;
                 
                 }
 
                 .footer tr td:nth-child(2) {
+                    width:50%;
+                text-align:center;
                 }
         }
     </style>
@@ -147,28 +155,28 @@
         <table class="patient_info">
             
             <tr>
-                <td><b>1. Số hồ sơ</b>/ PID:{{ chart }}</td>
-                <td><b>2. Quốc tịch</b>/ Nationality:</td>
+                <td><b>1. Số hồ sơ</b>/ <i>PID</i> : {{ chart }}</td>
+                <td><b>2. Quốc tịch</b>/ <i>Nationality</i> : </td>
             </tr>
             <tr>
-                <td><b>3. Họ và tên</b>/ Fullname: <text id="patient_info_name">{{ name }}</text></td>
-                <td><b>4. Giới tính</b>/ Gender: {{ gender }}</td>
+                <td><b>3. Họ và tên</b>/ <i>Fullname</i> : <text id="patient_info_name">{{ name }}</text></td>
+                <td><b>4. Giới tính</b>/ <i>Gender</i> : {{ gender }}</td>
             </tr>
             <tr>
-                <td><b>5. Địa chỉ</b>/ Address: {{address}}</td>
-                <td><b>6. Ngày sinh</b>/ D.O.B: {{date_of_birth}}</td>
+                <td><b>5. Địa chỉ</b>/ <i>Address</i> : {{address}}</td>
+                <td><b>6. Ngày sinh</b>/ <i>D.O.B</i> : {{date_of_birth}}</td>
             </tr>
             <tr>
-                <td><b>7. Số điện thoại</b>/Phone number : {{ phone }}</td>
+                <td><b>7. Số điện thoại</b>/<i>Phone number</i> : {{ phone }}</td>
             </tr>
             <tr>
-                <td><b>8. Chẩn đoán</b>/ Diagnostic:</td>
+                <td><b>8. Chẩn đoán</b>/ <i>Diagnostic</i> : {{ diagnostic }}</td>
             </tr>
             <tr>
-                <td><b>9. Thời gian nhận mẫu</b>/ Time : {{ date_time }}</td>
+                <td><b>9. Thời gian nhận mẫu</b>/ <i>Time</i> : {{ date_time }}</td>
             </tr>
             <tr>
-                <td><b>10. Khoa Khám bệnh</b>/ Department: {{ depart }}</td>
+                <td><b>10. Khoa Khám bệnh</b>/ <i>Department</i> : {{ depart }}</td>
             </tr>
             
         </table>
@@ -183,10 +191,12 @@
                         <b>Tên xét nghiệm</b>
                         <br /><i>Test name</i>
                     </th>
+                    <!--
                     <th>
                         <b>Mẫu bệnh phẩm</b>
                         <br /><i>Specimens</i>
                     </th>
+                        -->
                     <th>
                         <b>Kết quả</b>
                         <br /><i>Result</i>
@@ -210,13 +220,24 @@
                 <tr>
                     <td>{{ test.no }}</td>
                     <td>{{ test.name_vie }}<br /><i>{{ test.name }}</i></td>
-                    <td></td>
                     <td>{{ test.result }}</td>
-                    <td></td>
+                    <td>{{ test.unit_vie }}<br /><i>{{test.unit}}</i></td>
                     <td>
-                        {% if test.list_interval.length != 0 %}
-                            {% for interval in test.list_interval %}
-                                {{interval.name}} : {{interval.minimum}} - {{interval.maximum}} {{ interval.unit }}
+                        {% if test.normal_range.length != 0 %}
+                            {% for interval in test.normal_range %}
+                               
+                                    {{interval.name}}
+                                
+                                {% if interval.minimum is not None %}
+                                    {{interval.minimum}}
+                                {% else %}
+                                    &emsp;&emsp;
+                                {% endif %} < 
+                                {% if interval.maximum is not None %}
+                                    {{interval.maximum}}
+                                {% else %}
+                                    &emsp;&emsp;
+                                {% endif %}<br />
                             {% endfor %}
                         {% endif %}
                     </td>

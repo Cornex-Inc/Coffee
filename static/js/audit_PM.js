@@ -6,19 +6,9 @@ function numberWithCommas(x) {
 $(function () {
 
 
-    $('#doctor_search_date').daterangepicker({
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-            'This Year': [moment().startOf('year'), moment().endOf('year')],
-            'Last Year': [moment().subtract(1, 'year').add(1, 'day'), moment()],
-        },
+    $('#doctor_search_date_start, #doctor_search_date_end').daterangepicker({
         drops: "down",
-        "alwaysShowCalendars": true,
+        singleDatePicker: true,
         locale: {
             format: 'YYYY-MM-DD',
         },
@@ -27,7 +17,7 @@ $(function () {
 
 
     search_doctor_profit();
-    $('#doctor_search_date').change(function () {
+    $('#doctor_search_date_start, #doctor_search_date_end').change(function () {
         search_doctor_profit();
     })
     $('#doctor_search_search').change(function () {
@@ -70,19 +60,23 @@ $(function () {
 
 
 function search_doctor_profit(page = null) {
+    var page_context = 10;
+
 
     $.ajax({
         type: 'POST',
         url: '/manage/doctor_profit/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
-            'start_end_date': $('#doctor_search_date').val(),
+            'start_date': $('#doctor_search_date_start').val(),
+            'end_date': $('#doctor_search_date_end').val(),
             'doctor': $('#doctors_search_doctor').val(),
             'search': $('#doctor_search_search').val(),
             //'exam': $('#doctor_search_exam option:selected').val(),
             //'precedure': $('#doctor_search_precedure option:selected').val(),
             //'radiography': $('#doctor_search_radiography option:selected').val(),
             'page': page,
+            'page_context': page_context,
         },
         dataType: 'Json',
         success: function (response) {
@@ -90,9 +84,10 @@ function search_doctor_profit(page = null) {
             total_subtotal = 0;
             total_discounted = 0;
             total_total = 0;
-            
-            for (var i = 0; i < 10; i++) {//response.datas) {
-                var str = '<tr>'
+            console.log(response);
+            for (var i = 0; i < page_context; i++) {//response.datas) {
+                
+                var str = '<tr>';
                 if (response.datas[i]) {
                     str += '<td style="vertical-align: middle;">' + response.datas[i]['no'] + '</td>' +
                         '<td style="vertical-align: middle;">' + response.datas[i]['date'] + '</td>' +
@@ -169,10 +164,16 @@ function search_doctor_profit(page = null) {
                 $('#doctors_table_result').append(str);
             }
             //총 계
-            $("#profit_total_subtotal").html(numberWithCommas(total_subtotal));
-            $("#profit_total_discounted").html(numberWithCommas(total_discounted));
-            $("#profit_total_total").html(numberWithCommas(total_total));
-            
+            if ($('#doctor_search_search option:selected').val() == '') {
+                $("#profit_total_subtotal").html(numberWithCommas(response.amount_sub_total));
+                $("#profit_total_discounted").html(numberWithCommas(response.amount_discount));
+                $("#profit_total_total").html(numberWithCommas(response.amount_total));
+            } else {
+                $("#profit_total_subtotal").html(numberWithCommas(response.total_amount));
+                $("#profit_total_discounted").html(numberWithCommas(0));
+                $("#profit_total_total").html(numberWithCommas(response.total_amount));
+                
+            }
             
 
 
@@ -206,7 +207,7 @@ function search_doctor_profit(page = null) {
 
         },
         error: function (request, status, error) {
-            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
         },
     })
