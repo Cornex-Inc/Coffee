@@ -1,4 +1,7 @@
-﻿
+﻿jQuery.browser = {};
+
+var timer_count = 0;
+
 $(function () {
     $('#selected_test_manage').val('');
     $('#selected_image').val('');
@@ -58,6 +61,23 @@ $(function () {
     //    })
     //})
 });
+
+//알람
+function play_alarm() {
+    var x = document.getElementById("audio").play();
+
+
+    if (x !== undefined) {
+        x.then(_ => {
+            console.log(_);
+            // Autoplay started!
+        }).catch(error => {
+            console.log(error);
+            // Autoplay was prevented.
+            // Show a "Play" button so that user can start playback.
+        });
+    }
+}
 
 function show_popup() {
     window.open('/radiation/zoom_in/' + $('#selected_img_id').val(), 'Zoom in', 'height = ' + screen.height + ', width = ' + screen.width + 'fullscreen = yes')
@@ -177,7 +197,7 @@ function delete_image(image_id,li) {
 
 
 
-function waiting_list() {
+function waiting_list(Today = false, alarm = false) {
     var date, start, end;
 
     date = $('#patient_date_start').val();
@@ -203,8 +223,11 @@ function waiting_list() {
             $('#radiation_list_table > tbody ').empty();
             for (var i=0 ; i < response.datas.length; i++) {
                 var tr_class = "";
-                if (response.datas[i]['progress'] == 'new')
-                    tr_class = "class ='success'"
+                if (response.datas[i]['progress'] == 'new') {
+                    tr_class = "class ='success'";
+                    var is_new = true;
+                }
+                    
                 else if (response.datas[i]['progress'] == 'done')
                     tr_class = "class ='danger'"
 
@@ -220,6 +243,10 @@ function waiting_list() {
 
 
             }
+
+            //알람 
+            if (alarm && is_new)
+                play_alarm();
         },
         error: function (request, status, error) {
             console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -228,3 +255,29 @@ function waiting_list() {
     })
 }
 
+var w = undefined
+function worker_on(is_run) {
+    if (is_run) {
+        if (window.Worker) {
+            path = get_listener_path();
+            w = new Worker(path);
+            w.onmessage = function (event) {
+                console.log(timer_count);
+                timer_count += 1;
+                if (timer_count >= 18) {
+                    timer_count = 0;
+                    waiting_list(true, true);
+                } else {
+                    waiting_list(true, false);
+                }
+            };
+        }
+    } else {
+        timer_count = 0;
+
+        if (w != undefined) {
+            w.terminate();
+            w = undefined;
+        }
+    }
+}

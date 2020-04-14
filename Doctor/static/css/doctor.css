@@ -241,7 +241,10 @@
     float:left;
 }
 
-
+#past_diagnosis_showlarge{
+    margin-bottom:10px;
+    float:right;
+}
 
 .diagnosis_select_category_tree ul {
     margin: 0 auto;

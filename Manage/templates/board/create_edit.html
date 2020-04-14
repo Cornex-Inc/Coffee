@@ -1,0 +1,44 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+<form action="." method="POST">
+    {% csrf_token %}
+    <div class="">
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="save" />
+    </div>
+
+</form>
+
+
+<script>
+$(document).ready(function () {
+    $('#id_contents').summernote({
+        lang: "{{ lang }}",
+    });
+});
+</script>
+
+{% endblock %}
+
+{% block style %}
+<link href="{% static 'summernote-0.8.16-dist/summernote.min.css' %}" rel="stylesheet"/>
+
+{% endblock %}
+
+
+
+
+{% block scripts %}
+    
+<script src="{% static 'summernote-0.8.16-dist/summernote.min.js'%}"></script>
+<script src="{% static 'summernote-0.8.16-dist/lang/summernote-vi-VN.min.js'%}"></script>
+<script src="{% static 'summernote-0.8.16-dist/lang/summernote-ko-KR.min.js'%}"></script>
+
+<script src="{% static 'js/board/create_edit.js'%}"></script>
+
+{% endblock %}

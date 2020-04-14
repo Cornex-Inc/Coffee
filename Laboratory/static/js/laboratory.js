@@ -1,4 +1,5 @@
 ﻿jQuery.browser = {};
+var timer_count = 0;
 $(function () {
 
 
@@ -67,10 +68,24 @@ $(function () {
     $('#date_expected').on('cancel.daterangepicker', function (ev, picker) {
         $('#date_expected').val('');
     });
-
-
-
 });
+
+//알람
+function play_alarm() {
+    var x = document.getElementById("audio").play();
+
+
+    if (x !== undefined) {
+        x.then(_ => {
+            console.log(_);
+            // Autoplay started!
+        }).catch(error => {
+            console.log(error);
+            // Autoplay was prevented.
+            // Show a "Play" button so that user can start playback.
+        });
+    }
+}
 
 function laboratory_control_save(Done = false) {
     var selected_test_manage = $('#selected_test_manage').val();
@@ -175,7 +190,7 @@ function waiting_selected(manage_id) {
     })
 }
 
-function waiting_list(Today = false) {
+function waiting_list(Today = false, alarm = false) {
     var date, start, end;
 
     start = $('#laboratory_list_calendar_start').val();
@@ -197,6 +212,9 @@ function waiting_list(Today = false) {
         success: function (response) {
             $('#laboratory_list_table > tbody ').empty();
             for (var i in response.datas) {
+
+                //is_new << 완료 처리 해야함
+
                 var str = "<tr  onclick='get_test_list(" + response.datas[i]['id'] + ")'>" +
                     "<td>" + (parseInt(i) + 1) + "</td>" +
                     "<td>" + response.datas[i]['chart'] + "</td>" +
@@ -207,6 +225,10 @@ function waiting_list(Today = false) {
 
                 $('#laboratory_list_table').append(str);
             }
+
+            //알람 
+            if (alarm && is_new)
+                play_alarm();
         },
         error: function (request, status, error) {
             console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -266,21 +288,29 @@ function get_test_list(diagnosis_id) {
 }
 
 
-function worker_on(path) {
-    if ($("input:checkbox[id='laboratory_list_auto']").is(":checked") == true) {
+var w = undefined
+function worker_on(is_run) {
+    if (is_run) {
         if (window.Worker) {
+            path = get_listener_path();
             w = new Worker(path);
             w.onmessage = function (event) {
-                waiting_list(true);
+                console.log(timer_count);
+                timer_count += 1;
+                if (timer_count >= 18) {
+                    timer_count = 0;
+                    waiting_list(true, true);
+                } else {
+                    waiting_list(true, false);
+                }
             };
-
-            $('#laboratory_list_search').prop('disabled', true);
-        } else {
         }
     } else {
-        w.terminate();
-        w = undefined;
-        $('#laboratory_list_search').prop('disabled', false);
+        timer_count = 0;
 
+        if (w != undefined) {
+            w.terminate();
+            w = undefined;
+        }
     }
 }

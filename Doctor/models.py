@@ -527,6 +527,11 @@ class Medicine(models.Model):
         null=True,
         )
 
+    type = models.CharField(
+        max_length = 10,
+        default = 'PHARM',
+        )
+
     def __str__(self):
         if self.name is None:
             return self.name_vie
@@ -545,7 +550,7 @@ class Medicine(models.Model):
                 )
             return check.price
         except Pricechange.DoesNotExist:
-            return self.price
+            return self.price_input
 
     def get_price(self,get_date = None):
         date = datetime.datetime.now().strftime("%Y%m%d%H%M%S") if get_date is None else get_date.strftime("%Y%m%d%H%M%S")

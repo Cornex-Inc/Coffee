@@ -205,13 +205,13 @@ msgstr "tiếng Anh"
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:13
 #: .\obj\Release\Package\PackageTmp\Patient\forms.py:9
 msgid "Male"
-msgstr "Nữ"
+msgstr "Nam"
 
 #: .\Doctor\forms.py:14 .\Patient\forms.py:10
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:14
 #: .\obj\Release\Package\PackageTmp\Patient\forms.py:10
 msgid "Female"
-msgstr "Nam"
+msgstr "Nữ"
 
 #: .\Doctor\forms.py:156 .\Doctor\models.py:12
 #: .\Doctor\templates\Doctor\index.html:25

@@ -2,7 +2,7 @@
 
 .form-control {
     font-size: 12px;
-    padding: 3px 12px;
+    padding: 5px;
     height: 30px;
 }
 
@@ -123,19 +123,22 @@
 #patient_vital_first{
     
 }
+.input-group-addon {
+    padding: 5px;
+}
 
 #patient_table_vital_ht, #patient_table_vital_wt, #patient_table_vital_bmi, #patient_table_vital_bp, #patient_table_vital_bt, #patient_table_vital_pr, #patient_table_vital_breath {
     width: 60px;
     display: inline;
-    height:20px;
-    padding:5px;
+    height: 20px;
+    padding: 5px;
 }
 #patient_table_vital_ht, #patient_table_vital_wt, #patient_table_vital_bmi, #patient_table_vital_bp, #patient_table_vital_bt, #patient_table_vital_pr {
     margin-right: -5px;
 }
 
 .patient_table_title {
-    width: 100px;
+    width: 85px;
     font-weight: bold;
     text-align: left;
 }
@@ -149,14 +152,14 @@
     width:100%;
 }
 
-#patient_gender{
+/*#patient_gender{
     margin-top:6px;
 }
 
 #patient_gender input {
     vertical-align: middle;
     margin-top: -1px;
-}
+}*/
 
 .reception_waiting_date {
     width: 90px;
@@ -323,9 +326,9 @@
         margin-top: -1px;
     }
 
-    #patient_gender li:first-child {
+    /*#patient_gender li:first-child {
         margin-right: 70px;
-    }
+    }*/
 
 .medical_exam_pm .container {
     width: 700px;
@@ -349,6 +352,20 @@
 
 .medical_exam_pm .hoi {
 }
+
+#patient_nationality_div {
+    width: 207px;
+    display: inline-table;
+}
+
+
+#patient_gender_div {
+    width: 120px;
+    display: inline-table;
+}
+#patient_gender_span {
+        width: 50px;
+    }
 
 
 
@@ -464,6 +481,10 @@
         margin-left: 20px;
     }
 
+    .form-control {
+        padding: 3px 12px;
+    }
+
     #patient_table_vital_ht, #patient_table_vital_wt, #patient_table_vital_bmi, #patient_table_vital_bp, #patient_table_vital_bt, #patient_table_vital_pr, #patient_table_vital_breath {
         width: 75px;
         display: inline;
@@ -480,18 +501,22 @@
     .input-group {
         width: 430px;
     }
-    #patient_gender li:first-child {
+    /*#patient_gender li:first-child {
         margin-right: 45px;
-    }
+    }*/
     .costom-select {
         width: 300px;
     }
+    .input-group-addon {
+        padding: 5px 10px;
+    }
 
-    .patient_search_select{
-        width:123px;
+   
+    .patient_search_select {
+        width: 123px;
     }
     .patient_table_title {
-        width: 150px;
+        width: 100px;
     }
 
     .patient_search_table_wrap {
@@ -551,12 +576,16 @@
         width: 140px;
     }
 
-    #Reservation_Status tbody tr td:nth-child(3) {
-        text-align: left;
-    }
 
     #vital_sign input{
-        margin-right:21px;
+        margin-right:30px;
+    }
+
+    #patient_nationality_div, #patient_gender_div {
+        width: 213px;
+    }
+    #patient_gender_span{
+        width:100px;
     }
 }
 

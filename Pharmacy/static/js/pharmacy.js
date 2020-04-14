@@ -1,4 +1,7 @@
 jQuery.browser = {};
+
+var timer_count = 0;
+
 $(function () {
     
     $('.database_control input[type=text],input[type=number]').each(function () {
@@ -42,6 +45,23 @@ $(function () {
 
 
 });
+
+//알람
+function play_alarm() {
+    var x = document.getElementById("audio").play();
+
+
+    if (x !== undefined) {
+        x.then(_ => {
+            console.log(_);
+            // Autoplay started!
+        }).catch(error => {
+            console.log(error);
+            // Autoplay was prevented.
+            // Show a "Play" button so that user can start playback.
+        });
+    }
+}
 
 function save_data_control() {
     if ($('#selected_option').val() == '') {
@@ -185,7 +205,7 @@ function waiting_selected(diagnosis_id) {
     })
 }
 
-function waiting_list(Today = false) {
+function waiting_list(Today = false, alarm= false) {
     var date, start, end;
 
     start = $('#pharmacy_list_calendar_start').val();
@@ -208,8 +228,10 @@ function waiting_list(Today = false) {
             $('#pharmacy_list_table > tbody ').empty();
             for (var i = 0; i < response.datas.length; i++) {
                 var tr_class = "";
-                if (response.datas[i]['status'] == 'new')
-                    tr_class = "class ='success'"
+                if (response.datas[i]['status'] == 'new') {
+                    tr_class = "class ='success'";
+                    var is_new = true;
+                }
                 else if (response.datas[i]['status'] == 'hold')
                     tr_class = "class ='warning'"
                 else if (response.datas[i]['status'] == 'done')
@@ -224,6 +246,10 @@ function waiting_list(Today = false) {
 
                 $('#pharmacy_list_table').append(str);
             }
+            //알람 
+            if (alarm && is_new)
+                play_alarm();
+
         },
         error: function(request, status, error) {
             console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -305,21 +331,29 @@ function pharmacy_database_search(page = null) {
     })
 }
 
-function worker_on(path) {
-    if ($("input:checkbox[id='pharmacy_list_auto']").is(":checked") == true) {
+var w = undefined
+function worker_on(is_run) {
+    if (is_run) {
         if (window.Worker) {
+            path = get_listener_path();
             w = new Worker(path);
             w.onmessage = function (event) {
-                waiting_list(true);
+                console.log(timer_count);
+                timer_count += 1;
+                if (timer_count >= 18) {
+                    timer_count = 0;
+                    waiting_list(true, true);
+                } else {
+                    waiting_list(true, false);
+                }
             };
-
-            $('#pharmacy_list_search').prop('disabled', true);
-        } else {
         }
     } else {
-        w.terminate();
-        w = undefined;
-        $('#pharmacy_list_search').prop('disabled', false);
+        timer_count = 0;
 
+        if (w != undefined) {
+            w.terminate();
+            w = undefined;
+        }
     }
 }

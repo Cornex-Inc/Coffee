@@ -105,8 +105,17 @@ $(function () {
     })
 
     $('#Bill').click(function () {
-        $('.page_bill').printThis({
+        id = $("#selected_reception").val();
+
+        $("#dynamic_div").html('');
+        $('#dynamic_div').load('/receptionist/document_medical_receipt_old/' + id);
+
+        $('#dynamic_div').printThis({
         });
+
+
+        //$('.page_bill').printThis({
+        //});
     });
 
 
@@ -471,7 +480,7 @@ function waiting_selected(paymentrecord_id) {
                         "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['tests'][i].price) + " VND</td></tr>";
 
                     recepts_table += '<tr>' +
-                        '<td>' + response.datas['tests'][i].name + '</td>' +
+                        '<td colspan="2">' + response.datas['tests'][i].name + '</td>' +
                         '<td style="text-align:right;">' + numberWithCommas(response.datas['tests'][i].price) + '</td>' +
                         '<td></td>' +
                         '<td style="text-align:right;">' + numberWithCommas(response.datas['tests'][i].price) + '</td><td></td></tr>';
@@ -507,7 +516,7 @@ function waiting_selected(paymentrecord_id) {
                         recepts_table += '<td style="text-align:center;">' + numberWithCommas(response.datas['precedures'][i].amount) + '</td>';
                         recepts_table += '<td style="text-align:right;">' + numberWithCommas(response.datas['precedures'][i].price * response.datas['precedures'][i].amount) + '</td><td></td></tr>';
                     }
-                    console.log(numberWithCommas(response.datas['precedures'][i].price * response.datas['precedures'][i].amount))
+                    
 
                     no += 1;
                 }
@@ -571,6 +580,7 @@ function waiting_selected(paymentrecord_id) {
                 "<td id='discount_total' colspan='2'style='text-align:right; padding-right:0.6vw;'>" +
                 numberWithCommas(Number(response.datas['total_payment'])) + " VND</td></tr >" ;
 
+
             str += "<tr><td></td><td></td><td style='text-align:center;font-weight:bold;' >Paid</td>" +
                 "<td id='discount_paid' colspan='2'style='text-align:right; padding-right:0.6vw;'>" + numberWithCommas(response.datas['paid']) + " VND</td></tr >";
              
@@ -623,9 +633,6 @@ function waiting_selected(paymentrecord_id) {
                     $('#discount_unpaid').html(numberWithCommas(totalValue - response.datas['paid']) + ' VND');
                     $('#discount_amount').val('');
 
-
-;
-
                 }
             });
 
@@ -654,6 +661,7 @@ function waiting_selected(paymentrecord_id) {
                 chage_amount();
             })
             $('#id_pay').val('');
+            chage_amount();
             //응급
             //$('#is_emergency').change(function () {
             //    chage_amount();
@@ -1026,6 +1034,10 @@ function get_today_selected(reception_id) {
             $('#total_amount').val(numberWithCommas(response.datas['total_amount']));
             //get_bill_list(reception_id);
 
+
+            $('#chart_table_total').html(numberWithCommas(response.datas['total_amount']));
+            $('#chart_table_paid_amount').html(numberWithCommas(response.datas['total_amount']));
+
             //discount isvalid
             //discount percent
             $('#discount_input').keyup(function () {
@@ -1118,6 +1130,7 @@ function chage_amount() {
 
     var discount_amount = ''
     var total_aount = $('#total_amount').val();
+    var total_amount = total_aount
     total_aount = total_aount.replace(/[^0-9]/g, "");
     if ($('#discount_amount').val() == '') {
         var discount = $('#discount_input').val();
@@ -1133,17 +1146,31 @@ function chage_amount() {
         emergency_fee = total_aount * 0.3;   
     }
     $('#emergency_amount').html(numberWithCommas(emergency_fee.toFixed(0)) + ' VND');
-    var additional = $('#additional_amount').val();
+
+    var additional = $('#additional_amount').val(); 
+    $("#additional_items").empty();
+    if (additional != '' && additional != null && additional != 0) {
+
+        var additional_string = "<tr><td colspan='4'>" +
+            "Additional Amount</td>" +
+            "<td style='text-align:right;'>" + numberWithCommas(additional) + "</td>" +
+            "<tr></td></tr>";
+
+        $("#additional_items").append(additional_string);
+    }
 
     total_aount = parseInt(total_aount) + parseInt(emergency_fee) - parseInt(discount_amount * 1) + parseInt(additional);
 
 
-    $('#discount_total').html(numberWithCommas((total_aount.toFixed(0)) + ' VND'));
+    //$('#discount_total').html(numberWithCommas((total_aount.toFixed(0)) + ' VND'));
 
-    $('#chart_table_discount').html('');
-    $('#chart_table_discount_amount').html(numberWithCommas($('#discount_amount').val()));
-    $('#chart_table_total').html(numberWithCommas((total_aount.toFixed(0))));
-    
+    $('#chart_table_total').html(numberWithCommas(total_amount));
+
+    $('#chart_table_discount').html($('#discount_input').val() + '%');
+    $('#chart_table_discount_amount').html(numberWithCommas((discount_amount)))
+
+    $('#chart_table_paid_amount').html(numberWithCommas(total_aount));
+
     $('#id_pay').val(total_aount)
 
 }
@@ -1175,6 +1202,12 @@ function save_storage() {
         },
         dataType: 'Json',
         success: function (response) {
+
+            if (response.result == false) {
+                alert(response.msg)
+                return;
+            }
+
             if (response.result == 'paid') {
                 alert(gettext('Already paid.'));
                 waiting_list(true);

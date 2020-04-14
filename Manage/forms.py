@@ -1,9 +1,12 @@
 from django import forms
 import datetime
 
+from .models import *
 from Doctor.models import *
 
 from django.utils.translation import gettext as _
+
+from django_summernote.widgets import SummernoteWidget
 
 
 class PaymentSearchForm(forms.Form):
@@ -116,7 +119,7 @@ class DoctorsSearchForm(forms.Form):
             'id': 'doctors_search_doctor',
             'class':'form-control costom-select doctors_search_doctor',
         }),
-        queryset = Doctor.objects.all(),
+    queryset = Doctor.objects.all(),
         label=_('Doctor'),
         ) 
 
@@ -187,3 +190,12 @@ class MedicineSearchForm(forms.Form):
             'class':'form-control medicine_search_input',
         }),
         )
+
+
+class board_form(forms.ModelForm):
+    class Meta:
+        model = Board_Contents
+        fields = ['title','contents']
+        widgets = {
+            'content': SummernoteWidget(),
+        }

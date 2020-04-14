@@ -3,7 +3,9 @@
 {% load staticfiles %}
 {% block content %}
 
-
+<audio controls="controls" id="audio" style="display:none;">
+    <source src="{% static 'sound/ring.mp3' %}" type="audio/mp3" />
+</audio>
 <form id="signup" class="form-horizontal " method="post"  enctype="multipart/form-data" action="{% url 'Radiation:radiation_index' %}">
 {% csrf_token %}
     <div class="radiation_grid">
@@ -138,21 +140,9 @@
     }
     }
 
-    w = undefined
-    function worker_on(is_run) {
-        if (is_run) {
-            if (window.Worker) {
-                w = new Worker('{% static 'js/event_listener.js' %}');
-                w.onmessage = function (event) {
-                    waiting_list(true);
-                };
-            }
-        } else {
-            if( w != undefined){
-                w.terminate();
-                w = undefined;
-            }
-        }
+
+    function get_listener_path() {
+        return '{% static 'js/event_listener.js' %}';
     }
 
     

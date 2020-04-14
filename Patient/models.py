@@ -39,6 +39,24 @@ class Patient(models.Model):
         max_length = 32,
         )
 
+    nationality = models.CharField(
+        null = True,
+        default = None,
+        max_length = 16,
+        )
+
+    email = models.CharField(
+        null = True,
+        default = None,
+        max_length = 64,
+        )
+
+    memo = models.CharField(
+        null = True,
+        default = None,
+        max_length = 128,
+        )
+
 
     def getID(self):
         self.gender 

@@ -21,6 +21,11 @@ $(function () {
         },
     });
 
+    $("#report_search_date_start, #report_search_date_end").change(function () {
+        search_report();
+
+    });
+
     $('#date_of_hospitalization').daterangepicker({
         singleDatePicker: true,
         autoUpdateInput: false,
@@ -138,7 +143,7 @@ function search_report(page = null) {
                         '<td>' + response.datas[i].patient_name_eng + '<br/>' + response.datas[i].patient_name_kor + '</td>' +
                         '<td>' + response.datas[i].ID + '</td>' +
                         '<td>' + response.datas[i].Doctor + '</td>' +
-                        '<td>' + response.datas[i].PublicationDate + '</td></tr>';
+                        '<td>' + response.datas[i].Date + '</td></tr>';
                 }
                 else {
                     str += "<tr style='height:40px;'><td colspan='7'></td></tr>";

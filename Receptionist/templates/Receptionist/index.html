@@ -20,7 +20,25 @@
                             {{patient.id}}
                         </div>
                     </td>
-                    <td ></td>
+                    <td >
+                        <div class="input-group" id="patient_nationality_div" >
+                            <span class="input-group-addon patient_table_title" id="patient_nationality_span">{{_('Nationality') }}</span>
+                            <select name="nationality" id="patient_nationality" class="form-control costom-select" aria-describedby="basic-addon1" required="">
+                                <option value="">---------</option>
+                                <option value="Korea">{{ _('Korea') }}</option>
+                                <option value="Vietnam">{{ _('Vietnam') }}</option>
+                                <option value="Other">{{ _('Other') }}</option>
+                            </select>
+                        </div>
+                        <div class="input-group" id="patient_gender_div">
+                            <span class="input-group-addon patient_table_title" id="patient_gender_span">{{ _('Gender') }}</span>
+                            <select name="gender" id="patient_gender" class="form-control costom-select" aria-describedby="basic-addon1" required="">
+                                <option value="">---------</option>
+                                <option value="Male">{{ _('Male') }}</option>
+                                <option value="Female">{{ _('Female') }}</option>
+                            </select>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td >
@@ -44,11 +62,11 @@
                     </div>
                     </td>
                     <td >
-                    <div class="input-group">
-                        <span class="input-group-addon patient_table_title" id="basic-addon1" style="border:1px solid #ccc">{{ _('Gender') }}</span>
-                        {{patient.gender}}
-                        </div>
+                        <div class="input-group">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Address') }}</span>
+                        {{patient.address}}</div>
                     </td>
+                    
                 </tr>
                 <tr>
                     <td >
@@ -58,9 +76,10 @@
                     </div>
                     </td>
                     <td >
-                    <div class="input-group">
-                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Address') }}</span>
-                        {{patient.address}}</div>
+                        <div class="input-group">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1" style="border:1px solid #ccc">{{ _('Email') }}</span>
+                        {{patient.email}}
+                        </div>
                     </td>
                 </tr>
 

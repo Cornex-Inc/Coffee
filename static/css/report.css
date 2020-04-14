@@ -97,12 +97,21 @@ body {
     margin: 0 auto;
 }
 
+#report_search_table thead tr th{
+    vertical-align:middle;
+    text-align:center;
+}
+
+#report_search_table tbody tr td{
+    vertical-align:middle;
+    text-align:center;
+}
 
 .status_table_title span {
     font-size: 15px;
     height: 22.5px;
     padding-top: 1px;
-    color:white;
+    color: white;
     background: rgb(20,135,130);
     border-color: rgb(20,135,130);
 }

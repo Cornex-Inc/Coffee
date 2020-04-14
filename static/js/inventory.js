@@ -640,33 +640,31 @@ function get_expiry_date() {
 
 
 function show_edit_database_add_medicine(id) {
-    $('#add_medicine_database').on('shown.bs.modal', function () {
-        $.ajax({
-            type: 'POST',
-            url: '/pharmacy/get_edit_database_add_medicine/',
-            data: {
-                'csrfmiddlewaretoken': $('#csrf').val(),
-                'id': id,
-            },
-            dataType: 'Json',
-            success: function (response) {
-                console.log(response.data)
-                if (response.result == true) {
-                    $('#add_medicine_database_id').val(response.data.id);
+    $.ajax({
+        type: 'POST',
+        url: '/pharmacy/get_edit_database_add_medicine/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'id': id,
+        },
+        dataType: 'Json',
+        success: function (response) {
+            console.log(response.data)
+            if (response.result == true) {
+                $('#add_medicine_database_id').val(response.data.id);
 
-                    $('#add_medicine_reg').data('daterangepicker').setStartDate(response.data.date);
-                    $('#add_medicine_expiry').data('daterangepicker').setStartDate(response.data.expiry_date);
+                $('#add_medicine_reg').data('daterangepicker').setStartDate(response.data.date);
+                $('#add_medicine_expiry').data('daterangepicker').setStartDate(response.data.expiry_date);
 
-                    $("#add_medicine_changes").prop("disabled", true);
-                    $("#add_medicine_changes").val(response.data.tmp_count);
-                    $('#add_medicine_memo').val(response.data.memo);
+                $("#add_medicine_changes").prop("disabled", true);
+                $("#add_medicine_changes").val(response.data.tmp_count);
+                $('#add_medicine_memo').val(response.data.memo);
 
-                }
-            },
-            error: function (request, status, error) {
-                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-            },
-        })
+            }
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+        },
     })
 
     $('#add_medicine_database').modal({ backdrop: 'static', keyboard: false });

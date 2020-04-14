@@ -1,0 +1,110 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+
+
+{% if content %}
+
+<audio controls="controls" id="audio" style="display:none;">
+    <source src="{% static 'sound/ring.mp3' %}" type="audio/mp3" />
+</audio>
+
+<input type="button" value="play" id="playtest" />
+<script>
+    $(document).ready(function () {
+        $("#playtest").click(function () {
+            var x = document.getElementById("audio_test");
+            x.play();
+        });
+    });
+</script>
+
+
+<div class="content_div">
+    <div class="content_top_control">
+        <input type="hidden" value="{{ content.id }}" id="content_id" />
+        <a href="edit/{{ content.id }}">
+            <input type="button" value="{{ _('Edit')}}" />
+        </a>
+        <a href="delete/{{content.id}}" >
+            <input type="button" value="{{ _('Delete') }}" />
+        </a>
+    </div>
+    <div class="content_content">
+        <div>
+            {{content.title}}
+        </div>
+        <div>
+            {{content.contents | safe }}
+        </div>
+    </div>
+
+
+    <div class="content_comment">
+        <div class="content_comment_list" id="content_comment_list">
+
+        </div>
+
+
+
+        <div class="content_comment_new">
+            <textarea id="text_comment_new"></textarea>
+            <a class="btn btn-warning" onclick="add_comment()">{{ _('Add') }}</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+<div class="contest_div">
+    <div class="top_control_div">
+        Top Area
+        <a href="new">
+            <input type="button" value="+ {{ _('New') }}"/>
+        </a>
+    </div>
+    <div class="list_div">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>{{ _('No.') }}</th>
+                    <th>{{ _('Title') }}</th>
+                    <th>{{ _('Written by') }}</th>
+                    <th>{{ _('Date') }}</th>
+                    <th>{{ _('Views') }}</th>
+                </tr>
+            </thead>
+            <tbody id="contents_list">
+                {% for content in contents_list%}
+                <tr>
+                    <td>{{ content.id }}</td>
+                    <td>
+                        <a href="{{ content.id }}">{{ content.title }}</a>
+                    </td>
+                    <td>{{ content.creator}}</td>
+                    <td>{{ content.date }}</td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="foot_control_div">
+        Footer Area
+    </div>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/board/list.css' %}" />
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/board/list.js' %}" type="text/javascript"></script>
+{% endblock %}

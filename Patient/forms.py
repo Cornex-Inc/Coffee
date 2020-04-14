@@ -73,6 +73,16 @@ class PatientForm(forms.ModelForm):
                 }),
         )
 
+    email= forms.CharField(
+        label=_('Phone Number'),
+        widget=forms.TextInput(
+            attrs={
+                'id':'patient_email',
+                'class':'form-control',
+                'aria-describedby':"basic-addon1",
+                'autocomplete':'off',
+                }),
+        )
     
     gender = forms.ChoiceField(
         widget=forms.RadioSelect(attrs={'id':'patient_gender'}),

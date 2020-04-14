@@ -4,6 +4,13 @@
 {% load staticfiles %}
 {% csrf_token %}
 
+<!--<iframe src="/test" allow="autoplay" id="audio"></iframe>-->
+
+<audio controls="controls" id="audio" style="display:none;">
+    <source src="{% static 'sound/ring.mp3' %}" type="audio/mp3" />
+</audio>
+
+
 <div class="doctor_grid">
     <!--Patient_Information-->
     <div class="doctor_patient_info partition">
@@ -122,6 +129,7 @@
             {{ _('Date') }}:
             {{ receptionsearch.date }}
             {{ receptionsearch.progress }}
+            <input type="text" class="form-control" id="search_patient"/>
 
             <input type="button" class="btn btn-default" value="{{ _('Search') }}" onclick="reception_waiting()" />
         </div>
@@ -260,8 +268,9 @@
 
         <div class="status_table_title">
             <span class="btn btn-success">{{ _('Past History') }}</span>
+            <a class='btn btn-default btn-xs' href='javascript: void (0);' id="past_diagnosis_showlarge" ><i class='fa fa-lg fa-window-maximize'></i></a>
         </div>
-        <div class="diagnosis_table_wrap" style="overflow:auto; height:140px;">
+        <div class="diagnosis_table_wrap" style="overflow:auto; height:140px; margin-top:5px;">
             <table class="table" id="diagnosis_table">
                 <tbody>
                 </tbody>
@@ -726,25 +735,32 @@
 </div>
 
 
+
+
+
+
+<div id="past_diagnosis_showlarge_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h2>{{ _('Patient Past History') }}</h2>
+                <div id="modalBody" class="modal-body" >
+                    <table class="table" id="past_diagnosis_showlarge_table">
+                        <tbody>
+                    
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    w = undefined
-    function worker_on(is_run) {
-        if (is_run) {
-            if (window.Worker) {
-                w = new Worker('{% static 'js/event_listener.js' %}');
-                w.onmessage = function (event) {
-                    reception_waiting(true);
-                };
-            }
-        } else {
-            if( w != undefined){
-                w.terminate();
-                w = undefined;
-            }
-        }
+    function get_listener_path() {
+        return '{% static 'js/event_listener.js' %}';
     }
-
-
 </script>
 
 {% endblock %}

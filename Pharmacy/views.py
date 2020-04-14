@@ -153,11 +153,15 @@ def medicine_search(request):
         kwargs.update({
             'medicine_class_id':class_id,
             })
+
+
     datas=[]
+    argument_list = []
     if string == '':
+
         expiry_date = datetime.datetime.now() + datetime.timedelta(days=180)
         #medicine_tmp = MedicineLog.objects.filter(type='add',expiry_date__lte = expiry_date ).select_related('medicine').exclude(medicine__use_yn='N' ,expiry_date=None,tmp_count=0).order_by('expiry_date')
-        medicine_tmp= MedicineLog.objects.filter( type='add', expiry_date__lte = expiry_date, tmp_count__gte= 0 ).select_related('medicine').values(
+        medicine_tmp= MedicineLog.objects.filter( medicine__type="PHARM", type='add', expiry_date__lte = expiry_date, tmp_count__gte= 0 ).select_related('medicine').values(
             'medicine_id',
             ).annotate(Count('medicine_id')).order_by('expiry_date')
        
@@ -177,15 +181,16 @@ def medicine_search(request):
                     'alaert_expiry':True,
                 }
             datas.append(data)
+
+        medicines = Medicine.objects.filter( type="PHARM", **kwargs).exclude(use_yn='N').order_by("name")#.select_related('medicine_class').exclude(use_yn = 'N').order_by("name")
             
-        medicines = Medicine.objects.filter(**kwargs).exclude(use_yn='N').order_by('name')
     else:
-        argument_list = [] 
+        #argument_list = [] 
         argument_list.append( Q(**{'name__icontains':string} ) )
         argument_list.append( Q(**{'name_vie__icontains':string} ) )
         argument_list.append( Q(**{'name_display__icontains':string} ) )
 
-        medicines = Medicine.objects.filter(functools.reduce(operator.or_, argument_list),**kwargs)#.select_related('medicine_class').exclude(use_yn = 'N').order_by("name")
+        medicines = Medicine.objects.filter(functools.reduce(operator.or_, argument_list), type="PHARM", **kwargs).exclude(use_yn='N').order_by("name")#.select_related('medicine_class').exclude(use_yn = 'N').order_by("name")
 
 
     

@@ -145,6 +145,11 @@ doctor_patient_info table ul label {
     overflow: hidden;
 }
 
+#past_diagnosis_showlarge {
+    margin-bottom: 10px;
+    float: right;
+}
+
 .order_list {
     grid-row-start: 3;
     grid-row-end: 5;
@@ -254,10 +259,12 @@ doctor_patient_info table ul label {
 }
 
 .reception_progress {
-    width: 82px;
+    width: 70px;
     display: inline;
 }
-
+.ranges ul li:nth-child(2){
+    display:none;
+}
 
 .table_title {
     margin: 0;
@@ -287,6 +294,15 @@ doctor_patient_info table ul label {
 .Rectption_Status_wrap {
     height: 340px;
     overflow: auto;
+}
+
+#Rectption_Status thead tr th, #Rectption_Status tbody tr td{
+    vertical-align: middle;
+    text-align: center;
+}
+#search_patient{
+    width:130px;
+    display:inline;
 }
 
 .diagnosis_table_wrap {

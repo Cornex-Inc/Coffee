@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-
+{% load staticfiles %}
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
@@ -47,7 +47,7 @@
                 text-align: center;
                 font-size: 14px;
                 font-weight: 700;
-                margin-top: 15px;
+                margin-top: 40px;
             }
 
             .contents {
@@ -126,7 +126,7 @@
         <table class="top">
             <tr>
                 <td>
-                    <img src="/static/img/document_top.png" id="logo" />
+                    <img src="{% static '/img/document_top.png' %}" id="logo" />
                 </td>
             </tr>
         </table>
@@ -142,7 +142,7 @@
             
             <tr>
                 <td><b>1. Số hồ sơ</b>/ <i>PID</i> : {{ chart }}</td>
-                <td><b>2. Quốc tịch</b>/ <i>Nationality</i> : </td>
+                <td><b>2. Quốc tịch</b>/ <i>Nationality</i> : {{ nationality }}</td>
             </tr>
             <tr>
                 <td><b>3. Họ và tên</b>/ <i>Fullname</i> : <text id="patient_info_name">{{ name }}</text></td>

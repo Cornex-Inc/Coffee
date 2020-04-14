@@ -1,6 +1,9 @@
 jQuery.browser = {};
 
 
+var timer_count = 0;
+
+
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
@@ -377,9 +380,103 @@ $(function () {
         });
 
 
+
+    $("#past_diagnosis_showlarge").click(function () {
+        $('#past_diagnosis_showlarge_table tbody').empty();
+        $.ajax({
+            type: 'POST',
+            url: '/doctor/diagnosis_past/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+                'all': 'all',
+                'patient_id': $('#patient_id').val(),
+            },
+            dataType: 'Json',
+            success: function (response) {
+                for (var i in response.datas) {
+                    var str = "<tr style='background:#94ee90'><td colspan='5'>" + response.datas[i]['date'] + "(" + response.datas[i]['day'] + ")[" + response.datas[i]['doctor'] + "]</td>" +
+                        "</td></tr>" + /*"<tr><td colspan='5'>History: D-" + response.datas[i]['diagnosis']  + */
+
+                        "<tr><td colspan='5'><font style='font-weight:700;'>History:</font><br/><font style='font-weight:700; color:#d2322d'>S - </font>" + response.datas[i]['subjective'] + "<br/><font style='font-weight:700; color:#d2322d'>O - </font>" +
+                        response.datas[i]['objective'] + "<br/><font style='font-weight:700; color:#d2322d'>A - </font>" +
+                        response.datas[i]['assessment'] + "<br/><font style='font-weight:700; color:#d2322d'>P - </font>" +
+                        response.datas[i]['plan'] + "<br/><font style='font-weight:700; color:#d2322d'>D - </font>" +
+                        response.datas[i]['diagnosis'] +
+                        "</td></tr>";
+
+
+                    for (var j in response.datas[i]['exams']) {
+                        str += "<tr><td>" + response.datas[i]['exams'][j]['name'] + "</td><td>" +
+                            "</td><td>" +
+                            "</td><td>" +
+                            "</td><td>" +
+                            "</td></tr>";
+                    }
+
+                    for (var j in response.datas[i]['tests']) {
+                        str += "<tr><td>" + response.datas[i]['tests'][j]['name'] + "</td><td>" +
+                            "</td><td>" +
+                            "</td><td>" +
+                            "</td><td>" +
+                            "</td></tr>";
+                    }
+                    for (var j in response.datas[i]['precedures']) {
+                        str += "<tr><td>" + response.datas[i]['precedures'][j]['name'] + "</td><td>" +
+                            "</td><td>" +
+                            "</td><td>" +
+                            "</td><td>" +
+                            "</td></tr >";
+                    }
+                    for (var j in response.datas[i]['medicines']) {
+                        str += "<tr><td>" + response.datas[i]['medicines'][j]['name'] + "</td><td>" +
+                            response.datas[i]['medicines'][j]['unit'] + "</td><td>" +
+                            response.datas[i]['medicines'][j]['amount'] + "</td><td>" +
+                            response.datas[i]['medicines'][j]['days'] + "</td><td>" +
+                            response.datas[i]['medicines'][j]['memo'] + "</td></tr >";
+                    }
+
+                    $('#past_diagnosis_showlarge_table tbody').append(str);
+                }
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            },
+        })
+
+        $('#past_diagnosis_showlarge_modal').modal({ backdrop: 'static' });
+        $("#past_diagnosis_showlarge_modal").scrollTop(0);
+        $('#past_diagnosis_showlarge_modal').modal('show');
+    });
+
     get_medicine_count();
 
+
+
+    $("#playtest").click(function () {
+
+    });
+
+   
 });
+
+
+//알람
+function play_alarm() {
+    var x = document.getElementById("audio").play();
+    
+
+    if (x !== undefined) {
+        x.then(_ => {
+            console.log(_);
+            // Autoplay started!
+        }).catch(error => {
+            console.log(error);
+            // Autoplay was prevented.
+            // Show a "Play" button so that user can start playback.
+        });
+    }
+}
+
 
  //메디슨 클래스 혹은 약 아이템 클릭 시 갯수 동기화
 function get_medicine_count(id = null) {
@@ -732,11 +829,12 @@ function get_diagnosis(reception_no) {
 }
 
 
-function reception_waiting(Today = false) {
+function reception_waiting(Today = false, alarm = false) {
+    
     var date;
 
     progress = $('#reception_progress').val();
-
+    string = '';//$("#search_patient").val();
     date = $('#reception_waiting_date').val();
  
 
@@ -747,6 +845,7 @@ function reception_waiting(Today = false) {
             'csrfmiddlewaretoken': $('#csrf').val(),
             'date': date,
             'progress': progress,
+            'string': string,
         },
         dataType: 'Json',
         success: function (response) {
@@ -756,6 +855,7 @@ function reception_waiting(Today = false) {
             } else {
                 for (var i in response.datas) {
                     var color;
+                    var is_new = false;
                     $('#status').val(response.datas[i]['status']);
                     //if (response.datas[i]['status'] == 'new')
                     //    tr_class = "class ='success'"
@@ -765,8 +865,11 @@ function reception_waiting(Today = false) {
                     //    tr_class = "class ='danger'"
                     if (response.datas[i]['status'] == 'done')
                         tr_class = "class ='success'"
-                    else
-                        tr_class = "class =''"
+                    else {
+                        tr_class = "class =''";
+                        is_new = true;
+                    }
+                        
 
                     var str = "<tr style='cursor:pointer;'" + tr_class + " onclick='reception_select(" +
                         response.datas[i]['reception_no'] +
@@ -780,6 +883,10 @@ function reception_waiting(Today = false) {
 
                     $('#Rectption_Status').append(str);
                 }
+
+                //알람 
+                if (alarm && is_new)
+                    play_alarm();
             }
         },
         error: function (request, status, error) {
@@ -800,20 +907,30 @@ function diagnosis_report() {
 }
 
 
-
-function worker_on(path) {
-    if ($("input:checkbox[id='work_on']").is(":checked") == true) {
+var w = undefined
+function worker_on(is_run) {
+    if (is_run) {
         if (window.Worker) {
+            path = get_listener_path();
             w = new Worker(path);
             w.onmessage = function (event) {
-                reception_waiting(true);
+                console.log(timer_count);
+                timer_count += 1;
+                if (timer_count >= 18) {
+                    timer_count = 0;
+                    reception_waiting(true, true);
+                } else {
+                    reception_waiting(true,false);
+                }
             };
-
-        } else {
         }
     } else {
-        w.terminate();
-        w = undefined;
+        timer_count = 0;
+
+        if (w != undefined) {
+            w.terminate();
+            w = undefined;
+        }
     }
 }
 

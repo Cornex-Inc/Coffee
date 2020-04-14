@@ -1,5 +1,6 @@
 jQuery.browser = {};
 
+var timer_count = 0;
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -39,6 +40,14 @@ $(function () {
     }
 
     // init start
+    $('#search_patient').keydown(function (key) {
+        if (key.keyCode == 13) {
+            reception_waiting();
+            worker_on(false);
+        }
+    })
+
+
     reception_waiting(true);
 
     $('.diagnosis_select_contents').hide();
@@ -158,9 +167,15 @@ $(function () {
         singleDatePicker: true,
         showDropdowns: true,
         drops: "up",
+        ranges: {
+            'Today': [moment(), moment()],
+        },
         locale: {
             format: 'YYYY-MM-DD',
         },
+    });
+    $("#reception_waiting_date").change(function () {
+        reception_waiting();
     });
     worker_on(true);
     $('#reception_waiting_date').on('apply.daterangepicker', function () {
@@ -171,6 +186,10 @@ $(function () {
         } else {
             worker_on(false);
         }
+    });
+    $(".ranges ul li:first-child").click(function () {
+        $("#search_patient").val('');
+        worker_on(true);
     });
 
     $('#past_diagnosis_calendar').daterangepicker();
@@ -572,7 +591,93 @@ $(function () {
                 $results.css("top", newTop + "px");
             }
         });
+
+
+    $("#past_diagnosis_showlarge").click(function () {
+        $('#past_diagnosis_showlarge_table tbody').empty();
+        $.ajax({
+            type: 'POST',
+            url: '/doctor/diagnosis_past/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+                'all': 'all',
+                'patient_id': $('#patient_id').val(),
+            },
+            dataType: 'Json',
+            success: function (response) {
+                for (var i in response.datas) {
+                    var str = "<tr style='background:#94ee90'><td colspan='5'>" + response.datas[i]['date'] + "(" + response.datas[i]['day'] + ")[" + response.datas[i]['doctor'] + "]</td>" +
+                        "</td></tr>" + /*"<tr><td colspan='5'>History: D-" + response.datas[i]['diagnosis']  + */
+
+                        "<tr><td colspan='5'><font style='font-weight:700;'>History:</font><br/><font style='font-weight:700; color:#d2322d'>S - </font>" + response.datas[i]['subjective'] + "<br/><font style='font-weight:700; color:#d2322d'>O - </font>" +
+                        response.datas[i]['objective'] + "<br/><font style='font-weight:700; color:#d2322d'>A - </font>" +
+                        response.datas[i]['assessment'] + "<br/><font style='font-weight:700; color:#d2322d'>P - </font>" +
+                        response.datas[i]['plan'] + "<br/><font style='font-weight:700; color:#d2322d'>D - </font>" +
+                        response.datas[i]['diagnosis'] +
+                        "</td></tr>";
+
+
+                    for (var j in response.datas[i]['exams']) {
+                        str += "<tr><td>" + response.datas[i]['exams'][j]['name'] + "</td><td>" +
+                            "</td><td>" +
+                            "</td><td>" +
+                            "</td><td>" +
+                            "</td></tr>";
+                    }
+
+                    for (var j in response.datas[i]['tests']) {
+                        str += "<tr><td>" + response.datas[i]['tests'][j]['name'] + "</td><td>" +
+                            "</td><td>" +
+                            "</td><td>" +
+                            "</td><td>" +
+                            "</td></tr>";
+                    }
+                    for (var j in response.datas[i]['precedures']) {
+                        str += "<tr><td>" + response.datas[i]['precedures'][j]['name'] + "</td><td>" +
+                            "</td><td>" +
+                            "</td><td>" +
+                            "</td><td>" +
+                            "</td></tr >";
+                    }
+                    for (var j in response.datas[i]['medicines']) {
+                        str += "<tr><td>" + response.datas[i]['medicines'][j]['name'] + "</td><td>" +
+                            response.datas[i]['medicines'][j]['unit'] + "</td><td>" +
+                            response.datas[i]['medicines'][j]['amount'] + "</td><td>" +
+                            response.datas[i]['medicines'][j]['days'] + "</td><td>" +
+                            response.datas[i]['medicines'][j]['memo'] + "</td></tr >";
+                    }
+
+                    $('#past_diagnosis_showlarge_table tbody').append(str);
+                }
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            },
+        })
+
+        $('#past_diagnosis_showlarge_modal').modal({ backdrop: 'static' });
+        $("#past_diagnosis_showlarge_modal").scrollTop(0);
+        $('#past_diagnosis_showlarge_modal').modal('show');
+    });
 });
+
+
+//알람
+function play_alarm() {
+    var x = document.getElementById("audio").play();
+    //var x = document.getElementById("ifr_audio").getElementById('audio').play();
+
+    if (x !== undefined) {
+        x.then(_ => {
+            console.log(_);
+            // Autoplay started!
+        }).catch(error => {
+            console.log(error);
+            // Autoplay was prevented.
+            // Show a "Play" button so that user can start playback.
+        });
+    }
+}
 
 function selected_table_title(title) {
     //off
@@ -905,13 +1010,13 @@ function get_diagnosis(reception_no) {
 }
 
 
-function reception_waiting(Today = false) {
+function reception_waiting(Today = false, alarm = false) {
     var date;
 
     progress = $('#reception_progress').val();
-
+    string = $("#search_patient").val();
     date = $('#reception_waiting_date').val();
-
+    
 
     $.ajax({
         type: 'POST',
@@ -920,6 +1025,7 @@ function reception_waiting(Today = false) {
             'csrfmiddlewaretoken': $('#csrf').val(),
             'date': date,
             'progress': progress,
+            'string':string,
         },
         dataType: 'Json',
         success: function (response) {
@@ -938,8 +1044,11 @@ function reception_waiting(Today = false) {
                     //    tr_class = "class ='danger'"
                     if (response.datas[i]['status'] == 'done')
                         tr_class = "class ='success'"
-                    else
+                    else {
                         tr_class = "class =''"
+                        is_new = true;
+                    }
+
 
                     var str = "<tr style='cursor:pointer;'" + tr_class + " onclick='reception_select(" +
                         response.datas[i]['reception_no'] +
@@ -947,13 +1056,23 @@ function reception_waiting(Today = false) {
                         "get_diagnosis(" + response.datas[i]['reception_no'] +
                         ");'><td>" + (parseInt(i) + 1) + "</td>" +
                         "<td>" + response.datas[i]['chart'] + "</td>" +
-                        "<td>" + response.datas[i]['name_kor'] + "/" + response.datas[i]['name_eng'] + "</td>" +
-                        "<td>" + response.datas[i]['date_of_birth'] + '<br/>' + ' (' + response.datas[i]['age'] + '/' + response.datas[i]['gender'] + ")</td>" +
-                        "<td>" + response.datas[i]['reception_time'] + "</td></tr>";
+                        "<td>" + response.datas[i]['name_kor'] + "<br/>" + response.datas[i]['name_eng'] + "</td>" +
+                        "<td>" + response.datas[i]['date_of_birth'] + '<br/>' + ' (' + response.datas[i]['age'] + '/' + response.datas[i]['gender'] + ")</td>";
+                    if (string == '') {
+                        str += "<td>" + response.datas[i]['reception_time'] + "</td></tr>";
+                    }
+                    else {
+                        str += "<td>" + response.datas[i]['reception_datetime'] + "</td></tr>";
+                    }
+                        
+                        
 
                     $('#Rectption_Status').append(str);
                 }
             }
+            //알람 
+            if (alarm && is_new)
+                play_alarm();
         },
         error: function (request, status, error) {
             console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -974,19 +1093,30 @@ function diagnosis_report() {
 
 
 
-function worker_on(path) {
-    if ($("input:checkbox[id='work_on']").is(":checked") == true) {
+var w = undefined
+function worker_on(is_run) {
+    if (is_run) {
         if (window.Worker) {
+            path = get_listener_path();
             w = new Worker(path);
             w.onmessage = function (event) {
-                reception_waiting(true);
+                console.log(timer_count);
+                timer_count += 1;
+                if (timer_count >= 1) {
+                    timer_count = 0;
+                    reception_waiting(true, true);
+                } else {
+                    reception_waiting(true, false);
+                }
             };
-
-        } else {
         }
     } else {
-        w.terminate();
-        w = undefined;
+        timer_count = 0;
+
+        if (w != undefined) {
+            w.terminate();
+            w = undefined;
+        }
     }
 }
 

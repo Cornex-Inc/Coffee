@@ -27,7 +27,7 @@ from django.utils.translation import gettext as _
 from django.forms.models import model_to_dict
 from django.db.models import Q, Count, F
 from django.db.models.functions import Lower
-
+from django.template import RequestContext
 
 @login_required
 def index(request):
@@ -212,7 +212,7 @@ def index(request):
     if request.user.doctor.depart.id == 5: #ENT
         precedure_classes = PrecedureClass.objects.filter( Q(id = 2) | Q(id = 3) | Q(id = 5) | Q(id = 41) ).values()
     elif request.user.doctor.depart.id == 2: #IM
-        precedure_classes = PrecedureClass.objects.filter( Q(id = 2) | Q(id = 4) | Q(id = 5) | Q(id = 6)|Q(id = 8) | Q(id = 41) ).values()
+        precedure_classes = PrecedureClass.objects.filter( Q(id = 2) | Q(id = 4) | Q(id = 5) | Q(id = 6)|Q(id = 8) | Q(id = 41)| Q(id = 44) ).values()
     elif request.user.doctor.depart.id == 6: #DERM
         precedure_classes = PrecedureClass.objects.filter(Q(id = 11) | Q(id = 21) | Q(id = 30) | Q(id = 28)|Q(id = 27) |  Q(id = 23) | Q(id = 43) |Q(id = 14)).values().order_by('name')
     elif request.user.doctor.depart.id == 4: #PS
@@ -435,10 +435,8 @@ def index(request):
         bundle_set.update({ upper['upper'] : temp})
     
 
+        
 
-
-
-    
     return render(request,
         'Doctor/index.html',
             {
@@ -466,6 +464,8 @@ def index(request):
 
                 'reservation':reservation_form,
                 'today_vital':datetime.date.today().strftime('%b-%d'),
+
+                
             }
         )
 
@@ -499,14 +499,28 @@ def show_medical_report(request):
     
     try:
         report = Report.objects.get(reception_id = reception.id)
-        print(report)
+
+        publication_date = ''
+        if report.date_of_publication is not None:
+            if request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+                publication_date = report.date_of_publication.strftime('%d/%m/%Y')
+            else:
+                publication_date =  report.date_of_publication.strftime('%Y-%m-%d')
+
+        date_of_hospitalization = ''
+        if report.date_of_hospitalization is not None:
+            if request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+                date_of_hospitalization = report.date_of_hospitalization.strftime('%d/%m/%Y')
+            else:
+                date_of_hospitalization =  report.date_of_hospitalization.strftime('%Y-%m-%d')
+
         context.update({
                 'selected_report':report.id,
                 'reception_report':report.report,
                 'reception_usage':report.usage,
                 'serial':report.serial,
-                'publication_date':'' if report.date_of_publication is None else report.date_of_publication.strftime('%Y-%m-%d'),
-                'date_of_hospitalization':'' if report.date_of_hospitalization is None else report.date_of_hospitalization.strftime('%Y-%m-%d'),
+                'publication_date':publication_date,
+                'date_of_hospitalization':date_of_hospitalization,
             })
     except Report.DoesNotExist:
         context.update({
@@ -557,6 +571,7 @@ def show_medical_report(request):
 
 def reception_waiting(request):
     date = request.POST.get('date')
+    string = request.POST.get('string')
     progress = request.POST.get('progress')
     kwargs={}
     kwargs['doctor'] = request.user.doctor
@@ -567,7 +582,15 @@ def reception_waiting(request):
     date_min = datetime.datetime.combine(datetime.datetime.strptime(date, "%Y-%m-%d").date(), datetime.time.min)
     date_max = datetime.datetime.combine(datetime.datetime.strptime(date, "%Y-%m-%d").date(), datetime.time.max)
 
-    receptions = Reception.objects.filter(recorded_date__range = (date_min, date_max),**kwargs).exclude(progress='deleted')
+    print(string)
+    argument_list = [] 
+    if string !='':
+        argument_list.append( Q(**{'patient__name_kor__icontains':string} ) )
+        argument_list.append( Q(**{'patient__name_eng__icontains':string} ) )
+        argument_list.append( Q(**{'patient__id__icontains':string} ) ) 
+        receptions = Reception.objects.select_related('patient').filter(functools.reduce(operator.or_, argument_list),**kwargs).exclude(progress='deleted')
+    else:
+        receptions = Reception.objects.select_related('patient').filter(recorded_date__range = (date_min, date_max),**kwargs).exclude(progress='deleted')
 
     datas=[]
     today = datetime.date.today()
@@ -584,6 +607,7 @@ def reception_waiting(request):
             'age':reception.patient.get_age(),
             'gender':reception.patient.get_gender_simple(),
             'reception_time':reception.recorded_date.strftime('%H:%M'),
+            'reception_datetime':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),
             'status': reception.progress,
             })
         datas.append(data)
@@ -1398,8 +1422,10 @@ def report_search(request):
     
     argument_list = [] 
     kwargs={}
-    if hasattr(request.user,'depart'):
+    if hasattr(request.user,'doctor'):
         kwargs['depart'] = request.user.doctor.depart.id
+    
+   
 
     argument_list = [] 
     if input !='':
@@ -1423,6 +1449,7 @@ def report_search(request):
             'patient_name_kor':reception.patient.name_kor,
             'ID':reception.patient.getID(),
             'Doctor':reception.doctor.name_kor,
+            'Date':reception.recorded_date.strftime('%Y-%d-%m'),
             })
         no +=1
 

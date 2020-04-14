@@ -170,6 +170,9 @@
     }
 }
 
+#dynamic_div {
+    display: none;
+}
 
 @page {
     size: A4;
@@ -183,10 +186,15 @@
         /*max-height: 297mm;
         min-height: 297mm;*/
     }
+
+    #dynamic_div {
+        display: block;
+    }
+
     .page_bill {
         min-height:1000px;
         margin: 0 auto;
-        margin-top: 2cm;
+        margin-top: 1.5cm;
         text-align: center;
         display: block;
         background-repeat: no-repeat !important;
@@ -196,7 +204,7 @@
         .page_bill .title {
             width: 100%;
             text-align: center;
-            margin-top: 68px;
+            margin-top: 40px;
             margin-bottom: 65px;
             font-size: 18px;
             font-weight: 700;
@@ -237,7 +245,7 @@
         /*border: 1px solid black;*/
         padding: 3px;
     }
-    #chart_table_contents_items tr td {
+    #chart_table_contents_items tr td, #additional_items tr td{
         /*border: 1px solid black;*/
         padding: 3px;
     }

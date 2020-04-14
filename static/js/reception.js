@@ -815,7 +815,8 @@ function earse_inputs() {
     })
     $('#depart_select option:eq(0)').prop("selected", true);
     $('#doctor_select option:eq(0)').prop("selected", true);
-
+    $('#patient_nationality option:eq(0)').prop("selected", true);
+    $('#patient_gender option:eq(0)').prop("selected", true);
     $('input:radio[name=gender]').prop('checked', false);
     
 }
@@ -853,9 +854,12 @@ function patient_check_required() {
         $('#patient_name_eng'),
         $('#patient_date_of_birth'),]
 
-
-    if (!$('input[name=gender]').is(':checked')) {
+    if ($('#patient_gender').val() == '' ){
         alert(gettext("'Gender' is necessary."));
+        return false;
+    }
+    if ($('#patient_nationality').val() == '') {
+        alert(gettext("'Nationality' is necessary."));
         return false;
     }
 
@@ -885,10 +889,14 @@ function save_patient() {
     var name_kor = $('#patient_name_kor').val();
     var name_eng = $('#patient_name_eng').val();
     var date_of_birth = $('#patient_date_of_birth').val();
-    var gender = $('input[name="gender"]:checked').val();
+    var gender = $('#patient_gender').val();
+    var nationality = $("#patient_nationality").val();
+    //var gender = $('input[name="gender"]:checked').val();
     var address = $('#patient_address').val();
     var phone = $('#patient_phone').val();
- 
+    var email = $('#patient_email').val();
+
+      
     var past_history = $('#history_past').val();
     var family_history = $('#history_family').val();
 
@@ -910,16 +918,18 @@ function save_patient() {
         url: '/receptionist/save_patient/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
-            'id':id,
+            'id': id,
             'cahrt_no': chart_no,
             'name_kor': name_kor,
             'name_eng': name_eng,
             'date_of_birth': date_of_birth,
             'phone': phone,
+            'nationality': nationality,
             'gender': gender,
             'address': address,
             'past_history': past_history,
             'family_history': family_history,
+            'email': email,
 
             'tax_invoice_number': tax_invoice_number,
             'tax_invoice_company_name': tax_invoice_company_name,
@@ -953,14 +963,12 @@ function save_patient() {
 
 
                 str += response.chart + "</td>" +
-                    "<td>" + response.name_kor + ' / ' + response.name_eng + "</td>" +
+                    "<td>" + response.name_kor + '<br/>' + response.name_eng + "</td>" +
                     "<td>" + response.date_of_birth + ' (' + response.gender + '/' + response.age + ")</td>" +
                     "<td>" + response.phonenumber + "</td>" +
                     "<td>" + response.address + "</td></tr>";
 
                 $('#Patient_Search').append(str);
-
-
             } else {
                 alert(gettext('Failed.'));
             }
@@ -998,20 +1006,18 @@ function reception_check_required() {
 }
 
 function save_recept() {
-    if (!patient_check_required()) {
-        return;
-    }
-    if (!reception_check_required()) {
-        return
-    }
     var id = $('#patient_id').val();
     var chart_no = $('#patient_chart').val();
     var name_kor = $('#patient_name_kor').val();
     var name_eng = $('#patient_name_eng').val();
     var date_of_birth = $('#patient_date_of_birth').val();
-    var gender = $('input[name="gender"]:checked').val();
+    var gender = $('#patient_gender').val();
+    var nationality = $("#patient_nationality").val();
+    //var gender = $('input[name="gender"]:checked').val();
     var address = $('#patient_address').val();
     var phone = $('#patient_phone').val();
+    var email = $('#patient_email').val();
+
 
     var past_history = $('#history_past').val();
     var family_history = $('#history_family').val();
@@ -1125,6 +1131,10 @@ function set_patient_data(patient_id) {
             $('#patient_date_of_birth').val(response.date_of_birth);
             $('#patient_address').val(response.address);
             $('#patient_phone').val(response.phone);
+            $("#patient_gender").val(response.gender);
+            $('#patient_nationality').val(response.nationality);
+            $('#patient_email').val(response.email);
+
             
             $('#history_past').val(response.history_past);
             $('#history_family').val(response.history_family);

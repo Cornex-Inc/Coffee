@@ -3,6 +3,10 @@
 {% load staticfiles %}
 {% block content %}
 {% csrf_token %}
+<audio controls="controls" id="audio" style="display:none;">
+    <source src="{% static 'sound/ring.mp3' %}" type="audio/mp3" />
+</audio>
+
     <div class="pharmacy_grid">
         <div class="pharmacy_list partition">
             <div class="medicine_table_title">
@@ -78,24 +82,11 @@
         </div>
     </div>
 
-    <script>
-        w = undefined
-        function worker_on(is_run) {
-            if (is_run) {
-                if (window.Worker) {
-                    w = new Worker('{% static 'js/event_listener.js' %}');
-                    w.onmessage = function (event) {
-                        waiting_list(true);
-                    };
-                }
-            } else {
-                if( w != undefined){
-                    w.terminate();
-                    w = undefined;
-                }
-            }
-        }
-    </script>
+<script>
+    function get_listener_path() {
+        return '{% static 'js/event_listener.js' %}';
+    }
+</script>
 {% endblock %}
 
 
