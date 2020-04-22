@@ -4,40 +4,106 @@ $(document).ready(function () {
 
     comments_update();
 });
-//´ñ±Û »õ·Î°íÄ§
+//ëŒ“ê¸€ ìƒˆë¡œê³ ì¹¨
 function comments_update(contents_id) {
     $.ajax({
         type: 'POST',
         url: '/manage/board/comment/get',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
-            'content_id': $("#content_id").val(),   //°Ô½Ã ±Û ID
+            'content_id': $("#content_id").val(),   //ê²Œì‹œ ê¸€ ID
         },
         dataType: 'Json',
         success: function (response) {
             $("#content_comment_list").html('');
 
             var str = '';
-
             for (var i = 0; i < response.list_comment.length; i++) {
-                str += "<div class='comment'>";
-                console.log(response.list_comment[i].depth);
+                str += "<div class='comment_div'><div class='comment'>";
                 for (var j = 0; j < response.list_comment[i].depth; j++) {
-                    str += "&emsp;&emsp;"
+                    str += "<div class='comment_depth'></div>";
                 }
+                if (response.list_comment[i].depth > 0) {
+                    str += "<div class='comment_depth_stair'>ã„´</div>";
+                }
+                str += "<div class='comment_user_name'><p>" + response.list_comment[i].user + "</p></div>" +
+                    "<div class='comment_item'><p id='comment_item_" + response.list_comment[i].id + "'>" + response.list_comment[i].comment + "</p></div>" +
+                    "<div class='comment_date'><p>" + response.list_comment[i].datetime + 
+                    "&emsp;<i class='fa fa-reply fa-flip-vertical i_coursor reply_comment' aria-hidden='true' id='reply_comment_" + response.list_comment[i].id + "'></i>";
 
-                str += response.list_comment[i].comment + 
-                    " - " + response.list_comment[i].user + "<br/>" +
-                    response.list_comment[i].datetime + "<input type='button' value='reply' onclick='$(&apos;#comment_reply_&apos; + " + response.list_comment[i].id +").toggle();'/>" + "<br/>" + 
-                    "<div class='comment_reply' id='comment_reply_" + response.list_comment[i].id + "'><textarea></textarea><input type='button' onclick='add_comment(" + response.list_comment[i].id + ");' value='Save'/></div>" + 
-                    "<input type='button' class='btn' value='edit' onclick=&apos;set_edit(" + response.list_comment[i].id + ");&apos; /> " + 
-                    "<input type='button' class='btn' value='delete' onclick=delete_comment(" + response.list_comment[i].id + "); /> " + 
-                    "</div>"
+                
+                if (response.list_comment[i].is_creator == true) {
+                    str += "<i class='fa fa-pencil fa-fw i_coursor edit_comment' aria-hidden='true' id='edit_comment_" + response.list_comment[i].id +"'></i>" +
+                        "<i class='fa fa-trash fa-fw i_coursor delete_comment' aria-hidden='true' id='delete_comment_" + response.list_comment[i].id +"'></i>";
+                }    
+                str += "</p></div></div>" + 
+                    "<div class='comment_reply_wrap' id='reply_comment_div_" + response.list_comment[i].id + "'>" + 
+                    "<div class='comment_reply'><span class='fl' id='comment_text_front_" + response.list_comment[i].id + "'></span><div class='input-group'><textarea class='form-control reply_comment_text' id='reply_comment_text_" + response.list_comment[i].id + "'></textarea>" +
+                    "<span class='input-group-btn'>" +
+                    "<button class='btn btn-default add_reply_comment' id='add_reply_comment_" + response.list_comment[i].id + "'>" + gettext('Add<br />Comment') + "</button></span > " +
+                    "</div></div>" +
+                    "</div > " +
+                    "</div>";
             }
-
-            
-
             $("#content_comment_list").html(str);
+
+            //ë‹µê¸€
+            var reply_content = '';
+            var reply_textarea = '';
+            var reply_upper = '';
+            var is_edit = false;
+            $(".reply_comment").click(function () {
+                $(".comment_reply_wrap").hide();
+                var this_id = $(this).attr('id');
+                var split_id = this_id.split('_');
+
+                reply_content = $("#reply_comment_div_" + split_id[2]);
+                reply_textarea = $("#reply_comment_text_" + split_id[2]);
+                reply_textarea.val('');
+
+                $("#comment_text_front_" + split_id[2]).html('ã„´');
+                reply_upper = split_id[2];
+                reply_content.show();
+                is_edit = false;
+                
+            });
+            $(".add_reply_comment").click(function () {
+                if (is_edit) {// ìˆ˜ì •
+                    set_edit(reply_upper);
+                } else {// ì¶”ê°€
+                    add_comment(reply_upper);
+                }
+                
+            });
+
+            //ìˆ˜ì •
+            $(".edit_comment").click(function () {
+                $(".comment_reply_wrap").hide();
+                var this_id = $(this).attr('id');
+                var split_id = this_id.split('_');
+
+                reply_content = $("#reply_comment_div_" + split_id[2]);
+                reply_textarea = $("#reply_comment_text_" + split_id[2]);
+                reply_textarea.val($("#comment_item_" + split_id[2]).html());
+                reply_upper = split_id[2];
+                $("#comment_text_front_" + split_id[2]).html('Edit:');
+                reply_content.show();
+
+
+                is_edit = true;
+            });
+
+            //ì‚­ì œ
+            $(".delete_comment").click(function () {
+                var this_id = $(this).attr('id');
+                var split_id = this_id.split('_');
+
+                delete_comment(split_id[2]);
+            });
+
+
+            $("#content_comment_count").html(gettext('Comments') + '(' + response.conntents_count + ')');
+            $("#content_comment_count_top").html(response.conntents_count )
         },
         error: function (request, status, error) {
             console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -47,16 +113,15 @@ function comments_update(contents_id) {
 
 }
 
-//´ñ±Û µî·Ï
+//ëŒ“ê¸€ ë“±ë¡
 function add_comment(upper = null) {
 
 
-    // ½Å±Ô / ¼öÁ¤ ±¸ºĞ ÇØ¾ßÇÔ 
     var comment = ''
     if (upper == null) {
         comment = $("#text_comment_new").val();
     } else {
-        comment = $("#comment_reply_" + upper + ' textarea').val();
+        comment = $("#reply_comment_text_" + upper).val();
     }
 
     if (comment == '') {
@@ -70,10 +135,42 @@ function add_comment(upper = null) {
         url: '/manage/board/comment/add',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
-            'content_id': $("#content_id").val(),   //°Ô½Ã ±Û ID
-            'comment': comment,     //´ñ±Û ³»¿ë
+            'content_id': $("#content_id").val(),   //ê²Œì‹œ ê¸€ ID
+            'comment': comment,     //ëŒ“ê¸€ ë‚´ìš©
             'upper_id': upper,
             
+        },
+        dataType: 'Json',
+        success: function (response) {
+            comments_update($("#content_id").val());
+            $("#text_comment_new").val('');
+
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    });
+}
+
+//ëŒ“ê¸€ ìˆ˜ì •
+function set_edit(id) {
+
+
+    comment = $("#reply_comment_text_" + id).val();
+    if (comment == '') {
+        alert(gettext('Input Text'));
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/manage/board/comment/edit/' + id + '/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'content_id': id,   //ëŒ“ê¸€  ID
+            'comment': comment,     //ëŒ“ê¸€ ë‚´ìš©
+
         },
         dataType: 'Json',
         success: function (response) {
@@ -88,13 +185,8 @@ function add_comment(upper = null) {
     });
 }
 
-//´ñ±Û ¼öÁ¤
-function set_edit(id) {
-    
-}
 
-
-//´ñ±Û »èÁ¦
+//ëŒ“ê¸€ ì‚­ì œ
 function delete_comment(id) {
     
     if (confirm(gettext('Do you want to delete this comment?'))) {
@@ -106,7 +198,7 @@ function delete_comment(id) {
             url: url,
             data: {
                 'csrfmiddlewaretoken': $('#csrf').val(),
-                'content_id': $("#content_id").val(),   //°Ô½Ã ±Û 
+                'content_id': $("#content_id").val(),   //ê²Œì‹œ ê¸€ 
                 'id':id,
             },
             dataType: 'Json',

@@ -2,102 +2,222 @@
 
 {% load staticfiles %}
 {% block content %}
-{% csrf_token %}
 
 
-{% if content %}
-
-<audio controls="controls" id="audio" style="display:none;">
-    <source src="{% static 'sound/ring.mp3' %}" type="audio/mp3" />
-</audio>
-
-<input type="button" value="play" id="playtest" />
 <script>
-    $(document).ready(function () {
-        $("#playtest").click(function () {
-            var x = document.getElementById("audio_test");
-            x.play();
-        });
-    });
+    function select_content(id = null) {
+        if (id != null) {
+            $('#selected_content').val(id);
+            document.getElementById('board_form').submit();
+        }
+    }
+
+    function select_page(page = null) {
+        if (page != null) {
+            $('#page').val(page);
+            document.getElementById('board_form').submit();
+        }
+    }
+
+
 </script>
 
+<div class="board_grid">
+<form action="./" method="post" id="board_form">
+    {% csrf_token %}
+{% if content %}
 
-<div class="content_div">
-    <div class="content_top_control">
-        <input type="hidden" value="{{ content.id }}" id="content_id" />
-        <a href="edit/{{ content.id }}">
-            <input type="button" value="{{ _('Edit')}}" />
-        </a>
-        <a href="delete/{{content.id}}" >
-            <input type="button" value="{{ _('Delete') }}" />
-        </a>
-    </div>
-    <div class="content_content">
-        <div>
-            {{content.title}}
+<div class="content_div partition">
+    <input type="hidden" value="{{ content.id }}" id="content_id" />
+
+    <div class="content_wrap">
+        <span class="btn btn-danger title_span">{{ _('Content') }}</span>
+        <div class="content_top">
+            <div class="content_title">
+                {{content.title}}
+            </div>
+            <div class="content_top_control">
+                <div class="content_info">
+                    <div class="fl">
+                    <span class="content_creator">{{ content.creator }}</span>
+                    <span class="content_date">{{ content.date }}</span>
+                    </div>
+                    {{ _('Views') }}:{{ content.views }}
+                    <span class="content_count">{{ _('Comments') }}:<span id="content_comment_count_top">{{ content.comments_count }}</span></span>
+                </div>
+            </div>
         </div>
-        <div>
-            {{content.contents | safe }}
+        <div class="content_content">
+            <div class="content_control">
+                {% if user.user_id == content.creator %}
+                
+                
+                <div class="fl">
+                    <a href="edit/{{ content.id }}">
+                        <input type="button" class="btn btn-default" value="{{ _('Edit')}}" />
+                    </a>
+                    <a href="delete/{{content.id}}" >
+                        <input type="button" class="btn btn-danger" value="{{ _('Delete') }}" />
+                    </a>
+                </div>
+
+                {% endif%}
+
+                <div class="fr">
+                    <a href="./">
+                        <input type="button" class="btn btn-default" value="{{ _('List')}}" />
+                    </a>
+                    <a href="new">
+                        <input type="button" class="btn btn-primary" value="+ {{ _('New') }}"/>
+                    </a>
+                </div>
+            </div>
+            <div class="content_main">
+                {{content.contents | safe }}
+            </div>
         </div>
-    </div>
 
+        {%if content.list_file %}
+        <div class="file_list_div">
+            <div>
+                <span id="file_count">{{ _('Attached Files') }} ( {{ content.list_file_count }} )</span>
+            </div>
+            <ul>
+            {% for file in content.list_file %}
+            <li>
+                <i class="fa fa-file"></i>
+                <a href="{{ file.file_name}}" download> {{ file.origin_name }}</a>
+            </li>
 
-    <div class="content_comment">
-        <div class="content_comment_list" id="content_comment_list">
-
+            {% endfor %}
+            </ul>
         </div>
+        {% endif %}
+        <div class="content_comment">
+            <samp id="content_comment_count">Comments</samp>
 
+            <div class="content_comment_list" id="content_comment_list">
+    
+            </div>
 
+            <div class="content_comment_new">
+              <div class="col-lg-12">
+                <div class="input-group">
+                  <textarea class="form-control" id="text_comment_new"></textarea>
+                  <span class="input-group-btn">
+                    <a class="btn btn-default" id="text_comment_new_btn" onclick="add_comment()" >{{ _('Add<br/>Comment') }}</a>
+                  </span>
+                </div><!-- /input-group -->
+              </div><!-- /.col-lg-6 -->
+            </div>
 
-        <div class="content_comment_new">
-            <textarea id="text_comment_new"></textarea>
-            <a class="btn btn-warning" onclick="add_comment()">{{ _('Add') }}</a>
         </div>
     </div>
 </div>
 {% endif %}
 
 
-<div class="contest_div">
-    <div class="top_control_div">
-        Top Area
-        <a href="new">
-            <input type="button" value="+ {{ _('New') }}"/>
-        </a>
+    
+    <input type="hidden" name="page" id="page" value="{{ page_number }}" />
+    <input type="hidden" name="selected_content" id="selected_content" value="" />
+    <div class="content_div partition">
+        <div class="board_list_wrap">
+            <span class="btn btn-danger title_span">{{ _('Board List') }}</span>
+            <div class="top_control_div">
+                <div class="top_control_left">
+                    <div>
+                        <span>{{ _('Total Contents')}}:{{ content_count }}</span>
+                    </div>
+                    <div class="top_control_search_div">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('View Count') }}</span>
+                            <select class="form-control" name="view_contents_count">
+                                <option value="10" {% if view_contents_count == "10" %} selected {% endif %}>10{{ _('per page') }}</option>
+                                <option value="15" {% if view_contents_count == "15" %} selected {% endif %}>20{{ _('per page') }}</option>
+                                <option value="20" {% if view_contents_count == "20" %} selected {% endif %}>30{{ _('per page') }}</option>
+                                <option value="30" {% if view_contents_count == "30" %} selected {% endif %}>50{{ _('per page') }}</option>
+                            </select>
+                        </div> 
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('Type') }}</span>
+                            <select class="form-control" name="view_division_filter">
+                                <option value="">{{ _('All') }}</option>
+                                {% for code, name in dict_division.items  %}
+                                    <option value="{{ code }}" {% if view_division_filter == code %} selected {% endif%}> {{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <input type="text" class="form-control" name="search_string" value="{% if search_string is not ''%}{{search_string}}{% endif %}" placeholder="{{ _('Title / in Content') }}"/>
+                        <input type="submit" class="btn btn-default" value="{{ _('Search') }}"/>
+                    </div>
+                </div>
+                <div class="top_control_right">
+                    <a href="new">
+                        <input type="button" class="btn btn-primary" value="+ {{ _('New') }}"/>
+                    </a>
+                </div>
+            
+            </div>
+   
+            <div class="list_div">
+                <table class="table table-bordered table-hover" id="contents_table">
+                    <thead>
+                        <tr>
+                            <th>{{ _('No.') }}</th>
+                            <th>{{ _('Title') }}</th>
+                            <th>{{ _('Written by') }}</th>
+                            <th>{{ _('Date') }}</th>
+                            <th>{{ _('File') }}</th>
+                            <th>{{ _('Views') }}</th> 
+                        </tr>
+                    </thead>
+                    <tbody id="contents_list">
+
+                        {% for content in contents_list%}
+                        <tr {% if content.is_notice == '1'%} class="list_notice" {% endif %}>
+                            <td>{% if content.is_notice == '1'%}<b>NOTIECE</b>{% else %} {{ content.id }} {% endif %}</td>
+                            <td><!--href="{{ content.id }}"-->
+                                <a onclick="select_content( {{ content.id }} );"><span class="list_division">[ {{ content.division }} ] </span>{{ content.title }} {% if content.comment_count != 0 %}( {{ content.comment_count }} ) {% endif %}</a>
+                            </td>
+                            <td>{{ content.creator}}</td>
+                            <td>{{ content.date }}</td>
+                            <td>{% if content.is_file %}<i class="fa fa-info-circle"></i>{% endif %}</td>
+                            <td>{{ content.view_count }}</td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="foot_control_div">
+                <ul class="pagination" id="table_pagnation">
+                    {% if has_previous %}
+                       <li> <a onclick="select_page({{ page_number | add:'-1'}} )">&laquo;</a></li>
+                    {% else %}
+                        <li class="disabled"><span>&laquo;</span></li>
+                    {% endif %}
+
+                    {% for i in page_range %}
+
+                        {% ifequal i page %}
+                            <li class="active"><span>{{ i }}<span class="sr-only">(current)</span></span></li>
+                        {% else %}
+                            <li><a onclick="select_page({{ i }})">{{i}}</a></li>
+                        {% endifequal %}
+
+                    {% endfor %}
+
+                    {% if has_next %}
+                       <li> <a onclick="select_page({{ page_number | add:'1'}} )">&raquo;</a></li>
+                    {% else %}
+                        <li class="disabled"><span>&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
     </div>
-    <div class="list_div">
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>{{ _('No.') }}</th>
-                    <th>{{ _('Title') }}</th>
-                    <th>{{ _('Written by') }}</th>
-                    <th>{{ _('Date') }}</th>
-                    <th>{{ _('Views') }}</th>
-                </tr>
-            </thead>
-            <tbody id="contents_list">
-                {% for content in contents_list%}
-                <tr>
-                    <td>{{ content.id }}</td>
-                    <td>
-                        <a href="{{ content.id }}">{{ content.title }}</a>
-                    </td>
-                    <td>{{ content.creator}}</td>
-                    <td>{{ content.date }}</td>
-                    <td></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <div class="foot_control_div">
-        Footer Area
-    </div>
+</form>
 </div>
-
-
-
 
 {% endblock %}
 

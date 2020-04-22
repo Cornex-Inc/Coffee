@@ -77,4 +77,19 @@ $(function () {
 
     })
 
+
+
+    $("#select_doctor_depart").val('');
+    $("#select_doctor_depart").prop("disabled", true);
+    $("#select_depart").change(function () {
+        selected_item = $(this).val()
+        if (selected_item == 'DOCTOR') {
+            $("#select_doctor_depart").prop("disabled", false);
+        } else {
+            $("#select_doctor_depart").val('');
+            $("#select_doctor_depart").prop("disabled", true);
+        }
+    });
+
+
 });

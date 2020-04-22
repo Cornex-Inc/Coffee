@@ -33,14 +33,14 @@ from django.template import RequestContext
 def index(request):
 
 
-    try:
-        myinfo = Doctor.objects.get(user = request.user)
-        if myinfo.name_kor is None:
-            return redirect('/doctor/information')
-        
-    except Doctor.DoesNotExist:
-            return redirect('/doctor/information')
-    
+    #try:
+    #    myinfo = Doctor.objects.get(user = request.user)
+    #    if myinfo.name_kor is None:
+    #        return redirect('/doctor/information')
+    #    
+    #except Doctor.DoesNotExist:
+    #        return redirect('/doctor/information')
+    #
 
     patient_form = PatientForm_Doctor()
     history_form = HistoryForm()

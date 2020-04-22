@@ -1,0 +1,176 @@
+ul {
+    padding-left:10px;
+}
+
+li{
+    margin:5px;
+    list-style:none;
+}
+
+
+input[type=checkbox] {
+    vertical-align: middle;
+    margin-top: -1px;
+}
+
+.board_grid {
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    display: grid;
+}
+
+
+.partition {
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: rgba(180, 180, 180, 0.15);
+    border: 3.7px solid white;
+    overflow-y: hidden;
+}
+
+
+.title_span{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 15px;
+    padding-top: 1px;
+    background: rgb(233, 69, 139);
+    border-color: rgb(233, 69, 139);
+}
+
+.title_span:hover {
+    background: rgb(233, 69, 139);
+    border-color: rgb(233, 69, 139);
+}
+
+.content_div {
+    text-align: center;
+}
+
+
+.board_list_wrap, .content_wrap {
+    width: 1300px;
+    min-height: 800px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+#id_title{
+    width:100%;
+}
+
+#content_table{
+    table-layout:fixed;
+}
+
+    #content_table tbody tr td, #content_table tbody tr th{
+        vertical-align:middle;
+        text-align:center;
+    }
+
+    #content_table tbody tr th:nth-child(1) {
+        width: 100px;
+    }
+
+        #content_table tbody tr td:nth-child(2){
+            text-align:left;
+        }
+
+        .panel-default {
+        }
+
+
+#id_file {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+#id_file{
+    font:12px;
+}
+.file_div {
+    display: table;
+    width:100%;
+}
+.additional_files{
+    display:table-cell;
+    width:50%;
+}
+
+
+        .current_files ul li {
+            line-height: 1;
+            list-style: none;
+            margin: 5px;
+        }
+
+#file_table {
+    background-color: transparent;
+    table-layout:fixed;
+    width:100%;
+    height:150px;
+    border:none;
+}
+    #file_table tbody tr td{
+        border:none;
+    }
+
+    #file_table tbody tr td:nth-child(2n-1) {
+        width: 160px;
+        text-align: right;
+        vertical-align: top;
+    }
+
+    #file_table tbody tr td:nth-child(2n){
+        text-align:left;
+        vertical-align:top;
+        border:1px solid #ccc;
+        overflow:auto;
+    }
+
+    #select_files li {
+        line-height: 1;
+        list-style: none;
+        margin: 5px;
+    }
+
+.option_select_div {
+    display: inline-table;
+    width: 220px;
+    margin-right:20px;
+}
+
+.option_check_label {
+    display: inline;
+}
+
+.delete_files {
+    display: inline;
+    padding: 0px;
+    height: 17px;
+    width: 17px;
+}
+
+.file_origin_name{
+    display:inline;
+}
+
+.file_span {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.file_list_div {
+    width: 100%;
+    height: 150px;
+    overflow: auto;
+}
+

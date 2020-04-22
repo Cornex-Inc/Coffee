@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-08 13:28+0700\n"
+"POT-Creation-Date: 2020-04-17 03:21+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,23 +18,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: .\Account\admin.py:13 .\Account\admin.py:16 .\Account\admin.py:23
-#: .\Account\admin.py:27 .\Account\admin.py:28 .\Account\models.py:45
-#: .\Account\models.py:65 .\obj\Release\Package\PackageTmp\Account\admin.py:13
-#: .\obj\Release\Package\PackageTmp\Account\admin.py:16
-#: .\obj\Release\Package\PackageTmp\Account\admin.py:23
-#: .\obj\Release\Package\PackageTmp\Account\admin.py:27
-#: .\obj\Release\Package\PackageTmp\Account\admin.py:28
-#: .\obj\Release\Package\PackageTmp\Account\models.py:42
-#: .\obj\Release\Package\PackageTmp\Account\models.py:62
-msgid "email"
-msgstr "이메일"
+#: .\Account\admin.py:27 .\Account\admin.py:28 .\Account\models.py:190
+msgid "user_id"
+msgstr "사용자 이름"
 
 #: .\Account\admin.py:13 .\Account\admin.py:16 .\Account\admin.py:23
-#: .\obj\Release\Package\PackageTmp\Account\admin.py:13
-#: .\obj\Release\Package\PackageTmp\Account\admin.py:16
-#: .\obj\Release\Package\PackageTmp\Account\admin.py:23
-msgid "user_role"
-msgstr "권한"
+#: .\obj\Release\Package\PackageTmp\Doctor\models.py:38
+msgid "depart"
+msgstr "부서"
 
 #: .\Account\admin.py:16 .\obj\Release\Package\PackageTmp\Account\admin.py:16
 msgid "password"
@@ -62,23 +53,23 @@ msgstr "관리자"
 
 #: .\Account\forms.py:11 .\Account\forms.py:110 .\Account\models.py:35
 #: .\Doctor\forms.py:157 .\Doctor\templates\Doctor\audit.html:63
-#: .\Doctor\templates\Doctor\audit_PM.html:77
-#: .\Doctor\templates\Doctor\report.html:28 .\Manage\forms.py:42
-#: .\Manage\forms.py:74 .\Manage\forms.py:120
+#: .\Doctor\templates\Doctor\audit_PM.html:78
+#: .\Doctor\templates\Doctor\report.html:28 .\Manage\forms.py:45
+#: .\Manage\forms.py:77 .\Manage\forms.py:123
 #: .\Manage\templates\Manage\Manage.html:88
 #: .\Manage\templates\Manage\Manage.html:181
 #: .\Manage\templates\Manage\temp_manage.html:77 .\Pharmacy\forms.py:11
-#: .\Pharmacy\templates\Pharmacy\index.html:19
-#: .\Pharmacy\templates\Pharmacy\index.html:64 .\Receptionist\forms.py:240
-#: .\Receptionist\templates\Receptionist\index.html:76
-#: .\Receptionist\templates\Receptionist\index.html:191
-#: .\Receptionist\templates\Receptionist\index.html:206
-#: .\Receptionist\templates\Receptionist\index.html:232
-#: .\Receptionist\templates\Receptionist\index.html:248
-#: .\Receptionist\templates\Receptionist\index.html:702
+#: .\Pharmacy\templates\Pharmacy\index.html:23
+#: .\Pharmacy\templates\Pharmacy\index.html:68 .\Receptionist\forms.py:240
+#: .\Receptionist\templates\Receptionist\index.html:95
+#: .\Receptionist\templates\Receptionist\index.html:210
+#: .\Receptionist\templates\Receptionist\index.html:225
+#: .\Receptionist\templates\Receptionist\index.html:251
+#: .\Receptionist\templates\Receptionist\index.html:267
+#: .\Receptionist\templates\Receptionist\index.html:721
 #: .\Receptionist\templates\Receptionist\reservation.html:88
 #: .\Receptionist\templates\Receptionist\storage_page.html:59
-#: .\Receptionist\templates\Receptionist\storage_page.html:498
+#: .\Receptionist\templates\Receptionist\storage_page.html:501
 #: .\obj\Release\Package\PackageTmp\Account\forms.py:105
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:164
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:258
@@ -104,7 +95,7 @@ msgid "Doctor"
 msgstr "의사"
 
 #: .\Account\forms.py:12 .\Account\models.py:36
-#: .\app\templates\app\layout.html:126
+#: .\app\templates\app\layout.html:130
 msgid "Physical Therapist"
 msgstr ""
 
@@ -113,14 +104,14 @@ msgid "Receptionist"
 msgstr "접수"
 
 #: .\Account\forms.py:14 .\Account\forms.py:112 .\Account\models.py:39
-#: .\app\templates\app\layout.html:111
+#: .\app\templates\app\layout.html:110
 #: .\obj\Release\Package\PackageTmp\Account\forms.py:107
 #: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:96
 msgid "Pharmacy"
 msgstr "약국"
 
 #: .\Account\forms.py:15 .\Account\forms.py:113 .\Account\models.py:40
-#: .\app\templates\app\layout.html:103 .\app\templates\app\layout.html:114
+#: .\app\templates\app\layout.html:102 .\app\templates\app\layout.html:113
 #: .\obj\Release\Package\PackageTmp\Account\forms.py:108
 #: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:90
 #: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:98
@@ -131,8 +122,11 @@ msgstr "검사실"
 msgid "Radiation"
 msgstr "방사선과"
 
-#: .\Account\forms.py:20 .\app\forms.py:17 .\app\templates\app\login.html:30
-#: .\app\templates\app\login.html:66
+#: .\Account\forms.py:20 .\Manage\templates\Manage\employee_manage.html:95
+#: .\Manage\templates\Manage\employee_manage.html:277 .\app\forms.py:17
+#: .\app\templates\app\login.html:30 .\app\templates\app\login.html:66
+#: .\app\templates\app\login_admin.html:30
+#: .\app\templates\app\login_admin.html:66
 #: .\obj\Release\Package\PackageTmp\Account\forms.py:20
 #: .\obj\Release\Package\PackageTmp\app\forms.py:15
 #: .\obj\Release\Package\PackageTmp\app\templates\app\login.html:30
@@ -155,15 +149,15 @@ msgstr ""
 #: .\obj\Release\Package\PackageTmp\Account\forms.py:71
 #: .\obj\Release\Package\PackageTmp\Account\models.py:34
 msgid "DOCTOR"
-msgstr ""
+msgstr "의사"
 
 #: .\Account\forms.py:111 .\obj\Release\Package\PackageTmp\Account\forms.py:106
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:107
 msgid "Reception"
 msgstr "접수"
 
-#: .\Account\forms.py:114 .\app\templates\app\layout.html:104
-#: .\app\templates\app\layout.html:117
+#: .\Account\forms.py:114 .\app\templates\app\layout.html:103
+#: .\app\templates\app\layout.html:116
 #: .\obj\Release\Package\PackageTmp\Account\forms.py:109
 #: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:91
 #: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:100
@@ -178,11 +172,15 @@ msgstr ""
 msgid "Receptionist for Dental"
 msgstr "접수"
 
-#: .\Account\models.py:52 .\obj\Release\Package\PackageTmp\Account\models.py:49
+#: .\Account\models.py:45
+msgid "User ID"
+msgstr "사용자 이름"
+
+#: .\Account\models.py:53 .\obj\Release\Package\PackageTmp\Account\models.py:49
 msgid "is active"
 msgstr ""
 
-#: .\Account\models.py:57 .\obj\Release\Package\PackageTmp\Account\models.py:54
+#: .\Account\models.py:58 .\obj\Release\Package\PackageTmp\Account\models.py:54
 msgid "is superuser"
 msgstr ""
 
@@ -201,71 +199,75 @@ msgstr "베트남어"
 msgid "English"
 msgstr "영어"
 
-#: .\Doctor\forms.py:13 .\Patient\forms.py:9
+#: .\Doctor\forms.py:13 .\Manage\templates\Manage\employee_manage.html:122
+#: .\Patient\forms.py:9 .\Receptionist\templates\Receptionist\index.html:37
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:13
 #: .\obj\Release\Package\PackageTmp\Patient\forms.py:9
 msgid "Male"
 msgstr "남자"
 
-#: .\Doctor\forms.py:14 .\Patient\forms.py:10
+#: .\Doctor\forms.py:14 .\Manage\templates\Manage\employee_manage.html:123
+#: .\Patient\forms.py:10 .\Receptionist\templates\Receptionist\index.html:38
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:14
 #: .\obj\Release\Package\PackageTmp\Patient\forms.py:10
 msgid "Female"
 msgstr "여자"
 
 #: .\Doctor\forms.py:156 .\Doctor\models.py:12
-#: .\Doctor\templates\Doctor\index.html:25
-#: .\Doctor\templates\Doctor\index.html:129
-#: .\Doctor\templates\Doctor\index.html:202
-#: .\Doctor\templates\Doctor\index.html:277
-#: .\Doctor\templates\Doctor\index.html:305
-#: .\Doctor\templates\Doctor\index.html:346
-#: .\Doctor\templates\Doctor\index.html:397
-#: .\Doctor\templates\Doctor\index.html:438
-#: .\Doctor\templates\Doctor\index_PM.html:28
-#: .\Doctor\templates\Doctor\index_PM.html:134
-#: .\Doctor\templates\Doctor\index_PM.html:226
-#: .\Doctor\templates\Doctor\index_PM.html:296
-#: .\Doctor\templates\Doctor\index_PM.html:323
-#: .\Doctor\templates\Doctor\index_PM.html:377
-#: .\Doctor\templates\Doctor\index_PM.html:402
-#: .\Doctor\templates\Doctor\index_PM.html:427
+#: .\Doctor\templates\Doctor\index.html:29
+#: .\Doctor\templates\Doctor\index.html:134
+#: .\Doctor\templates\Doctor\index.html:207
+#: .\Doctor\templates\Doctor\index.html:283
+#: .\Doctor\templates\Doctor\index.html:311
+#: .\Doctor\templates\Doctor\index.html:352
+#: .\Doctor\templates\Doctor\index.html:403
+#: .\Doctor\templates\Doctor\index.html:444
+#: .\Doctor\templates\Doctor\index_PM.html:35
+#: .\Doctor\templates\Doctor\index_PM.html:142
+#: .\Doctor\templates\Doctor\index_PM.html:234
+#: .\Doctor\templates\Doctor\index_PM.html:305
+#: .\Doctor\templates\Doctor\index_PM.html:332
+#: .\Doctor\templates\Doctor\index_PM.html:386
+#: .\Doctor\templates\Doctor\index_PM.html:411
+#: .\Doctor\templates\Doctor\index_PM.html:436
 #: .\Doctor\templates\Doctor\report.html:26
 #: .\Doctor\templates\Doctor\report.html:56
 #: .\Doctor\templates\Doctor\report.html:484
 #: .\Doctor\templates\Doctor\reportwindow.html:70 .\Laboratory\forms.py:9
 #: .\Laboratory\templates\Laboratory\checklist.html:26
 #: .\Laboratory\templates\Laboratory\checklist.html:60
-#: .\Laboratory\templates\Laboratory\index.html:41
-#: .\Laboratory\templates\Laboratory\index.html:95
-#: .\Manage\templates\Manage\inventory_precedure.html:24
-#: .\Manage\templates\Manage\inventory_precedure.html:73
-#: .\Manage\templates\Manage\inventory_precedure.html:79
-#: .\Manage\templates\Manage\inventory_test.html:24
-#: .\Manage\templates\Manage\inventory_test.html:73
-#: .\Manage\templates\Manage\inventory_test.html:79
-#: .\Manage\templates\Manage\inventory_test.html:110 .\Pharmacy\forms.py:9
-#: .\Pharmacy\templates\Pharmacy\index.html:17
-#: .\Pharmacy\templates\Pharmacy\index.html:32
-#: .\Pharmacy\templates\Pharmacy\inventory.html:145
-#: .\Pharmacy\templates\Pharmacy\inventory.html:151 .\Radiation\forms.py:42
-#: .\Radiation\templates\Radiation\index.html:33
-#: .\Radiation\templates\Radiation\index.html:47 .\Receptionist\forms.py:55
+#: .\Laboratory\templates\Laboratory\index.html:44
+#: .\Laboratory\templates\Laboratory\index.html:98
+#: .\Manage\templates\Manage\inventory_medical_tool.html:156
+#: .\Manage\templates\Manage\inventory_medical_tool.html:162
+#: .\Manage\templates\Manage\inventory_precedure.html:31
+#: .\Manage\templates\Manage\inventory_precedure.html:78
+#: .\Manage\templates\Manage\inventory_precedure.html:84
+#: .\Manage\templates\Manage\inventory_test.html:36
+#: .\Manage\templates\Manage\inventory_test.html:84
+#: .\Manage\templates\Manage\inventory_test.html:90
+#: .\Manage\templates\Manage\inventory_test.html:121 .\Pharmacy\forms.py:9
+#: .\Pharmacy\templates\Pharmacy\index.html:21
+#: .\Pharmacy\templates\Pharmacy\index.html:36
+#: .\Pharmacy\templates\Pharmacy\inventory.html:156
+#: .\Pharmacy\templates\Pharmacy\inventory.html:162 .\Radiation\forms.py:42
+#: .\Radiation\templates\Radiation\index.html:35
+#: .\Radiation\templates\Radiation\index.html:49 .\Receptionist\forms.py:55
 #: .\Receptionist\forms.py:237
 #: .\Receptionist\templates\Receptionist\Documents.html:37
-#: .\Receptionist\templates\Receptionist\index.html:146
 #: .\Receptionist\templates\Receptionist\index.html:165
-#: .\Receptionist\templates\Receptionist\index.html:203
-#: .\Receptionist\templates\Receptionist\index.html:244
-#: .\Receptionist\templates\Receptionist\index.html:598
-#: .\Receptionist\templates\Receptionist\index.html:672
+#: .\Receptionist\templates\Receptionist\index.html:184
+#: .\Receptionist\templates\Receptionist\index.html:222
+#: .\Receptionist\templates\Receptionist\index.html:263
+#: .\Receptionist\templates\Receptionist\index.html:617
+#: .\Receptionist\templates\Receptionist\index.html:691
 #: .\Receptionist\templates\Receptionist\reservation.html:53
 #: .\Receptionist\templates\Receptionist\storage_page.html:34
 #: .\Receptionist\templates\Receptionist\storage_page.html:53
 #: .\Receptionist\templates\Receptionist\storage_page.html:191
 #: .\Receptionist\templates\Receptionist\storage_page.html:204
-#: .\Receptionist\templates\Receptionist\storage_page.html:457
-#: .\Receptionist\templates\Receptionist\storage_page.html:495
+#: .\Receptionist\templates\Receptionist\storage_page.html:460
+#: .\Receptionist\templates\Receptionist\storage_page.html:498
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:12
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:77
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:86
@@ -303,29 +305,32 @@ msgstr "이름"
 #: .\Doctor\templates\Doctor\audit_PM.html:14
 #: .\Manage\templates\Manage\temp_manage.html:14
 msgid "AUDIT"
-msgstr ""
+msgstr "회계"
 
 #: .\Doctor\templates\Doctor\audit.html:22
 #: .\Doctor\templates\Doctor\audit.html:60
 #: .\Doctor\templates\Doctor\audit_PM.html:26
-#: .\Doctor\templates\Doctor\audit_PM.html:74
-#: .\Doctor\templates\Doctor\index.html:86
-#: .\Doctor\templates\Doctor\index.html:115
-#: .\Doctor\templates\Doctor\index_PM.html:90
-#: .\Doctor\templates\Doctor\index_PM.html:122
+#: .\Doctor\templates\Doctor\audit_PM.html:75
+#: .\Doctor\templates\Doctor\index.html:91
+#: .\Doctor\templates\Doctor\index.html:120
+#: .\Doctor\templates\Doctor\index_PM.html:97
+#: .\Doctor\templates\Doctor\index_PM.html:129
 #: .\Doctor\templates\Doctor\report.html:11
 #: .\Doctor\templates\Doctor\report.html:29
-#: .\Laboratory\templates\Laboratory\index.html:12 .\Manage\forms.py:75
+#: .\Laboratory\templates\Laboratory\index.html:15 .\Manage\forms.py:78
 #: .\Manage\templates\Manage\Manage.html:27
 #: .\Manage\templates\Manage\Manage.html:85
 #: .\Manage\templates\Manage\Manage.html:178
+#: .\Manage\templates\Manage\inventory_medical_tool.html:57
+#: .\Manage\templates\Manage\inventory_medical_tool.html:74
 #: .\Manage\templates\Manage\temp_manage.html:26
 #: .\Manage\templates\Manage\temp_manage.html:74
-#: .\Pharmacy\templates\Pharmacy\index.html:12
-#: .\Pharmacy\templates\Pharmacy\inventory.html:48
-#: .\Pharmacy\templates\Pharmacy\inventory.html:65
-#: .\Radiation\templates\Radiation\index.html:17
-#: .\Receptionist\templates\Receptionist\index.html:223
+#: .\Manage\templates\board\list.html:75
+#: .\Pharmacy\templates\Pharmacy\index.html:16
+#: .\Pharmacy\templates\Pharmacy\inventory.html:59
+#: .\Pharmacy\templates\Pharmacy\inventory.html:76
+#: .\Radiation\templates\Radiation\index.html:19
+#: .\Receptionist\templates\Receptionist\index.html:242
 #: .\Receptionist\templates\Receptionist\storage_page.html:205
 #: .\app\templates\app\notice.html:16
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\audit.html:33
@@ -347,8 +352,8 @@ msgstr "날짜"
 
 #: .\Doctor\templates\Doctor\audit.html:25
 #: .\Doctor\templates\Doctor\audit.html:64
-#: .\Doctor\templates\Doctor\audit_PM.html:78
-#: .\Doctor\templates\Doctor\index.html:263
+#: .\Doctor\templates\Doctor\audit_PM.html:79
+#: .\Doctor\templates\Doctor\index.html:269
 #: .\Manage\templates\Manage\Manage.html:46
 #: .\Manage\templates\Manage\Manage.html:139
 #: .\Manage\templates\Manage\temp_manage.html:78
@@ -358,12 +363,13 @@ msgstr "진료비"
 #: .\Doctor\templates\Doctor\audit.html:27
 #: .\Doctor\templates\Doctor\audit.html:34
 #: .\Doctor\templates\Doctor\audit.html:41
-#: .\Doctor\templates\Doctor\audit.html:48 .\Manage\forms.py:11
-#: .\Manage\forms.py:18 .\Manage\forms.py:73
-#: .\Radiation\templates\Radiation\index.html:32 .\Receptionist\forms.py:97
+#: .\Doctor\templates\Doctor\audit.html:48 .\Manage\forms.py:14
+#: .\Manage\forms.py:21 .\Manage\forms.py:76
+#: .\Radiation\templates\Radiation\index.html:34 .\Receptionist\forms.py:97
 #: .\Receptionist\forms.py:244
 #: .\Receptionist\templates\Receptionist\Documents.html:21
-#: .\Receptionist\templates\Receptionist\index.html:145
+#: .\Receptionist\templates\Receptionist\index.html:164
+#: .\Receptionist\templates\Receptionist\reservation.html:333
 #: .\Receptionist\templates\Receptionist\storage_page.html:19
 #: .\Receptionist\templates\Receptionist\storage_page.html:182
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:163
@@ -376,7 +382,7 @@ msgstr "전체"
 #: .\Doctor\templates\Doctor\audit.html:65
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:121
 msgid "Test"
-msgstr ""
+msgstr "검사"
 
 #: .\Doctor\templates\Doctor\audit.html:39
 #: .\Doctor\templates\Doctor\audit.html:66
@@ -391,7 +397,7 @@ msgstr "처치"
 
 #: .\Doctor\templates\Doctor\audit.html:46
 #: .\Doctor\templates\Doctor\audit.html:67
-#: .\Doctor\templates\Doctor\index.html:266 .\Manage\forms.py:136
+#: .\Doctor\templates\Doctor\index.html:272 .\Manage\forms.py:139
 #: .\Manage\templates\Manage\Manage.html:70
 #: .\Manage\templates\Manage\Manage.html:91
 #: .\Manage\templates\Manage\Manage.html:163
@@ -404,19 +410,22 @@ msgid "Medicine"
 msgstr "약"
 
 #: .\Doctor\templates\Doctor\audit.html:59
-#: .\Doctor\templates\Doctor\audit_PM.html:73
-#: .\Doctor\templates\Doctor\index.html:127
-#: .\Doctor\templates\Doctor\index_PM.html:132
+#: .\Doctor\templates\Doctor\audit_PM.html:74
+#: .\Doctor\templates\Doctor\index.html:132
+#: .\Doctor\templates\Doctor\index_PM.html:140
 #: .\Doctor\templates\Doctor\report.html:24
 #: .\Laboratory\templates\Laboratory\checklist.html:23
-#: .\Laboratory\templates\Laboratory\index.html:39
-#: .\Laboratory\templates\Laboratory\index.html:61
+#: .\Laboratory\templates\Laboratory\index.html:42
+#: .\Laboratory\templates\Laboratory\index.html:64
 #: .\Manage\templates\Manage\Manage.html:177
+#: .\Manage\templates\Manage\employee_manage.html:38
+#: .\Manage\templates\Manage\inventory_medical_tool.html:34
 #: .\Manage\templates\Manage\temp_manage.html:73
-#: .\Pharmacy\templates\Pharmacy\inventory.html:23
-#: .\Receptionist\templates\Receptionist\index.html:163
-#: .\Receptionist\templates\Receptionist\index.html:201
-#: .\Receptionist\templates\Receptionist\index.html:242
+#: .\Manage\templates\board\list.html:72
+#: .\Pharmacy\templates\Pharmacy\inventory.html:34
+#: .\Receptionist\templates\Receptionist\index.html:182
+#: .\Receptionist\templates\Receptionist\index.html:220
+#: .\Receptionist\templates\Receptionist\index.html:261
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:130
 #: .\obj\Release\Package\PackageTmp\Laboratory\templates\Laboratory\index.html:21
 #: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:52
@@ -428,7 +437,7 @@ msgid "No."
 msgstr "번호"
 
 #: .\Doctor\templates\Doctor\audit.html:61
-#: .\Doctor\templates\Doctor\audit_PM.html:75
+#: .\Doctor\templates\Doctor\audit_PM.html:76
 #: .\Manage\templates\Manage\Manage.html:86
 #: .\Manage\templates\Manage\Manage.html:179
 #: .\Manage\templates\Manage\temp_manage.html:75
@@ -442,29 +451,33 @@ msgid "Patient"
 msgstr "환자"
 
 #: .\Doctor\templates\Doctor\audit.html:62
-#: .\Doctor\templates\Doctor\audit_PM.html:76 .\Laboratory\forms.py:11
-#: .\Laboratory\templates\Laboratory\index.html:43 .\Manage\forms.py:31
-#: .\Manage\forms.py:111 .\Manage\templates\Manage\Manage.html:87
+#: .\Doctor\templates\Doctor\audit_PM.html:77 .\Laboratory\forms.py:11
+#: .\Laboratory\templates\Laboratory\index.html:46 .\Manage\forms.py:34
+#: .\Manage\forms.py:114 .\Manage\templates\Manage\Manage.html:87
 #: .\Manage\templates\Manage\Manage.html:180
+#: .\Manage\templates\Manage\employee_manage.html:21
+#: .\Manage\templates\Manage\employee_manage.html:40
+#: .\Manage\templates\Manage\employee_manage.html:160
 #: .\Manage\templates\Manage\temp_manage.html:76
-#: .\Pharmacy\templates\Pharmacy\index.html:34
-#: .\Pharmacy\templates\Pharmacy\index.html:63 .\Radiation\forms.py:44
-#: .\Radiation\templates\Radiation\index.html:49
-#: .\Radiation\templates\Radiation\index.html:78 .\Receptionist\forms.py:239
+#: .\Pharmacy\templates\Pharmacy\index.html:38
+#: .\Pharmacy\templates\Pharmacy\index.html:67 .\Radiation\forms.py:44
+#: .\Radiation\templates\Radiation\index.html:51
+#: .\Radiation\templates\Radiation\index.html:80 .\Receptionist\forms.py:239
 #: .\Receptionist\templates\Receptionist\Documents.html:19
 #: .\Receptionist\templates\Receptionist\Documents.html:39
-#: .\Receptionist\templates\Receptionist\index.html:70
-#: .\Receptionist\templates\Receptionist\index.html:168
+#: .\Receptionist\templates\Receptionist\index.html:89
 #: .\Receptionist\templates\Receptionist\index.html:187
-#: .\Receptionist\templates\Receptionist\index.html:205
-#: .\Receptionist\templates\Receptionist\index.html:228
+#: .\Receptionist\templates\Receptionist\index.html:206
+#: .\Receptionist\templates\Receptionist\index.html:224
 #: .\Receptionist\templates\Receptionist\index.html:247
-#: .\Receptionist\templates\Receptionist\index.html:690
+#: .\Receptionist\templates\Receptionist\index.html:266
+#: .\Receptionist\templates\Receptionist\index.html:709
 #: .\Receptionist\templates\Receptionist\reservation.html:82
+#: .\Receptionist\templates\Receptionist\reservation.html:331
 #: .\Receptionist\templates\Receptionist\storage_page.html:35
 #: .\Receptionist\templates\Receptionist\storage_page.html:206
-#: .\Receptionist\templates\Receptionist\storage_page.html:497
-#: .\app\templates\app\login.html:78
+#: .\Receptionist\templates\Receptionist\storage_page.html:500
+#: .\app\templates\app\login.html:78 .\app\templates\app\login_admin.html:78
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:146
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\audit.html:37
 #: .\obj\Release\Package\PackageTmp\Laboratory\templates\Laboratory\index.html:24
@@ -493,23 +506,24 @@ msgid "Depart"
 msgstr "과"
 
 #: .\Doctor\templates\Doctor\audit.html:68
-#: .\Doctor\templates\Doctor\audit_PM.html:81
+#: .\Doctor\templates\Doctor\audit_PM.html:82
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:278
 msgid "Sub Total"
 msgstr "소계"
 
 #: .\Doctor\templates\Doctor\audit.html:69
-#: .\Doctor\templates\Doctor\audit_PM.html:82
+#: .\Doctor\templates\Doctor\audit_PM.html:83
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:283
 msgid "Discount"
 msgstr "할인"
 
 #: .\Doctor\templates\Doctor\audit.html:70
-#: .\Doctor\templates\Doctor\audit_PM.html:83
+#: .\Doctor\templates\Doctor\audit_PM.html:84
 #: .\Manage\templates\Manage\Manage.html:93
 #: .\Manage\templates\Manage\Manage.html:107
-#: .\Pharmacy\templates\Pharmacy\index.html:68
-#: .\Pharmacy\templates\Pharmacy\inventory.html:54
+#: .\Manage\templates\Manage\inventory_medical_tool.html:63
+#: .\Pharmacy\templates\Pharmacy\index.html:72
+#: .\Pharmacy\templates\Pharmacy\inventory.html:65
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\audit.html:45
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\audit.html:54
 #: .\obj\Release\Package\PackageTmp\Manage\templates\Manage\manage.html:106
@@ -518,80 +532,82 @@ msgstr "할인"
 msgid "Total"
 msgstr "총계"
 
-#: .\Doctor\templates\Doctor\audit_PM.html:29
-#: .\Doctor\templates\Doctor\index.html:119
-#: .\Doctor\templates\Doctor\index.html:259
-#: .\Doctor\templates\Doctor\index_PM.html:126
-#: .\Doctor\templates\Doctor\index_PM.html:278
+#: .\Doctor\templates\Doctor\audit_PM.html:30
+#: .\Doctor\templates\Doctor\index.html:124
+#: .\Doctor\templates\Doctor\index.html:265
+#: .\Doctor\templates\Doctor\index_PM.html:134
+#: .\Doctor\templates\Doctor\index_PM.html:287
 #: .\Laboratory\templates\Laboratory\checklist.html:15
-#: .\Laboratory\templates\Laboratory\index.html:32
-#: .\Manage\templates\Manage\inventory_precedure.html:15
-#: .\Manage\templates\Manage\inventory_test.html:15
+#: .\Laboratory\templates\Laboratory\index.html:35
+#: .\Manage\templates\Manage\employee_manage.html:30
+#: .\Manage\templates\Manage\inventory_medical_tool.html:26
+#: .\Manage\templates\Manage\inventory_precedure.html:21
+#: .\Manage\templates\Manage\inventory_test.html:26
 #: .\Manage\templates\Manage\temp_manage.html:29
-#: .\Pharmacy\templates\Pharmacy\index.html:22
-#: .\Pharmacy\templates\Pharmacy\inventory.html:15
-#: .\Radiation\templates\Radiation\index.html:38
+#: .\Pharmacy\templates\Pharmacy\index.html:26
+#: .\Pharmacy\templates\Pharmacy\inventory.html:26
+#: .\Radiation\templates\Radiation\index.html:40
 #: .\Receptionist\templates\Receptionist\Documents.html:28
-#: .\Receptionist\templates\Receptionist\index.html:153
-#: .\Receptionist\templates\Receptionist\reservation.html:320
+#: .\Receptionist\templates\Receptionist\index.html:172
+#: .\Receptionist\templates\Receptionist\reservation.html:329
 #: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:45
 #: .\physical_therapist\templates\physical_therapist\index.html:89
 msgid "Search"
 msgstr "검색"
 
-#: .\Doctor\templates\Doctor\audit_PM.html:40
-#: .\Doctor\templates\Doctor\audit_PM.html:80
+#: .\Doctor\templates\Doctor\audit_PM.html:41
+#: .\Doctor\templates\Doctor\audit_PM.html:81
 #: .\Manage\templates\Manage\temp_manage.html:40
 #: .\Manage\templates\Manage\temp_manage.html:80
 msgid "Radiography"
 msgstr "방사선과"
 
-#: .\Doctor\templates\Doctor\audit_PM.html:79
-#: .\Doctor\templates\Doctor\index.html:265
+#: .\Doctor\templates\Doctor\audit_PM.html:80
+#: .\Doctor\templates\Doctor\index.html:271
 #: .\Manage\templates\Manage\temp_manage.html:79
 msgid "Procedure"
 msgstr "처치"
 
-#: .\Doctor\templates\Doctor\index.html:11
-#: .\Doctor\templates\Doctor\index_PM.html:11
-#: .\Radiation\templates\Radiation\index.html:62
-#: .\Receptionist\templates\Receptionist\index.html:583
-#: .\Receptionist\templates\Receptionist\index.html:657
+#: .\Doctor\templates\Doctor\index.html:15
+#: .\Doctor\templates\Doctor\index_PM.html:18
+#: .\Radiation\templates\Radiation\index.html:64
+#: .\Receptionist\templates\Receptionist\index.html:602
+#: .\Receptionist\templates\Receptionist\index.html:676
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:10
 #: .\obj\Release\Package\PackageTmp\Radiation\templates\Radiation\index.html:40
 #: .\physical_therapist\templates\physical_therapist\index.html:11
 msgid "Patient Information"
 msgstr "환자 정보"
 
-#: .\Doctor\templates\Doctor\index.html:12
-#: .\Doctor\templates\Doctor\index_PM.html:13
-#: .\Doctor\templates\Doctor\index_PM.html:15
+#: .\Doctor\templates\Doctor\index.html:16
+#: .\Doctor\templates\Doctor\index_PM.html:20
+#: .\Doctor\templates\Doctor\index_PM.html:22
 #: .\Receptionist\templates\Receptionist\Documents.html:46
-#: .\Receptionist\templates\Receptionist\index.html:126
-#: .\Receptionist\templates\Receptionist\index.html:740
-#: .\app\templates\app\layout.html:105
+#: .\Receptionist\templates\Receptionist\index.html:145
+#: .\Receptionist\templates\Receptionist\index.html:759
+#: .\app\templates\app\layout.html:104
 #: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:92
 #: .\physical_therapist\templates\physical_therapist\index.html:14
 msgid "Medical Report"
 msgstr "소견서"
 
-#: .\Doctor\templates\Doctor\index.html:18
-#: .\Doctor\templates\Doctor\index.html:128
-#: .\Doctor\templates\Doctor\index_PM.html:21
-#: .\Doctor\templates\Doctor\index_PM.html:133
+#: .\Doctor\templates\Doctor\index.html:22
+#: .\Doctor\templates\Doctor\index.html:133
+#: .\Doctor\templates\Doctor\index_PM.html:28
+#: .\Doctor\templates\Doctor\index_PM.html:141
 #: .\Doctor\templates\Doctor\report.html:483
-#: .\Laboratory\templates\Laboratory\index.html:40
-#: .\Laboratory\templates\Laboratory\index.html:87
-#: .\Pharmacy\templates\Pharmacy\index.html:31
+#: .\Laboratory\templates\Laboratory\index.html:43
+#: .\Laboratory\templates\Laboratory\index.html:90
+#: .\Pharmacy\templates\Pharmacy\index.html:35
 #: .\Receptionist\templates\Receptionist\index.html:18
-#: .\Receptionist\templates\Receptionist\index.html:164
-#: .\Receptionist\templates\Receptionist\index.html:202
-#: .\Receptionist\templates\Receptionist\index.html:243
-#: .\Receptionist\templates\Receptionist\index.html:589
-#: .\Receptionist\templates\Receptionist\index.html:663
+#: .\Receptionist\templates\Receptionist\index.html:183
+#: .\Receptionist\templates\Receptionist\index.html:221
+#: .\Receptionist\templates\Receptionist\index.html:262
+#: .\Receptionist\templates\Receptionist\index.html:608
+#: .\Receptionist\templates\Receptionist\index.html:682
 #: .\Receptionist\templates\Receptionist\reservation.html:59
-#: .\Receptionist\templates\Receptionist\storage_page.html:456
-#: .\Receptionist\templates\Receptionist\storage_page.html:494
+#: .\Receptionist\templates\Receptionist\storage_page.html:459
+#: .\Receptionist\templates\Receptionist\storage_page.html:497
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:16
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:131
 #: .\obj\Release\Package\PackageTmp\Laboratory\templates\Laboratory\index.html:22
@@ -607,27 +623,28 @@ msgstr "소견서"
 msgid "Chart No."
 msgstr "차트 번호"
 
-#: .\Doctor\templates\Doctor\index.html:33
-#: .\Doctor\templates\Doctor\index.html:130
-#: .\Doctor\templates\Doctor\index_PM.html:36
-#: .\Doctor\templates\Doctor\index_PM.html:135
+#: .\Doctor\templates\Doctor\index.html:37
+#: .\Doctor\templates\Doctor\index.html:135
+#: .\Doctor\templates\Doctor\index_PM.html:43
+#: .\Doctor\templates\Doctor\index_PM.html:143
 #: .\Doctor\templates\Doctor\report.html:485
-#: .\Laboratory\templates\Laboratory\index.html:42
-#: .\Laboratory\templates\Laboratory\index.html:103 .\Patient\forms.py:54
-#: .\Pharmacy\templates\Pharmacy\index.html:33
-#: .\Radiation\templates\Radiation\index.html:48
-#: .\Radiation\templates\Radiation\index.html:72 .\Receptionist\forms.py:57
+#: .\Laboratory\templates\Laboratory\index.html:45
+#: .\Laboratory\templates\Laboratory\index.html:106
+#: .\Manage\templates\Manage\employee_manage.html:135 .\Patient\forms.py:54
+#: .\Pharmacy\templates\Pharmacy\index.html:37
+#: .\Radiation\templates\Radiation\index.html:50
+#: .\Radiation\templates\Radiation\index.html:74 .\Receptionist\forms.py:57
 #: .\Receptionist\forms.py:84
 #: .\Receptionist\templates\Receptionist\Documents.html:38
-#: .\Receptionist\templates\Receptionist\index.html:42
-#: .\Receptionist\templates\Receptionist\index.html:148
-#: .\Receptionist\templates\Receptionist\index.html:166
-#: .\Receptionist\templates\Receptionist\index.html:204
-#: .\Receptionist\templates\Receptionist\index.html:245
-#: .\Receptionist\templates\Receptionist\index.html:604
-#: .\Receptionist\templates\Receptionist\index.html:678
+#: .\Receptionist\templates\Receptionist\index.html:60
+#: .\Receptionist\templates\Receptionist\index.html:167
+#: .\Receptionist\templates\Receptionist\index.html:185
+#: .\Receptionist\templates\Receptionist\index.html:223
+#: .\Receptionist\templates\Receptionist\index.html:264
+#: .\Receptionist\templates\Receptionist\index.html:623
+#: .\Receptionist\templates\Receptionist\index.html:697
 #: .\Receptionist\templates\Receptionist\reservation.html:68
-#: .\Receptionist\templates\Receptionist\storage_page.html:496
+#: .\Receptionist\templates\Receptionist\storage_page.html:499
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:58
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\audit.html:35
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:30
@@ -650,11 +667,13 @@ msgstr "차트 번호"
 msgid "Date of Birth"
 msgstr "생년월일"
 
-#: .\Doctor\templates\Doctor\index.html:39
-#: .\Doctor\templates\Doctor\index_PM.html:42
+#: .\Doctor\templates\Doctor\index.html:43
+#: .\Doctor\templates\Doctor\index_PM.html:49
 #: .\Doctor\templates\Doctor\report.html:60
-#: .\Doctor\templates\Doctor\reportwindow.html:78 .\Patient\forms.py:80
-#: .\Receptionist\templates\Receptionist\index.html:48
+#: .\Doctor\templates\Doctor\reportwindow.html:78
+#: .\Manage\templates\Manage\employee_manage.html:44
+#: .\Manage\templates\Manage\employee_manage.html:119 .\Patient\forms.py:90
+#: .\Receptionist\templates\Receptionist\index.html:34
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:85
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:36
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\report.html:52
@@ -666,13 +685,13 @@ msgstr "생년월일"
 msgid "Gender"
 msgstr "성별"
 
-#: .\Doctor\templates\Doctor\index.html:47
-#: .\Doctor\templates\Doctor\index_PM.html:50
+#: .\Doctor\templates\Doctor\index.html:51
+#: .\Doctor\templates\Doctor\index_PM.html:57
 #: .\Doctor\templates\Doctor\report.html:70
 #: .\Doctor\templates\Doctor\report.html:486
 #: .\Doctor\templates\Doctor\reportwindow.html:93
 #: .\Receptionist\templates\Receptionist\Documents.html:41
-#: .\Receptionist\templates\Receptionist\index.html:56
+#: .\Receptionist\templates\Receptionist\index.html:74
 #: .\Receptionist\templates\Receptionist\reservation.html:74
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:54
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\report.html:62
@@ -683,13 +702,14 @@ msgstr "성별"
 msgid "Phone"
 msgstr "전화번호"
 
-#: .\Doctor\templates\Doctor\index.html:53
-#: .\Doctor\templates\Doctor\index_PM.html:56
+#: .\Doctor\templates\Doctor\index.html:57
+#: .\Doctor\templates\Doctor\index_PM.html:63
 #: .\Doctor\templates\Doctor\report.html:80
-#: .\Doctor\templates\Doctor\reportwindow.html:107 .\Patient\forms.py:85
+#: .\Doctor\templates\Doctor\reportwindow.html:107
+#: .\Manage\templates\Manage\employee_manage.html:143 .\Patient\forms.py:95
 #: .\Receptionist\templates\Receptionist\Documents.html:40
-#: .\Receptionist\templates\Receptionist\index.html:62
-#: .\Receptionist\templates\Receptionist\index.html:632
+#: .\Receptionist\templates\Receptionist\index.html:66
+#: .\Receptionist\templates\Receptionist\index.html:651
 #: .\Receptionist\templates\Receptionist\storage_page.html:74
 #: .\Receptionist\templates\Receptionist\storage_page.html:153
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:90
@@ -708,63 +728,63 @@ msgstr "전화번호"
 msgid "Address"
 msgstr "주소"
 
-#: .\Doctor\templates\Doctor\index.html:62
-#: .\Doctor\templates\Doctor\index_PM.html:65
+#: .\Doctor\templates\Doctor\index.html:66
+#: .\Doctor\templates\Doctor\index_PM.html:72
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:69
 #: .\physical_therapist\templates\physical_therapist\index.html:64
 msgid "Past history"
 msgstr "과거력"
 
-#: .\Doctor\templates\Doctor\index.html:70
-#: .\Doctor\templates\Doctor\index_PM.html:74
+#: .\Doctor\templates\Doctor\index.html:74
+#: .\Doctor\templates\Doctor\index_PM.html:81
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:77
 #: .\physical_therapist\templates\physical_therapist\index.html:72
 msgid "Familiy history"
 msgstr "가족력"
 
-#: .\Doctor\templates\Doctor\index.html:80
-#: .\Receptionist\templates\Receptionist\index.html:720
+#: .\Doctor\templates\Doctor\index.html:84
+#: .\Receptionist\templates\Receptionist\index.html:739
 msgid "Vital Signs"
 msgstr "활력징후"
 
-#: .\Doctor\templates\Doctor\index.html:87
+#: .\Doctor\templates\Doctor\index.html:92
 msgid "Wt(kg)"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index.html:88
+#: .\Doctor\templates\Doctor\index.html:93
 msgid "Ht(cm)"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index.html:89
+#: .\Doctor\templates\Doctor\index.html:94
 msgid "BP(mmHg)"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index.html:90
+#: .\Doctor\templates\Doctor\index.html:95
 msgid "BT(˚c)"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index.html:91
-#: .\Receptionist\templates\Receptionist\index.html:99
-#: .\Receptionist\templates\Receptionist\index.html:733
+#: .\Doctor\templates\Doctor\index.html:96
+#: .\Receptionist\templates\Receptionist\index.html:118
+#: .\Receptionist\templates\Receptionist\index.html:752
 msgid "RR"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index.html:92
-#: .\Receptionist\templates\Receptionist\index.html:98
-#: .\Receptionist\templates\Receptionist\index.html:731
+#: .\Doctor\templates\Doctor\index.html:97
+#: .\Receptionist\templates\Receptionist\index.html:117
+#: .\Receptionist\templates\Receptionist\index.html:750
 msgid "PR"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index.html:113
-#: .\Doctor\templates\Doctor\index_PM.html:118
-#: .\Receptionist\templates\Receptionist\index.html:180
+#: .\Doctor\templates\Doctor\index.html:118
+#: .\Doctor\templates\Doctor\index_PM.html:125
+#: .\Receptionist\templates\Receptionist\index.html:199
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:120
 #: .\physical_therapist\templates\physical_therapist\index.html:83
 msgid "Reception Status"
 msgstr "접수상태"
 
-#: .\Doctor\templates\Doctor\index.html:131
-#: .\Doctor\templates\Doctor\index_PM.html:136
+#: .\Doctor\templates\Doctor\index.html:136
+#: .\Doctor\templates\Doctor\index_PM.html:144
 #: .\Receptionist\templates\Receptionist\storage_page.html:36
 #: .\env_local\Lib\site-packages\django\db\models\fields\__init__.py:2097
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:134
@@ -774,128 +794,140 @@ msgstr "접수상태"
 msgid "Time"
 msgstr "시간"
 
-#: .\Doctor\templates\Doctor\index.html:142
-#: .\Doctor\templates\Doctor\index_PM.html:147
+#: .\Doctor\templates\Doctor\index.html:147
+#: .\Doctor\templates\Doctor\index_PM.html:155
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:103
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:145
 #: .\physical_therapist\templates\physical_therapist\index.html:111
 msgid "History Taking"
 msgstr "진료내용"
 
-#: .\Doctor\templates\Doctor\index.html:145
-#: .\Doctor\templates\Doctor\index_PM.html:149
-#: .\Laboratory\templates\Laboratory\index.html:147
-#: .\Manage\templates\Manage\inventory_precedure.html:104
-#: .\Manage\templates\Manage\inventory_test.html:129
-#: .\Pharmacy\templates\Pharmacy\index.html:50
-#: .\Pharmacy\templates\Pharmacy\inventory.html:253
-#: .\Pharmacy\templates\Pharmacy\inventory.html:311
-#: .\Pharmacy\templates\Pharmacy\inventory.html:352
-#: .\Receptionist\templates\Receptionist\index.html:130
-#: .\Receptionist\templates\Receptionist\index.html:639
+#: .\Doctor\templates\Doctor\index.html:150
+#: .\Doctor\templates\Doctor\index_PM.html:157
+#: .\Laboratory\templates\Laboratory\index.html:150
+#: .\Manage\templates\Manage\employee_manage.html:211
+#: .\Manage\templates\Manage\employee_manage.html:252
+#: .\Manage\templates\Manage\employee_manage.html:294
+#: .\Manage\templates\Manage\inventory_medical_tool.html:264
+#: .\Manage\templates\Manage\inventory_medical_tool.html:325
+#: .\Manage\templates\Manage\inventory_medical_tool.html:366
+#: .\Manage\templates\Manage\inventory_precedure.html:109
+#: .\Manage\templates\Manage\inventory_test.html:140
+#: .\Pharmacy\templates\Pharmacy\index.html:54
+#: .\Pharmacy\templates\Pharmacy\inventory.html:264
+#: .\Pharmacy\templates\Pharmacy\inventory.html:322
+#: .\Pharmacy\templates\Pharmacy\inventory.html:363
+#: .\Receptionist\templates\Receptionist\index.html:149
+#: .\Receptionist\templates\Receptionist\index.html:658
 #: .\Receptionist\templates\Receptionist\reservation.html:106
 #: .\Receptionist\templates\Receptionist\storage_page.html:124
-#: .\Receptionist\templates\Receptionist\storage_page.html:473
-#: .\Receptionist\templates\Receptionist\storage_page.html:511
+#: .\Receptionist\templates\Receptionist\storage_page.html:476
+#: .\Receptionist\templates\Receptionist\storage_page.html:514
 #: .\physical_therapist\templates\physical_therapist\index.html:113
 msgid "Cancel"
 msgstr "취소"
 
-#: .\Doctor\templates\Doctor\index.html:146
-#: .\Doctor\templates\Doctor\index_PM.html:150
+#: .\Doctor\templates\Doctor\index.html:151
+#: .\Doctor\templates\Doctor\index_PM.html:158
 #: .\Doctor\templates\Doctor\report.html:110
 #: .\Laboratory\templates\Laboratory\checklist.html:46
-#: .\Laboratory\templates\Laboratory\index.html:79
-#: .\Manage\templates\Manage\inventory_precedure.html:103
-#: .\Manage\templates\Manage\inventory_test.html:128
-#: .\Pharmacy\templates\Pharmacy\inventory.html:252
-#: .\Pharmacy\templates\Pharmacy\inventory.html:310
-#: .\Pharmacy\templates\Pharmacy\inventory.html:351
-#: .\Radiation\templates\Radiation\index.html:63
-#: .\Receptionist\templates\Receptionist\index.html:131
-#: .\Receptionist\templates\Receptionist\index.html:640
-#: .\Receptionist\templates\Receptionist\index.html:748
+#: .\Laboratory\templates\Laboratory\index.html:82
+#: .\Manage\templates\Manage\employee_manage.html:212
+#: .\Manage\templates\Manage\employee_manage.html:253
+#: .\Manage\templates\Manage\employee_manage.html:295
+#: .\Manage\templates\Manage\inventory_medical_tool.html:263
+#: .\Manage\templates\Manage\inventory_medical_tool.html:324
+#: .\Manage\templates\Manage\inventory_medical_tool.html:365
+#: .\Manage\templates\Manage\inventory_precedure.html:108
+#: .\Manage\templates\Manage\inventory_test.html:139
+#: .\Pharmacy\templates\Pharmacy\inventory.html:263
+#: .\Pharmacy\templates\Pharmacy\inventory.html:321
+#: .\Pharmacy\templates\Pharmacy\inventory.html:362
+#: .\Radiation\templates\Radiation\index.html:65
+#: .\Receptionist\templates\Receptionist\index.html:150
+#: .\Receptionist\templates\Receptionist\index.html:659
+#: .\Receptionist\templates\Receptionist\index.html:767
 #: .\Receptionist\templates\Receptionist\reservation.html:107
 #: .\Receptionist\templates\Receptionist\storage_page.html:125
 #: .\physical_therapist\templates\physical_therapist\index.html:114
 msgid "Save"
 msgstr "저장"
 
-#: .\Doctor\templates\Doctor\index.html:147
-#: .\Doctor\templates\Doctor\index_PM.html:151
-#: .\Pharmacy\templates\Pharmacy\index.html:51 .\Receptionist\forms.py:100
+#: .\Doctor\templates\Doctor\index.html:152
+#: .\Doctor\templates\Doctor\index_PM.html:159
+#: .\Pharmacy\templates\Pharmacy\index.html:55 .\Receptionist\forms.py:100
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:115
 #: .\physical_therapist\templates\physical_therapist\index.html:115
 msgid "Done"
 msgstr "완료"
 
-#: .\Doctor\templates\Doctor\index.html:152
-#: .\Doctor\templates\Doctor\index_PM.html:164
+#: .\Doctor\templates\Doctor\index.html:157
+#: .\Doctor\templates\Doctor\index_PM.html:172
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:154
 #: .\physical_therapist\templates\physical_therapist\index.html:128
 msgid "Subjective Data"
 msgstr "주호소"
 
-#: .\Doctor\templates\Doctor\index.html:156
-#: .\Doctor\templates\Doctor\index_PM.html:168
+#: .\Doctor\templates\Doctor\index.html:161
+#: .\Doctor\templates\Doctor\index_PM.html:176
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:158
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:124
 #: .\physical_therapist\templates\physical_therapist\index.html:132
 msgid "Objective Data"
 msgstr "진료 내역"
 
-#: .\Doctor\templates\Doctor\index.html:160
-#: .\Doctor\templates\Doctor\index_PM.html:172
+#: .\Doctor\templates\Doctor\index.html:165
+#: .\Doctor\templates\Doctor\index_PM.html:180
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:162
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:118
 #: .\physical_therapist\templates\physical_therapist\index.html:136
 msgid "Assessment"
 msgstr "사정"
 
-#: .\Doctor\templates\Doctor\index.html:164
-#: .\Doctor\templates\Doctor\index_PM.html:176
+#: .\Doctor\templates\Doctor\index.html:169
+#: .\Doctor\templates\Doctor\index_PM.html:184
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:166
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:112
 #: .\physical_therapist\templates\physical_therapist\index.html:140
 msgid "Plan"
 msgstr "치료계획"
 
-#: .\Doctor\templates\Doctor\index.html:168
-#: .\Doctor\templates\Doctor\index_PM.html:180
+#: .\Doctor\templates\Doctor\index.html:173
+#: .\Doctor\templates\Doctor\index_PM.html:188
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:170
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:130
 #: .\physical_therapist\templates\physical_therapist\index.html:144
 msgid "Diagnosis"
 msgstr "진단명"
 
-#: .\Doctor\templates\Doctor\index.html:173
-#: .\Doctor\templates\Doctor\index_PM.html:184
+#: .\Doctor\templates\Doctor\index.html:178
+#: .\Doctor\templates\Doctor\index_PM.html:192
 msgid "ICD Code"
 msgstr "ICD 코드"
 
-#: .\Doctor\templates\Doctor\index.html:192
-#: .\Doctor\templates\Doctor\index_PM.html:216
+#: .\Doctor\templates\Doctor\index.html:197
+#: .\Doctor\templates\Doctor\index_PM.html:224
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:176
 #: .\physical_therapist\templates\physical_therapist\index.html:154
 msgid "Order List"
 msgstr "오더내역"
 
-#: .\Doctor\templates\Doctor\index.html:201
-#: .\Doctor\templates\Doctor\index.html:276
-#: .\Doctor\templates\Doctor\index.html:304
-#: .\Doctor\templates\Doctor\index.html:345
-#: .\Doctor\templates\Doctor\index.html:396
-#: .\Doctor\templates\Doctor\index.html:437
-#: .\Doctor\templates\Doctor\index_PM.html:225
-#: .\Doctor\templates\Doctor\index_PM.html:295
-#: .\Doctor\templates\Doctor\index_PM.html:322
-#: .\Doctor\templates\Doctor\index_PM.html:376
-#: .\Doctor\templates\Doctor\index_PM.html:401
-#: .\Doctor\templates\Doctor\index_PM.html:426
-#: .\Laboratory\templates\Laboratory\checklist.html:51 .\Manage\forms.py:169
-#: .\Manage\templates\Manage\inventory_precedure.html:23
-#: .\Manage\templates\Manage\inventory_test.html:23
-#: .\Pharmacy\templates\Pharmacy\index.html:61
+#: .\Doctor\templates\Doctor\index.html:206
+#: .\Doctor\templates\Doctor\index.html:282
+#: .\Doctor\templates\Doctor\index.html:310
+#: .\Doctor\templates\Doctor\index.html:351
+#: .\Doctor\templates\Doctor\index.html:402
+#: .\Doctor\templates\Doctor\index.html:443
+#: .\Doctor\templates\Doctor\index_PM.html:233
+#: .\Doctor\templates\Doctor\index_PM.html:304
+#: .\Doctor\templates\Doctor\index_PM.html:331
+#: .\Doctor\templates\Doctor\index_PM.html:385
+#: .\Doctor\templates\Doctor\index_PM.html:410
+#: .\Doctor\templates\Doctor\index_PM.html:435
+#: .\Laboratory\templates\Laboratory\checklist.html:51 .\Manage\forms.py:172
+#: .\Manage\templates\Manage\inventory_precedure.html:29
+#: .\Manage\templates\Manage\inventory_test.html:34
+#: .\Pharmacy\templates\Pharmacy\index.html:65
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:104
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:141
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:215
@@ -905,13 +937,16 @@ msgstr "오더내역"
 msgid "Code"
 msgstr "코드"
 
-#: .\Doctor\templates\Doctor\index.html:203
-#: .\Doctor\templates\Doctor\index_PM.html:227
-#: .\Manage\templates\Manage\inventory_test.html:114
-#: .\Pharmacy\templates\Pharmacy\index.html:65
-#: .\Pharmacy\templates\Pharmacy\inventory.html:28
-#: .\Pharmacy\templates\Pharmacy\inventory.html:173
-#: .\Pharmacy\templates\Pharmacy\inventory.html:179
+#: .\Doctor\templates\Doctor\index.html:208
+#: .\Doctor\templates\Doctor\index_PM.html:235
+#: .\Manage\templates\Manage\inventory_medical_tool.html:37
+#: .\Manage\templates\Manage\inventory_medical_tool.html:184
+#: .\Manage\templates\Manage\inventory_medical_tool.html:190
+#: .\Manage\templates\Manage\inventory_test.html:125
+#: .\Pharmacy\templates\Pharmacy\index.html:69
+#: .\Pharmacy\templates\Pharmacy\inventory.html:39
+#: .\Pharmacy\templates\Pharmacy\inventory.html:184
+#: .\Pharmacy\templates\Pharmacy\inventory.html:190
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:191
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:187
 #: .\obj\Release\Package\PackageTmp\Pharmacy\forms.py:85
@@ -919,10 +954,10 @@ msgstr "코드"
 msgid "Unit"
 msgstr "단위"
 
-#: .\Doctor\templates\Doctor\index.html:204
-#: .\Doctor\templates\Doctor\index_PM.html:228
+#: .\Doctor\templates\Doctor\index.html:209
+#: .\Doctor\templates\Doctor\index_PM.html:236
 #: .\Manage\templates\Manage\temp_manage.html:81
-#: .\Pharmacy\templates\Pharmacy\index.html:66
+#: .\Pharmacy\templates\Pharmacy\index.html:70
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:188
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:183
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:214
@@ -930,9 +965,9 @@ msgstr "단위"
 msgid "Amount"
 msgstr "수량"
 
-#: .\Doctor\templates\Doctor\index.html:205
-#: .\Doctor\templates\Doctor\index_PM.html:229
-#: .\Pharmacy\templates\Pharmacy\index.html:67
+#: .\Doctor\templates\Doctor\index.html:210
+#: .\Doctor\templates\Doctor\index_PM.html:237
+#: .\Pharmacy\templates\Pharmacy\index.html:71
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:189
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:188
 #: .\obj\Release\Package\PackageTmp\Receptionist\models.py:219
@@ -940,25 +975,25 @@ msgstr "수량"
 msgid "Days"
 msgstr "일수"
 
-#: .\Doctor\templates\Doctor\index.html:206
-#: .\Doctor\templates\Doctor\index_PM.html:230
-#: .\Pharmacy\templates\Pharmacy\index.html:69
+#: .\Doctor\templates\Doctor\index.html:211
+#: .\Doctor\templates\Doctor\index_PM.html:238
+#: .\Pharmacy\templates\Pharmacy\index.html:73
 msgid "Use"
 msgstr "용법"
 
-#: .\Doctor\templates\Doctor\index.html:224
-#: .\Doctor\templates\Doctor\index_PM.html:248
+#: .\Doctor\templates\Doctor\index.html:229
+#: .\Doctor\templates\Doctor\index_PM.html:256
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:208
 msgid "Next Visiting Day"
 msgstr "다음 방문일"
 
-#: .\Doctor\templates\Doctor\index.html:229
+#: .\Doctor\templates\Doctor\index.html:234
 msgid "Total Price"
 msgstr "총 금액"
 
-#: .\Doctor\templates\Doctor\index.html:242
-#: .\Doctor\templates\Doctor\index_PM.html:262 .\Patient\forms.py:104
-#: .\Receptionist\templates\Receptionist\index.html:109
+#: .\Doctor\templates\Doctor\index.html:247
+#: .\Doctor\templates\Doctor\index_PM.html:270 .\Patient\forms.py:114
+#: .\Receptionist\templates\Receptionist\index.html:128
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:217
 #: .\obj\Release\Package\PackageTmp\Patient\forms.py:104
 #: .\obj\Release\Package\PackageTmp\Patient\models.py:98
@@ -967,14 +1002,14 @@ msgstr "총 금액"
 msgid "Past History"
 msgstr "과거력"
 
-#: .\Doctor\templates\Doctor\index.html:256
-#: .\Doctor\templates\Doctor\index_PM.html:275
+#: .\Doctor\templates\Doctor\index.html:262
+#: .\Doctor\templates\Doctor\index_PM.html:284
 #: .\Laboratory\templates\Laboratory\checklist.html:9
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:231
 msgid "Check List"
 msgstr "검진내역"
 
-#: .\Doctor\templates\Doctor\index.html:264 .\Manage\forms.py:144
+#: .\Doctor\templates\Doctor\index.html:270 .\Manage\forms.py:147
 #: .\Manage\templates\Manage\Manage.html:54
 #: .\Manage\templates\Manage\Manage.html:89
 #: .\Manage\templates\Manage\Manage.html:147
@@ -985,26 +1020,27 @@ msgstr "검진내역"
 msgid "Lab"
 msgstr "검사"
 
-#: .\Doctor\templates\Doctor\index.html:267
+#: .\Doctor\templates\Doctor\index.html:273
 msgid "Bundle Px"
 msgstr "묶음처방"
 
-#: .\Doctor\templates\Doctor\index.html:279
-#: .\Doctor\templates\Doctor\index.html:307
-#: .\Doctor\templates\Doctor\index.html:348
-#: .\Doctor\templates\Doctor\index.html:399
-#: .\Doctor\templates\Doctor\index.html:439
-#: .\Doctor\templates\Doctor\index_PM.html:297
-#: .\Doctor\templates\Doctor\index_PM.html:324
-#: .\Doctor\templates\Doctor\index_PM.html:378
-#: .\Doctor\templates\Doctor\index_PM.html:403
-#: .\Doctor\templates\Doctor\index_PM.html:428
+#: .\Doctor\templates\Doctor\index.html:285
+#: .\Doctor\templates\Doctor\index.html:313
+#: .\Doctor\templates\Doctor\index.html:354
+#: .\Doctor\templates\Doctor\index.html:405
+#: .\Doctor\templates\Doctor\index.html:445
+#: .\Doctor\templates\Doctor\index_PM.html:306
+#: .\Doctor\templates\Doctor\index_PM.html:333
+#: .\Doctor\templates\Doctor\index_PM.html:387
+#: .\Doctor\templates\Doctor\index_PM.html:412
+#: .\Doctor\templates\Doctor\index_PM.html:437
 #: .\Laboratory\templates\Laboratory\checklist.html:29
 #: .\Laboratory\templates\Laboratory\checklist.html:72
-#: .\Manage\templates\Manage\inventory_precedure.html:27
-#: .\Manage\templates\Manage\inventory_test.html:27
-#: .\Pharmacy\templates\Pharmacy\index.html:70
-#: .\Pharmacy\templates\Pharmacy\inventory.html:29
+#: .\Manage\templates\Manage\inventory_medical_tool.html:38
+#: .\Manage\templates\Manage\inventory_precedure.html:32
+#: .\Manage\templates\Manage\inventory_test.html:38
+#: .\Pharmacy\templates\Pharmacy\index.html:74
+#: .\Pharmacy\templates\Pharmacy\inventory.html:40
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:153
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:220
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:250
@@ -1013,171 +1049,177 @@ msgstr "묶음처방"
 msgid "Price"
 msgstr "금액"
 
-#: .\Doctor\templates\Doctor\index.html:398
-#: .\Pharmacy\templates\Pharmacy\inventory.html:30
+#: .\Doctor\templates\Doctor\index.html:404
+#: .\Manage\templates\Manage\inventory_medical_tool.html:39
+#: .\Pharmacy\templates\Pharmacy\inventory.html:41
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:225
 #: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:59
 msgid "Count"
 msgstr "개수"
 
-#: .\Doctor\templates\Doctor\index_PM.html:14
-#: .\Doctor\templates\Doctor\index_PM.html:457
-#: .\Receptionist\templates\Receptionist\index.html:125
-#: .\Receptionist\templates\Receptionist\index.html:303
+#: .\Doctor\templates\Doctor\index.html:489
+#: .\Doctor\templates\Doctor\index_PM.html:747
+msgid "Patient Past History"
+msgstr "환자 과거력"
+
+#: .\Doctor\templates\Doctor\index_PM.html:21
+#: .\Doctor\templates\Doctor\index_PM.html:466
+#: .\Receptionist\templates\Receptionist\index.html:144
+#: .\Receptionist\templates\Receptionist\index.html:322
 #: .\physical_therapist\templates\physical_therapist\index.html:13
 #: .\physical_therapist\templates\physical_therapist\index.html:207
 msgid "Initial Report"
 msgstr "사전 문진"
 
-#: .\Doctor\templates\Doctor\index_PM.html:84
+#: .\Doctor\templates\Doctor\index_PM.html:91
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\index.html:87
 msgid "Vital"
 msgstr "활력징후"
 
-#: .\Doctor\templates\Doctor\index_PM.html:210
+#: .\Doctor\templates\Doctor\index_PM.html:218
 #: .\Receptionist\templates\Receptionist\storage_page.html:164
 #: .\physical_therapist\templates\physical_therapist\index.html:148
 msgid "Recommend"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:462
-#: .\Receptionist\templates\Receptionist\index.html:308
+#: .\Doctor\templates\Doctor\index_PM.html:471
+#: .\Receptionist\templates\Receptionist\index.html:327
 #: .\physical_therapist\templates\physical_therapist\index.html:212
 msgid "활력징후"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:466
-#: .\Receptionist\templates\Receptionist\index.html:312
+#: .\Doctor\templates\Doctor\index_PM.html:475
+#: .\Receptionist\templates\Receptionist\index.html:331
 #: .\physical_therapist\templates\physical_therapist\index.html:216
 msgid "키"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:472
-#: .\Receptionist\templates\Receptionist\index.html:318
+#: .\Doctor\templates\Doctor\index_PM.html:481
+#: .\Receptionist\templates\Receptionist\index.html:337
 #: .\physical_therapist\templates\physical_therapist\index.html:222
 msgid "몸무게"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:479
-#: .\Receptionist\templates\Receptionist\index.html:325
+#: .\Doctor\templates\Doctor\index_PM.html:488
+#: .\Receptionist\templates\Receptionist\index.html:344
 #: .\physical_therapist\templates\physical_therapist\index.html:229
 msgid "BMI"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:485
-#: .\Receptionist\templates\Receptionist\index.html:331
+#: .\Doctor\templates\Doctor\index_PM.html:494
+#: .\Receptionist\templates\Receptionist\index.html:350
 #: .\physical_therapist\templates\physical_therapist\index.html:235
 msgid "혈압"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:491
-#: .\Receptionist\templates\Receptionist\index.html:337
+#: .\Doctor\templates\Doctor\index_PM.html:500
+#: .\Receptionist\templates\Receptionist\index.html:356
 #: .\physical_therapist\templates\physical_therapist\index.html:241
 msgid "체온"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:508
-#: .\Receptionist\templates\Receptionist\index.html:354
+#: .\Doctor\templates\Doctor\index_PM.html:517
+#: .\Receptionist\templates\Receptionist\index.html:373
 #: .\physical_therapist\templates\physical_therapist\index.html:258
 msgid "2. 현재 불편한 부위와 증상에 표시하여 주세요."
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:544
-#: .\Receptionist\templates\Receptionist\index.html:390
+#: .\Doctor\templates\Doctor\index_PM.html:553
+#: .\Receptionist\templates\Receptionist\index.html:409
 #: .\physical_therapist\templates\physical_therapist\index.html:294
 msgid "2)방향"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:545
-#: .\Receptionist\templates\Receptionist\index.html:391
+#: .\Doctor\templates\Doctor\index_PM.html:554
+#: .\Receptionist\templates\Receptionist\index.html:410
 #: .\physical_therapist\templates\physical_therapist\index.html:295
 msgid "왼쪽"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:546
-#: .\Receptionist\templates\Receptionist\index.html:392
+#: .\Doctor\templates\Doctor\index_PM.html:555
+#: .\Receptionist\templates\Receptionist\index.html:411
 #: .\physical_therapist\templates\physical_therapist\index.html:296
 msgid "가운데"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:547
-#: .\Receptionist\templates\Receptionist\index.html:393
+#: .\Doctor\templates\Doctor\index_PM.html:556
+#: .\Receptionist\templates\Receptionist\index.html:412
 #: .\physical_therapist\templates\physical_therapist\index.html:297
 msgid "오른쪽"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:553
-#: .\Receptionist\templates\Receptionist\index.html:399
+#: .\Doctor\templates\Doctor\index_PM.html:562
+#: .\Receptionist\templates\Receptionist\index.html:418
 #: .\physical_therapist\templates\physical_therapist\index.html:303
 msgid "3)증상"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:554
-#: .\Receptionist\templates\Receptionist\index.html:400
+#: .\Doctor\templates\Doctor\index_PM.html:563
+#: .\Receptionist\templates\Receptionist\index.html:419
 #: .\physical_therapist\templates\physical_therapist\index.html:304
 msgid "당긴다"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:555
-#: .\Receptionist\templates\Receptionist\index.html:401
+#: .\Doctor\templates\Doctor\index_PM.html:564
+#: .\Receptionist\templates\Receptionist\index.html:420
 #: .\physical_therapist\templates\physical_therapist\index.html:305
 msgid "저리다"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:556
-#: .\Receptionist\templates\Receptionist\index.html:402
+#: .\Doctor\templates\Doctor\index_PM.html:565
+#: .\Receptionist\templates\Receptionist\index.html:421
 #: .\physical_therapist\templates\physical_therapist\index.html:306
 msgid "쑤신다"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:557
-#: .\Receptionist\templates\Receptionist\index.html:403
+#: .\Doctor\templates\Doctor\index_PM.html:566
+#: .\Receptionist\templates\Receptionist\index.html:422
 #: .\physical_therapist\templates\physical_therapist\index.html:307
 msgid "감각이 둔하다"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:558
-#: .\Receptionist\templates\Receptionist\index.html:404
+#: .\Doctor\templates\Doctor\index_PM.html:567
+#: .\Receptionist\templates\Receptionist\index.html:423
 #: .\physical_therapist\templates\physical_therapist\index.html:308
 msgid "마비가 된다"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:561
-#: .\Receptionist\templates\Receptionist\index.html:407
+#: .\Doctor\templates\Doctor\index_PM.html:570
+#: .\Receptionist\templates\Receptionist\index.html:426
 #: .\physical_therapist\templates\physical_therapist\index.html:311
 msgid "발병시기"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:568
-#: .\Receptionist\templates\Receptionist\index.html:414
+#: .\Doctor\templates\Doctor\index_PM.html:577
+#: .\Receptionist\templates\Receptionist\index.html:433
 #: .\physical_therapist\templates\physical_therapist\index.html:318
 msgid ""
 "3. 최근 6개월 내 현재 증상으로 치료 받은 내역을 체크해주세요 (한의원 포함) "
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:569
-#: .\Doctor\templates\Doctor\index_PM.html:637
-#: .\Receptionist\templates\Receptionist\index.html:415
-#: .\Receptionist\templates\Receptionist\index.html:483
+#: .\Doctor\templates\Doctor\index_PM.html:578
+#: .\Doctor\templates\Doctor\index_PM.html:646
+#: .\Receptionist\templates\Receptionist\index.html:434
+#: .\Receptionist\templates\Receptionist\index.html:502
 #: .\physical_therapist\templates\physical_therapist\index.html:319
 #: .\physical_therapist\templates\physical_therapist\index.html:387
 msgid "없음"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:573
-#: .\Receptionist\templates\Receptionist\index.html:419
+#: .\Doctor\templates\Doctor\index_PM.html:582
+#: .\Receptionist\templates\Receptionist\index.html:438
 #: .\physical_therapist\templates\physical_therapist\index.html:323
 msgid "물리치료"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:574
-#: .\Doctor\templates\Doctor\index_PM.html:577
-#: .\Doctor\templates\Doctor\index_PM.html:581
-#: .\Doctor\templates\Doctor\index_PM.html:584
-#: .\Receptionist\templates\Receptionist\index.html:420
-#: .\Receptionist\templates\Receptionist\index.html:423
-#: .\Receptionist\templates\Receptionist\index.html:427
-#: .\Receptionist\templates\Receptionist\index.html:430
+#: .\Doctor\templates\Doctor\index_PM.html:583
+#: .\Doctor\templates\Doctor\index_PM.html:586
+#: .\Doctor\templates\Doctor\index_PM.html:590
+#: .\Doctor\templates\Doctor\index_PM.html:593
+#: .\Receptionist\templates\Receptionist\index.html:439
+#: .\Receptionist\templates\Receptionist\index.html:442
+#: .\Receptionist\templates\Receptionist\index.html:446
+#: .\Receptionist\templates\Receptionist\index.html:449
 #: .\physical_therapist\templates\physical_therapist\index.html:324
 #: .\physical_therapist\templates\physical_therapist\index.html:327
 #: .\physical_therapist\templates\physical_therapist\index.html:331
@@ -1185,261 +1227,261 @@ msgstr ""
 msgid "회"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:576
-#: .\Receptionist\templates\Receptionist\index.html:422
+#: .\Doctor\templates\Doctor\index_PM.html:585
+#: .\Receptionist\templates\Receptionist\index.html:441
 #: .\physical_therapist\templates\physical_therapist\index.html:326
 msgid "주사치료"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:580
-#: .\Receptionist\templates\Receptionist\index.html:426
+#: .\Doctor\templates\Doctor\index_PM.html:589
+#: .\Receptionist\templates\Receptionist\index.html:445
 #: .\physical_therapist\templates\physical_therapist\index.html:330
 msgid "약복용"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:583
-#: .\Receptionist\templates\Receptionist\index.html:429
+#: .\Doctor\templates\Doctor\index_PM.html:592
+#: .\Receptionist\templates\Receptionist\index.html:448
 #: .\physical_therapist\templates\physical_therapist\index.html:333
 msgid "침치료"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:590
-#: .\Receptionist\templates\Receptionist\index.html:436
+#: .\Doctor\templates\Doctor\index_PM.html:599
+#: .\Receptionist\templates\Receptionist\index.html:455
 #: .\physical_therapist\templates\physical_therapist\index.html:340
 msgid "4. 통증 정도가 어느정도인지 표시해주세요."
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:604
-#: .\Receptionist\templates\Receptionist\index.html:450
+#: .\Doctor\templates\Doctor\index_PM.html:613
+#: .\Receptionist\templates\Receptionist\index.html:469
 #: .\physical_therapist\templates\physical_therapist\index.html:354
 msgid "5. 한번이라도 수술 받으신 적이 있나요 ?"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:608
-#: .\Doctor\templates\Doctor\index_PM.html:674
-#: .\Receptionist\templates\Receptionist\index.html:454
-#: .\Receptionist\templates\Receptionist\index.html:520
+#: .\Doctor\templates\Doctor\index_PM.html:617
+#: .\Doctor\templates\Doctor\index_PM.html:683
+#: .\Receptionist\templates\Receptionist\index.html:473
+#: .\Receptionist\templates\Receptionist\index.html:539
 #: .\physical_therapist\templates\physical_therapist\index.html:358
 #: .\physical_therapist\templates\physical_therapist\index.html:424
 msgid "예"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:609
-#: .\Receptionist\templates\Receptionist\index.html:455
+#: .\Doctor\templates\Doctor\index_PM.html:618
+#: .\Receptionist\templates\Receptionist\index.html:474
 #: .\physical_therapist\templates\physical_therapist\index.html:359
 msgid "년도"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:611
-#: .\Receptionist\templates\Receptionist\index.html:457
+#: .\Doctor\templates\Doctor\index_PM.html:620
+#: .\Receptionist\templates\Receptionist\index.html:476
 #: .\physical_therapist\templates\physical_therapist\index.html:361
 msgid "수술명"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:613
-#: .\Doctor\templates\Doctor\index_PM.html:676
-#: .\Receptionist\templates\Receptionist\index.html:459
-#: .\Receptionist\templates\Receptionist\index.html:522
+#: .\Doctor\templates\Doctor\index_PM.html:622
+#: .\Doctor\templates\Doctor\index_PM.html:685
+#: .\Receptionist\templates\Receptionist\index.html:478
+#: .\Receptionist\templates\Receptionist\index.html:541
 #: .\physical_therapist\templates\physical_therapist\index.html:363
 #: .\physical_therapist\templates\physical_therapist\index.html:426
 msgid "아니오"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:618
-#: .\Receptionist\templates\Receptionist\index.html:464
+#: .\Doctor\templates\Doctor\index_PM.html:627
+#: .\Receptionist\templates\Receptionist\index.html:483
 #: .\physical_therapist\templates\physical_therapist\index.html:368
 msgid "6. 위 증상과 관련된 어떤 검사를 하셨는지요?"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:621
-#: .\Receptionist\templates\Receptionist\index.html:467
+#: .\Doctor\templates\Doctor\index_PM.html:630
+#: .\Receptionist\templates\Receptionist\index.html:486
 #: .\physical_therapist\templates\physical_therapist\index.html:371
 msgid "MRI"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:622
-#: .\Receptionist\templates\Receptionist\index.html:468
+#: .\Doctor\templates\Doctor\index_PM.html:631
+#: .\Receptionist\templates\Receptionist\index.html:487
 #: .\physical_therapist\templates\physical_therapist\index.html:372
 msgid "CT"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:623
-#: .\Receptionist\templates\Receptionist\index.html:469
+#: .\Doctor\templates\Doctor\index_PM.html:632
+#: .\Receptionist\templates\Receptionist\index.html:488
 #: .\physical_therapist\templates\physical_therapist\index.html:373
 msgid "단순방사선촬영"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:624
-#: .\Receptionist\templates\Receptionist\index.html:470
+#: .\Doctor\templates\Doctor\index_PM.html:633
+#: .\Receptionist\templates\Receptionist\index.html:489
 #: .\physical_therapist\templates\physical_therapist\index.html:374
 msgid "근전도검사"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:625
-#: .\Receptionist\templates\Receptionist\index.html:471
+#: .\Doctor\templates\Doctor\index_PM.html:634
+#: .\Receptionist\templates\Receptionist\index.html:490
 #: .\physical_therapist\templates\physical_therapist\index.html:375
 msgid "척추조영술"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:629
-#: .\Doctor\templates\Doctor\index_PM.html:661
-#: .\Doctor\templates\Doctor\index_PM.html:714
-#: .\Receptionist\templates\Receptionist\index.html:475
-#: .\Receptionist\templates\Receptionist\index.html:507
-#: .\Receptionist\templates\Receptionist\index.html:560
+#: .\Doctor\templates\Doctor\index_PM.html:638
+#: .\Doctor\templates\Doctor\index_PM.html:670
+#: .\Doctor\templates\Doctor\index_PM.html:723
+#: .\Receptionist\templates\Receptionist\index.html:494
+#: .\Receptionist\templates\Receptionist\index.html:526
+#: .\Receptionist\templates\Receptionist\index.html:579
 #: .\physical_therapist\templates\physical_therapist\index.html:379
 #: .\physical_therapist\templates\physical_therapist\index.html:411
 #: .\physical_therapist\templates\physical_therapist\index.html:464
 msgid "기타"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:634
-#: .\Receptionist\templates\Receptionist\index.html:480
+#: .\Doctor\templates\Doctor\index_PM.html:643
+#: .\Receptionist\templates\Receptionist\index.html:499
 #: .\physical_therapist\templates\physical_therapist\index.html:384
 msgid "외부에서 가져온 CD나 필름이 있나요 ?"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:638
-#: .\Receptionist\templates\Receptionist\index.html:484
+#: .\Doctor\templates\Doctor\index_PM.html:647
+#: .\Receptionist\templates\Receptionist\index.html:503
 #: .\physical_therapist\templates\physical_therapist\index.html:388
 msgid "필름"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:639
-#: .\Receptionist\templates\Receptionist\index.html:485
+#: .\Doctor\templates\Doctor\index_PM.html:648
+#: .\Receptionist\templates\Receptionist\index.html:504
 #: .\physical_therapist\templates\physical_therapist\index.html:389
 msgid "CD"
 msgstr "카드"
 
-#: .\Doctor\templates\Doctor\index_PM.html:645
-#: .\Receptionist\templates\Receptionist\index.html:491
+#: .\Doctor\templates\Doctor\index_PM.html:654
+#: .\Receptionist\templates\Receptionist\index.html:510
 #: .\physical_therapist\templates\physical_therapist\index.html:395
 msgid ""
 "7. 현재 치료중인 질환과 복용약이 있으신가요? (아스피린, 쿠마딘, 와파린 등)"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:648
-#: .\Receptionist\templates\Receptionist\index.html:494
+#: .\Doctor\templates\Doctor\index_PM.html:657
+#: .\Receptionist\templates\Receptionist\index.html:513
 #: .\physical_therapist\templates\physical_therapist\index.html:398
 msgid "고혈압"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:649
-#: .\Receptionist\templates\Receptionist\index.html:495
+#: .\Doctor\templates\Doctor\index_PM.html:658
+#: .\Receptionist\templates\Receptionist\index.html:514
 #: .\physical_therapist\templates\physical_therapist\index.html:399
 msgid "당뇨"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:650
-#: .\Receptionist\templates\Receptionist\index.html:496
+#: .\Doctor\templates\Doctor\index_PM.html:659
+#: .\Receptionist\templates\Receptionist\index.html:515
 #: .\physical_therapist\templates\physical_therapist\index.html:400
 msgid "간질환"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:651
-#: .\Receptionist\templates\Receptionist\index.html:497
+#: .\Doctor\templates\Doctor\index_PM.html:660
+#: .\Receptionist\templates\Receptionist\index.html:516
 #: .\physical_therapist\templates\physical_therapist\index.html:401
 msgid "뇌질환(중풍)"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:652
-#: .\Receptionist\templates\Receptionist\index.html:498
+#: .\Doctor\templates\Doctor\index_PM.html:661
+#: .\Receptionist\templates\Receptionist\index.html:517
 #: .\physical_therapist\templates\physical_therapist\index.html:402
 msgid "폐결핵"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:655
-#: .\Receptionist\templates\Receptionist\index.html:501
+#: .\Doctor\templates\Doctor\index_PM.html:664
+#: .\Receptionist\templates\Receptionist\index.html:520
 #: .\physical_therapist\templates\physical_therapist\index.html:405
 msgid "심장질환"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:656
-#: .\Receptionist\templates\Receptionist\index.html:502
+#: .\Doctor\templates\Doctor\index_PM.html:665
+#: .\Receptionist\templates\Receptionist\index.html:521
 #: .\physical_therapist\templates\physical_therapist\index.html:406
 msgid "관절염"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:657
-#: .\Receptionist\templates\Receptionist\index.html:503
+#: .\Doctor\templates\Doctor\index_PM.html:666
+#: .\Receptionist\templates\Receptionist\index.html:522
 #: .\physical_therapist\templates\physical_therapist\index.html:407
 msgid "신장질환"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:658
-#: .\Receptionist\templates\Receptionist\index.html:504
+#: .\Doctor\templates\Doctor\index_PM.html:667
+#: .\Receptionist\templates\Receptionist\index.html:523
 #: .\physical_therapist\templates\physical_therapist\index.html:408
 msgid "갑상선질환"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:665
-#: .\Receptionist\templates\Receptionist\index.html:511
+#: .\Doctor\templates\Doctor\index_PM.html:674
+#: .\Receptionist\templates\Receptionist\index.html:530
 #: .\physical_therapist\templates\physical_therapist\index.html:415
 msgid "복용약"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:671
-#: .\Receptionist\templates\Receptionist\index.html:517
+#: .\Doctor\templates\Doctor\index_PM.html:680
+#: .\Receptionist\templates\Receptionist\index.html:536
 #: .\physical_therapist\templates\physical_therapist\index.html:421
 msgid "8. 약에 대한 부작용은 있으신가요?"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:684
-#: .\Receptionist\templates\Receptionist\index.html:530
+#: .\Doctor\templates\Doctor\index_PM.html:693
+#: .\Receptionist\templates\Receptionist\index.html:549
 #: .\physical_therapist\templates\physical_therapist\index.html:434
 msgid "9. 임신 가능성이 있으신가요?"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:688
-#: .\Receptionist\templates\Receptionist\index.html:534
+#: .\Doctor\templates\Doctor\index_PM.html:697
+#: .\Receptionist\templates\Receptionist\index.html:553
 #: .\physical_therapist\templates\physical_therapist\index.html:438
 msgid "해당없음"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:692
-#: .\Receptionist\templates\Receptionist\index.html:538
+#: .\Doctor\templates\Doctor\index_PM.html:701
+#: .\Receptionist\templates\Receptionist\index.html:557
 #: .\physical_therapist\templates\physical_therapist\index.html:442
 msgid "임신중"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:696
-#: .\Receptionist\templates\Receptionist\index.html:542
+#: .\Doctor\templates\Doctor\index_PM.html:705
+#: .\Receptionist\templates\Receptionist\index.html:561
 #: .\physical_therapist\templates\physical_therapist\index.html:446
 msgid "계획중"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:702
-#: .\Receptionist\templates\Receptionist\index.html:548
+#: .\Doctor\templates\Doctor\index_PM.html:711
+#: .\Receptionist\templates\Receptionist\index.html:567
 #: .\physical_therapist\templates\physical_therapist\index.html:452
 msgid "10. 내원 동기"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:705
-#: .\Receptionist\templates\Receptionist\index.html:551
+#: .\Doctor\templates\Doctor\index_PM.html:714
+#: .\Receptionist\templates\Receptionist\index.html:570
 #: .\physical_therapist\templates\physical_therapist\index.html:455
 msgid "전단지"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:706
-#: .\Receptionist\templates\Receptionist\index.html:552
+#: .\Doctor\templates\Doctor\index_PM.html:715
+#: .\Receptionist\templates\Receptionist\index.html:571
 #: .\physical_therapist\templates\physical_therapist\index.html:456
 msgid "카카오톡 오픈 채팅"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:707
-#: .\Receptionist\templates\Receptionist\index.html:553
+#: .\Doctor\templates\Doctor\index_PM.html:716
+#: .\Receptionist\templates\Receptionist\index.html:572
 #: .\physical_therapist\templates\physical_therapist\index.html:457
 msgid "페이스북"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:710
-#: .\Receptionist\templates\Receptionist\index.html:556
+#: .\Doctor\templates\Doctor\index_PM.html:719
+#: .\Receptionist\templates\Receptionist\index.html:575
 #: .\physical_therapist\templates\physical_therapist\index.html:460
 msgid "간판"
 msgstr ""
 
-#: .\Doctor\templates\Doctor\index_PM.html:711
-#: .\Receptionist\templates\Receptionist\index.html:557
+#: .\Doctor\templates\Doctor\index_PM.html:720
+#: .\Receptionist\templates\Receptionist\index.html:576
 #: .\physical_therapist\templates\physical_therapist\index.html:461
 msgid "지인소개"
 msgstr ""
@@ -1454,7 +1496,7 @@ msgstr "소견서검색"
 #: .\Doctor\templates\Doctor\reportwindow.html:64 .\Patient\forms.py:25
 #: .\Receptionist\forms.py:56 .\Receptionist\forms.py:238
 #: .\Receptionist\templates\Receptionist\Documents.html:36
-#: .\Receptionist\templates\Receptionist\index.html:147
+#: .\Receptionist\templates\Receptionist\index.html:166
 #: .\Receptionist\templates\Receptionist\storage_page.html:33
 #: .\Receptionist\templates\Receptionist\storage_page.html:192
 #: .\Receptionist\templates\Receptionist\storage_page.html:203
@@ -1497,7 +1539,7 @@ msgstr "발생일"
 
 #: .\Doctor\templates\Doctor\report.html:90
 msgid "Recommendation <br/> and Follow-up:"
-msgstr ""
+msgstr "지시사항"
 
 #: .\Doctor\templates\Doctor\report.html:95
 #: .\Doctor\templates\Doctor\reportwindow.html:131
@@ -1520,16 +1562,19 @@ msgstr "인쇄(영어)"
 
 #: .\Doctor\templates\Doctor\report.html:107
 #: .\Laboratory\templates\Laboratory\checklist.html:44
-#: .\Manage\templates\Manage\inventory_precedure.html:38
-#: .\Manage\templates\Manage\inventory_test.html:38
-#: .\Pharmacy\templates\Pharmacy\inventory.html:77 .\Receptionist\forms.py:98
+#: .\Manage\templates\Manage\employee_manage.html:61
+#: .\Manage\templates\Manage\inventory_medical_tool.html:86
+#: .\Manage\templates\Manage\inventory_precedure.html:43
+#: .\Manage\templates\Manage\inventory_test.html:49
+#: .\Manage\templates\board\list.html:65
+#: .\Pharmacy\templates\Pharmacy\inventory.html:88 .\Receptionist\forms.py:98
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:113
 msgid "New"
 msgstr "신규"
 
 #: .\Doctor\templates\Doctor\report.html:109
 msgid "Print"
-msgstr ""
+msgstr "인쇄"
 
 #: .\Doctor\templates\Doctor\report.html:115
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\report.html:101
@@ -1537,10 +1582,10 @@ msgid "Preview"
 msgstr "미리보기"
 
 #: .\Doctor\templates\Doctor\report.html:473
-#: .\Laboratory\templates\Laboratory\index.html:10
-#: .\Pharmacy\templates\Pharmacy\index.html:9
-#: .\Radiation\templates\Radiation\index.html:12
-#: .\Receptionist\templates\Receptionist\index.html:142
+#: .\Laboratory\templates\Laboratory\index.html:13
+#: .\Pharmacy\templates\Pharmacy\index.html:13
+#: .\Radiation\templates\Radiation\index.html:14
+#: .\Receptionist\templates\Receptionist\index.html:161
 #: .\Receptionist\templates\Receptionist\reservation.html:123
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\report.html:278
 #: .\obj\Release\Package\PackageTmp\Radiation\templates\Radiation\index.html:10
@@ -1549,7 +1594,7 @@ msgid "Patient List"
 msgstr "환자목록"
 
 #: .\Doctor\templates\Doctor\reportwindow.html:32
-#: .\Receptionist\templates\Receptionist\storage_page.html:489
+#: .\Receptionist\templates\Receptionist\storage_page.html:492
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\reportwindow.html:32
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:378
 msgid "Report List"
@@ -1568,9 +1613,9 @@ msgid "발행일자"
 msgstr ""
 
 #: .\Laboratory\forms.py:10 .\Pharmacy\forms.py:10
-#: .\Pharmacy\templates\Pharmacy\index.html:18 .\Radiation\forms.py:43
-#: .\Radiation\templates\Radiation\index.html:34
-#: .\Radiation\templates\Radiation\index.html:46
+#: .\Pharmacy\templates\Pharmacy\index.html:22 .\Radiation\forms.py:43
+#: .\Radiation\templates\Radiation\index.html:36
+#: .\Radiation\templates\Radiation\index.html:48
 #: .\obj\Release\Package\PackageTmp\Radiation\templates\Radiation\index.html:25
 msgid "Chart"
 msgstr "차트"
@@ -1585,7 +1630,7 @@ msgstr "차트"
 msgid "Filter"
 msgstr "필터"
 
-#: .\Laboratory\forms.py:25 .\Manage\forms.py:97 .\Manage\forms.py:184
+#: .\Laboratory\forms.py:25 .\Manage\forms.py:100 .\Manage\forms.py:187
 #: .\Pharmacy\forms.py:24 .\Radiation\forms.py:57
 #: .\obj\Release\Package\PackageTmp\Laboratory\forms.py:26
 #: .\obj\Release\Package\PackageTmp\Manage\forms.py:98
@@ -1630,8 +1675,9 @@ msgstr "코드"
 
 #: .\Laboratory\templates\Laboratory\checklist.html:25
 #: .\Laboratory\templates\Laboratory\checklist.html:55
+#: .\Manage\templates\Manage\inventory_precedure.html:30
 msgid "Classification"
-msgstr "방사선과"
+msgstr "구분"
 
 #: .\Laboratory\templates\Laboratory\checklist.html:27
 #: .\Laboratory\templates\Laboratory\checklist.html:64
@@ -1649,19 +1695,21 @@ msgid "Waiting Time"
 msgstr ""
 
 #: .\Laboratory\templates\Laboratory\checklist.html:45
-#: .\Manage\templates\Manage\inventory_test.html:103
+#: .\Manage\templates\Manage\inventory_test.html:114
+#: .\Manage\templates\board\list.html:54
 msgid "Add"
 msgstr "추가"
 
 #: .\Laboratory\templates\Laboratory\checklist.html:81
-#: .\Receptionist\templates\Receptionist\index.html:745
+#: .\Manage\templates\board\list.html:32
+#: .\Receptionist\templates\Receptionist\index.html:764
 #: .\Receptionist\templates\Receptionist\reservation.html:105
 #: .\env_local\Lib\site-packages\django\forms\formsets.py:375
 msgid "Delete"
 msgstr "삭제"
 
-#: .\Laboratory\templates\Laboratory\index.html:19
-#: .\Laboratory\templates\Laboratory\index.html:26
+#: .\Laboratory\templates\Laboratory\index.html:22
+#: .\Laboratory\templates\Laboratory\index.html:29
 #: .\Manage\templates\Manage\Manage.html:48
 #: .\Manage\templates\Manage\Manage.html:56
 #: .\Manage\templates\Manage\Manage.html:64
@@ -1670,56 +1718,62 @@ msgstr "삭제"
 #: .\Manage\templates\Manage\Manage.html:149
 #: .\Manage\templates\Manage\Manage.html:157
 #: .\Manage\templates\Manage\Manage.html:165
-#: .\Radiation\templates\Radiation\index.html:24
-#: .\Receptionist\templates\Receptionist\index.html:692
-#: .\Receptionist\templates\Receptionist\index.html:704
+#: .\Manage\templates\Manage\employee_manage.html:14
+#: .\Manage\templates\Manage\employee_manage.html:23
+#: .\Manage\templates\Manage\inventory_medical_tool.html:19
+#: .\Manage\templates\Manage\inventory_precedure.html:14
+#: .\Manage\templates\Manage\inventory_test.html:19
+#: .\Pharmacy\templates\Pharmacy\inventory.html:19
+#: .\Radiation\templates\Radiation\index.html:26
+#: .\Receptionist\templates\Receptionist\index.html:711
+#: .\Receptionist\templates\Receptionist\index.html:723
 #: .\Receptionist\templates\Receptionist\storage_page.html:190
 msgid "ALL"
 msgstr "전체"
 
-#: .\Laboratory\templates\Laboratory\index.html:55
+#: .\Laboratory\templates\Laboratory\index.html:58
 #: .\obj\Release\Package\PackageTmp\Laboratory\templates\Laboratory\index.html:10
 msgid "Lab Finding"
 msgstr "검사 목록"
 
-#: .\Laboratory\templates\Laboratory\index.html:62
-#: .\Laboratory\templates\Laboratory\index.html:111
-#: .\Radiation\templates\Radiation\index.html:50
-#: .\Radiation\templates\Radiation\index.html:82
+#: .\Laboratory\templates\Laboratory\index.html:65
+#: .\Laboratory\templates\Laboratory\index.html:114
+#: .\Radiation\templates\Radiation\index.html:52
+#: .\Radiation\templates\Radiation\index.html:84
 msgid "Request"
 msgstr "항목"
 
-#: .\Laboratory\templates\Laboratory\index.html:63
-#: .\Laboratory\templates\Laboratory\index.html:119
+#: .\Laboratory\templates\Laboratory\index.html:66
+#: .\Laboratory\templates\Laboratory\index.html:122
 msgid "Ordered Date"
 msgstr "오더 날짜"
 
-#: .\Laboratory\templates\Laboratory\index.html:64
+#: .\Laboratory\templates\Laboratory\index.html:67
 msgid "Reference Interval"
 msgstr "정상치"
 
-#: .\Laboratory\templates\Laboratory\index.html:65
-#: .\Laboratory\templates\Laboratory\index.html:139
+#: .\Laboratory\templates\Laboratory\index.html:68
+#: .\Laboratory\templates\Laboratory\index.html:142
 #: .\obj\Release\Package\PackageTmp\Laboratory\models.py:24
 #: .\obj\Release\Package\PackageTmp\Laboratory\templates\Laboratory\index.html:30
 #: .\obj\Release\Package\PackageTmp\Laboratory\templates\Laboratory\index.html:104
 msgid "Result"
 msgstr "결과"
 
-#: .\Laboratory\templates\Laboratory\index.html:66
-#: .\Laboratory\templates\Laboratory\index.html:127
+#: .\Laboratory\templates\Laboratory\index.html:69
+#: .\Laboratory\templates\Laboratory\index.html:130
 msgid "Expected Date"
 msgstr "결과예정일"
 
-#: .\Laboratory\templates\Laboratory\index.html:78
+#: .\Laboratory\templates\Laboratory\index.html:81
 #: .\obj\Release\Package\PackageTmp\Laboratory\templates\Laboratory\index.html:41
 msgid "Result Report"
 msgstr "검사 결과"
 
-#: .\Manage\forms.py:12
+#: .\Manage\forms.py:15
 #: .\Receptionist\templates\Receptionist\storage_page.html:105
 #: .\Receptionist\templates\Receptionist\storage_page.html:207
-#: .\Receptionist\templates\Receptionist\storage_page.html:459
+#: .\Receptionist\templates\Receptionist\storage_page.html:462
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\audit.html:43
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\audit.html:56
 #: .\obj\Release\Package\PackageTmp\Manage\templates\Manage\manage.html:104
@@ -1730,7 +1784,7 @@ msgstr "검사 결과"
 msgid "Paid"
 msgstr "수납"
 
-#: .\Manage\forms.py:13
+#: .\Manage\forms.py:16
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\audit.html:44
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\audit.html:58
 #: .\obj\Release\Package\PackageTmp\Manage\templates\Manage\manage.html:105
@@ -1739,52 +1793,58 @@ msgstr "수납"
 msgid "Unpaid"
 msgstr "미수"
 
-#: .\Manage\forms.py:19 .\Receptionist\forms.py:279
+#: .\Manage\forms.py:22 .\Receptionist\forms.py:279
 #: .\Receptionist\models.py:319
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:310
 msgid "Remit"
 msgstr "송금"
 
-#: .\Manage\forms.py:20 .\Receptionist\forms.py:280
+#: .\Manage\forms.py:23 .\Receptionist\forms.py:280
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:311
 msgid "Card"
 msgstr "카드"
 
-#: .\Manage\forms.py:21 .\Receptionist\forms.py:281
+#: .\Manage\forms.py:24 .\Receptionist\forms.py:281
 #: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:312
 msgid "Cash"
 msgstr "현금"
 
-#: .\Manage\forms.py:128 .\obj\Release\Package\PackageTmp\Manage\forms.py:129
+#: .\Manage\forms.py:131 .\obj\Release\Package\PackageTmp\Manage\forms.py:129
 #: .\obj\Release\Package\PackageTmp\Manage\templates\Manage\manage.html:98
 msgid "General"
 msgstr "일반"
 
-#: .\Manage\forms.py:152 .\obj\Release\Package\PackageTmp\Manage\forms.py:153
+#: .\Manage\forms.py:155 .\obj\Release\Package\PackageTmp\Manage\forms.py:153
 #: .\obj\Release\Package\PackageTmp\Manage\templates\Manage\manage.html:101
 msgid "Scaling"
 msgstr ""
 
-#: .\Manage\forms.py:160 .\obj\Release\Package\PackageTmp\Manage\forms.py:161
+#: .\Manage\forms.py:163 .\obj\Release\Package\PackageTmp\Manage\forms.py:161
 #: .\obj\Release\Package\PackageTmp\Manage\templates\Manage\manage.html:102
 msgid "Panorama"
 msgstr ""
 
-#: .\Manage\forms.py:168
+#: .\Manage\forms.py:171
 msgid "Nmae"
 msgstr "이름"
 
-#: .\Manage\forms.py:170 .\Pharmacy\templates\Pharmacy\inventory.html:159
-#: .\Pharmacy\templates\Pharmacy\inventory.html:165
+#: .\Manage\forms.py:173
+#: .\Manage\templates\Manage\inventory_medical_tool.html:170
+#: .\Manage\templates\Manage\inventory_medical_tool.html:176
+#: .\Pharmacy\templates\Pharmacy\inventory.html:170
+#: .\Pharmacy\templates\Pharmacy\inventory.html:176
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:209
 #: .\obj\Release\Package\PackageTmp\Pharmacy\forms.py:105
 #: .\obj\Release\Package\PackageTmp\Pharmacy\forms.py:115
 msgid "Ingredient"
 msgstr "성분"
 
-#: .\Manage\forms.py:171 .\Pharmacy\templates\Pharmacy\inventory.html:27
-#: .\Pharmacy\templates\Pharmacy\inventory.html:187
-#: .\Pharmacy\templates\Pharmacy\inventory.html:193
+#: .\Manage\forms.py:174
+#: .\Manage\templates\Manage\inventory_medical_tool.html:198
+#: .\Manage\templates\Manage\inventory_medical_tool.html:204
+#: .\Pharmacy\templates\Pharmacy\inventory.html:38
+#: .\Pharmacy\templates\Pharmacy\inventory.html:198
+#: .\Pharmacy\templates\Pharmacy\inventory.html:204
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:203
 #: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:55
 msgid "Country"
@@ -1799,10 +1859,12 @@ msgid "REVENUE STATUS"
 msgstr "매출현황"
 
 #: .\Manage\templates\Manage\Manage.html:84
-#: .\Pharmacy\templates\Pharmacy\index.html:30
-#: .\Pharmacy\templates\Pharmacy\inventory.html:64
-#: .\Pharmacy\templates\Pharmacy\inventory.html:93
-#: .\Radiation\templates\Radiation\index.html:45
+#: .\Manage\templates\Manage\inventory_medical_tool.html:73
+#: .\Manage\templates\Manage\inventory_medical_tool.html:102
+#: .\Pharmacy\templates\Pharmacy\index.html:34
+#: .\Pharmacy\templates\Pharmacy\inventory.html:75
+#: .\Pharmacy\templates\Pharmacy\inventory.html:104
+#: .\Radiation\templates\Radiation\index.html:47
 #: .\Receptionist\templates\Receptionist\Documents.html:35
 #: .\Receptionist\templates\Receptionist\storage_page.html:32
 #: .\Receptionist\templates\Receptionist\storage_page.html:202
@@ -1819,7 +1881,7 @@ msgstr "번호"
 
 #: .\Manage\templates\Manage\Manage.html:92
 #: .\Receptionist\templates\Receptionist\storage_page.html:111
-#: .\Receptionist\templates\Receptionist\storage_page.html:460
+#: .\Receptionist\templates\Receptionist\storage_page.html:463
 #: .\obj\Release\Package\PackageTmp\Doctor\templates\Doctor\audit.html:42
 #: .\obj\Release\Package\PackageTmp\Manage\templates\Manage\manage.html:103
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:100
@@ -1834,75 +1896,364 @@ msgstr "의사"
 msgid "MEDICINE"
 msgstr "약"
 
-#: .\Manage\templates\Manage\inventory_precedure.html:9
-msgid "Procedure Inventory"
-msgstr "처치"
+#: .\Manage\templates\Manage\employee_manage.html:9
+#: .\app\templates\app\layout.html:124
+msgid "Employee Management"
+msgstr "직원 관리"
 
-#: .\Manage\templates\Manage\inventory_precedure.html:25
-#: .\Manage\templates\Manage\inventory_test.html:25
+#: .\Manage\templates\Manage\employee_manage.html:12
+#: .\Manage\templates\Manage\employee_manage.html:39
+#: .\Manage\templates\Manage\inventory_medical_tool.html:76
+#: .\Manage\templates\Manage\inventory_medical_tool.html:131
+#: .\Pharmacy\templates\Pharmacy\inventory.html:78
+#: .\Pharmacy\templates\Pharmacy\inventory.html:133
+#: .\obj\Release\Package\PackageTmp\Pharmacy\models.py:71
+msgid "Type"
+msgstr "구분"
+
+#: .\Manage\templates\Manage\employee_manage.html:41
+#: .\Manage\templates\Manage\employee_manage.html:151
+msgid "Rank"
+msgstr "직급"
+
+#: .\Manage\templates\Manage\employee_manage.html:42
+#: .\Manage\templates\Manage\employee_manage.html:84
+msgid "ID"
+msgstr "아이디"
+
+#: .\Manage\templates\Manage\employee_manage.html:43
+msgid "Name(KOR)"
+msgstr "이름(한국)"
+
+#: .\Manage\templates\Manage\employee_manage.html:45
+msgid "DOB"
+msgstr "생년월일"
+
+#: .\Manage\templates\Manage\employee_manage.html:46
+#: .\Manage\templates\Manage\employee_manage.html:139
+#: .\Receptionist\templates\Receptionist\index.html:80
+msgid "Email"
+msgstr "이메일"
+
+#: .\Manage\templates\Manage\employee_manage.html:47
+msgid "Phone1"
+msgstr "전화번호1"
+
+#: .\Manage\templates\Manage\employee_manage.html:48
+msgid "Phone2"
+msgstr "전화번호2"
+
+#: .\Manage\templates\Manage\employee_manage.html:49
+#: .\Manage\templates\Manage\employee_manage.html:198
+msgid "Date of Employment"
+msgstr "입사일"
+
+#: .\Manage\templates\Manage\employee_manage.html:50
+#: .\Manage\templates\Manage\employee_manage.html:189
+msgid "Status"
+msgstr ""
+
+#: .\Manage\templates\Manage\employee_manage.html:51
+#: .\Manage\templates\Manage\inventory_medical_tool.html:40
+#: .\Manage\templates\Manage\inventory_medical_tool.html:107
+#: .\Manage\templates\Manage\inventory_precedure.html:33
+#: .\Manage\templates\Manage\inventory_test.html:39
+#: .\Manage\templates\board\list.html:29
+#: .\Pharmacy\templates\Pharmacy\inventory.html:42
+#: .\Pharmacy\templates\Pharmacy\inventory.html:109
+msgid "Edit"
+msgstr "수정"
+
+#: .\Manage\templates\Manage\employee_manage.html:85
+msgid "Type English and Numbers only."
+msgstr "영어와 숫자만 입력하세요."
+
+#: .\Manage\templates\Manage\employee_manage.html:87
+msgid "Check"
+msgstr "확인"
+
+#: .\Manage\templates\Manage\employee_manage.html:99
+#: .\Manage\templates\Manage\employee_manage.html:285
+msgid "Password Confirm"
+msgstr "비밀번호 확인"
+
+#: .\Manage\templates\Manage\employee_manage.html:107
+#: .\obj\Release\Package\PackageTmp\Doctor\models.py:22
+msgid "Korean Name"
+msgstr "한글 이름"
+
+#: .\Manage\templates\Manage\employee_manage.html:111
+#: .\obj\Release\Package\PackageTmp\Doctor\models.py:26
+msgid "English Name"
+msgstr "영문 이름"
+
+#: .\Manage\templates\Manage\employee_manage.html:115
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:91
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:135
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:178
 msgid "Vietnamese Name"
 msgstr "베트남어 이름"
 
-#: .\Manage\templates\Manage\inventory_precedure.html:26
-#: .\Manage\templates\Manage\inventory_precedure.html:58
-#: .\Manage\templates\Manage\inventory_test.html:26
-#: .\Manage\templates\Manage\inventory_test.html:58
-#: .\Pharmacy\templates\Pharmacy\inventory.html:132
-#: .\app\templates\app\login.html:72
+#: .\Manage\templates\Manage\employee_manage.html:127
+msgid "Phone Number 1"
+msgstr "전화번호1"
+
+#: .\Manage\templates\Manage\employee_manage.html:131
+msgid "Phone Number 2"
+msgstr "전화번호2"
+
+#: .\Manage\templates\Manage\employee_manage.html:163
+msgid "I-MEDICARE"
+msgstr "I-MEDICARE"
+
+#: .\Manage\templates\Manage\employee_manage.html:168
+msgid "KBL"
+msgstr "KBL"
+
+#: .\Manage\templates\Manage\employee_manage.html:176
+msgid "Division"
+msgstr "구분"
+
+#: .\Manage\templates\Manage\employee_manage.html:202
+#: .\Manage\templates\Manage\inventory_medical_tool.html:77
+#: .\Pharmacy\templates\Pharmacy\inventory.html:79
+#: .\Radiation\templates\Radiation\index.html:117
+#: .\obj\Release\Package\PackageTmp\Radiation\models.py:35
+#: .\obj\Release\Package\PackageTmp\Radiation\templates\Radiation\index.html:76
+msgid "Remark"
+msgstr "비고"
+
+#: .\Manage\templates\Manage\employee_manage.html:227
+msgid "Resignation"
+msgstr "퇴사"
+
+#: .\Manage\templates\Manage\employee_manage.html:230
+msgid "Would you like to make the employee resigned?"
+msgstr "이 직원을 퇴사 처리 하시겠습니까?"
+
+#: .\Manage\templates\Manage\employee_manage.html:236
+msgid "Date of Resignation"
+msgstr "등록 날"
+
+#: .\Manage\templates\Manage\employee_manage.html:244
+msgid "Reason"
+msgstr "사유"
+
+#: .\Manage\templates\Manage\employee_manage.html:268
+msgid "Change Password"
+msgstr "비밀번호"
+
+#: .\Manage\templates\Manage\employee_manage.html:271
+msgid "Would you like to change password ?"
+msgstr ""
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:9
+msgid "Tool List"
+msgstr "도구 목록"
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:17
+#: .\Manage\templates\Manage\inventory_medical_tool.html:142
+#: .\Manage\templates\Manage\inventory_precedure.html:12
+#: .\Manage\templates\Manage\inventory_precedure.html:63
+#: .\Manage\templates\Manage\inventory_test.html:17
+#: .\Manage\templates\Manage\inventory_test.html:35
+#: .\Manage\templates\Manage\inventory_test.html:69
+#: .\Pharmacy\templates\Pharmacy\inventory.html:17
+#: .\Pharmacy\templates\Pharmacy\inventory.html:143
+#: .\app\templates\app\login.html:72 .\app\templates\app\login_admin.html:72
 #: .\obj\Release\Package\PackageTmp\app\templates\app\login.html:74
 msgid "Class"
 msgstr ""
 
-#: .\Manage\templates\Manage\inventory_precedure.html:79
-#: .\Manage\templates\Manage\inventory_test.html:79
-#: .\Pharmacy\templates\Pharmacy\inventory.html:151
-#: .\Pharmacy\templates\Pharmacy\inventory.html:165
-#: .\Pharmacy\templates\Pharmacy\inventory.html:179
-#: .\Pharmacy\templates\Pharmacy\inventory.html:193
+#: .\Manage\templates\Manage\inventory_medical_tool.html:35
+#: .\Pharmacy\templates\Pharmacy\index.html:66
+#: .\Pharmacy\templates\Pharmacy\inventory.html:35
+#: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:53
+msgid "Trade Name"
+msgstr "상품명"
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:36
+#: .\Manage\templates\Manage\inventory_medical_tool.html:212
+#: .\Pharmacy\templates\Pharmacy\inventory.html:37
+#: .\Pharmacy\templates\Pharmacy\inventory.html:212
+#: .\obj\Release\Package\PackageTmp\Doctor\models.py:197
+#: .\obj\Release\Package\PackageTmp\Pharmacy\forms.py:95
+#: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:54
+msgid "Company"
+msgstr "제약회사"
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:55
+#: .\Pharmacy\templates\Pharmacy\inventory.html:57
+msgid "Inventory History"
+msgstr "인벤토리"
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:75
+#: .\Manage\templates\Manage\inventory_medical_tool.html:105
+#: .\Pharmacy\templates\Pharmacy\inventory.html:77
+#: .\Pharmacy\templates\Pharmacy\inventory.html:107
+#: .\Receptionist\templates\Receptionist\storage_page.html:90
+#: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:79
+msgid "Quantity"
+msgstr "수량"
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:88
+#: .\Pharmacy\templates\Pharmacy\inventory.html:90
+msgid "+ Add"
+msgstr "+ 추가"
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:95
+#: .\Manage\templates\Manage\inventory_medical_tool.html:104
+#: .\Manage\templates\Manage\inventory_medical_tool.html:299
+#: .\Pharmacy\templates\Pharmacy\inventory.html:97
+#: .\Pharmacy\templates\Pharmacy\inventory.html:106
+#: .\Pharmacy\templates\Pharmacy\inventory.html:297
+msgid "Expiration Date"
+msgstr "유통기한"
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:96
+#: .\Pharmacy\templates\Pharmacy\inventory.html:98
+msgid "dsds"
+msgstr ""
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:103
+#: .\Pharmacy\templates\Pharmacy\inventory.html:105
+#: .\Receptionist\templates\Receptionist\index.html:151
+#: .\app\templates\app\layout.html:94
+#: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:82
+msgid "Registration"
+msgstr "등록"
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:106
+#: .\Pharmacy\templates\Pharmacy\inventory.html:108
+msgid "Remained Date"
+msgstr "납은 기간"
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:162
+#: .\Manage\templates\Manage\inventory_medical_tool.html:176
+#: .\Manage\templates\Manage\inventory_medical_tool.html:190
+#: .\Manage\templates\Manage\inventory_medical_tool.html:204
+#: .\Manage\templates\Manage\inventory_precedure.html:84
+#: .\Manage\templates\Manage\inventory_test.html:90
+#: .\Pharmacy\templates\Pharmacy\inventory.html:162
+#: .\Pharmacy\templates\Pharmacy\inventory.html:176
+#: .\Pharmacy\templates\Pharmacy\inventory.html:190
+#: .\Pharmacy\templates\Pharmacy\inventory.html:204
 msgid "in Vietnamese"
 msgstr "베트남어"
 
-#: .\Manage\templates\Manage\inventory_precedure.html:87
-#: .\Manage\templates\Manage\inventory_test.html:87
-#: .\Pharmacy\templates\Pharmacy\inventory.html:236
+#: .\Manage\templates\Manage\inventory_medical_tool.html:220
+#: .\Pharmacy\templates\Pharmacy\inventory.html:220
+msgid "Displaying Name"
+msgstr "표시 될 이름"
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:228
+#: .\Pharmacy\templates\Pharmacy\inventory.html:228
+msgid "Price for Purchase"
+msgstr "구매가"
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:234
+#: .\Pharmacy\templates\Pharmacy\inventory.html:234
+msgid "Multiple Level"
+msgstr ""
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:247
+#: .\Manage\templates\Manage\inventory_precedure.html:92
+#: .\Manage\templates\Manage\inventory_test.html:98
+#: .\Pharmacy\templates\Pharmacy\inventory.html:247
 msgid "Price for Sale"
 msgstr "판매가"
 
-#: .\Manage\templates\Manage\inventory_precedure.html:93
-#: .\Manage\templates\Manage\inventory_test.html:93
-#: .\Pharmacy\templates\Pharmacy\inventory.html:242
+#: .\Manage\templates\Manage\inventory_medical_tool.html:253
+#: .\Manage\templates\Manage\inventory_precedure.html:98
+#: .\Manage\templates\Manage\inventory_test.html:104
+#: .\Pharmacy\templates\Pharmacy\inventory.html:253
 msgid "Price(Dollar $)"
 msgstr "판매가(달러 $)"
 
+#: .\Manage\templates\Manage\inventory_medical_tool.html:282
+#: .\Pharmacy\templates\Pharmacy\inventory.html:282
+msgid "Goods Receipt"
+msgstr "입고"
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:289
+#: .\Pharmacy\templates\Pharmacy\inventory.html:289
+msgid "Date of Registration"
+msgstr "등록 날"
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:308
+#: .\Manage\templates\Manage\inventory_medical_tool.html:349
+#: .\Pharmacy\templates\Pharmacy\inventory.html:305
+#: .\Pharmacy\templates\Pharmacy\inventory.html:346
+#: .\obj\Release\Package\PackageTmp\Pharmacy\forms.py:74
+msgid "Changes"
+msgstr "변동"
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:316
+#: .\Manage\templates\Manage\inventory_medical_tool.html:357
+#: .\Pharmacy\templates\Pharmacy\inventory.html:313
+#: .\Pharmacy\templates\Pharmacy\inventory.html:354
+#: .\Receptionist\templates\Receptionist\reservation.html:96
+#: .\obj\Release\Package\PackageTmp\Pharmacy\models.py:65
+#: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:349
+#: .\obj\Release\Package\PackageTmp\Receptionist\models.py:194
+#: .\obj\Release\Package\PackageTmp\Receptionist\models.py:225
+#: .\obj\Release\Package\PackageTmp\Receptionist\models.py:259
+#: .\obj\Release\Package\PackageTmp\Receptionist\models.py:300
+#: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\reservation.html:114
+msgid "Memo"
+msgstr "메모"
+
+#: .\Manage\templates\Manage\inventory_medical_tool.html:342
+#: .\Pharmacy\templates\Pharmacy\inventory.html:339
+msgid "Disposal"
+msgstr "폐기"
+
+#: .\Manage\templates\Manage\inventory_precedure.html:9
+msgid "Procedure Inventory"
+msgstr "처치"
+
 #: .\Manage\templates\Manage\inventory_test.html:9
-msgid "Test Inventory"
+msgid "Test list"
 msgstr "인벤토리"
 
-#: .\Manage\templates\Manage\inventory_test.html:102
-msgid "Result Table"
-msgstr "결과"
+#: .\Manage\templates\Manage\inventory_test.html:37
+msgid "unit"
+msgstr "단위"
 
-#: .\Manage\templates\Manage\inventory_test.html:111
+#: .\Manage\templates\Manage\inventory_test.html:113
+msgid "Result Table"
+msgstr "결과 표"
+
+#: .\Manage\templates\Manage\inventory_test.html:122
 msgid "Name(VI)"
 msgstr "이름(베트남)"
 
-#: .\Manage\templates\Manage\inventory_test.html:112
+#: .\Manage\templates\Manage\inventory_test.html:123
 msgid "Mininum"
-msgstr ""
+msgstr "최소치"
 
-#: .\Manage\templates\Manage\inventory_test.html:113
+#: .\Manage\templates\Manage\inventory_test.html:124
 msgid "Maximum"
-msgstr ""
+msgstr "최대치"
 
-#: .\Manage\templates\Manage\inventory_test.html:115
+#: .\Manage\templates\Manage\inventory_test.html:126
 msgid "Unit(VI)"
 msgstr "단위(베트남)"
 
+#: .\Manage\templates\board\list.html:73 .\app\templates\app\notice.html:14
+msgid "Title"
+msgstr "제목"
+
+#: .\Manage\templates\board\list.html:74
+msgid "Written by"
+msgstr "작성자"
+
+#: .\Manage\templates\board\list.html:76
+msgid "Views"
+msgstr "조회 수"
+
 #: .\Patient\forms.py:29 .\Receptionist\forms.py:82
-#: .\Receptionist\templates\Receptionist\index.html:28
+#: .\Receptionist\templates\Receptionist\index.html:46
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:33
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:150
 #: .\obj\Release\Package\PackageTmp\Patient\forms.py:29
@@ -1912,7 +2263,7 @@ msgid "Name Kor"
 msgstr "한글 이름"
 
 #: .\Patient\forms.py:41 .\Receptionist\forms.py:83
-#: .\Receptionist\templates\Receptionist\index.html:34
+#: .\Receptionist\templates\Receptionist\index.html:52
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:45
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:154
 #: .\obj\Release\Package\PackageTmp\Patient\forms.py:41
@@ -1921,9 +2272,10 @@ msgstr "한글 이름"
 msgid "Name Eng"
 msgstr "영문 이름"
 
-#: .\Patient\forms.py:66 .\Receptionist\forms.py:58 .\Receptionist\forms.py:85
-#: .\Receptionist\templates\Receptionist\index.html:149
-#: .\Receptionist\templates\Receptionist\index.html:167
+#: .\Patient\forms.py:66 .\Patient\forms.py:77 .\Receptionist\forms.py:58
+#: .\Receptionist\forms.py:85
+#: .\Receptionist\templates\Receptionist\index.html:168
+#: .\Receptionist\templates\Receptionist\index.html:186
 #: .\Receptionist\templates\Receptionist\storage_page.html:67
 #: .\obj\Release\Package\PackageTmp\Doctor\forms.py:70
 #: .\obj\Release\Package\PackageTmp\Patient\forms.py:66
@@ -1934,7 +2286,7 @@ msgstr "영문 이름"
 msgid "Phone Number"
 msgstr "전화번호"
 
-#: .\Patient\forms.py:118 .\Receptionist\templates\Receptionist\index.html:117
+#: .\Patient\forms.py:128 .\Receptionist\templates\Receptionist\index.html:136
 #: .\obj\Release\Package\PackageTmp\Patient\forms.py:117
 #: .\obj\Release\Package\PackageTmp\Patient\models.py:103
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:114
@@ -1952,143 +2304,36 @@ msgstr "추가"
 
 #: .\Pharmacy\models.py:38
 msgid "decrese"
-msgstr ""
+msgstr "감소"
 
 #: .\Pharmacy\models.py:39 .\Receptionist\models.py:55
 msgid "deleted"
 msgstr "삭제"
 
-#: .\Pharmacy\templates\Pharmacy\index.html:47
+#: .\Pharmacy\templates\Pharmacy\index.html:51
 msgid "Ordered Medicine"
 msgstr "약처방"
 
-#: .\Pharmacy\templates\Pharmacy\index.html:62
-#: .\Pharmacy\templates\Pharmacy\inventory.html:24
-#: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:53
-msgid "Trade Name"
-msgstr "상품명"
-
 #: .\Pharmacy\templates\Pharmacy\inventory.html:9
-#: .\app\templates\app\layout.html:112
-msgid "Inventory"
-msgstr "인벤토리"
+msgid "Medicine List"
+msgstr "약 목록"
 
-#: .\Pharmacy\templates\Pharmacy\inventory.html:25
+#: .\Pharmacy\templates\Pharmacy\inventory.html:36
 #: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:56
 msgid "Generic Name"
 msgstr "성분명"
 
-#: .\Pharmacy\templates\Pharmacy\inventory.html:26
-#: .\Pharmacy\templates\Pharmacy\inventory.html:201
-#: .\obj\Release\Package\PackageTmp\Doctor\models.py:197
-#: .\obj\Release\Package\PackageTmp\Pharmacy\forms.py:95
-#: .\obj\Release\Package\PackageTmp\Pharmacy\templates\Pharmacy\index.html:54
-msgid "Company"
-msgstr "제약회사"
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:46
-msgid "Inventory History"
-msgstr "인벤토리"
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:66
-#: .\Pharmacy\templates\Pharmacy\inventory.html:96
-#: .\Receptionist\templates\Receptionist\storage_page.html:90
-#: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\storage_page.html:79
-msgid "Quantity"
-msgstr "수량"
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:67
-#: .\Pharmacy\templates\Pharmacy\inventory.html:122
-#: .\obj\Release\Package\PackageTmp\Pharmacy\models.py:71
-msgid "Type"
-msgstr ""
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:68
-#: .\Radiation\templates\Radiation\index.html:115
-#: .\obj\Release\Package\PackageTmp\Radiation\models.py:35
-#: .\obj\Release\Package\PackageTmp\Radiation\templates\Radiation\index.html:76
-msgid "Remark"
-msgstr "비고"
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:79
-msgid "+ Add"
-msgstr ""
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:86
-#: .\Pharmacy\templates\Pharmacy\inventory.html:95
-#: .\Pharmacy\templates\Pharmacy\inventory.html:286
-msgid "Expiration Date"
-msgstr "유통기한"
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:87
-msgid "dsds"
-msgstr ""
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:94
-#: .\Receptionist\templates\Receptionist\index.html:132
-#: .\app\templates\app\layout.html:94
-#: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:82
-msgid "Registration"
-msgstr "등록"
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:97
-msgid "Days left"
-msgstr "남은 일"
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:209
-msgid "Displaying Name"
-msgstr "표시 될 이름"
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:217
-msgid "Price for Purchase"
-msgstr "구매가"
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:223
-msgid "Multiple Level"
-msgstr ""
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:271
-msgid "Goods Receipt"
-msgstr "입고"
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:278
-msgid "Date of Registration"
-msgstr "등록 날"
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:294
-#: .\Pharmacy\templates\Pharmacy\inventory.html:335
-#: .\obj\Release\Package\PackageTmp\Pharmacy\forms.py:74
-msgid "Changes"
-msgstr "변동"
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:302
-#: .\Pharmacy\templates\Pharmacy\inventory.html:343
-#: .\Receptionist\templates\Receptionist\reservation.html:96
-#: .\obj\Release\Package\PackageTmp\Pharmacy\models.py:65
-#: .\obj\Release\Package\PackageTmp\Receptionist\forms.py:349
-#: .\obj\Release\Package\PackageTmp\Receptionist\models.py:194
-#: .\obj\Release\Package\PackageTmp\Receptionist\models.py:225
-#: .\obj\Release\Package\PackageTmp\Receptionist\models.py:259
-#: .\obj\Release\Package\PackageTmp\Receptionist\models.py:300
-#: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\reservation.html:114
-msgid "Memo"
-msgstr "메모"
-
-#: .\Pharmacy\templates\Pharmacy\inventory.html:328
-msgid "Disposal"
-msgstr ""
-
-#: .\Radiation\templates\Radiation\index.html:68
+#: .\Radiation\templates\Radiation\index.html:70
 msgid "Patient Name"
 msgstr "환자 이름"
 
-#: .\Radiation\templates\Radiation\index.html:90
+#: .\Radiation\templates\Radiation\index.html:92
 #: .\env_local\Lib\site-packages\django\db\models\fields\files.py:360
 #: .\obj\Release\Package\PackageTmp\Radiation\templates\Radiation\index.html:66
 msgid "Image"
 msgstr "이미지"
 
-#: .\Radiation\templates\Radiation\index.html:92
+#: .\Radiation\templates\Radiation\index.html:94
 msgid "Viewer"
 msgstr "뷰어"
 
@@ -2144,14 +2389,14 @@ msgid "Document List"
 msgstr "문서 목록"
 
 #: .\Receptionist\templates\Receptionist\Documents.html:14
-#: .\Receptionist\templates\Receptionist\index.html:182
+#: .\Receptionist\templates\Receptionist\index.html:201
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:175
 msgid "Date:"
 msgstr "날짜:"
 
 #: .\Receptionist\templates\Receptionist\Documents.html:42
-#: .\Receptionist\templates\Receptionist\index.html:207
-#: .\Receptionist\templates\Receptionist\index.html:249
+#: .\Receptionist\templates\Receptionist\index.html:226
+#: .\Receptionist\templates\Receptionist\index.html:268
 msgid "Date Time"
 msgstr "날짜 씨간"
 
@@ -2172,78 +2417,88 @@ msgid "Prescription Letter"
 msgstr "처방전"
 
 #: .\Receptionist\templates\Receptionist\Documents.html:48
-#, fuzzy
-#| msgid "Result"
 msgid "Lab Result"
-msgstr "결과"
+msgstr "검사 결과"
 
 #: .\Receptionist\templates\Receptionist\index.html:11
 msgid "New Patient"
 msgstr "신규 환자"
 
-#: .\Receptionist\templates\Receptionist\index.html:84
-#: .\Receptionist\templates\Receptionist\index.html:712
-msgid "C / C"
-msgstr ""
+#: .\Receptionist\templates\Receptionist\index.html:25
+msgid "Nationality"
+msgstr "국적"
 
-#: .\Receptionist\templates\Receptionist\index.html:92
-#, fuzzy
-#| msgid "Vital"
+#: .\Receptionist\templates\Receptionist\index.html:28
+msgid "Korea"
+msgstr "한국"
+
+#: .\Receptionist\templates\Receptionist\index.html:29
+msgid "Vietnam"
+msgstr "베트남"
+
+#: .\Receptionist\templates\Receptionist\index.html:30
+msgid "Other"
+msgstr "그 외"
+
+#: .\Receptionist\templates\Receptionist\index.html:103
+#: .\Receptionist\templates\Receptionist\index.html:731
+msgid "C / C"
+msgstr "주호소"
+
+#: .\Receptionist\templates\Receptionist\index.html:111
 msgid "Vital Sign"
 msgstr "활력징후"
 
-#: .\Receptionist\templates\Receptionist\index.html:94
-#: .\Receptionist\templates\Receptionist\index.html:723
+#: .\Receptionist\templates\Receptionist\index.html:113
+#: .\Receptionist\templates\Receptionist\index.html:742
 msgid "Ht"
 msgstr ""
 
-#: .\Receptionist\templates\Receptionist\index.html:95
-#: .\Receptionist\templates\Receptionist\index.html:725
+#: .\Receptionist\templates\Receptionist\index.html:114
+#: .\Receptionist\templates\Receptionist\index.html:744
 msgid "Wt"
 msgstr ""
 
-#: .\Receptionist\templates\Receptionist\index.html:96
-#: .\Receptionist\templates\Receptionist\index.html:727
+#: .\Receptionist\templates\Receptionist\index.html:115
+#: .\Receptionist\templates\Receptionist\index.html:746
 msgid "BP"
 msgstr ""
 
-#: .\Receptionist\templates\Receptionist\index.html:97
-#: .\Receptionist\templates\Receptionist\index.html:729
+#: .\Receptionist\templates\Receptionist\index.html:116
+#: .\Receptionist\templates\Receptionist\index.html:748
 msgid "BT"
 msgstr ""
 
-#: .\Receptionist\templates\Receptionist\index.html:124
-#: .\Receptionist\templates\Receptionist\index.html:580
+#: .\Receptionist\templates\Receptionist\index.html:143
+#: .\Receptionist\templates\Receptionist\index.html:599
 #: .\Receptionist\templates\Receptionist\storage_page.html:141
 msgid "Inform Tax Invoice"
 msgstr "세금계산서 정보"
 
-#: .\Receptionist\templates\Receptionist\index.html:169
-#, fuzzy
-#| msgid "Past history"
+#: .\Receptionist\templates\Receptionist\index.html:188
 msgid "Last Visit"
 msgstr "최근 방문"
 
-#: .\Receptionist\templates\Receptionist\index.html:208
+#: .\Receptionist\templates\Receptionist\index.html:227
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:197
 msgid "New / Repeat"
 msgstr "신환 / 재진"
 
-#: .\Receptionist\templates\Receptionist\index.html:220
+#: .\Receptionist\templates\Receptionist\index.html:239
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:208
 msgid "Reservation Status"
 msgstr "예약현황"
 
-#: .\Receptionist\templates\Receptionist\index.html:246
+#: .\Receptionist\templates\Receptionist\index.html:265
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:229
 msgid "PhoneNumber"
 msgstr "전화번호"
 
-#: .\Receptionist\templates\Receptionist\index.html:611
+#: .\Receptionist\templates\Receptionist\index.html:630
 msgid "Tax Invoice Information"
 msgstr "세금계산서 정보"
 
-#: .\Receptionist\templates\Receptionist\index.html:616
+#: .\Receptionist\templates\Receptionist\index.html:635
 #: .\Receptionist\templates\Receptionist\storage_page.html:144
 #: .\obj\Release\Package\PackageTmp\Patient\models.py:117
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:124
@@ -2251,7 +2506,7 @@ msgstr "세금계산서 정보"
 msgid "Number"
 msgstr "번호"
 
-#: .\Receptionist\templates\Receptionist\index.html:624
+#: .\Receptionist\templates\Receptionist\index.html:643
 #: .\Receptionist\templates\Receptionist\storage_page.html:148
 #: .\obj\Release\Package\PackageTmp\Patient\models.py:123
 #: .\obj\Release\Package\PackageTmp\Receptionist\templates\Receptionist\index.html:128
@@ -2259,15 +2514,15 @@ msgstr "번호"
 msgid "Company Name"
 msgstr "회사명"
 
-#: .\Receptionist\templates\Receptionist\index.html:655
+#: .\Receptionist\templates\Receptionist\index.html:674
 msgid "Edit Reception"
 msgstr "접수"
 
-#: .\Receptionist\templates\Receptionist\index.html:685
+#: .\Receptionist\templates\Receptionist\index.html:704
 msgid "Reception Information"
 msgstr "접수"
 
-#: .\Receptionist\templates\Receptionist\index.html:747
+#: .\Receptionist\templates\Receptionist\index.html:766
 msgid "Close"
 msgstr "닫기"
 
@@ -2276,57 +2531,55 @@ msgstr "닫기"
 msgid "Reservation Date"
 msgstr "예약일"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:180
+#: .\Receptionist\templates\Receptionist\reservation.html:182
 msgid "New Reservation"
 msgstr "신규 예약"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:459
+#: .\Receptionist\templates\Receptionist\reservation.html:478
 msgid "No Patient"
 msgstr "환자 없음"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:537
+#: .\Receptionist\templates\Receptionist\reservation.html:556
 msgid "selecte Reservation Date ! "
 msgstr "예약일을 선택하세요"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:541
+#: .\Receptionist\templates\Receptionist\reservation.html:560
 msgid "Name is necessary! "
 msgstr "이름은 필수 입니다!"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:546
+#: .\Receptionist\templates\Receptionist\reservation.html:565
 msgid "Depart is necessary! ! "
 msgstr "과는 필수 입니다!"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:551
+#: .\Receptionist\templates\Receptionist\reservation.html:570
 msgid "Doctor is necessary! ! "
 msgstr "의사는 필수 입니다!"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:556
+#: .\Receptionist\templates\Receptionist\reservation.html:575
 msgid "Memo is necessary! ! "
 msgstr "메모는 필수 입니다!"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:564
+#: .\Receptionist\templates\Receptionist\reservation.html:583
 msgid "Date of birth should be 0000(year)-00(month)-00(day)"
 msgstr "생년월일은 0000(년)-00(월)-00(일) 으로 되어야 합니다."
 
-#: .\Receptionist\templates\Receptionist\reservation.html:590
+#: .\Receptionist\templates\Receptionist\reservation.html:609
 msgid "saved"
 msgstr "저장"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:609
+#: .\Receptionist\templates\Receptionist\reservation.html:628
 msgid "Add Reservation"
 msgstr "예약 추가"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:621
+#: .\Receptionist\templates\Receptionist\reservation.html:640
 msgid "Edit Reservation"
 msgstr "예약 수정"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:657
+#: .\Receptionist\templates\Receptionist\reservation.html:676
 msgid "Do you want to delete?"
 msgstr "삭제 하시겠습니까?"
 
-#: .\Receptionist\templates\Receptionist\reservation.html:667
-#, fuzzy
-#| msgid "Delete"
+#: .\Receptionist\templates\Receptionist\reservation.html:686
 msgid "Deleted"
 msgstr "삭제"
 
@@ -2389,28 +2642,36 @@ msgstr "수납 목록"
 msgid "Balance"
 msgstr "잔금"
 
-#: .\Receptionist\templates\Receptionist\storage_page.html:413
+#: .\Receptionist\templates\Receptionist\storage_page.html:416
 msgid "의사소견"
 msgstr ""
 
-#: .\Receptionist\templates\Receptionist\storage_page.html:451
+#: .\Receptionist\templates\Receptionist\storage_page.html:454
 msgid "Payment Record"
 msgstr "수납"
 
-#: .\Receptionist\templates\Receptionist\storage_page.html:458
+#: .\Receptionist\templates\Receptionist\storage_page.html:461
 msgid "Date Paid"
 msgstr "날짜"
 
-#: .\Receptionist\templates\Receptionist\storage_page.html:499
+#: .\Receptionist\templates\Receptionist\storage_page.html:502
 msgid "Date of Hospitalization"
 msgstr "검사 날짜"
+
+#: .\Receptionist\views.py:1103
+msgid "Cannot edit past payment"
+msgstr "이전 수납은 수정 할 수 없습니다"
+
+#: .\Receptionist\views.py:1113
+msgid "Cannot edit payment after 7 PM."
+msgstr "7 PM 이후 수납 수정은 불가능 합니다."
 
 #: .\app\templates\app\layout.html:95
 #: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:83
 msgid "Payment"
 msgstr "수납"
 
-#: .\app\templates\app\layout.html:96 .\app\templates\app\layout.html:106
+#: .\app\templates\app\layout.html:96 .\app\templates\app\layout.html:105
 #: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:84
 #: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:93
 msgid "Reservation"
@@ -2420,14 +2681,16 @@ msgstr "예약"
 msgid "Documents"
 msgstr "문서"
 
-#: .\app\templates\app\layout.html:108
+#: .\app\templates\app\layout.html:107
 #: .\obj\Release\Package\PackageTmp\app\templates\app\layout.html:94
 msgid "Audit"
 msgstr "회계"
 
-#: .\app\templates\app\layout.html:115
-#, fuzzy
-#| msgid "Inventory"
+#: .\app\templates\app\layout.html:111 .\app\templates\app\layout.html:123
+msgid "Inventory"
+msgstr "인벤토리"
+
+#: .\app\templates\app\layout.html:114
 msgid "Lab Inventory"
 msgstr "검사 인벤토리"
 
@@ -2436,31 +2699,29 @@ msgid "Tests"
 msgstr "검사"
 
 #: .\app\templates\app\layout.html:121
-#, fuzzy
-#| msgid "Procedure"
 msgid "Procedures"
 msgstr "처치"
 
 #: .\app\templates\app\layout.html:122
-#, fuzzy
-#| msgid "Medicine"
 msgid "Medicines"
 msgstr "약"
 
 #: .\app\templates\app\login.html:24 .\app\templates\app\login.html:60
+#: .\app\templates\app\login_admin.html:24
+#: .\app\templates\app\login_admin.html:60
 #: .\obj\Release\Package\PackageTmp\app\templates\app\login.html:24
 #: .\obj\Release\Package\PackageTmp\app\templates\app\login.html:62
 msgid "User name"
 msgstr "사용자 이름"
 
-#: .\app\templates\app\login.html:39 .\app\templates\app\loginpartial.html:17
-#: .\app\views.py:74
+#: .\app\templates\app\login.html:39 .\app\templates\app\login_admin.html:39
+#: .\app\templates\app\loginpartial.html:17 .\app\views.py:73
 #: .\obj\Release\Package\PackageTmp\app\templates\app\login.html:38
 #: .\obj\Release\Package\PackageTmp\app\templates\app\loginpartial.html:17
 msgid "Log in"
 msgstr "로그인"
 
-#: .\app\templates\app\login.html:51
+#: .\app\templates\app\login.html:51 .\app\templates\app\login_admin.html:51
 #: .\obj\Release\Package\PackageTmp\app\templates\app\login.html:54
 msgid "Register"
 msgstr "사용자 등록"
@@ -2470,15 +2731,11 @@ msgstr "사용자 등록"
 msgid "Log out"
 msgstr "로그아웃"
 
-#: .\app\templates\app\notice.html:14
-msgid "Title"
-msgstr ""
-
 #: .\app\templates\app\notice.html:15
 msgid "Writer"
 msgstr ""
 
-#: .\app\views.py:68
+#: .\app\views.py:67
 msgid "Please enter a correct user name and password."
 msgstr ""
 
@@ -2491,19 +2748,19 @@ msgstr ""
 #: .\env_local\Lib\site-packages\bootstrap4\templates\bootstrap4\form_errors.html:3
 #: .\env_local\Lib\site-packages\bootstrap4\templates\bootstrap4\messages.html:4
 msgid "close"
-msgstr ""
+msgstr "닫기"
 
 #: .\env_local\Lib\site-packages\django\contrib\messages\apps.py:7
 msgid "Messages"
-msgstr ""
+msgstr "메세지"
 
 #: .\env_local\Lib\site-packages\django\contrib\sitemaps\apps.py:7
 msgid "Site Maps"
-msgstr ""
+msgstr "사이트 맵"
 
 #: .\env_local\Lib\site-packages\django\contrib\staticfiles\apps.py:9
 msgid "Static Files"
-msgstr ""
+msgstr "정적 파일"
 
 #: .\env_local\Lib\site-packages\django\contrib\syndication\apps.py:7
 msgid "Syndication"
@@ -2511,11 +2768,11 @@ msgstr "방사선과"
 
 #: .\env_local\Lib\site-packages\django\core\paginator.py:42
 msgid "That page number is not an integer"
-msgstr ""
+msgstr "페이지 번호가 정수가 아닙니다."
 
 #: .\env_local\Lib\site-packages\django\core\paginator.py:44
 msgid "That page number is less than 1"
-msgstr ""
+msgstr "페이지 번호가 1보다 적습니다."
 
 #: .\env_local\Lib\site-packages\django\core\paginator.py:49
 msgid "That page contains no results"
@@ -2607,10 +2864,8 @@ msgstr[0] ""
 #: .\env_local\Lib\site-packages\django\core\validators.py:394
 #: .\env_local\Lib\site-packages\django\forms\fields.py:289
 #: .\env_local\Lib\site-packages\django\forms\fields.py:324
-#, fuzzy
-#| msgid "Serial Number"
 msgid "Enter a number."
-msgstr "연번"
+msgstr "숫자를 입력하세요"
 
 #: .\env_local\Lib\site-packages\django\core\validators.py:396
 #, python-format
@@ -2781,10 +3036,8 @@ msgid "Duration"
 msgstr "지속"
 
 #: .\env_local\Lib\site-packages\django\db\models\fields\__init__.py:1640
-#, fuzzy
-#| msgid "Address"
 msgid "Email address"
-msgstr "주소"
+msgstr "이메일 주소"
 
 #: .\env_local\Lib\site-packages\django\db\models\fields\__init__.py:1663
 msgid "File path"
@@ -2800,16 +3053,12 @@ msgid "Floating point number"
 msgstr ""
 
 #: .\env_local\Lib\site-packages\django\db\models\fields\__init__.py:1849
-#, fuzzy
-#| msgid "Address"
 msgid "IPv4 address"
-msgstr "주소"
+msgstr "IPv4 주소"
 
 #: .\env_local\Lib\site-packages\django\db\models\fields\__init__.py:1880
-#, fuzzy
-#| msgid "Address"
 msgid "IP address"
-msgstr "주소"
+msgstr "IP 주소"
 
 #: .\env_local\Lib\site-packages\django\db\models\fields\__init__.py:1960
 #: .\env_local\Lib\site-packages\django\db\models\fields\__init__.py:1961
@@ -3688,6 +3937,22 @@ msgstr ""
 msgid "Failed to save attachment"
 msgstr ""
 
+#: .\obj\Release\Package\PackageTmp\Account\admin.py:13
+#: .\obj\Release\Package\PackageTmp\Account\admin.py:16
+#: .\obj\Release\Package\PackageTmp\Account\admin.py:23
+#: .\obj\Release\Package\PackageTmp\Account\admin.py:27
+#: .\obj\Release\Package\PackageTmp\Account\admin.py:28
+#: .\obj\Release\Package\PackageTmp\Account\models.py:42
+#: .\obj\Release\Package\PackageTmp\Account\models.py:62
+msgid "email"
+msgstr "이메일"
+
+#: .\obj\Release\Package\PackageTmp\Account\admin.py:13
+#: .\obj\Release\Package\PackageTmp\Account\admin.py:16
+#: .\obj\Release\Package\PackageTmp\Account\admin.py:23
+msgid "user_role"
+msgstr "권한"
+
 #: .\obj\Release\Package\PackageTmp\Account\forms.py:11
 #: .\obj\Release\Package\PackageTmp\Account\models.py:33
 msgid "ADMIN"
@@ -3713,29 +3978,11 @@ msgstr ""
 msgid "RADIATION"
 msgstr ""
 
-#: .\obj\Release\Package\PackageTmp\Doctor\models.py:22
-#, fuzzy
-#| msgid "Korean"
-msgid "Korean Name"
-msgstr "한글"
-
-#: .\obj\Release\Package\PackageTmp\Doctor\models.py:26
-#, fuzzy
-#| msgid "English"
-msgid "English Name"
-msgstr "영어"
-
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:31
 #, fuzzy
 #| msgid "name"
 msgid "Nickname"
 msgstr "이름"
-
-#: .\obj\Release\Package\PackageTmp\Doctor\models.py:38
-#, fuzzy
-#| msgid "Depart"
-msgid "depart"
-msgstr "과"
 
 #: .\obj\Release\Package\PackageTmp\Doctor\models.py:44
 #, fuzzy
@@ -3980,6 +4227,9 @@ msgstr ""
 msgid "Time(s)"
 msgstr "시간"
 
+#~ msgid "Days left"
+#~ msgstr "남은 일"
+
 #, fuzzy
 #~| msgid "Precedure"
 #~ msgid "Prodecdures"
@@ -4030,9 +4280,6 @@ msgstr "시간"
 #~| msgid "Reception"
 #~ msgid "Save + Reception"
 #~ msgstr "접수"
-
-#~ msgid "Edit"
-#~ msgstr "수정"
 
 #~ msgid "Search Patient"
 #~ msgstr "환자검색"

@@ -1,0 +1,330 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+<div class="inventory_grid">
+    <div class="inventory_database partition">
+        <div class="table_title">
+            <span class="btn btn-danger title_span">{{ _('Employee Management') }}</span>
+            <div style="float:right;">
+                <div class="input-group" id="search_type_div">
+                    <span class="input-group-addon" id="basic-addon1">{{ _('Division') }}</span>
+                    <select id="search_division_type" class="form-control">
+                        <option value="">{{ _('ALL') }}</option>
+                        {% for data in list_division %}
+                        <option value="{{ data.id }}">{{ data.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group" id="search_depart_div">
+                    <span class="input-group-addon" id="basic-addon1">{{ _('Depart') }}</span>
+                    <select id="search_depart" class="form-control">
+                        <option value="">{{ _('ALL') }}</option>
+                        <option value="ADMIN">{{ _('Administrator') }}</option>
+                        <optgroup label="{{ _('I-MEDICARE') }}">
+                            {% for data in list_depart_clinic %}
+                            <option value="{{ data.id }}">{{ data.name }}</option>
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="{{ _('KBL') }}">
+                            {% for data in list_depart_kbl %}
+                            <option value="{{ data.id }}">{{ data.name }}</option>
+                            {% endfor %}
+                            </optgroup>
+                    </select>
+                </div>
+                <input type="text" id="search_input" class="form-control search_select">
+                <input type="button" class="btn btn-default" value="{{ _('Search')}}" onclick="database_search()" />
+            </div>
+        </div>
+        <div class="database_list">
+            <div class="database_table">
+                <table class="table table-bordered table-hover table-striped" id="database_table">
+                    <thead>
+                        <tr>
+                            <th>{{ _('No.') }}</th>
+                            <th>{{ _('Division') }}</th>
+                            <th>{{ _('Depart') }}</th>
+                            <th>{{ _('Rank') }}</th>
+                            <th>{{ _('ID') }}</th>
+                            <th>{{ _('Name') }}</th>
+                            <th>{{ _('Gender') }}</th>
+                            <th>{{ _('DOB') }}</th>
+                            <th>{{ _('Email') }}</th>
+                            <th>{{ _('Phone1') }}</th>
+                            <th>{{ _('Phone2') }}</th>
+                            <th>{{ _('Date of Employment') }}</th>
+                            <th>{{ _('Status') }}</th>
+                            <th>{{ _('Edit') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <ul class="pagination" id="table_pagnation">
+            </ul>
+            <div style="float:right; margin-top:20px;">
+                <input type="button" class="btn btn-info" id="employee_new" value="{{ _('New') }}" onclick="edit_database()" />
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<!-- Registrtaion -->
+<div id="add_edit_database" class="modal fade">
+    <div class="modal-dialog add_edit_modal" style="width:800px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4 id="add_edit_database_header"></h4>
+                <div id="modalBody" class="modal-body">
+                    <input type="hidden" id="add_edit_database_id" />
+                    <table class="table" id="add_edit_database_table">
+                        <tr>
+                            <td>
+                                <div class="input-group input-group_half_left">
+                                    <span class="input-group-addon" id="basic-addon1">* {{ _('ID') }}</span>
+                                    <input type="text" id="add_edit_database_user_ID" class="form-control medicine_control_input" aria-describedby="basic-addon1" placeholder="{{ _('Type English and Numbers only.') }}"/>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button" id="add_edit_database_ID_check" onclick="check_id();">{{ _('Check') }}</button>
+                                    </span>
+                                </div>
+                                <span id="add_edit_database_id_check_string">
+                                </span>
+                                <input type="hidden" id="add_edit_database_id_check_status" value="" />
+                                <br />
+                                <div class="input-group input-group_half_left">
+                                    <span class="input-group-addon" id="basic-addon1">* {{ _('Password') }}</span>
+                                    <input type="text" id="add_edit_database_password" class="form-control" aria-describedby="basic-addon1" autocomplete="false"/>
+                                </div>
+                                <div class="input-group input-group_half_right">
+                                    <span class="input-group-addon" id="basic-addon1">* {{ _('Password Confirm') }}</span>
+                                    <input type="text" id="add_edit_database_password_confirm" class="form-control" aria-describedby="basic-addon1" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group input-group_half_left">
+                                    <span class="input-group-addon" id="basic-addon1">* {{ _('Korean Name') }}</span>
+                                    <input type="text" id="add_edit_database_name_ko" class="form-control" aria-describedby="basic-addon1" />
+                                </div>
+                                <div class="input-group input-group_half_right">
+                                    <span class="input-group-addon" id="basic-addon1">* {{ _('English Name') }}</span>
+                                    <input type="text" id="add_edit_database_name_en" class="form-control" aria-describedby="basic-addon1" />
+                                </div>
+                                <div class="input-group input-group_half_left">
+                                    <span class="input-group-addon" id="basic-addon1">* {{ _('Vietnamese Name') }}</span>
+                                    <input type="text" id="add_edit_database_name_vi" class="form-control" aria-describedby="basic-addon1" />
+                                </div>
+                                <div class="input-group input-group_half_right">
+                                    <span class="input-group-addon" id="basic-addon1">* {{ _('Gender') }}</span>
+                                    <select id="add_edit_database_gender" class="form-control" aria-describedby="basic-addon1">
+                                        <option value="">---------</option>
+                                        <option value="Male">{{ _('Male') }}</option>
+                                        <option value="Female">{{ _('Female') }}</option>
+                                    </select>
+                                </div>
+                                <div class="input-group input-group_half_left">
+                                    <span class="input-group-addon" id="basic-addon1">* {{ _('Phone Number 1') }}</span>
+                                    <input type="text" id="add_edit_database_phone1" class="form-control" aria-describedby="basic-addon1" />
+                                </div>
+                                <div class="input-group input-group_half_right">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Phone Number 2') }}</span>
+                                    <input type="text" id="add_edit_database_phone2" class="form-control" aria-describedby="basic-addon1" />
+                                </div>
+                                <div class="input-group input-group_half_left">
+                                    <span class="input-group-addon" id="basic-addon1">* {{ _('Date of Birth') }}</span>
+                                    <input type="text" id="add_edit_database_dob" class="form-control date_input" aria-describedby="basic-addon1" />
+                                </div>
+                                <div class="input-group input-group_half_right">
+                                    <span class="input-group-addon" id="basic-addon1">* {{ _('Email') }}</span>
+                                    <input type="text" id="add_edit_database_email" class="form-control" aria-describedby="basic-addon1" />
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Address') }}</span>
+                                    <input type="text" id="add_edit_database_addr" class="form-control" aria-describedby="basic-addon1" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group input-group_half_left">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Rank') }}</span>
+                                    <select id="add_edit_database_rank" class="form-control" aria-describedby="basic-addon1">
+                                        <option value="">----------</option>
+                                        {% for data in list_rank %}
+                                        <option value="{{ data.id }}">{{ data.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="input-group input-group_half_right">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Depart') }}</span>
+                                    <select id="add_edit_database_depart" class="form-control" aria-describedby="basic-addon1">
+                                        <option value="">----------</option>
+                                        <optgroup label="{{ _('I-MEDICARE') }}">
+                                            {% for data in list_depart_clinic %}
+                                            <option value="{{ data.id }}">{{ data.name }}</option>
+                                            {% endfor %}
+                                        </optgroup>
+                                        <optgroup label="{{ _('KBL') }}">
+                                            {% for data in list_depart_kbl %}
+                                            <option value="{{ data.id }}">{{ data.name }}</option>
+                                            {% endfor %}
+                                         </optgroup>
+                                    </select>
+                                </div>
+                                <div class="input-group input-group_half_left">
+                                    <span class="input-group-addon" id="basic-addon1">* {{ _('Division') }}</span>
+                                    <select id="add_edit_database_division" class="form-control" aria-describedby="basic-addon1">
+                                        <option value="">----------</option>
+                                        {% for data in list_division %}
+                                            <option value="{{ data.id }}">{{ data.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group input-group_half_left">
+                                    <span class="input-group-addon" id="basic-addon1">* {{ _('Status') }}</span>
+                                    <select id="add_edit_database_status" class="form-control" aria-describedby="basic-addon1">
+                                        <option value="">----------</option>
+                                        {% for data in list_status %}
+                                            <option value="{{ data.id }}">{{ data.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="input-group input-group_half_right">
+                                    <span class="input-group-addon" id="basic-addon1">* {{ _('Date of Employment') }}</span>
+                                    <input type="text" id="add_edit_database_date_of_employment" class="form-control date_input" aria-describedby="basic-addon1" />
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Remark') }}</span>
+                                    <input type="text" id="add_edit_database_remark" class="form-control" aria-describedby="basic-addon1" />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                    <a class="btn btn-primary" onclick="save_database()">{{ _('Save') }}</a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Resignation -->
+<div id="edit_database_resignation" class="modal fade">
+    <div class="modal-dialog" style="width:500px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4 id="delete_database_header">{{ _('Resignation') }}</h4>
+                <div id="modalBody" class="modal-body">
+                    <input type="hidden" id="delete_database_id" />
+                    <span>{{ _('Would you like to make the employee resigned?') }}</span>
+                    <br />- <span id="selected_user_resignation"></span>
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">* {{ _('Date of Resignation') }}</span>
+                                    <input type="text" id="delete_database_date_of_resignation" class="form-control date_input" aria-describedby="basic-addon1" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">* {{ _('Reason') }}</span>
+                                    <input type="text" id="delete_database_resignation_reason" class="form-control" aria-describedby="basic-addon1" />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                    <a class="btn btn-primary" id="delete_database_ok">{{ _('Save') }}</a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Edit Password -->
+<div id="edit_database_password" class="modal fade">
+    <div class="modal-dialog" style="width:500px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4 id="password_database_header">{{ _('Change Password') }}</h4>
+                <div id="modalBody" class="modal-body">
+                    <input type="hidden" id="password_database_id" />
+                    <span>{{ _('Would you like to change password ?') }}</span>
+                    <br />- <span id="selected_user_change_password"></span>
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">* {{ _('Password') }}</span>
+                                    <input type="text" id="edit_database_password_password" class="form-control" aria-describedby="basic-addon1" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">* {{ _('Password Confirm') }}</span>
+                                    <input type="text" id="edit_database_password_confirm" class="form-control" aria-describedby="basic-addon1" />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <span id="add_edit_database_id_check_string"></span>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                    <a class="btn btn-primary" id="password_database_ok">{{ _('Save') }}</a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/employee_manage.css' %}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<script src="{% static 'js/employee_manage.js' %}" type="text/javascript"></script>
+{% endblock %}

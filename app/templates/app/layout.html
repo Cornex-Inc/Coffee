@@ -75,6 +75,7 @@
 
 <body>
     <input id="csrf" type="hidden" value="{{ csrf_token }}" />
+    <input id="language" type="hidden" value="{{ request.LANGUAGE_CODE }}" />
     <div class="navbar navbar-inverse navbar-fixed-top" style=" margin:0px; position:inherit; background:rgb(255, 255, 255); border-bottom:4px solid rgba(206, 17, 39, 1);border-color:rgba(206, 17, 39, 1);">
         <div class="">
             <div class="navbar-header">
@@ -94,12 +95,11 @@
                         <li {% if url_name == 'reception_index' %}class="active"{% endif %}><a href="{% url 'Receptionist:reception_index' %}" >{{ _('Registration') }}</a></li>
                         <li {% if url_name == 'storage_page' %}class="active"{% endif %}><a href="{% url 'Receptionist:storage_page'%}">{{ _('Payment') }}</a></li>
                         <li {% if url_name == 'reservation' %}class="active"{% endif %}><a href="{% url 'Receptionist:reservation'%}">{{ _('Reservation') }}</a></li>
-                    <li {% if url_name == 'reservation' %}class="active"{% endif %}><a href="{% url 'Receptionist:Documents'%}">{{ _('Documents') }}</a></li>
+                        <li {% if url_name == 'reservation' %}class="active"{% endif %}><a href="{% url 'Receptionist:Documents'%}">{{ _('Documents') }}</a></li>
                     {% elif user.is_doctor %}
                         <li {% if url_name == 'index' %}class="active"{% endif %}><a href="{% url 'Doctor:index'%}">
                             <span style="margin-right:5px;color:blue;">{{ user.doctor.depart.name }} </span> Dr.{{user.doctor.name_short }}</a>
                         </li>
-
                         <li {% if url_name == 'laboratory_index' %}class="active"{% endif %}><a href="{% url 'Laboratory:laboratory_index'%}">{{ _('Laboratory') }}</a></li>
                         <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Radiation:radiation_index'%}">{{ _('Radiology') }}</a></li>
                         <li {% if url_name == 'report' %}class="active"{% endif %}><a href="{% url 'Doctor:report'%}">{{ _('Medical Report') }}</a></li>    
@@ -115,14 +115,21 @@
                         <li {% if url_name == 'inventory_test' %}class="active"{% endif %}><a href="{% url 'Manage:inventory_test'%}">{{ _('Lab Inventory') }}</a></li>
                     {% elif user.is_radiation %}
                         <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Radiation:radiation_index'%}">{{ _('Radiology') }}</a></li>
+
                     {% elif user.is_admin %}
                     <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Manage:manage'%}">{{ _('REVENUE TOTAL') }}</a></li>
                     <li {% if url_name == 'inventory_test' %}class="active"{% endif %}><a href="{% url 'Manage:inventory_test'%}">{{ _('Tests') }}</a></li>
-                        <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Manage:inventory_precedure'%}">{{ _('Procedures') }}</a></li>
-                        <li {% if url_name == 'inventory' %}class="active"{% endif %}><a href="{% url 'Pharmacy:inventory'%}">{{ _('Medicines') }}</a></li>
+                    <li {% if url_name == 'radiation_index' %}class="active"{% endif %}><a href="{% url 'Manage:inventory_precedure'%}">{{ _('Procedures') }}</a></li>
+                    <li {% if url_name == 'inventory' %}class="active"{% endif %}><a href="{% url 'Pharmacy:inventory'%}">{{ _('Medicines') }}</a></li>
+                    <li {% if url_name == 'reservation' %}class="active"{% endif %}><a href="{% url 'Receptionist:Documents'%}">{{ _('Documents') }}</a></li>
+                    <li {% if url_name == 'inventory_medical_tool' %}class="active"{% endif %}><a href="{% url 'Manage:inventory_medical_tool'%}">{{ _('Inventory') }}</a></li>
+                    <li {% if url_name == 'manage_employee' %}class="active"{% endif %}><a href="{% url 'Manage:manage_employee'%}">{{ _('Employee Mgt') }}</a></li>
+                    <li {% if url_name == 'manage_employee' %}class="active"{% endif %}><a href="{% url 'Manage:board_list'%}">{{ _('Board') }}</a></li>
+                    <li {% if url_name == 'manage_employee' %}class="active"{% endif %}><a href="{% url 'Manage:board_work_list'%}">{{ _('Co-Work Board') }}</a></li>
                         <!--<li><a href="#DOCTOR_PROFIT">DOCTORS PROFIT</a></li>
                         <li><a href="#MEDICINE_TOTAL">MEDICINE</a></li>-->
                     {% elif user.is_physical_therapist %}
+
                         <li {% if url_name == 'physical_therapist_index' %}class="active"{% endif %}><a href="{% url 'physical_therapist:index'%}">{{ _('Physical Therapist') }}</a></li>
                     
                     

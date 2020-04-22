@@ -100,6 +100,7 @@ function search_doctor_profit(page = null) {
                     
                     // exam fee
                     str += '<td style="vertical-align: middle;">';
+                    console.log(response.datas[i]['exams'])
                     if (response.datas[i]['exams'].length == 0) {
                         str += ' - ';
                     } else {
@@ -138,8 +139,10 @@ function search_doctor_profit(page = null) {
                     }
                     str += '<td style="vertical-align: middle;">' + numberWithCommas(response.datas[i]['subtotal']) + '</td>'
 
+                    str += '<td style="vertical-align: middle;">' + numberWithCommas(response.datas[i]['additional']) + '</td>'
+
                     if (response.datas[i]['discount'] == 0 || response.datas[i]['discount'] == null) {
-                        str += '<td style="vertical-align: middle;">-</td>'
+                        str += '<td style="vertical-align: middle;">0</td>'
                     } else {
                         str += '<td style="vertical-align: middle;">' + numberWithCommas(response.datas[i]['discount']) + '</td>'
                         total_discounted += response.datas[i]['discount'];
@@ -158,7 +161,7 @@ function search_doctor_profit(page = null) {
                     total_total += response.datas[i]['total'];
                 }
                 else {
-                    str += "<td colspan='11'></td></tr>"
+                    str += "<td colspan='12'></td></tr>"
                 }
 
                 $('#doctors_table_result').append(str);
@@ -166,10 +169,12 @@ function search_doctor_profit(page = null) {
             //총 계
             if ($('#doctor_search_search option:selected').val() == '') {
                 $("#profit_total_subtotal").html(numberWithCommas(response.amount_sub_total));
+                $("#profit_total_additional").html(numberWithCommas(response.total_additional));
                 $("#profit_total_discounted").html(numberWithCommas(response.amount_discount));
                 $("#profit_total_total").html(numberWithCommas(response.amount_total));
             } else {
                 $("#profit_total_subtotal").html(numberWithCommas(response.total_amount));
+                $("#profit_total_additional").html(numberWithCommas(0));
                 $("#profit_total_discounted").html(numberWithCommas(0));
                 $("#profit_total_total").html(numberWithCommas(response.total_amount));
                 

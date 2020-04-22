@@ -99,6 +99,13 @@ class Reception(models.Model):
         default = False,
         )
 
+    need_invoice = models.BooleanField(
+        default = False,
+        )
+    need_insurance = models.BooleanField(
+        default = False,
+        )
+
     
     
 

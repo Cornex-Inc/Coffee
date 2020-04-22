@@ -1071,8 +1071,8 @@ function reception_waiting(Today = false, alarm = false) {
                 }
             }
             //알람 
-            if (alarm && is_new)
-                play_alarm();
+            //if (alarm && is_new)
+                //play_alarm();
         },
         error: function (request, status, error) {
             console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -1100,7 +1100,6 @@ function worker_on(is_run) {
             path = get_listener_path();
             w = new Worker(path);
             w.onmessage = function (event) {
-                console.log(timer_count);
                 timer_count += 1;
                 if (timer_count >= 1) {
                     timer_count = 0;

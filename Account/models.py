@@ -6,12 +6,12 @@ from django.utils.translation import gettext as _
 # Create your models here.
 
 class UserManager(BaseUserManager):
-    def create_user(self,email,password=None,):
-        if not email:
+    def create_user(self,user_id,password=None,):
+        if not user_id:
             raise ValueError(_('User must have an eamil address'))
 
         user = self.model(
-            email = self.normalize_email(email),
+            user_id = self.normalize_user_id(user_id),
 
             )
 
@@ -19,9 +19,9 @@ class UserManager(BaseUserManager):
         user.save(using = self._db)
         return user
 
-    def create_superuser(self,email,password,):
+    def create_superuser(self,user_id,password,):
         user = self.create_user(
-            email,
+            user_id,
             password = password,
             )
 
@@ -41,10 +41,11 @@ class User(AbstractBaseUser,PermissionsMixin):
             ('RADIATION', _('Radiation')),)
 
 
-    email = models.CharField(
-        verbose_name = _('email'),
+    user_id = models.CharField(
+        verbose_name = _('User ID'),
         max_length = 64,
         unique = True,
+        null=False,
         )
 
     is_active = models.BooleanField(
@@ -57,15 +58,139 @@ class User(AbstractBaseUser,PermissionsMixin):
         verbose_name=_('is superuser'),
         )
 
-    is_staff = models.BooleanField(default=False)
-    user_role = models.CharField(max_length=30, choices=user_role_choices, default='ADMIN')
+    #구분 유형
+    division_type = models.CharField(
+        max_length = 16,
+        null= True,
+        )
 
+    #부서
+    
+    depart = models.CharField( 
+        max_length = 16,
+        null= True,
+        )
+    #의사 과
+    depart_doctor = models.CharField(
+        max_length = 16,
+        null= True,
+        )
+
+    #직급
+    rank = models.CharField(
+        max_length = 16,
+        null= True,
+        )
+
+    #한글 이름
+    name_ko = models.CharField(
+        max_length = 64,
+        null = True,
+        )
+
+    #영문 이름
+    name_en = models.CharField(
+        max_length = 64,
+        null = True,
+        )
+
+    #베트남 이름
+    name_vi= models.CharField(
+        max_length = 64,
+        null = True,
+        )
+
+    #성별
+    gender = models.CharField(
+        max_length = 6,
+        null = True,
+        )
+
+    #생년월일
+    date_of_birth = models.DateField(
+        null = True,
+        )
+
+    #연락 번호 1
+    phone_number1= models.CharField(
+        max_length = 16,
+        null = True,
+        )
+
+    #연락 번호 2
+    phone_number2 = models.CharField(
+        max_length = 16,
+        null = True,
+        )
+
+    #이메일
+    email= models.CharField(
+        max_length = 64,
+        null = True,
+        )
+
+    #주소
+    address= models.CharField(
+        max_length = 128,
+        null = True,
+        )
+    
+    #입사 일
+    date_of_employment= models.DateField(
+        max_length = 8,
+        null = True,
+        )
+
+    #퇴사 일
+    date_of_resignation= models.DateField(
+        max_length = 8,
+        null = True,
+        )
+
+    #퇴사 이유
+    resignation_memo = models.CharField(
+        max_length = 256,
+        null = True,
+        )
+    
+    #사원 메모
+    memo= models.CharField(
+        max_length = 256,
+        null = True,
+        )
+
+
+
+    #등록 일
+    date_of_registered = models.DateTimeField(
+            auto_now_add=True,
+            blank=True,
+            null = True,
+        )
+
+    #마지막 수정 일
+    lastest_modified_date = models.DateTimeField(
+            auto_now_add=True,
+            blank=True,
+            null = True,
+        )
+
+    #재직 상태
+    status = models.CharField(
+        max_length = 8,
+        null = True,
+        )
+
+
+
+
+    is_staff = models.BooleanField(default=False)
     objects = UserManager()
 
-    USERNAME_FIELD = _('email')
+    USERNAME_FIELD = _('user_id')
     
     def __str__(self):
-        return self.email
+        return self.user_id
 
     def has_perm(self, perm, obj=None):
         return True
@@ -75,19 +200,18 @@ class User(AbstractBaseUser,PermissionsMixin):
 
 
     def is_doctor(self):
-        return str(self.user_role) == 'DOCTOR'
+        return str(self.depart) == 'DOCTOR'
     def is_receptionist(self):
-        return str(self.user_role) == 'RECEPTIONIST'
+        return str(self.depart) == 'RECEPTIONIST'
     def is_pharmacy(self):
-        return str(self.user_role) == 'PHARMACY'
+        return str(self.depart) == 'PHARMACY'
     def is_laboratory(self):
-        return str(self.user_role) == 'LABORATORY'
+        return str(self.depart) == 'LABORATORY'
     def is_radiation(self):
-        return str(self.user_role) == 'RADIATION'
+        return str(self.depart) == 'RADIATION'
     def is_physical_therapist(self):
-        return str(self.user_role) == 'PT'
-        
-
+        return str(self.depart) == 'PT'
+    
     @property
     def is_admin(self):
         return self.is_superuser

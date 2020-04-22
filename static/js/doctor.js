@@ -199,12 +199,23 @@ $(function () {
         showDropdowns: true,
         drops: "up",
         locale: {
-            format: 'YYYY-MM-DD', 
+            format: "YYYY-MM-DD",
         },
     });
-    worker_on(true);
-    $('#reception_waiting_date').on('apply.daterangepicker', function () {
-        today = moment().format('YYYY[-]MM[-]DD');
+    
+    //언어 별 날짜 출력
+    //초기값
+    if ($("#language").val() == 'vi') {
+        var today = moment().format('DD[/]MM[/]YYYY');
+        $('#reception_waiting_date').val(today);
+    }
+    //선택 시 
+    $('#reception_waiting_date').on('apply.daterangepicker', function (ev, picker) {
+        var today = moment().format('YYYY[-]MM[-]DD');
+        if ($("#language").val() == 'vi') {
+            $(this).val(picker.startDate.format('DD/MM/YYYY'));
+            today = moment().format('DD[/]MM[/]YYYY');
+        } 
         date = $('#reception_waiting_date').val();
         if (date == today) {
             worker_on(true);
@@ -212,6 +223,8 @@ $(function () {
             worker_on(false);
         }
     });
+    worker_on(true);
+
 
     $('#past_diagnosis_calendar').daterangepicker();
 
@@ -836,7 +849,10 @@ function reception_waiting(Today = false, alarm = false) {
     progress = $('#reception_progress').val();
     string = '';//$("#search_patient").val();
     date = $('#reception_waiting_date').val();
- 
+    //언어에 따라 날짜가 다르기 때문에 서버 형식에 맞게 재설정 후 전송
+    if ($("#language").val() == 'vi') {
+        date = moment(date, 'DD/MM/YYYY').format('YYYY-MM-DD')
+    }
 
     $.ajax({
         type: 'POST',

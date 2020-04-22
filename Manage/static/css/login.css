@@ -41,3 +41,20 @@ body {
 .checkbox_login{
 
 }
+
+/*********°ü¸®ÀÚ ***********/
+
+#login_select_div{
+    width: 290px;
+}
+
+.login_wrap select {
+    width: 49%;
+    display:inline;
+    margin:0px;
+}
+
+#login_select{
+    margin:0;
+    padding:0;
+}

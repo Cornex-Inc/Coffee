@@ -1,0 +1,176 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+
+<div class="board_grid">
+<form action="./" method="post" id="board_form" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="content_div partition">
+        <div class="board_list_wrap">
+
+            <span class="btn btn-danger title_span">{{ _('Board List') }}</span>
+            <div class="">
+            <table class="table" id="content_table">
+                <tbody>
+                <tr>
+                    <th><label>{{ _('Options') }}:</label></th>
+                    <td>
+
+                        <div class="input-group option_select_div">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('Division') }}</span>
+                            <select name="select_division" class="form-control" required>
+                                <option value="">----------</option>
+                                {% for division in list_division %}
+                                    <option value="{{division.id}}" {% if division.id == division_selected %} selected {% endif %}>{{ division.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-group option_select_div">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('Requested Depart') }}</span>
+                            <select name="select_depart_to" class="form-control" required>
+                                <option value="">----------</option>
+                                <optgroup label="I-MEDICARE">
+                                    {% for data in list_depart_medical %}
+                                        <option value="{{data.id}}" {% if data.id == division_selected %} selected {% endif %}>{{ data.name }}</option>
+                                    {% endfor %}
+                                </optgroup>
+                                <optgroup label="KBL">
+                                    {% for data in list_depart_kbl %}
+                                        <option value="{{data.id}}" {% if data.id == division_selected %} selected {% endif %}>{{ data.name }}</option>
+                                    {% endfor %}
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <div class="input-group option_select_div">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('Status') }}</span>
+                            <select name="select_status" class="form-control" id="select_status" required>
+                                {% for division in list_status %}
+                                    <option value="{{division.id}}" {% if division.id == division_selected %} selected {% endif %}>{{ division.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                    </td>
+                </tr>
+                {{ form.as_table }}
+
+                <tr>
+                    <td></td>
+                    <td>
+                        <table id="file_table">
+                            <tr>
+                                <td>
+                                    <a class="btn btn-success">
+                                        <label class="glyphicon glyphicon-cloud-upload" for="id_file"> Add Files</label>
+                                        {{ file_form.file }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="file_list_div">
+                                        <ul id="select_files">
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>
+                                {% if list_file %} 
+                                
+                                    
+                                    <div class="current_files">
+                                        <div>
+                                        <span class="file_span">{{ _('Attached Files') }} ( {{ list_file_count }} )</span>
+                                        </div>
+                                    </div>
+                                    
+                                </td>
+                                <td>
+                                    <div class="file_list_div">
+                                        <ul>
+                                        {% for cfile in list_file%}
+                                            <li id="current_file_{{cfile.id }}">
+                                                <div class="file_origin_name">{{ cfile.origin_name }}</div>
+                                                <input type="button" class="btn btn-danger delete_files" value="X" onclick="delete_file({{cfile.id }})"/>
+                                            </li>
+                                        {% endfor %}
+                                        </ul>
+                                    </div>
+                                
+                                {% else %}
+                                    </td><td style="border:none;">
+                                {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+                
+            </div>
+            <div style="text-align:right;">
+                <input type="button" class="btn btn-default" id="cancel" value="{{ _('Cancel') }}"/>
+                <input type="submit" class="btn btn-primary" id="save" value="{{ _('Save') }}" />
+            </div>
+        </div>
+    </div>
+
+</form>
+</div>
+
+
+  <div class="modal fade" id="modal-progress" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Uploading...</h4>
+        </div>
+        <div class="modal-body">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+<script>
+$(document).ready(function () {
+    //$('#id_contents').summernote({
+    //    lang: "{{ lang }}",
+    //});
+});
+</script>
+
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/board/create_edit.css' %}" />
+<link href="{% static 'summernote-0.8.16-dist/summernote.min.css' %}" rel="stylesheet"/>
+
+{% endblock %}
+
+
+
+
+{% block scripts %}
+
+<script src="{% static 'jQuery-File-Upload/js/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'jQuery-File-Upload/js/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'jQuery-File-Upload/js/jquery.fileupload.js' %}"></script>
+
+<script src="{% static 'js/board/create_edit.js' %}" type="text/javascript"></script>
+
+
+<script src="{% static 'summernote-0.8.16-dist/summernote.min.js'%}"></script>
+<script src="{% static 'summernote-0.8.16-dist/lang/summernote-vi-VN.min.js'%}"></script>
+<script src="{% static 'summernote-0.8.16-dist/lang/summernote-ko-KR.min.js'%}"></script>
+
+<script src="{% static 'js/board/create_edit.js'%}"></script>
+
+{% endblock %}

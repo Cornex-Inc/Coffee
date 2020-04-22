@@ -16,17 +16,31 @@ $(function () {
             format: 'YYYY-MM-DD',
         },
     });
-    worker_on(true);
-    $('#patient_date_start, #patient_date_end').on('apply.daterangepicker', function () {
-        today = moment().format('YYYY[-]MM[-]DD');
 
-        date = $('#patient_date').val();
+
+    //언어 별 날짜 출력
+    //초기값
+    if ($("#language").val() == 'vi') {
+        var today = moment().format('DD[/]MM[/]YYYY');
+        $('#patient_date_start, #patient_date_end').val(today);
+    }
+    //선택 시 
+    $('#patient_date_start, #patient_date_end').on('apply.daterangepicker', function (ev, picker) {
+        var today = moment().format('YYYY[-]MM[-]DD');
+        if ($("#language").val() == 'vi') {
+            $(this).val(picker.startDate.format('DD/MM/YYYY'));
+            today = moment().format('DD[/]MM[/]YYYY');
+        }
+        date = $(this).val();
         if (date == today) {
             worker_on(true);
         } else {
             worker_on(false);
         }
     });
+    worker_on(true);
+
+
 
     $('#patient_search_btn').click(function () {
         waiting_list();
@@ -198,12 +212,15 @@ function delete_image(image_id,li) {
 
 
 function waiting_list(Today = false, alarm = false) {
-    var date, start, end;
-
-    date = $('#patient_date_start').val();
+    var start, end;
     
     start = $('#patient_date_start').val();
     end = $('#patient_date_end').val();
+    //언어에 따라 날짜가 다르기 때문에 서버 형식에 맞게 재설정 후 전송
+    if ($("#language").val() == 'vi') {
+        start = moment(start, 'DD/MM/YYYY').format('YYYY-MM-DD');
+        end = moment(end, 'DD/MM/YYYY').format('YYYY-MM-DD');
+    }
 
 
     $.ajax({

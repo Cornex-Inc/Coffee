@@ -1,12 +1,20 @@
 from django import forms
 import datetime
 
-from .models import *
-from Doctor.models import *
-
+from django.utils import translation
 from django.utils.translation import gettext as _
 
 from django_summernote.widgets import SummernoteWidget
+from django.db.models import Q, Count, F, Min,Sum
+
+
+from .models import *
+from app.models import *
+from Doctor.models import *
+
+
+
+
 
 
 class PaymentSearchForm(forms.Form):
@@ -193,9 +201,20 @@ class MedicineSearchForm(forms.Form):
 
 
 class board_form(forms.ModelForm):
+
+
     class Meta:
         model = Board_Contents
-        fields = ['title','contents']
+        fields = ['title','contents'] 
         widgets = {
-            'content': SummernoteWidget(),
+            'title':forms.TextInput(attrs={'class':'form-control'} ),
+            'contents': SummernoteWidget( attrs={'summernote': {'width': '1200px', 'height': '400px'}} ),
         }
+
+
+class board_file_form(forms.ModelForm):
+    class Meta:
+        model = Board_File
+        fields = ['file']
+
+        files = forms.FileField(required=False)#widget=forms.ClearableFileInput(attrs={'multiple': True,'required':False}))

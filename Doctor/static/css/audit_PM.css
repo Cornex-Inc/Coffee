@@ -101,7 +101,7 @@ body {
     width: 85px;
 }
 .doctors_table_th tr th:nth-child(5) {
-    width: 240px;
+    width: 130px;
 }
 
 .doctors_table_th tr th:nth-child(6) {
@@ -112,11 +112,11 @@ body {
 }
 
 
-.doctors_table_th tr th:nth-child(9), .doctors_table_th tr th:nth-child(10), .doctors_table_th tr th:nth-child(11) {
-    text-align: center;
+.doctors_table_th tr th:nth-child(9), .doctors_table_th tr th:nth-child(10), .doctors_table_th tr th:nth-child(11), .doctors_table_th tr th:nth-child(12) {
+    text-align: right;
     width: 135px;
 }
 
-.payment_table_result tr td:nth-child(9), .payment_table_result tr td:nth-child(10), .payment_table_result tr td:nth-child(11) {
+.payment_table_result tr td:nth-child(9), .payment_table_result tr td:nth-child(10), .payment_table_result tr td:nth-child(11), .payment_table_result tr td:nth-child(12) {
     text-align: right;
 }

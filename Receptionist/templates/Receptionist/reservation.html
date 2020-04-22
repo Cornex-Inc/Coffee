@@ -175,8 +175,8 @@
             hiddenDays: [1],
             firstDay:2,
             eventTextColor:'#000000',
-            eventBorderColor:'#a9dded',
-            eventBackgroundColor:'#d7f0f7',
+            //eventBorderColor:'#a9dded',
+            //eventBackgroundColor:'#d7f0f7',
             customButtons: {
                 Add_New: {
                     text: "{{ _('New Reservation') }}",
@@ -209,17 +209,20 @@
                         'date_start':info.startStr,
                         'date_end':info.endStr,
                         'depart':$('#reservation_search_depart option:selected').val(),
-                        'doctor':$('#reservation_search_doctor option:selected').val(),
-                        'search_string': $('#reservation_search_string').val(),
                     },
                     dataType: 'Json',
                     success: function (response) {
                         successCallback(response.datas);
 
+                        
+    
+    
                         for ( var i in response.count_patient){
                             $("th[data-date='" + i + "']").html( response.count_patient[i].date + " ( " + response.count_patient[i].count + " )");
-
+                            
                         }
+    console.log(response)
+
                         
 
                     },
@@ -228,7 +231,6 @@
                     },
                 });
             },
-    
             eventRender: function(info){
                 $(info.el).on('dblclick', function() {
 

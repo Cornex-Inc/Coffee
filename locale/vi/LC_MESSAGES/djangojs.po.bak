@@ -3,9 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+msgid ""
+msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-08 14:15+0700\n"
+"POT-Creation-Date: 2020-04-17 03:22+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,194 +17,378 @@
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: .\Doctor\static\js\doctor.js:516 .\Doctor\static\js\doctor.js:690
-#: .\Doctor\static\js\doctor.js:724 .\Doctor\static\js\doctor_PM.js:324
-#: .\Doctor\static\js\doctor_PM.js:707 .\Doctor\static\js\doctor_PM.js:926
-#: .\Doctor\static\js\doctor_PM.js:960 .\Pharmacy\static\js\pharmacy.js:111
-#: .\Receptionist\static\js\storage_page.js:105
-#: .\Receptionist\static\js\storage_page.js:119
-#: .\Receptionist\static\js\storage_page.js:1140
+#: .\Doctor\static\js\doctor.js:718 .\Doctor\static\js\doctor.js:902
+#: .\Doctor\static\js\doctor.js:946 .\Doctor\static\js\doctor_PM.js:347
+#: .\Doctor\static\js\doctor_PM.js:899 .\Doctor\static\js\doctor_PM.js:1087
+#: .\Doctor\static\js\doctor_PM.js:1132
+#: .\Manage\static\js\employee_manage.js:166
+#: .\Manage\static\js\inventory_precedure.js:142
+#: .\Manage\static\js\inventory_test.js:143
+#: .\Pharmacy\static\js\inventory.js:178 .\Pharmacy\static\js\pharmacy.js:139
+#: .\Receptionist\static\js\storage_page.js:125
+#: .\Receptionist\static\js\storage_page.js:139
+#: .\Receptionist\static\js\storage_page.js:1180
 #: .\physical_therapist\static\js\physical_therapist.js:320
 #: .\physical_therapist\static\js\physical_therapist.js:703
 #: .\physical_therapist\static\js\physical_therapist.js:924
 #: .\physical_therapist\static\js\physical_therapist.js:958
-#: .\static\js\doctor.js:516 .\static\js\doctor.js:690
-#: .\static\js\doctor.js:724 .\static\js\doctor_PM.js:320
-#: .\static\js\doctor_PM.js:703 .\static\js\doctor_PM.js:922
-#: .\static\js\doctor_PM.js:956 .\static\js\pharmacy.js:111
-#: .\static\js\physical_therapist.js:320 .\static\js\physical_therapist.js:703
-#: .\static\js\physical_therapist.js:922 .\static\js\physical_therapist.js:956
 msgid "Select patient first."
 msgstr "Chọn bệnh nhân."
 
-#: .\Doctor\static\js\doctor.js:729 .\Doctor\static\js\doctor_PM.js:965
+#: .\Doctor\static\js\doctor.js:854 .\Doctor\static\js\doctor_PM.js:1034
+#: .\Receptionist\static\js\reception.js:1182
+#: .\Receptionist\static\js\reception.js:1301
+#: .\Receptionist\static\js\reception.js:1364
+#: .\Receptionist\static\js\reception.js:1414
+#: .\physical_therapist\static\js\physical_therapist.js:884
+msgid "No Result !!"
+msgstr ""
+
+#: .\Doctor\static\js\doctor.js:951 .\Doctor\static\js\doctor_PM.js:1137
 #: .\physical_therapist\static\js\physical_therapist.js:963
-#: .\static\js\doctor.js:729 .\static\js\doctor_PM.js:961
-#: .\static\js\physical_therapist.js:961
 msgid "Diagnosis is empty."
 msgstr "Chẩn đoán đang trống"
 
-#: .\Doctor\static\js\doctor.js:765 .\Doctor\static\js\doctor_PM.js:1002
+#: .\Doctor\static\js\doctor.js:991 .\Doctor\static\js\doctor.js:997
+#: .\Doctor\static\js\doctor_PM.js:1175 .\Doctor\static\js\doctor_PM.js:1183
 #: .\physical_therapist\static\js\physical_therapist.js:1000
-#: .\static\js\doctor.js:765 .\static\js\doctor_PM.js:998
-#: .\static\js\physical_therapist.js:998
 msgid "amount is empty."
 msgstr "Giá trị thanh toán đang trống"
 
-#: .\Doctor\static\js\doctor.js:770 .\Doctor\static\js\doctor_PM.js:1007
+#: .\Doctor\static\js\doctor.js:1003 .\Doctor\static\js\doctor_PM.js:1188
 #: .\physical_therapist\static\js\physical_therapist.js:1005
-#: .\static\js\doctor.js:770 .\static\js\doctor_PM.js:1003
-#: .\static\js\physical_therapist.js:1003
 msgid "days is empty."
 msgstr "Ngày đang để trống"
 
-#: .\Doctor\static\js\doctor.js:801 .\static\js\doctor.js:801
+#: .\Doctor\static\js\doctor.js:1065
 msgid ""
 "Failed \n"
 "already settled or is settled."
-msgstr "Không thành công\nĐã thanh toán rồi"
+msgstr ""
+"Không thành công\n"
+"Đã thanh toán rồi"
 
-#: .\Doctor\static\js\doctor.js:803 .\Doctor\static\js\doctor_PM.js:1040
+#: .\Doctor\static\js\doctor.js:1067 .\Doctor\static\js\doctor_PM.js:1228
 #: .\physical_therapist\static\js\physical_therapist.js:1038
-#: .\static\js\doctor.js:803 .\static\js\doctor_PM.js:1036
-#: .\static\js\physical_therapist.js:1036
 msgid "Saved"
 msgstr "Đã lưu"
 
-#: .\Doctor\static\js\doctor_PM.js:1038
+#: .\Doctor\static\js\doctor_PM.js:1226
 #: .\physical_therapist\static\js\physical_therapist.js:1036
-#: .\static\js\doctor_PM.js:1034 .\static\js\physical_therapist.js:1034
 msgid ""
 "Only SOAPD and Recommend are saved. \n"
 "already settled or is settled."
 msgstr ""
 
-#: .\Doctor\static\js\report.js:33 .\static\js\report.js:33
-msgid "Outbreak Day is empty."
-msgstr "Ngày phát bệnh đang để trống"
-
-#: .\Doctor\static\js\report.js:38 .\Doctor\static\js\report.js:89
-#: .\static\js\report.js:38 .\static\js\report.js:89
-msgid "Opinion is empty."
-msgstr "Ý kiến bác sĩ đang để trống"
-
-#: .\Doctor\static\js\report.js:43 .\Doctor\static\js\report.js:94
-#: .\static\js\report.js:43 .\static\js\report.js:94
-msgid "Purpose is empty."
-msgstr "Mục đích đang để trống"
-
-#: .\Doctor\static\js\report.js:84 .\static\js\report.js:84
-msgid "Outbreak Date is empty."
-msgstr "Ngày phát bệnh đang để trống"
-
-#: .\Doctor\static\js\report.js:312 .\static\js\report.js:312
-msgid "Type a text for searching"
-msgstr ""
-
-#: .\Laboratory\static\js\laboratory.js:69 .\static\js\laboratory.js:69
-msgid "Select test first."
-msgstr "Nhập văn bản để tìm kiếm"
-
-#: .\Laboratory\static\js\laboratory.js:92 .\Pharmacy\static\js\pharmacy.js:64
-#: .\Pharmacy\static\js\pharmacy.js:134
-#: .\Receptionist\static\js\reception.js:912
-#: .\Receptionist\static\js\reception.js:1435 .\static\js\laboratory.js:92
-#: .\static\js\pharmacy.js:64 .\static\js\pharmacy.js:134
-#: .\static\js\reception.js:912 .\static\js\reception.js:1435
+#: .\Doctor\static\js\report.js:104 .\Laboratory\static\js\laboratory.js:116
+#: .\Manage\static\js\employee_manage.js:121
+#: .\Manage\static\js\employee_manage.js:189
+#: .\Manage\static\js\inventory_precedure.js:97
+#: .\Manage\static\js\inventory_precedure.js:165
+#: .\Manage\static\js\inventory_test.js:98
+#: .\Manage\static\js\inventory_test.js:166
+#: .\Pharmacy\static\js\inventory.js:133 .\Pharmacy\static\js\inventory.js:201
+#: .\Pharmacy\static\js\pharmacy.js:92 .\Pharmacy\static\js\pharmacy.js:162
+#: .\Receptionist\static\js\reception.js:951
+#: .\Receptionist\static\js\reception.js:1495
 msgid "Saved."
 msgstr "Đã lưu."
 
-#: .\Pharmacy\static\js\pharmacy.js:40 .\static\js\pharmacy.js:40
+#: .\Doctor\static\js\report.js:343
+msgid "Type a text for searching"
+msgstr "Nhập từ khóa tìm kiếm."
+
+#: .\Laboratory\static\js\laboratory.js:93
+msgid "Select test first."
+msgstr "Nhập văn bản để tìm kiếm"
+
+#: .\Manage\static\js\board\list.js:63
+msgid "Input Text"
+msgstr ""
+
+#: .\Manage\static\js\board\list.js:100
+#, fuzzy
+#| msgid "Are you sure you want to delete ?"
+msgid "Do you want to delete this comment?"
+msgstr "Bạn có chắc muốn xóa mục này không?"
+
+#: .\Manage\static\js\employee_manage.js:97
+#: .\Manage\static\js\inventory_precedure.js:73
+#: .\Manage\static\js\inventory_test.js:74
+#: .\Pharmacy\static\js\inventory.js:109 .\Pharmacy\static\js\pharmacy.js:68
 msgid "Select medicine first."
 msgstr "Vui lòng chọn thuốc"
 
-#: .\Pharmacy\static\js\pharmacy.js:44 .\static\js\pharmacy.js:44
+#: .\Manage\static\js\employee_manage.js:101
+#: .\Manage\static\js\inventory_precedure.js:77
+#: .\Manage\static\js\inventory_test.js:78
+#: .\Pharmacy\static\js\inventory.js:113 .\Pharmacy\static\js\pharmacy.js:72
 msgid "Amount should be number"
 msgstr "Số lượng phải nhập dưới dạng số"
 
-#: .\Pharmacy\static\js\pharmacy.js:115 .\static\js\pharmacy.js:115
+#: .\Manage\static\js\employee_manage.js:170
+#: .\Manage\static\js\inventory_precedure.js:146
+#: .\Manage\static\js\inventory_test.js:147
+#: .\Pharmacy\static\js\inventory.js:182 .\Pharmacy\static\js\pharmacy.js:143
 msgid "Already done."
 msgstr "Hoàn tất"
 
-#: .\Radiation\static\js\radiation.js:34 .\static\js\radiation.js:34
-msgid "Image Select or save First."
-msgstr "Chọn hoặc lưu hình ảnh"
-
-#: .\Radiation\static\js\radiation.js:161 .\static\js\radiation.js:161
-msgid "deleted."
-msgstr "Đã xóa."
-
-#: .\Receptionist\static\js\reception.js:505 .\static\js\reception.js:505
-msgid "Question 5 is empty."
-msgstr "Câu số 5 đang để trống"
-
-#: .\Receptionist\static\js\reception.js:537 .\static\js\reception.js:537
-msgid "Question 8 is empty."
-msgstr "Câu số 8 đang để trống"
-
-#: .\Receptionist\static\js\reception.js:544 .\static\js\reception.js:544
-msgid "Question 9 is empty."
-msgstr "Câu số 9 đang để trống"
-
-#: .\Receptionist\static\js\reception.js:848 .\static\js\reception.js:848
-msgid "'Gender' is necessary."
-msgstr "Vui lòng chọn giới tính"
-
-#: .\Receptionist\static\js\reception.js:859
-#: .\Receptionist\static\js\reception.js:966 .\static\js\reception.js:859
-#: .\static\js\reception.js:966
-msgid "'"
+#: .\Manage\static\js\employee_manage.js:338
+msgid "Edit Employee"
 msgstr ""
 
-#: .\Receptionist\static\js\reception.js:936 .\static\js\reception.js:936
-msgid "Failed."
-msgstr "Không thành công"
+#: .\Manage\static\js\employee_manage.js:380
+#: .\Manage\static\js\employee_manage.js:445
+#: .\Manage\static\js\employee_manage.js:497
+#: .\Manage\static\js\employee_manage.js:551
+#: .\Manage\static\js\inventory_medical_tool.js:244
+#: .\Manage\static\js\inventory_medical_tool.js:318
+#: .\Manage\static\js\inventory_precedure.js:283
+#: .\Manage\static\js\inventory_precedure.js:344
+#: .\Manage\static\js\inventory_test.js:286
+#: .\Manage\static\js\inventory_test.js:347
+#: .\Pharmacy\static\js\inventory.js:338 .\Pharmacy\static\js\inventory.js:419
+msgid "Please Refresh this page."
+msgstr "Vui lòng tải lại trang"
 
-#: .\Receptionist\static\js\reception.js:1032 .\static\js\reception.js:1032
-msgid "has been Recepted."
+#: .\Manage\static\js\employee_manage.js:390
+msgid "New Employee"
 msgstr ""
 
-#: .\Receptionist\static\js\reception.js:1057 .\static\js\reception.js:1057
-msgid "failed to recepted."
-msgstr "Không thành công"
-
-#: .\Receptionist\static\js\reception.js:1114
-msgid "Input search string."
-msgstr "Vui lòng nhập cụm từ tìm kiếm"
-
-#: .\Receptionist\static\js\reception.js:1171 .\static\js\reception.js:1171
-msgid "Abnormal approach"
-msgstr "Cách truy cập không đúng"
-
-#: .\Receptionist\static\js\reception.js:1414 .\static\js\reception.js:1414
-msgid "Select Depart."
+#: .\Manage\static\js\employee_manage.js:468
+#: .\Manage\static\js\employee_manage.js:521
+#: .\Manage\static\js\inventory_medical_tool.js:41
+#: .\Manage\static\js\inventory_medical_tool.js:405
+#: .\Manage\static\js\inventory_precedure.js:359
+#: .\Manage\static\js\inventory_test.js:362
+#: .\Pharmacy\static\js\inventory.js:41 .\Pharmacy\static\js\inventory.js:506
+#, fuzzy
+#| msgid "Select Depart."
+msgid "Select Item."
 msgstr "Vui lòng chọn Khoa"
 
-#: .\Receptionist\static\js\reception.js:1418 .\static\js\reception.js:1418
-msgid "Select Doctor."
-msgstr "Vui lòng chọn bác sĩ"
+#: .\Manage\static\js\employee_manage.js:571
+#: .\Manage\static\js\employee_manage.js:613
+#, fuzzy
+#| msgid "days is empty."
+msgid "ID field is empty."
+msgstr "Ngày đang để trống"
 
-#: .\Receptionist\static\js\reception.js:1447 .\static\js\reception.js:1447
+#: .\Manage\static\js\employee_manage.js:586
+msgid "Can be used."
+msgstr ""
+
+#: .\Manage\static\js\employee_manage.js:591
+msgid "Cannot be used. Type other ID."
+msgstr ""
+
+#: .\Manage\static\js\employee_manage.js:620
+msgid "Check ID."
+msgstr ""
+
+#: .\Manage\static\js\employee_manage.js:627
+#, fuzzy
+#| msgid "Purpose is empty."
+msgid "Password field is empty"
+msgstr "Mục đích đang để trống"
+
+#: .\Manage\static\js\employee_manage.js:634
+msgid "Password Confirm field is empty"
+msgstr ""
+
+#: .\Manage\static\js\employee_manage.js:640
+msgid "Check Password."
+msgstr ""
+
+#: .\Manage\static\js\employee_manage.js:647
+#, fuzzy
+#| msgid "Outbreak Date is empty."
+msgid "Korean Name field is empty"
+msgstr "Ngày phát bệnh đang để trống"
+
+#: .\Manage\static\js\employee_manage.js:654
+msgid "English Name field is empty"
+msgstr ""
+
+#: .\Manage\static\js\employee_manage.js:661
+msgid "Vietnamese Name field is empty"
+msgstr ""
+
+#: .\Manage\static\js\employee_manage.js:668
+msgid "Phone Number1 field is empty"
+msgstr ""
+
+#: .\Manage\static\js\employee_manage.js:675
+msgid "Date of Birth field is empty"
+msgstr ""
+
+#: .\Manage\static\js\employee_manage.js:682
+msgid "Email field is empty"
+msgstr ""
+
+#: .\Manage\static\js\employee_manage.js:689
+#, fuzzy
+#| msgid "Question 5 is empty."
+msgid "Division field is empty"
+msgstr "Câu số 5 đang để trống"
+
+#: .\Manage\static\js\employee_manage.js:697
+#, fuzzy
+#| msgid "Purpose is empty."
+msgid "Status field is empty"
+msgstr "Mục đích đang để trống"
+
+#: .\Manage\static\js\employee_manage.js:704
+msgid "Date of Employment field is empty"
+msgstr ""
+
+#: .\Manage\static\js\inventory_medical_tool.js:201
+#: .\Pharmacy\static\js\inventory.js:296
+msgid "New Medicine"
+msgstr ""
+
+#: .\Manage\static\js\inventory_medical_tool.js:210
+#: .\Manage\static\js\inventory_precedure.js:263
+#: .\Manage\static\js\inventory_test.js:266
+#: .\Pharmacy\static\js\inventory.js:305
+msgid "Edit Data"
+msgstr ""
+
+#: .\Manage\static\js\inventory_medical_tool.js:268
+#: .\Manage\static\js\inventory_precedure.js:307
+#: .\Manage\static\js\inventory_test.js:310
+#: .\Pharmacy\static\js\inventory.js:362
+#, fuzzy
+#| msgid "'Gender' is necessary."
+msgid "Name is necessary! "
+msgstr "Vui lòng chọn giới tính"
+
+#: .\Manage\static\js\inventory_medical_tool.js:273
+#: .\Manage\static\js\inventory_precedure.js:312
+#: .\Manage\static\js\inventory_test.js:315
+#: .\Pharmacy\static\js\inventory.js:367
+msgid "Name in Vietnamese is necessary! "
+msgstr "Vui lòng nhập tên tiếng Việt!"
+
+#: .\Manage\static\js\inventory_medical_tool.js:409
+#: .\Manage\static\js\inventory_precedure.js:363
+#: .\Manage\static\js\inventory_test.js:366
+#: .\Pharmacy\static\js\inventory.js:510
+#: .\Receptionist\static\js\reception.js:1507
 msgid "Are you sure you want to delete ?"
 msgstr "Bạn có chắc muốn xóa mục này không?"
 
-#: .\Receptionist\static\js\reception.js:1459 .\static\js\reception.js:1459
-msgid "Deleted."
-msgstr "Đã xóa"
-
-#: .\Receptionist\static\js\storage_page.js:208
+#: .\Manage\static\js\inventory_medical_tool.js:421
+#: .\Manage\static\js\inventory_precedure.js:375
+#: .\Manage\static\js\inventory_test.js:378
+#: .\Pharmacy\static\js\inventory.js:522
+#: .\Receptionist\static\js\storage_page.js:235
 msgid "Deleted"
 msgstr "Đã xóa"
 
-#: .\Receptionist\static\js\storage_page.js:1166
+#: .\Manage\static\js\inventory_medical_tool.js:620
+#: .\Pharmacy\static\js\inventory.js:706
+msgid "You really want to disposal medicines?"
+msgstr "Bạn thực sự muốn xóa thuốc này?"
+
+#: .\Manage\static\js\inventory_medical_tool.js:634
+#: .\Pharmacy\static\js\inventory.js:720
+msgid "deleted"
+msgstr "Đã xóa."
+
+#: .\Manage\static\js\inventory_medical_tool.js:647
+#: .\Pharmacy\static\js\inventory.js:733
+msgid "Count is more than left"
+msgstr "Không đủ thuốc trong kho"
+
+#: .\Manage\static\js\inventory_precedure.js:254
+msgid "New Procedure"
+msgstr "Thủ thuật mới"
+
+#: .\Manage\static\js\inventory_test.js:257
+msgid "New Test"
+msgstr "Xét nghiệm mới."
+
+#: .\Radiation\static\js\radiation.js:37
+msgid "Image Select or save First."
+msgstr "Chọn hoặc lưu hình ảnh"
+
+#: .\Radiation\static\js\radiation.js:181
+msgid "deleted."
+msgstr "Đã xóa."
+
+#: .\Receptionist\static\js\reception.js:514
+msgid "Question 5 is empty."
+msgstr "Câu số 5 đang để trống"
+
+#: .\Receptionist\static\js\reception.js:546
+msgid "Question 8 is empty."
+msgstr "Câu số 8 đang để trống"
+
+#: .\Receptionist\static\js\reception.js:553
+msgid "Question 9 is empty."
+msgstr "Câu số 9 đang để trống"
+
+#: .\Receptionist\static\js\reception.js:858
+msgid "'Gender' is necessary."
+msgstr "Vui lòng chọn giới tính"
+
+#: .\Receptionist\static\js\reception.js:862
+#, fuzzy
+#| msgid "'Gender' is necessary."
+msgid "'Nationality' is necessary."
+msgstr "Vui lòng chọn giới tính"
+
+#: .\Receptionist\static\js\reception.js:873
+#: .\Receptionist\static\js\reception.js:999
+msgid "'"
+msgstr ""
+
+#: .\Receptionist\static\js\reception.js:973
+msgid "Failed."
+msgstr "Không thành công"
+
+#: .\Receptionist\static\js\reception.js:1080
+msgid "has been Recepted."
+msgstr "Đã được đăng ký"
+
+#: .\Receptionist\static\js\reception.js:1105
+msgid "failed to recepted."
+msgstr "Không thành công"
+
+#: .\Receptionist\static\js\reception.js:1166
+msgid "Input search string."
+msgstr "Vui lòng nhập cụm từ tìm kiếm"
+
+#: .\Receptionist\static\js\reception.js:1225
+msgid "Abnormal approach"
+msgstr "Cách truy cập không đúng"
+
+#: .\Receptionist\static\js\reception.js:1474
+msgid "Select Depart."
+msgstr "Vui lòng chọn Khoa"
+
+#: .\Receptionist\static\js\reception.js:1478
+msgid "Select Doctor."
+msgstr "Vui lòng chọn bác sĩ"
+
+#: .\Receptionist\static\js\reception.js:1519
+msgid "Deleted."
+msgstr "Đã xóa"
+
+#: .\Receptionist\static\js\storage_page.js:36
+msgid "Doy you want to change reservation?"
+msgstr ""
+
+#: .\Receptionist\static\js\storage_page.js:1212
 msgid "Already paid."
 msgstr "Đã thanh toán"
 
-#: .\Receptionist\static\js\storage_page.js:1169
+#: .\Receptionist\static\js\storage_page.js:1216
 msgid "Payment amount should be lower than remaining."
 msgstr "Phí khám phải thấp hơn tổng sổ"
 
-#: .\Receptionist\static\js\storage_page.js:1171
+#: .\Receptionist\static\js\storage_page.js:1218
 msgid "Paid"
 msgstr "Đã thanh toán"
 
@@ -211,13 +397,11 @@ msgid "Right click is not available."
 msgstr "Không click được chuột phải"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\SelectFilter2.js:47
-#: .\static\admin\js\SelectFilter2.js:47
 #, javascript-format
 msgid "Available %s"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\SelectFilter2.js:53
-#: .\static\admin\js\SelectFilter2.js:53
 #, javascript-format
 msgid ""
 "This is the list of available %s. You may choose some by selecting them in "
@@ -225,45 +409,37 @@ msgid ""
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\SelectFilter2.js:69
-#: .\static\admin\js\SelectFilter2.js:69
 #, javascript-format
 msgid "Type into this box to filter down the list of available %s."
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\SelectFilter2.js:74
-#: .\static\admin\js\SelectFilter2.js:74
 msgid "Filter"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\SelectFilter2.js:78
-#: .\static\admin\js\SelectFilter2.js:78
 msgid "Choose all"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\SelectFilter2.js:78
-#: .\static\admin\js\SelectFilter2.js:78
 #, javascript-format
 msgid "Click to choose all %s at once."
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\SelectFilter2.js:84
-#: .\static\admin\js\SelectFilter2.js:84
 msgid "Choose"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\SelectFilter2.js:86
-#: .\static\admin\js\SelectFilter2.js:86
 msgid "Remove"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\SelectFilter2.js:92
-#: .\static\admin\js\SelectFilter2.js:92
 #, javascript-format
 msgid "Chosen %s"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\SelectFilter2.js:98
-#: .\static\admin\js\SelectFilter2.js:98
 #, javascript-format
 msgid ""
 "This is the list of chosen %s. You may remove some by selecting them in the "
@@ -271,19 +447,16 @@ msgid ""
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\SelectFilter2.js:108
-#: .\static\admin\js\SelectFilter2.js:108
 msgid "Remove all"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\SelectFilter2.js:108
-#: .\static\admin\js\SelectFilter2.js:108
 #, javascript-format
 msgid "Click to remove all chosen %s at once."
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\actions.js:48
 #: .\obj\Release\Package\PackageTmp\static\admin\js\actions.min.js:2
-#: .\static\admin\js\actions.js:48 .\static\admin\js\actions.min.js:2
 msgid "%(sel)s of %(cnt)s selected"
 msgid_plural "%(sel)s of %(cnt)s selected"
 msgstr[0] ""
@@ -291,7 +464,6 @@ msgstr[1] ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\actions.js:117
 #: .\obj\Release\Package\PackageTmp\static\admin\js\actions.min.js:5
-#: .\static\admin\js\actions.js:117 .\static\admin\js\actions.min.js:5
 msgid ""
 "You have unsaved changes on individual editable fields. If you run an "
 "action, your unsaved changes will be lost."
@@ -299,7 +471,6 @@ msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\actions.js:129
 #: .\obj\Release\Package\PackageTmp\static\admin\js\actions.min.js:5
-#: .\static\admin\js\actions.js:129 .\static\admin\js\actions.min.js:5
 msgid ""
 "You have selected an action, but you haven't saved your changes to "
 "individual fields yet. Please click OK to save. You'll need to re-run the "
@@ -308,7 +479,6 @@ msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\actions.js:131
 #: .\obj\Release\Package\PackageTmp\static\admin\js\actions.min.js:6
-#: .\static\admin\js\actions.js:131 .\static\admin\js\actions.min.js:6
 msgid ""
 "You have selected an action, and you haven't made any changes on individual "
 "fields. You're probably looking for the Go button rather than the Save "
@@ -317,33 +487,26 @@ msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:13
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:115
-#: .\static\admin\js\admin\DateTimeShortcuts.js:13
-#: .\static\admin\js\admin\DateTimeShortcuts.js:118
 msgid "Now"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:14
-#: .\static\admin\js\admin\DateTimeShortcuts.js:14
 msgid "Midnight"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:15
-#: .\static\admin\js\admin\DateTimeShortcuts.js:15
 msgid "6 a.m."
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:16
-#: .\static\admin\js\admin\DateTimeShortcuts.js:16
 msgid "Noon"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:17
-#: .\static\admin\js\admin\DateTimeShortcuts.js:17
 msgid "6 p.m."
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:82
-#: .\static\admin\js\admin\DateTimeShortcuts.js:83
 #, javascript-format
 msgid "Note: You are %s hour ahead of server time."
 msgid_plural "Note: You are %s hours ahead of server time."
@@ -351,7 +514,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:90
-#: .\static\admin\js\admin\DateTimeShortcuts.js:91
 #, javascript-format
 msgid "Note: You are %s hour behind server time."
 msgid_plural "Note: You are %s hours behind server time."
@@ -359,142 +521,114 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:133
-#: .\static\admin\js\admin\DateTimeShortcuts.js:136
 msgid "Choose a Time"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:163
-#: .\static\admin\js\admin\DateTimeShortcuts.js:166
 msgid "Choose a time"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:180
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:340
-#: .\static\admin\js\admin\DateTimeShortcuts.js:183
-#: .\static\admin\js\admin\DateTimeShortcuts.js:343
 msgid "Cancel"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:245
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:325
-#: .\static\admin\js\admin\DateTimeShortcuts.js:248
-#: .\static\admin\js\admin\DateTimeShortcuts.js:328
 msgid "Today"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:262
-#: .\static\admin\js\admin\DateTimeShortcuts.js:265
 msgid "Choose a Date"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:319
-#: .\static\admin\js\admin\DateTimeShortcuts.js:322
 msgid "Yesterday"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\admin\DateTimeShortcuts.js:331
-#: .\static\admin\js\admin\DateTimeShortcuts.js:334
 msgid "Tomorrow"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:12
-#: .\static\admin\js\calendar.js:12
 msgid "January"
 msgstr "Tháng 1"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:13
-#: .\static\admin\js\calendar.js:13
 msgid "February"
 msgstr "Tháng 2"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:14
-#: .\static\admin\js\calendar.js:14
 msgid "March"
 msgstr "Tháng 3"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:15
-#: .\static\admin\js\calendar.js:15
 msgid "April"
 msgstr "Tháng 4"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:16
-#: .\static\admin\js\calendar.js:16
 msgid "May"
 msgstr "Tháng 5"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:17
-#: .\static\admin\js\calendar.js:17
 msgid "June"
 msgstr "Tháng 6"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:18
-#: .\static\admin\js\calendar.js:18
 msgid "July"
 msgstr "Tháng 7"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:19
-#: .\static\admin\js\calendar.js:19
 msgid "August"
 msgstr "Tháng 8"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:20
-#: .\static\admin\js\calendar.js:20
 msgid "September"
 msgstr "Tháng 9"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:21
-#: .\static\admin\js\calendar.js:21
 msgid "October"
 msgstr "Tháng 10"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:22
-#: .\static\admin\js\calendar.js:22
 msgid "November"
 msgstr "Tháng 11"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:23
-#: .\static\admin\js\calendar.js:23
 msgid "December"
 msgstr "Tháng 12"
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:26
-#: .\static\admin\js\calendar.js:26
 msgctxt "one letter Sunday"
 msgid "S"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:27
-#: .\static\admin\js\calendar.js:27
 msgctxt "one letter Monday"
 msgid "M"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:28
-#: .\static\admin\js\calendar.js:28
 msgctxt "one letter Tuesday"
 msgid "T"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:29
-#: .\static\admin\js\calendar.js:29
 msgctxt "one letter Wednesday"
 msgid "W"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:30
-#: .\static\admin\js\calendar.js:30
 msgctxt "one letter Thursday"
 msgid "T"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:31
-#: .\static\admin\js\calendar.js:31
 msgctxt "one letter Friday"
 msgid "F"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\calendar.js:32
-#: .\static\admin\js\calendar.js:32
 msgctxt "one letter Saturday"
 msgid "S"
 msgstr ""
@@ -502,13 +636,16 @@ msgstr ""
 #: .\obj\Release\Package\PackageTmp\static\admin\js\collapse.js:27
 #: .\obj\Release\Package\PackageTmp\static\admin\js\collapse.js:45
 #: .\obj\Release\Package\PackageTmp\static\admin\js\collapse.min.js:2
-#: .\static\admin\js\collapse.js:10 .\static\admin\js\collapse.js:21
-#: .\static\admin\js\collapse.min.js:4 .\static\admin\js\collapse.min.js:5
 msgid "Show"
 msgstr ""
 
 #: .\obj\Release\Package\PackageTmp\static\admin\js\collapse.js:41
 #: .\obj\Release\Package\PackageTmp\static\admin\js\collapse.min.js:2
-#: .\static\admin\js\collapse.js:18 .\static\admin\js\collapse.min.js:4
 msgid "Hide"
 msgstr ""
+
+#~ msgid "Outbreak Day is empty."
+#~ msgstr "Ngày phát bệnh đang để trống"
+
+#~ msgid "Opinion is empty."
+#~ msgstr "Ý kiến bác sĩ đang để trống"

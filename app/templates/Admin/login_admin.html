@@ -1,0 +1,90 @@
+{% extends "app/layout.html" %}
+{% load staticfiles %}
+{% block content %}
+
+{% if user.is_authenticated %}
+<script>
+location.href="/";
+</script>
+{% else %}
+<div class="index_middle">
+    <img style="width:516px; height:450px; margin-top:50px; " src="{% static 'img/index_main.png'%}" />
+</div>
+<div class="login_wrap">
+    <div class="login_contents">
+        <h2>{{ title }}</h2>
+        <div class="row" style="display:inline-block;">
+            <section id="loginForm">
+                <form action="." method="post" class="form-horizontal">
+                    {% csrf_token %}
+                    <hr />
+                    <!-- 접속 화면 선택 -->
+                    <div class="form-group">
+                        <label for="id_username" class="col-md-3 control-label" style="text-align:left;"></label>
+                        <div class="col-md-8 login_select">
+                            <!--과 선택-->
+                            <div id="login_select_div">
+                                <select name="depart" id="select_depart" class="form-control">
+                                    <option value="ADMIN" selected>{{ _('Admin Page') }}</option>
+                                    <optgroup label="{{ _('I-MEDICARE') }}">
+                                        {% for data in list_depart_clinic %}
+                                        <option value="{{ data.id }}">{{ data.name }}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                    <optgroup label="{{ _('KBL') }}">
+                                        {% for data in list_depart_kbl %}
+                                        <option value="{{ data.id }}">{{ data.name }}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                </select>
+                                <select name="doctor_depart" id="select_doctor_depart" class="form-control">
+                                    <option value="" selected>----------</option>
+                                    {% for data in list_depart_doctor %}
+                                    <option value="{{ data.id }}">{{ data.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!--로그인-->
+                    <div class="form-group">
+                        <label for="id_username" class="col-md-3 control-label" style="text-align:left;">{{ _('User name') }}</label>
+                        <div class="col-md-8">
+                            {{ form.username }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_password" class="col-md-3 control-label" style="text-align:left;">{{ _('Password') }}</label>
+                        <div class="col-md-8">
+                            {{ form.password }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-3 col-md-7">
+                            <input type="hidden" name="next" value="/" />
+                            <input type="submit" value="{{ _('Log in') }}" class="btn btn-default" />
+                        </div>
+                    </div>
+                    {% if error %}
+                    <p class="validation-summary-errors">{{ error }}</p>
+                    {% endif %}
+                </form>
+                
+            </section>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" />
+<script src="{% static 'js/login.js' %}"></script>
+<script src="{% static 'app/scripts/jquery.validate.min.js' %}"></script>
+
+{% endblock %}

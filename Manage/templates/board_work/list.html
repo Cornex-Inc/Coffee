@@ -1,0 +1,282 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+
+
+<script>
+    function select_content(id = null) {
+        if (id != null) {
+            $('#selected_content').val(id);
+            document.getElementById('board_form').submit();
+        }
+    }
+
+    function select_page(page = null) {
+        if (page != null) {
+            $('#page').val(page);
+            document.getElementById('board_form').submit();
+        }
+    }
+
+
+</script>
+
+<div class="board_grid">
+<form action="./" method="post" id="board_form">
+    {% csrf_token %}
+{% if content %}
+
+<div class="content_div partition">
+    <input type="hidden" value="{{ content.id }}" id="content_id" />
+
+    <div class="content_wrap">
+        <span class="btn btn-danger title_span">{{ _('Content') }}</span>
+        <div class="content_top">
+            <div class="content_title">
+                {{content.title}}
+            </div>
+            <div class="content_top_control">
+                <div class="content_info">
+                    <div class="fl">
+                    <span class="content_creator">{{ content.creator }}</span>
+                    <span class="content_date">{{ content.date }}</span>
+                    </div>
+                    {{ _('Views') }}:{{ content.views }}
+                    <span class="content_count">{{ _('Comments') }}:<span id="content_comment_count_top">{{ content.comments_count }}</span></span>
+                </div>
+            </div>
+        </div>
+        <div class="content_content">
+            <div class="content_control">
+                {% if user.user_id == content.creator %}
+                
+                
+                <div class="fl">
+                    <a href="edit/{{ content.id }}">
+                        <input type="button" class="btn btn-default" value="{{ _('Edit')}}" />
+                    </a>
+                    <a href="delete/{{content.id}}" >
+                        <input type="button" class="btn btn-danger" value="{{ _('Delete') }}" />
+                    </a>
+                </div>
+
+                {% endif%}
+
+                <div class="fr">
+                    <a href="./">
+                        <input type="button" class="btn btn-default" value="{{ _('List')}}" />
+                    </a>
+                    <a href="new">
+                        <input type="button" class="btn btn-primary" value="+ {{ _('New') }}"/>
+                    </a>
+                </div>
+            </div>
+            <div class="content_main">
+                {{content.contents | safe }}
+            </div>
+        </div>
+
+        {%if content.list_file %}
+        <div class="file_list_div">
+            <div>
+                <span id="file_count">{{ _('Attached Files') }} ( {{ content.list_file_count }} )</span>
+            </div>
+            <ul>
+            {% for file in content.list_file %}
+            <li>
+                <i class="fa fa-file"></i>
+                <a href="{{ file.file_name}}" download> {{ file.origin_name }}</a>
+            </li>
+
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <div class="content_comment">
+            <samp id="content_comment_count">Comments</samp>
+
+            <div class="content_comment_list" id="content_comment_list">
+    
+            </div>
+            
+            <table class="table" id="content_comment_additional">
+                <tr>
+                    <td>
+                        <div class="input-group" id="expected_date_div">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('Expected Date') }}</span>
+                            <input type="text" name="expected_date" id="expected_date" class="form-control date_input" aria-describedby="basic-addon1" autocomplete="off" value="{{ content.expected_date}}"/>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group" id="due_date_div">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('Due Date') }}</span>
+                            <input type="text" name="due_date" id="due_date" class="form-control date_input" aria-describedby="basic-addon1" autocomplete="off" value="{{ content.due_date}}"/>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group" id="status_div">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('Status') }}</span>
+                            <select class="form-control" name="status" id="select_status">
+                                {% for code, name in dict_status.items  %}
+                                    <option value="{{ code }}" {% if content.selected_status == code %} selected {% endif%}> {{ name }}</option>
+                                {% endfor %}
+                            </select>
+                         </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="content_comment_new">
+              <div class="col-lg-12">
+                <div class="input-group">
+                  <textarea class="form-control" id="text_comment_new"></textarea>
+                  <span class="input-group-btn">
+                    <a class="btn btn-default" id="text_comment_new_btn" onclick="add_comment()" >{{ _('Add<br/>Comment') }}</a>
+                  </span>
+                </div><!-- /input-group -->
+              </div><!-- /.col-lg-6 -->
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+    
+    <input type="hidden" name="page" id="page" value="{{ page_number }}" />
+    <input type="hidden" name="selected_content" id="selected_content" value="" />
+    <div class="content_div partition">
+        <div class="board_list_wrap">
+            <span class="btn btn-danger title_span">{{ _('Co-Work Board') }}</span>
+            <div class="top_control_div">
+                <div class="top_control_left">
+                    <div>
+                        <span>{{ _('Total Contents')}}:{{ content_count }}</span>
+                    </div>
+                    <div class="top_control_search_div">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('View Count') }}</span>
+                            <select class="form-control" name="view_contents_count">
+                                <option value="10" {% if view_contents_count == "10" %} selected {% endif %}>10{{ _('per page') }}</option>
+                                <option value="15" {% if view_contents_count == "15" %} selected {% endif %}>20{{ _('per page') }}</option>
+                                <option value="20" {% if view_contents_count == "20" %} selected {% endif %}>30{{ _('per page') }}</option>
+                                <option value="30" {% if view_contents_count == "30" %} selected {% endif %}>50{{ _('per page') }}</option>
+                            </select>
+                        </div> 
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('Type') }}</span>
+                            <select class="form-control" name="view_division_filter">
+                                <option value="">----------</option>
+                                {% for code, name in dict_division.items  %}
+                                    <option value="{{ code }}" {% if view_division_filter == code %} selected {% endif%}> {{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <input type="text" class="form-control" name="search_string" value="{% if search_string is not ''%}{{search_string}}{% endif %}" placeholder="{{ _('Title / in Content') }}"/>
+                        <input type="submit" class="btn btn-default" value="{{ _('Search') }}"/>
+                    </div>
+                </div>
+                <div class="top_control_right">
+                    <a href="new">
+                        <input type="button" class="btn btn-primary" value="+ {{ _('New') }}"/>
+                    </a>
+                </div>
+            
+            </div>
+   
+            <div class="list_div">
+                <table class="table table-bordered table-hover" id="contents_table">
+                    <thead>
+                        <tr>
+                            <th>{{ _('No.') }}</th>
+                            <th>{{ _('Division') }}</th>
+                            <th>{{ _('Title') }}</th>
+                            <th>{{ _('RQSTR') }}</th>
+                            <th>{{ _('Written by') }}</th>
+                            <th>{{ _('RQSTD_DATE') }}</th>
+                            <th>{{ _('RQSTD') }}</th>
+                            <th>{{ _('EXPCT_DAT') }}</th>
+                            <th>{{ _('Due Date') }}</th>
+                            <th>{{ _('File') }}</th>
+                            <th>{{ _('Views') }}</th>
+                            <th>{{ _('Status') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contents_list">
+
+                        {% for content in contents_list%}
+                        <tr>
+                            <td>{{ content.id }}</td>
+                            <td>{{ content.division }}</td>
+                            <td><a onclick="select_content( {{ content.id }} );">{{ content.title }}</a></td>
+                            <td>{{content.depart_from}}</td>
+                            <td>{{ content.creator}}</td>
+                            <td>{{ content.date }}</td>
+                            <td>{{content.depart_to}}</td>
+                            <td></td>
+                            <td></td>
+                            <td>{% if content.is_file %}<i class="fa fa-info-circle"></i>{% endif %}</td>
+                            <td>{{ content.view_count }}</td>
+                            <td>{{ content.status }}</td>
+                        </tr>
+                            {% for comment in content.list_comment %}
+                            <tr>
+                                <td></td>
+                                <td style="text-align:right;"><i class="fa fa-level-up fa-rotate-90"></i></td>
+                                <td>{{ comment.comment }}</td>
+                                <td></td>
+                                <td>{{ comment.user }}</td>
+                                <td></td>
+                                <td></td>
+                                <td>{% if comment.no == 0 %}{{ content.expected_date }}{% endif %}</td>
+                                <td>{% if comment.no == 0 %}{{ content.due_date }}{% endif %}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            {% endfor %}
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="foot_control_div">
+                <ul class="pagination" id="table_pagnation">
+                    {% if has_previous %}
+                       <li> <a onclick="select_page({{ page_number | add:'-1'}} )">&laquo;</a></li>
+                    {% else %}
+                        <li class="disabled"><span>&laquo;</span></li>
+                    {% endif %}
+
+                    {% for i in page_range %}
+
+                        {% ifequal i page %}
+                            <li class="active"><span>{{ i }}<span class="sr-only">(current)</span></span></li>
+                        {% else %}
+                            <li><a onclick="select_page({{ i }})">{{i}}</a></li>
+                        {% endifequal %}
+
+                    {% endfor %}
+
+                    {% if has_next %}
+                       <li> <a onclick="select_page({{ page_number | add:'1'}} )">&raquo;</a></li>
+                    {% else %}
+                        <li class="disabled"><span>&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/board_work/list.css' %}" />
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/board_work/list.js' %}" type="text/javascript"></script>
+{% endblock %}

@@ -19,6 +19,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', views.home, name='index'),
     path('login/', views.login,name='login'),
+    path('logout/', views.logout, name='logout'),
     #path('login/', auth_views.auth_login,name='login'),
     #path('login/',
     #     LoginView.as_view
@@ -35,13 +36,9 @@ urlpatterns = [
     #         }
     #     ),
     #     name='login'),
-    path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
+    #path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
     path('register/', views.register, name='register'),
 
-    #notice
-    path('notice/', views.notice, name = 'notice'),
-    path('notice/edit/', views.notice_edit, name = 'notice_edit'),
-    
     path('doctor/',include('Doctor.urls',namespace='Doctor')),
     path('receptionist/',include('Receptionist.urls',namespace='receptionist')),
     path('laboratory/',include('Laboratory.urls',namespace='Laboratory')),
@@ -51,18 +48,34 @@ urlpatterns = [
 
     path('manage/',include('Manage.urls',namespace='Manage')),
 
+
+    #admin 접속
+    path('admin/',views.admin,name='admin'),
+
+
+
+
+    #번역
     path('TranslateEN/',views.TranslateEN,name='TranslateEN'),
     path('TranslateVIE/',views.TranslateVIE,name='TranslateVIE'),
     path('TranslateKO/',views.TranslateKO,name='TranslateKO'),
-
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
+    
 
-    path('admin/', admin.site.urls),
+    #Django 관리자
+    path('cornex/', admin.site.urls),
 
+
+
+    #서머노트 - 게시판
     path('summernote/', include('django_summernote.urls')),
 
-    path('test/',views.test),
 
+    #테스트
+    path('test/',views.test),
+    path('test/send/',views.test_send),
+    path('test/recv/',views.test_recv),
+    path('test/get_res_table/',views.get_res_table),
 ]
 
 

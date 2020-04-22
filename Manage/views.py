@@ -1,3 +1,6 @@
+
+
+import os
 from django.shortcuts import render
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 
@@ -16,6 +19,9 @@ from Doctor.models import *
 from Pharmacy.models import *
 
 from dateutil import relativedelta
+
+
+from django.views import View
 
 
 # Create your views here.
@@ -450,11 +456,13 @@ def doctor_profit(request):
 
     if request.user.is_admin or request.user.doctor.depart.name == 'PM' :
         total_amount = 0
+        total_additional = 0
+        amount_discount = 0
 
         filter_search = request.POST.get('search')
 
         receptions = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').select_related('payment').filter(payment__progress='paid').order_by("-id")
-        
+        #receptions = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').select_related('diagnosis').select_related('payment').order_by("-id")
         for reception in receptions:
             exams = []
             precedures = []
@@ -462,6 +470,8 @@ def doctor_profit(request):
 
             data={}
             sub_total = 0
+
+
             if filter_search == '':
                 tmp_exam_set = reception.diagnosis.exammanager_set.all()
                 tmp_precedure_set = reception.diagnosis.preceduremanager_set.all()
@@ -503,16 +513,24 @@ def doctor_profit(request):
                             })
                         sub_total += precedure_set.precedure.get_price(reception.recorded_date)
                         total_amount += sub_total
-                
+
+            total_additional += 0 if reception.payment.additional is None else reception.payment.additional
+            
+            if reception.payment.discounted is None:
+                discount = reception.payment.discounted_amount if filter_search == '' else 0
+            else:
+                discount = reception.payment.discounted / 100 * reception.payment.sub_total
+            amount_discount += 0 if discount is None else discount
+
             data.update({
                 'exams':exams,
                 'precedures':precedures,
                 'radiographys':radiographys,
                 
                 'subtotal':reception.payment.sub_total if filter_search == '' else sub_total,
-                'discount':reception.payment.discounted_amount if filter_search == '' else 0,
+                'discount':discount if filter_search == '' else 0,
                 'total':reception.payment.total if filter_search == '' else sub_total,
-
+                'additional':reception.payment.additional if filter_search == '' else 0,
 
   
                 'no':reception.id,
@@ -531,6 +549,7 @@ def doctor_profit(request):
 
         context.update({
             'total_amount':total_amount,
+            'total_additional':total_additional,
             })
     else:
         filter_exam_fee = request.POST.get('exam_fee')
@@ -657,17 +676,16 @@ def doctor_profit(request):
     
     query_total = receptions.aggregate(
         amount_sub_total=Sum('payment__sub_total'),
-        amount_discount = Sum('payment__discounted_amount'),
+        #amount_discount = Sum('payment__discounted_amount'),
         amount_total = Sum('payment__total'),
         )
 
     context.update({
         'amount_sub_total':query_total['amount_sub_total'] if query_total['amount_sub_total'] is not None else 0,
-        'amount_discount':query_total['amount_discount'] if query_total['amount_discount'] is not None else 0,
+        'amount_discount':amount_discount,
         'amount_total':query_total['amount_total'] if query_total['amount_total'] is not None else 0,
         })
     
-
     paginator = Paginator(datas, page_context)
     try:
         paging_data = paginator.page(page)
@@ -1121,10 +1139,11 @@ def precedure_add_edit_set(request):
         data = Precedure()
         data.price = price
         data.price_dollar = price_dollar
-        
 
-        last_code = Precedure.objects.filter(precedure_class_id=precedure_class).last()
+        last_code = Precedure.objects.filter(precedure_class_id=precedure_class).order_by('code').last()
         precedure_class = int(precedure_class)
+
+
         if precedure_class ==1: #D
             CODE = 'D'
         elif precedure_class == 2: #CT
@@ -1157,6 +1176,7 @@ def precedure_add_edit_set(request):
         else:
             temp_code = last_code.code.split(CODE)
             data.code = CODE + str('%04d' % (int(temp_code[1]) + 1))
+        
 
     else:
         data = Precedure.objects.get(id=id)
@@ -1722,61 +1742,511 @@ def save_database_disposal_medicine(request):
     return JsonResponse({'result':True,})
 
 
+
+
+
+def manage_employee(request):
+
+    #직급
+    list_rank = []
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        query_rank= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='RANK').annotate(code = F('commcode'),name = F('commcode_name_ko')).values('code','name')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        query_rank= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='RANK').annotate(code = F('commcode'),name = F('commcode_name_en')).values('code','name')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        query_rank= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='RANK').annotate(code = F('commcode'),name = F('commcode_name_vi')).values('code','name')
+
+    for data in query_rank:
+        list_rank.append({
+            'id':data['code'],
+            'name':data['name']
+            })
+
+    #부서 - KBL
+    list_depart_kbl = []
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL').annotate(code = F('commcode'),name = F('commcode_name_ko')).values('code','name')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL').annotate(code = F('commcode'),name = F('commcode_name_en')).values('code','name')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL').annotate(code = F('commcode'),name = F('commcode_name_vi')).values('code','name')
+
+    for data in query_depart:
+        list_depart_kbl.append({
+            'id':data['code'],
+            'name':data['name']
+            })
+
+    #부서 - 병원
+    list_depart_clinic = []
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC').annotate(code = F('commcode'),name = F('commcode_name_ko')).values('code','name','id')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC').annotate(code = F('commcode'),name = F('commcode_name_en')).values('code','name','id')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC').annotate(code = F('commcode'),name = F('commcode_name_vi')).values('code','name','id')
+
+    for data in query_depart:
+        if data['code'] == 'DOCTOR':
+            temp_commcode = COMMCODE.objects.get(id = data['id'])
+            data['code'] += '_' + temp_commcode.se1
+        list_depart_clinic.append({
+            'id':data['code'],
+            'name':data['name']
+            })
+
+
+
+    #사원 구분 
+    list_division = []
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        query_division= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='EMPLOYEE DIVISION').annotate(code = F('commcode'),name = F('commcode_name_ko')).values('code','name')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        query_division= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='EMPLOYEE DIVISION').annotate(code = F('commcode'),name = F('commcode_name_en')).values('code','name')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        query_division= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='EMPLOYEE DIVISION').annotate(code = F('commcode'),name = F('commcode_name_vi')).values('code','name')
+    for data in query_division:
+        list_division.append({
+            'id':data['code'],
+            'name':data['name']
+            })
+
+    #재직 상태
+    list_status = []
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        query_status= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='EMPLOYEE STATUS').annotate(code = F('commcode'),name = F('commcode_name_ko')).values('code','name')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        query_status= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='EMPLOYEE STATUS').annotate(code = F('commcode'),name = F('commcode_name_en')).values('code','name')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        query_status= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='EMPLOYEE STATUS').annotate(code = F('commcode'),name = F('commcode_name_vi')).values('code','name')
+    for data in query_status:
+        list_status.append({
+            'id':data['code'],
+            'name':data['name']
+            })
+
+    return render(request,
+        'Manage/employee_manage.html',
+            {
+                'list_rank':list_rank,
+                'list_depart_clinic':list_depart_clinic,
+                'list_depart_kbl':list_depart_kbl,
+                'list_division':list_division,
+                'list_status':list_status,
+            }
+        )
+
+
+def employee_search(request):
+    string = request.POST.get('string')
+    division_type = request.POST.get('division_type')
+    depart_filter = request.POST.get('depart_filter')
+
+
+    kwargs = {}
+    kwargs['is_active'] = True # 기본 
+    if division_type is not '':
+        kwargs['division_type'] = division_type
+    if depart_filter is not '':
+        if 'DOCTOR' in depart_filter:
+            split_depart = depart_filter.split('_')
+
+            kwargs['depart'] = 'DOCTOR'
+            kwargs['depart_doctor'] = split_depart[1]
+        else:
+            kwargs['depart'] = depart_filter
+
+
+
+    query_user = User.objects.filter(**kwargs)
+
+
+    list_user = []
+    for user in query_user:
+       list_user.append({
+               'id':user.id,
+               'division_type':'' if user.division_type is None else user.division_type,
+               'depart':'' if user.depart is None else user.depart,
+               'rank':'' if user.rank is None else user.rank,
+               'user_id':'' if user.user_id is None else user.user_id,
+               'name_ko':'' if user.name_ko is None else user.name_ko,
+               'name_en':'' if user.name_en is None else user.name_en,
+               'name_vi':'' if user.name_vi is None else user.name_vi,
+               'gender':'' if user.gender is None else user.gender,
+               'date_of_birth':'' if user.date_of_birth is None else user.date_of_birth,
+               'phone_number1':'' if user.phone_number1 is None else user.phone_number1,
+               'phone_number2':'' if user.phone_number2 is None else user.phone_number2,
+               'email':'' if user.email is None else user.email,
+               'date_of_employment':'' if user.date_of_employment is None else user.date_of_employment,
+               'status':'' if user.status is None else user.status,
+               
+           })
+    
+    page_context = request.POST.get('context_in_page',10)
+    page = request.POST.get('page',1)
+    paginator = Paginator(list_user, page_context)
+    try:
+        paging_data = paginator.page(page)
+    except PageNotAnInteger:
+        paging_data = paginator.page(1)
+    except EmptyPage:
+        paging_data = paginator.page(paginator.num_pages)
+
+
+
+    return JsonResponse({
+        'result':True,
+        'datas':list(paging_data),
+
+        'page_range_start':paging_data.paginator.page_range.start,
+        'page_range_stop':paging_data.paginator.page_range.stop,
+        'page_number':paging_data.number,
+        'has_previous':paging_data.has_previous(),
+        'has_next':paging_data.has_next(),
+
+
+        })
+
+
+
+
+@login_required
+def employee_check_id(request):
+       
+    user_id = request.POST.get('user_id')
+
+    try:
+        user = User.objects.get(user_id = user_id)
+        result = False
+    except User.DoesNotExist:
+        result = True
+
+    return JsonResponse({
+        'result':result,
+        })
+
+
+
+@login_required
+def employee_add_edit(request):
+
+    id = request.POST.get('id')
+
+    user_id = request.POST.get('user_id')
+    password = request.POST.get('password')
+    name_ko = request.POST.get('name_ko')
+    name_en = request.POST.get('name_en')
+    name_vi = request.POST.get('name_vi')
+    gender = request.POST.get("gender")
+    phone1 = request.POST.get('phone1')
+    phone2 = request.POST.get('phone2')
+    date_of_birth = request.POST.get('date_of_birth')
+    email = request.POST.get('email')
+    address = request.POST.get('address')
+
+    rank = request.POST.get('rank')
+    depart = request.POST.get('depart')
+    division = request.POST.get('division')
+
+    status = request.POST.get('status')
+    date_of_employment = request.POST.get('date_of_employment')
+    remark = request.POST.get('remark')
+
+    
+    try:
+        user = User.objects.get(pk = id)
+        user.lastest_modified_date = datetime.datetime.now()
+    except User.DoesNotExist:
+        user = User()
+    
+    
+    user.user_id = user_id
+    #기본 정보
+    user.set_password(password)
+    user.name_ko = name_ko
+    user.name_en = name_en
+    user.name_vi = name_vi
+    user.gender = gender
+    user.phone_number1 = phone1
+    user.phone_number2 = phone2
+    user.date_of_birth = date_of_birth
+    user.email = email
+    user.address = address
+
+    user.status = status
+    user.date_of_employment = date_of_employment
+    user.memo = remark
+
+
+    #권한 설정
+    user.rank = rank
+    user.depart = depart
+    user.division_type = division
+
+    #권한 설정 #superuser / staff / 
+
+    if "DOCTOR" in depart:
+        str_split = depart.split('_')
+        commcode = COMMCODE.objects.get(upper_commcode = '0002', commcode_grp='DEPART_CLICINC', commcode='DOCTOR',se1 = str_split[1])
+      
+        user.depart_doctor = str_split[1]
+        user.depart = str_split[0]
+
+    user.save()
+
+    return JsonResponse({
+        'result':True,
+        })
+
+@login_required
+def employee_add_edit_get(request):
+     
+    id = request.POST.get('id')
+
+    user = User.objects.get(pk = id)
+
+    if user.depart == 'DOCTOR':
+        depart = user.depart + "_" + user.depart_doctor
+    else:
+        depart = user.depart
+
+    return JsonResponse({
+        'result':True,
+
+        "user_id" : user.user_id,
+        "name_ko" : user.name_ko,
+        "name_en" : user.name_en,
+        "name_vi" : user.name_vi,
+        "gender" : user.gender,
+        "phone1" : user.phone_number1,
+        "phone2" : user.phone_number2,
+        "date_of_birth" : user.date_of_birth,
+        "email" : user.email,
+        "address" : user.address,
+
+        "rank" : user.rank,
+        "depart" : depart,
+        "division" : user.division_type,
+
+        "status" : user.status,
+        "date_of_employment" : user.date_of_employment,
+        "remark" : user.memo,
+
+        })
+
+
+
+
+@login_required
+def employee_delete(request):
+
+    id = request.POST.get('id')
+
+    date_of_resignation = request.POST.get('date_of_resignation')
+    resignation_reason = request.POST.get('resignation_reason')
+
+    user = User.objects.get(pk = id)
+
+    user.is_active = False
+
+    user.status = 'RESIGNED'
+    user.date_of_resignation = date_of_resignation
+    user.resignation_memo = resignation_reason
+
+    user.lastest_modified_date = datetime.datetime.now()
+
+    user.save()
+
+    return JsonResponse({
+        'result':True,
+        
+        })
+
+
+@login_required
+def employee_change_password(request):
+    id = request.POST.get('id')
+    password = request.POST.get('password')
+
+    user = User.objects.get(pk = id)
+    user.set_password(password)
+    user.save()
+
+    return JsonResponse({
+        'result':True,
+        })
+
+
 @login_required
 def board_list(request,id=None):
 
-    #content
+    if id == None:
+        id = request.POST.get('selected_content',None)
     
+    current_language = request.session[translation.LANGUAGE_SESSION_KEY]
+    if current_language == 'ko':
+         fname = F('commcode_name_ko')
+    elif current_language == 'en':
+        fname = F('commcode_name_en')
+    elif current_language == 'vi':
+        fname = F('commcode_name_vi')
+    #초기 - Division
+    list_division = COMMCODE.objects.filter(upper_commcode = '000005',commcode_grp = 'BOARD_DIVISION')
+
+    dict_division = {}
+    for division in list_division.annotate(code = F('commcode'),name = fname).values('code','name'):
+        dict_division.update({
+            division['code'] : division['name']
+            })
+
+
+
+    #content
     content = None;
-    if id is not None:
+    #게시글 오픈 유무
+    if id is not '':
         try:
             read_page = Board_Contents.objects.get(id = id )
+            creator = User.objects.get(id = int(read_page.creator))
+            #조회수 카운트
+            ##자기 자신을 제외한 유저에만 해당
+            if creator.id != request.user.id:
+                date_min = datetime.datetime.combine(datetime.datetime.now().date(), datetime.time.min)
+                date_max = datetime.datetime.combine(datetime.datetime.now().date(), datetime.time.max)
+
+                is_new = Board_View_Log.objects.filter(registered_date__range = (date_min, date_max),user_id = request.user.id, board_id = read_page.id, ).count()
+                if is_new == 0 : #오늘 안봤으면 추가
+                    new_view = Board_View_Log()
+                    new_view.board_id = read_page.id
+                    new_view.user_id = request.user.id
+                    new_view.save()
+
+                    read_page.view_count += 1
+                    read_page.save()
+
+            #페이지 상세 정보 
+            
+            
+            comments_count = Board_Comment.objects.filter(content_id = id, use_yn = 'Y').count()
             content = {
                 'id':read_page.id,
                 'title':read_page.title,
                 'contents':read_page.contents,
+                'creator':creator.user_id,
+                'date':read_page.created_date.strftime('%Y-%m-%d %H:%M'),
+                'views': read_page.view_count,
+                'comments_count':comments_count,
                 }
+
+            query_file = Board_File.objects.filter(board_id = id)
+
+            list_file = []
+            for file in query_file:
+                list_file.append({
+                    'id':file.id,
+                    'file_name':file.file.url,
+                    'origin_name':file.origin_name,
+                    })
+            content.update({
+                'list_file': list_file,
+                'list_file_count':query_file.count(),
+                })
+
         except Board_Contents.DoesNotExist:
             content = None;
 
 
 
-        #댓글
-
-
+   
 
     #search filter
     kwargs = {}
     kwargs['use_yn'] = 'Y' # 기본 
+    kwargs['board_type'] = 'BASIC' #일반 게시판
 
 
+    search_string = request.POST.get('search_string','')
+    view_division_filter = request.POST.get('view_division_filter','')
+    if view_division_filter != '':
+        kwargs['options'] = view_division_filter
 
+    users = User.objects.all()
+    if search_string == '':
+        query = Board_Contents.objects.filter(**kwargs).order_by('-top_seq','-created_date')
+
+    else:
+        argument_list = [] 
+
+        argument_list.append( Q(**{'title__icontains':search_string} ) ) 
+        argument_list.append( Q(**{'contents__icontains':search_string} ) ) 
+
+        #list_search_user = users.filter()
+        query = Board_Contents.objects.filter(functools.reduce(operator.or_, argument_list),**kwargs).order_by('-created_date')
+
+
+    #목록 정렬
     contents_list = []
-    query = Board_Contents.objects.filter(**kwargs)
     for item in query:
-        creator = User.objects.get(id= int(item.creator))
+        comment_count = Board_Comment.objects.filter(content_id = item.id, use_yn = 'Y').count()
+        creator = users.get(id = int(item.creator))
+        file_count = Board_File.objects.filter(board_id = item.id).count()
+
+
         contents_list.append({
             'id':item.id,
+            'is_notice':item.top_seq,
+            'division':dict_division[item.options],
             'title':item.title,
-            'creator':creator.email,
+            'creator':creator.user_id,
             'date':item.created_date.strftime('%Y-%m-%d %H:%M'),
+            'comment_count':comment_count,
+            'is_file':False if file_count is 0 else True,
+            'view_count':item.view_count,
             })
+
+
+    #페이지네이션
+    page = request.POST.get('page',1)
+    view_contents_count = request.POST.get('view_contents_count',10);
+    paginator = Paginator(contents_list, view_contents_count)
+    try:
+        paging_data = paginator.page(page)
+    except PageNotAnInteger:
+        paging_data = paginator.page(1)
+    except EmptyPage:
+        paging_data = paginator.page(paginator.num_pages)
 
     return render(request,
         'board/list.html',
             {
+                'content_count':query.count(),
                 'content':content,
-                'contents_list':contents_list,
+                #'contents_list':contents_list,
+                'contents_list':paging_data,
+
+                'search_string':search_string,
+                'view_division_filter':view_division_filter,
+                'view_contents_count':view_contents_count,
+                'dict_division':dict_division,
+
+                'page':int(page),
+                'page_range':list( range(paging_data.paginator.page_range.start, paging_data.paginator.page_range.stop) ) ,
+                'page_range_start':paging_data.paginator.page_range.start,
+                'page_range_stop':paging_data.paginator.page_range.stop,
+                'page_number':paging_data.number,
+                'has_previous':paging_data.has_previous(),
+                'has_next':paging_data.has_next(),
             }
         )
 
 
 
-
 @login_required
 def board_create_edit(request,id=None):
-
     
+    division_selected= None
+    option_err=''
+    is_top= '0'
     #language
     lang = ''
     if request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
@@ -1785,42 +2255,109 @@ def board_create_edit(request,id=None):
         lang = 'ko-KR'
     else:
         lang = 'en-US'
-
-
-    if id is None:
+    
+    list_file = []
+    if id is None: # 새글
         load_contents = Board_Contents()
         form = board_form()
 
+        file_form = board_file_form()
+
         load_contents.creator = request.user.id
-    else:
+    else: # 글 수정 
         load_contents = Board_Contents.objects.get(id = id)
         form = board_form(instance = load_contents)
-    
+        division_selected = load_contents.options
+
+        is_top = load_contents.top_seq
+
+        file_form = board_file_form()
+        query_file = Board_File.objects.filter(board_id = id)
+        for file in query_file:
+            list_file.append({
+                'id':file.id,
+                'file_name':file.file.url,
+                'origin_name':file.origin_name,
+                })
+
+
+    #저장
     if request.method == 'POST':
         form = board_form(request.POST)
-        
-        if form.is_valid():
+        file_form = board_file_form(request.POST, request.FILES)   
+        files = request.FILES.getlist('file') 
+
+        select_valid = False
+        division_selected = request.POST.get('select_division',None)
+        if division_selected is not None:
+            select_valid = True
+
+
+        if form.is_valid() and file_form.is_valid() and select_valid:
+            load_contents.board_type = 'BASIC'
             load_contents.title = form.cleaned_data['title']
             load_contents.contents = form.cleaned_data['contents']
+            load_contents.options = division_selected
+
+            
+            is_notice = request.POST.get('top_seq','off')
+            if is_notice == 'on':
+                load_contents.top_seq = 1
+   
+
             
             load_contents.lastest_modifier = request.user.id
             load_contents.lastest_modified_date = datetime.datetime.now()
             
-
             load_contents.save()
+
+            #file save
+            for f in files:
+                file_instance = Board_File(file=f, board_id = load_contents.pk)
+                file_instance.origin_name = f.name
+                file_instance.save()
+ 
+
             if id is None:
                 return HttpResponseRedirect('./../' + str(load_contents.pk))
             else:
                 return HttpResponseRedirect('./../../' + str(load_contents.pk))
         else:
-            form = board_form(instance=profile)
+            pass#form = board_form(instance=profile)
 
+
+
+
+    
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+    list_division = []
+    query_division= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='BOARD_DIVISION').annotate(code = F('commcode'),name = f_name ).values('code','name')
+    for data in query_division:
+        list_division.append({
+            'id':data['code'],
+            'name':data['name']
+            })
+    
 
     return render(request,
         'board/create_edit.html',
             {
                 'form':form,
+                'file_form':file_form,
                 'lang':lang,
+
+                'list_file': list_file if list_file else None,
+                'list_file_count':len(list_file),
+
+                'list_division':list_division,
+                'division_selected':division_selected, #division
+                'option_err':option_err,
+                'is_top':is_top
             }
         )
 
@@ -1841,37 +2378,61 @@ def board_delete(request,id):
     return HttpResponseRedirect('./../')
 
 
+@login_required
+def board_delete_file(request):
+    id = request.POST.get('id')
 
+    file = Board_File.objects.get(pk = id)
+
+
+    file.delete()
+
+
+    return JsonResponse({
+        'result':True,
+        })
+
+
+
+@login_required
 def board_comment_get(request):
     content_id = request.POST.get('content_id')
 
-
     #set user data
     user_dict = {}
-    users = User.objects.all().values('id','email')
+    users = User.objects.all().values('id','user_id')
     for user in users:
-        user_dict[user['id']] = user['email']
-
-
+        user_dict[user['id']] = user['user_id']
 
     list_comment = []
     query = Board_Comment.objects.filter(content_id = content_id,use_yn = 'Y').order_by('orderno').values()
+
     
-   
     for data in query:
-        type(data['creator'])
-        list_comment.append({
+        comment = {}
+        comment.update({
             'id':data['id'],
             'user_id':data['creator'],
             'user':user_dict[ int(data['creator']) ],
             'comment':data['comment'],
-            'datetime':data['created_date'],
+            'datetime':data['created_date'].strftime('%Y-%m-%d %H:%M'),
             'depth':data['depth'],
             })
+
+        if request.user.id is int(data['creator']):
+            comment.update({'is_creator':True})
+        else:
+            comment.update({'is_creator':False})
+
+        list_comment.append(comment)
+
+
+
 
     return JsonResponse({
         'result':True,
         'list_comment':list_comment,
+        'conntents_count':query.count(),
         })
 
 
@@ -1899,18 +2460,17 @@ def board_comment_add(request,comment_id=None):
         
         try:
             check = Board_Comment.objects.filter(content_id = content_id, orderno__gt = upper.orderno, depth__lte = upper.depth,).order_by('orderno')[:1]
-            print(check)
+            
             new_comment.orderno = check[0].orderno
         except IndexError:
-            print('indexError')
             check = Board_Comment.objects.filter(content_id = content_id, ).order_by('-orderno')[:1]
-            print(check)
+           
             new_comment.orderno = check[0].orderno + 1
         
 
         #저장 전 sequence 자리 비우기
         query_set = Board_Comment.objects.filter(content_id = content_id, orderno__gte = new_comment.orderno ,).order_by('orderno')
-        print(query_set)
+        
         for query in query_set:
             query.orderno += 1
             
@@ -1919,7 +2479,7 @@ def board_comment_add(request,comment_id=None):
           
     else:#첫번째 뎁스 댓글
         check = Board_Comment.objects.filter(content_id = content_id, ).order_by('orderno')
-        print(check.count())
+        
         if check.count() != 0:
             check_last = check.last()
             new_comment.orderno = check_last.orderno + 1
@@ -1939,9 +2499,16 @@ def board_comment_add(request,comment_id=None):
         })
 
 
+
+
+
+
 def board_comment_edit(request,id):
-
-
+    content_content = request.POST.get('comment')
+    comment = Board_Comment.objects.get(id = id)
+    comment.comment = content_content
+    comment.last_modified_date = datetime.datetime.now()
+    comment.save()
 
     return JsonResponse({
         'result':True,
@@ -1961,3 +2528,475 @@ def board_comment_delete(request,id):#Comment ID
         })
 
 
+
+
+
+
+
+
+@login_required
+def board_work_list(request,id=None):
+    def_date = '0000-00-00 00:00:00'
+
+
+    if id == None:
+        id = request.POST.get('selected_content',None)
+    
+    current_language = request.session[translation.LANGUAGE_SESSION_KEY]
+    if current_language == 'ko':
+         fname = F('commcode_name_ko')
+    elif current_language == 'en':
+        fname = F('commcode_name_en')
+    elif current_language == 'vi':
+        fname = F('commcode_name_vi')
+
+    #set user data
+    user_dict = {}
+    users = User.objects.all().values('id','user_id')
+    for user in users:
+        user_dict.update({
+            user['id'] : user['user_id']
+            })
+
+
+    #초기 - Division
+    list_division = COMMCODE.objects.filter(upper_commcode = '000005',commcode_grp = 'BOARD_WORK_DIVISION')
+
+    dict_division = {}
+    for division in list_division.annotate(code = F('commcode'),name = fname).values('code','name'):
+        dict_division.update({
+            division['code'] : division['name']
+            })
+
+    # - Depart
+    ##경천
+    dict_depart = {}
+    query_depart_kbl= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL',upper_commcode ='000002' )
+    for data in query_depart_kbl.annotate(code = F('commcode'),name = fname).values('code','name'):
+        dict_depart.update({
+            data['code'] : data['name']
+            })
+    ##IMEDI
+    query_depart_medical= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC',upper_commcode ='000002' )
+    for data in query_depart_medical.annotate(code = F('commcode'),name = fname).values('code','name'):
+        dict_depart.update({
+            data['code'] : data['name']
+            })
+
+    ##관리자
+    query_depart_admin= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_ADMIN',upper_commcode ='000002' )
+    for data in query_depart_admin.annotate(code = F('commcode'),name = fname).values('code','name'):
+        dict_depart.update({
+            data['code'] : data['name']
+            })
+
+    # - Status
+    dict_status ={}
+    query_status= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='BOARD_STATUS',upper_commcode ='000005' )
+    for data in query_status.annotate(code = F('commcode'),name = fname).values('code','name'):
+        dict_status.update({
+            data['code'] : data['name']
+            })
+
+    #content
+    content = None;
+    #게시글 오픈 유무
+    if id is not '':
+        try:
+            read_page = Board_Contents.objects.get(id = id )
+            creator = User.objects.get(id = int(read_page.creator))
+            #조회수 카운트
+            ##자기 자신을 제외한 유저에만 해당
+            if creator.id != request.user.id:
+                #date_min = datetime.datetime.combine(datetime.datetime.now().date(), datetime.time.min)
+                #date_max = datetime.datetime.combine(datetime.datetime.now().date(), datetime.time.max)
+
+                is_new = Board_View_Log.objects.filter(user_id = request.user.id, board_id = read_page.id).count()
+                if is_new == 0 : #오늘 안봤으면 추가
+                    new_view = Board_View_Log()
+                    new_view.board_id = read_page.id
+                    new_view.user_id = request.user.id
+                    new_view.save()
+
+                    read_page.view_count += 1
+                    read_page.save()
+
+            #페이지 상세 정보 
+            
+            
+            comments_count = Board_Comment.objects.filter(content_id = id, use_yn = 'Y').count()
+            content = {
+                'id':read_page.id,
+                'title':read_page.title,
+                'contents':read_page.contents,
+                'creator':creator.user_id,
+                'date':read_page.created_date.strftime('%Y-%m-%d %H:%M'),
+                'views': read_page.view_count,
+                'comments_count':comments_count,
+                'expected_date':'' if read_page.date_to_be_done == def_date else read_page.date_to_be_done,
+                'due_date':'' if read_page.date_done == def_date else read_page.date_done,
+                }
+            selected_status = read_page.status
+            query_file = Board_File.objects.filter(board_id = id)
+
+            list_file = []
+            for file in query_file:
+                list_file.append({
+                    'id':file.id,
+                    'file_name':file.file.url,
+                    'origin_name':file.origin_name,
+                    })
+            content.update({
+                'list_file': list_file,
+                'list_file_count':query_file.count(),
+                'selected_status':selected_status,
+                })
+
+            
+
+
+
+        except Board_Contents.DoesNotExist:
+            content = None;
+
+
+    #search filter
+    argument_list = [] 
+    kwargs = {}
+    kwargs['use_yn'] = 'Y' # 기본 
+    kwargs['board_type'] = 'COWORK' #협업 게시판
+
+    search_string = request.POST.get('search_string','')
+    view_division_filter = request.POST.get('view_division_filter','')
+    if view_division_filter != '':
+        kwargs['options'] = view_division_filter
+
+    if request.user.depart != 'ADMIN':
+        argument_list.append( Q(**{'depart_to':request.user.depart} ) ) 
+        argument_list.append( Q(**{'depart_from':request.user.depart} ) ) 
+
+    if search_string != '':
+        argument_list.append( Q(**{'title__icontains':search_string} ) ) 
+        argument_list.append( Q(**{'contents__icontains':search_string} ) ) 
+    
+    if request.user.depart == 'ADMIN' and search_string == '':
+        query = Board_Contents.objects.filter(**kwargs).order_by('-created_date')
+    else:
+        query = Board_Contents.objects.filter(functools.reduce(operator.or_, argument_list),**kwargs).order_by('-created_date')
+    users = User.objects.all()
+
+    #목록 정렬
+    contents_list = []
+    for item in query:
+        comment_count = Board_Comment.objects.filter(content_id = item.id, use_yn = 'Y').count()
+        creator = users.get(id = int(item.creator))
+        file_count = Board_File.objects.filter(board_id = item.id).count()
+
+
+        #댓글 불러오기
+        list_comment = []
+        query = Board_Comment.objects.filter(content_id = item.id,use_yn = 'Y').order_by('orderno').values()
+        no=0
+        for data in query:
+            comment = {}
+            comment.update({
+                'no':no,
+                'id':data['id'],
+                'user_id':data['creator'],
+                'user':user_dict[ int(data['creator']) ],
+                'comment':data['comment'],
+                'datetime':data['created_date'].strftime('%Y-%m-%d %H:%M'),
+                'depth':data['depth'],
+                'orderno':data['orderno'],
+                })
+            no +=1
+
+            if request.user.id is int(data['creator']):
+                comment.update({'is_creator':True})
+            else:
+                comment.update({'is_creator':False})
+
+            list_comment.append(comment)
+
+
+        
+        contents_list.append({
+            'id':item.id,
+            'is_notice':item.top_seq,
+            'division':dict_division[item.options],
+            'title':item.title,
+            'creator':creator.user_id,
+            'date':item.created_date.strftime('%Y-%m-%d'),
+            'depart_from':dict_depart[item.depart_from],
+            'depart_to':dict_depart[item.depart_to],
+            'status':dict_status[item.status],
+            'is_file':False if file_count is 0 else True,
+            'view_count':item.view_count,
+            
+            'list_comment':list_comment,
+            'expected_date':'' if item.date_to_be_done == def_date else item.date_to_be_done,
+            'due_date':'' if item.date_done == def_date else item.date_done,
+
+            #'comment_count':comment_count,
+            })
+
+
+
+
+    #페이지네이션
+    page = request.POST.get('page',1)
+    view_contents_count = request.POST.get('view_contents_count',10);
+    paginator = Paginator(contents_list, view_contents_count)
+    try:
+        paging_data = paginator.page(page)
+    except PageNotAnInteger:
+        paging_data = paginator.page(1)
+    except EmptyPage:
+        paging_data = paginator.page(paginator.num_pages)
+
+    return render(request,
+        'board_work/list.html',
+            {
+                'content_count':query.count(),
+                'content':content,
+                #'contents_list':contents_list,
+                'contents_list':paging_data,
+
+                'search_string':search_string,
+                'view_division_filter':view_division_filter,
+                'view_contents_count':view_contents_count,
+                'dict_division':dict_division,
+                
+                
+                'dict_status':dict_status,
+
+
+                'page':int(page),
+                'page_range':list( range(paging_data.paginator.page_range.start, paging_data.paginator.page_range.stop) ) ,
+                'page_range_start':paging_data.paginator.page_range.start,
+                'page_range_stop':paging_data.paginator.page_range.stop,
+                'page_number':paging_data.number,
+                'has_previous':paging_data.has_previous(),
+                'has_next':paging_data.has_next(),
+            }
+        )
+
+
+
+@login_required
+def board_work_create_edit(request,id=None):
+    option_err=''
+    is_top= '0'
+    division_selected = None
+    depart_to_selected = None
+    #language
+    
+    list_file = []
+    if id is None: # 새글
+        load_contents = Board_Contents()
+        form = board_form()
+
+        file_form = board_file_form()
+
+        load_contents.creator = request.user.id
+        load_contents.depart_from = request.user.depart
+        if request.user.depart =='DOCTOR':
+            load_contents.depart_from = request.user.depart + "_" + request.user.depart_doctor
+    else: # 글 수정 
+        load_contents = Board_Contents.objects.get(id = id)
+        form = board_form(instance = load_contents)
+        division_selected = load_contents.options
+
+        is_top = load_contents.top_seq
+
+        file_form = board_file_form()
+        query_file = Board_File.objects.filter(board_id = id)
+        for file in query_file:
+            list_file.append({
+                'id':file.id,
+                'file_name':file.file.url,
+                'origin_name':file.origin_name,
+                })
+
+
+    #저장
+    if request.method == 'POST':
+        form = board_form(request.POST)
+        file_form = board_file_form(request.POST, request.FILES)   
+        files = request.FILES.getlist('file') 
+
+        division_select_valid = False
+        division_selected = request.POST.get('select_division',None)
+        if division_selected is not None:
+            division_select_valid = True
+
+        depart_to_select_valid = False
+        depart_to_selected = request.POST.get('select_depart_to',None)
+        if depart_to_selected is not None:
+            depart_to_select_valid = True
+
+        satus_selected = request.POST.get('select_status','SUBMIT')
+
+        if form.is_valid() and file_form.is_valid() and division_select_valid and depart_to_select_valid:
+            load_contents.board_type = 'COWORK'
+            load_contents.title = form.cleaned_data['title']
+            load_contents.contents = form.cleaned_data['contents']
+            load_contents.options = division_selected
+            load_contents.status = satus_selected
+            load_contents.depart_to = depart_to_selected
+
+
+            load_contents.lastest_modifier = request.user.id
+            load_contents.lastest_modified_date = datetime.datetime.now()
+            
+            load_contents.save()
+
+            #file save
+            for f in files:
+                file_instance = Board_File(file=f, board_id = load_contents.pk)
+                file_instance.origin_name = f.name
+                file_instance.save()
+ 
+
+            if id is None:
+                return HttpResponseRedirect('./../' + str(load_contents.pk))
+            else:
+                return HttpResponseRedirect('./../../' + str(load_contents.pk))
+        else:
+            pass#form = board_form(instance=profile)
+
+
+
+
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+    
+    #구분
+    list_division = []
+    query_division= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='BOARD_WORK_DIVISION').annotate(code = F('commcode'),name = f_name ).values('code','name')
+    for data in query_division:
+        list_division.append({
+            'id':data['code'],
+            'name':data['name']
+            })
+    #부서
+    ##경천
+    list_depart_kbl = []
+    query_depart_kbl= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL',upper_commcode ='000002' ).annotate(code = F('commcode'),name = f_name ).values('code','name')
+    for data in query_depart_kbl:
+        list_depart_kbl.append({
+            'id':data['code'],
+            'name':data['name']
+            })
+    ##IMEDI
+    list_depart_medical = []
+    query_depart_medical= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC',upper_commcode ='000002' ).annotate(code = F('commcode'),name = f_name ).values('code','name')
+    for data in query_depart_medical:
+        list_depart_medical.append({
+            'id':data['code'],
+            'name':data['name']
+            })
+
+    #게시판 상태
+    list_status = []
+    query_status= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='BOARD_STATUS',upper_commcode ='000005' ).annotate(code = F('commcode'),name = f_name ).values('code','name')
+    for data in query_status:
+        list_status.append({
+            'id':data['code'],
+            'name':data['name']
+            })
+
+
+    return render(request,
+        'board_work/create_edit.html',
+            {
+                'form':form,
+                'file_form':file_form,
+
+                'list_file': list_file if list_file else None,
+                'list_file_count':len(list_file),
+
+                'list_division':list_division,
+                'division_selected':division_selected, #division
+                'depart_to_selected':depart_to_selected,
+                'list_depart_kbl':list_depart_kbl,
+                'list_depart_medical':list_depart_medical,
+                'list_status':list_status,
+                
+                'option_err':option_err,
+
+            }
+        )
+
+
+def board_work_comment_add(request):
+    content_id = request.POST.get('content_id')
+    comment = request.POST.get('comment',None)
+    upper_id = request.POST.get('upper_id',None)
+
+
+    new_comment = Board_Comment()
+
+
+
+
+    if upper_id != '':#대댓글
+        upper = Board_Comment.objects.get(pk = upper_id)
+        new_comment.depth = upper.depth + 1
+        
+        try:
+            check = Board_Comment.objects.filter(content_id = content_id, orderno__gt = upper.orderno, depth__lte = upper.depth,).order_by('orderno')[:1]
+            
+            new_comment.orderno = check[0].orderno
+        except IndexError:
+            check = Board_Comment.objects.filter(content_id = content_id, ).order_by('-orderno')[:1]
+           
+            new_comment.orderno = check[0].orderno + 1
+        
+
+        #저장 전 sequence 자리 비우기
+        query_set = Board_Comment.objects.filter(content_id = content_id, orderno__gte = new_comment.orderno ,).order_by('orderno')
+        
+        for query in query_set:
+            query.orderno += 1
+            
+            query.save()
+
+          
+    else:#첫번째 뎁스 댓글
+        check = Board_Comment.objects.filter(content_id = content_id, ).order_by('orderno')
+        
+        def_date = '0000-00-00 00:00:00'
+
+        expected_date = request.POST.get('expected_date',def_date)
+        due_date = request.POST.get('due_date',def_date)
+        select_status = request.POST.get('select_status')
+
+        content = Board_Contents.objects.get(id = content_id)
+        content.status = select_status
+        content.date_to_be_done = expected_date
+        content.date_done = due_date
+        content.save()
+
+        if check.count() != 0: # 완전 처음이 아닐때 
+            check_last = check.last()
+            new_comment.orderno = check_last.orderno + 1
+
+
+
+
+    new_comment.content_id = content_id
+    new_comment.comment = comment
+    new_comment.creator = request.user.id
+
+
+    new_comment.save()
+
+    return JsonResponse({
+        'result':True,
+        })

@@ -105,7 +105,7 @@
     display: inline;
 }
 .radiation_waiting_control {
-    float:right;
+    text-align:right;
 }
 
 .radiation_list_table_wrap{

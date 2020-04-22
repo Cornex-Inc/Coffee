@@ -29,11 +29,11 @@ $(function () {
         var hour = picker.container.find(".hourselect").children("option:selected").val();
         if (hour < 9)
             hour = 9;
-        else if (hour > 17)
-            hour = 17;
+        else if (hour > 18)
+            hour = 18;
         picker.startDate.set({ hour: hour, });
         $('#id_follow_update').val(picker.startDate.format('YYYY-MM-DD HH:mm:ss'));
-        if (confirm(gettext("Doy you want to change reservation?"))) {
+        if (confirm(gettext("Do you want to change reservation?"))) {
             var reservation_date = picker.startDate.format('YYYY-MM-DD HH:mm:ss');
             var reception = $('#selected_reception').val();
 
@@ -587,10 +587,11 @@ function waiting_selected(paymentrecord_id) {
             //str += "<tr><td></td><td></td><td style='text-align:center;font-weight:bold;' >Unpaid</td>" +
             //    "<td id='discount_unpaid' colspan='2'style='text-align:right; padding-right:0.6vw;'>" + numberWithCommas(response.datas['unpaid_total']) + " VND</td></tr >";
 
-
+            //total
+            $("#discount_total").val(numberWithCommas(response.datas['total_payment']));
+            $("#total_amount").val(numberWithCommas(response.datas['sub_total']));
 
             $('#storage_bills').append(str);
-            $('#total_amount').val(numberWithCommas(response.datas['unpaid_total']));
             //get_bill_list(reception_id);
             $('.medication_contents').hide();
             $('.chart_table_medicine_contents').hide();
@@ -1162,7 +1163,7 @@ function chage_amount() {
     total_aount = parseInt(total_aount) + parseInt(emergency_fee) - parseInt(discount_amount * 1) + parseInt(additional);
 
 
-    //$('#discount_total').html(numberWithCommas((total_aount.toFixed(0)) + ' VND'));
+    $('#discount_total').html(numberWithCommas((total_aount.toFixed(0)) + ' VND'));
 
     $('#chart_table_total').html(numberWithCommas(total_amount));
 

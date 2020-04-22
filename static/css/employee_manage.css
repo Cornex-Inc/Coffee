@@ -1,0 +1,300 @@
+
+.inventory_grid {
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    display: grid;
+}
+
+
+.partition {
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: rgba(180, 180, 180, 0.15);
+    border: 3.7px solid white;
+    overflow: hidden;
+}
+
+.inventory_database {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    overflow-y: hidden;
+}
+
+
+.title_span {
+    margin-bottom: 15px;
+    font-size: 15px;
+    height: 30px;
+    padding-top: 1px;
+    background: rgb(90,64,129);
+    border-color: rgb(90,64,129);
+}
+
+    .title_span:hover {
+        background: rgb(90,64,129);
+        border-color: rgb(90,64,129);
+    }
+
+#database_table {
+    height: 650px;
+    table-layout: fixed;
+}
+
+    #database_table thead tr th {
+        font-weight: 700;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+
+.input-group {
+    display: inline-table;
+    width: 200px;
+}
+
+#search_depart {
+    display: table-cell;
+}
+
+
+#database_table thead tr th{
+    vertical-align:middle;
+    text-align:center;
+}
+
+#database_table thead tr th:nth-child(1) {
+    width: 50px;
+}
+
+    #database_table thead tr th:nth-child(7) {
+        width: 80px;
+    }
+    #database_table thead tr th:nth-child(2), #database_table thead tr th:nth-child(4), #database_table thead tr th:nth-child(8), #database_table thead tr th:nth-child(13) {
+        width: 100px;
+    }
+
+#database_table thead tr th:nth-child(3) {
+    width:150px;
+}
+
+    #database_table thead tr th:nth-child(14) {
+        width: 130px;
+    }
+
+
+
+
+
+    #database_table tbody tr {
+        height: 30px;
+    }
+
+
+        #database_table tbody tr td {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+
+.database_btn_edit {
+    width: 45px;
+}
+
+.database_btn_delete {
+    margin-left: 10px;
+}
+
+.input_span {
+}
+
+
+.search_select {
+    width: 170px;
+    display: inline-block;
+}
+
+.database_table {
+    height: 600px;
+    overflow: auto;
+}
+
+.inventory_history_part1 {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    overflow-y: hidden;
+}
+
+#inventory_history_date {
+    width: 100px;
+    display: inline;
+}
+
+#inventory_history_table {
+    table-layout: fixed;
+}
+
+#inventory_history_total {
+    float: right;
+}
+
+#inventory_history_table thead tr th:nth-child(1) {
+    width: 50px;
+}
+
+#inventory_history_table thead tr th:nth-child(2) {
+    width: 140px;
+}
+
+#inventory_history_table thead tr th:nth-child(3) {
+    width: 65px;
+}
+
+#inventory_history_table thead tr th:nth-child(4) {
+    width: 50px;
+}
+
+#inventory_history_table thead tr th:nth-child(5) {
+}
+
+#add_medicine_table .input-group-addon:first-child {
+    width: 150px;
+}
+
+#inventory_history_div {
+    height: 280px;
+    overflow-y: auto;
+}
+
+#inventory_add {
+    float: right;
+}
+
+.inventory_history_part2 {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    overflow-y: hidden;
+}
+
+
+#inventory_expiry_div {
+    height: 325px;
+    overflow-y: auto;
+}
+
+#inventory_expiry_table {
+    table-layout: fixed;
+}
+
+    #inventory_expiry_table thead tr th {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+        #inventory_expiry_table thead tr th:nth-child(1) {
+            width: 50px;
+        }
+
+        #inventory_expiry_table thead tr th:nth-child(3) {
+            width: 110px;
+        }
+
+        #inventory_expiry_table thead tr th:nth-child(6) {
+            width: 80px;
+        }
+
+#inventory_expiry_tbody tr td {
+    text-align: center;
+    vertical-align: middle;
+
+}
+
+.add_medicine_database_h4 {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+
+
+
+/* add_edit_database - 고객 정보 등록 및 수정 창 */
+
+#add_edit_database .input-group {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+#add_edit_database .input-group_half_left {
+    width: 49.5%;
+    margin-right:0.2%;
+}
+
+#add_edit_database .input-group_half_right {
+    width: 49.5%;
+    margin-left: 0.2%;
+}
+
+#add_edit_database .input-group-addon:first-child {
+    width: 150px;
+    font-weight: 700;
+}
+
+#add_edit_database_code_check_string {
+    display: table;
+    height: 30px;
+}
+
+    #add_edit_database_code_check_string div {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+#add_edit_database_table {
+    table-layout: fixed;
+}
+
+#add_edit_database_ID_check{
+    height:30px;
+
+}
+/* edit_database_resignation - 퇴사처리 창 */
+#edit_database_resignation .input-group {
+    width: 100%;
+}
+
+
+
+
+#edit_database_resignation .input-group-addon:first-child {
+    width: 150px;
+    font-weight: 700;
+}
+
+/* edit_database_password - 비밀번호 변경 창 */
+#edit_database_password .input-group {
+    width: 100%;
+}
+
+#edit_database_password .input-group-addon:first-child {
+    width: 150px;
+    font-weight: 700;
+}
+
+
+@media ( min-height: 1900px ) {
+    .inventory_grid {
+        width: 1920px;
+        height: 800px;
+    }
+}

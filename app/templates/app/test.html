@@ -1,16 +1,239 @@
-﻿<!DOCTYPE html>
+﻿
+{% extends "app/layout.html" %}
+{% load staticfiles %}
+{% block content %}
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
-    {% load staticfiles %}
-    {% csrf_token %}
+
+<script src="{% static 'js/jquery.ajax-cross-origin.min.js'%}"></script>
+<script>
+
+    function refresh_table() {
+
+
+
+
+       //var json_response = JSON.parse('{"status":"success","code":"00","data":{"tranId":4789208981,"name":"API","totalSMS":1,"totalPrice":400,"invalidPhone":[]},"msg_id":"50"}');
+       //$.ajax({
+       //    type: 'POST',
+       //    url: '/test/recv/',
+       //    data: {
+       //        'csrfmiddlewaretoken': $('#csrf').val(),
+       //        'msg_id': json_response.msg_id,
+       //        'status': json_response.status,
+       //        'code': json_response.code,
+       //        'tranId' : json_response.tranId,
+       //    },
+       //    dataType: 'Json',
+       //    success: function (response) {
+       //                    
+       //                    
+       //                            
+       //                    
+       //    },
+       //    error: function (request, status, error) {
+       //        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+       //    },
+       //})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        $("#recv_table").empty();
+
+        $.ajax({
+            type: 'POST',
+            url: '/test/get_res_table/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+            },
+            dataType: 'Json',
+            success: function (response) {
+                
+                if (response.res == true) {
+                    var str = ''
+                    for (var i = 0; i < response.list_res.length; i++) {
+                        str += '<tr><td>' + response.list_res[i].id +
+                            '</td><td>' + response.list_res[i].phone +
+                            '</td><td>' + response.list_res[i].contents +
+                            '</td><td>' + response.list_res[i].status + 
+                            '</td><td>' + response.list_res[i].date_of_registered +
+                            '</td><td>' + response.list_res[i].code +
+                            '</td><td>' + response.list_res[i].date_of_recieved + '</td></tr>';
+                    }
+                    $("#recv_table").html(str);
+
+                }
+
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            },
+        })
+
+
+
+
+
+    }
+
+
+    function test() {
+        var phone = $("#phone_number").val()
+        var contents = $("#contents").val()
+
+        $.ajax({
+            type: 'POST',
+            //url: '/manage/employee_check_id/',
+            url: '/test/send/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+                'phone': phone,
+                'contents':contents,
+            },
+            dataType: 'Json',
+            success: function (response) {
+                console.log(response);
+                if (response.res == true) {
+                    var url = 'http://kbl.cornex.co.kr/sms/sms_send.php?msg_id=' + response.id + '&phone=' + phone + '&contents=' + contents;
+                    console.log('url : ' + url);
+
+                    $.ajax({
+                        crossOrigin: true,
+                        type: 'GET',
+                        //url: '/manage/employee_check_id/',
+                        url: url,
+                        data: {
+                            //'csrfmiddlewaretoken': $('#csrf').val(),
+                            //'msg_id': response.id,
+                            //'phone': $("#phone_number").val(),
+                            //'contents': $("#contents").val(),
+                        },
+                        dataType: 'Json',
+                        //jsonp: "callback", 
+                        success: function (response) {
+                            json_response = JSON.parse(response);
+
+                            console.log(json_response);
+
+                            $.ajax({
+                                type: 'POST',
+                                url: '/test/recv/',
+                                data: {
+                                    'csrfmiddlewaretoken': $('#csrf').val(),
+                                    'msg_id': json_response.msg_id,
+                                    'status': json_response.status,
+                                    'code': json_response.code,
+                                    'tranId' : json_response.tranId,
+                                },
+                                dataType: 'Json',
+                                success: function (response) {
+                                    
+                            
+                                    
+                            
+                                },
+                                error: function (request, status, error) {
+                                    console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                                },
+                            })
+
+                        },
+                        error: function (request, status, error) {
+                            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                        },
+                    })
+
+                }
+
+
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            },
+        })
+
+        //$.ajax({
+        //    type: 'POST',
+        //    //url: '/manage/employee_check_id/',
+        //    url: 'http://kbl.cornex.co.kr/sms/sms_send.php',
+        //    data: {
+        //        'csrfmiddlewaretoken': $('#csrf').val(),
+        //        'phone': $("#phone_number").val(),
+        //        'contents': $("#contents").val(),
+        //    },
+        //    dataType: 'Json',
+        //    success: function (response) {
+        //        console.log(response);
+        //        //if (response.result == true) {
+        //        //    database_search();
+        //        //
+        //        //    $("#edit_database_password").modal('hide');
+        //        //} else {
+        //        //    alert(gettext('Please Refresh this page.'));
+        //        //}
+        //    },
+        //    error: function (request, status, error) {
+        //        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+        //    },
+        //})
+
+
+    }
+</script>
+
+
+<div class="index_wrap">
+
+
     <audio autoplay controls>
         <source src="{% static 'sound/ring.mp3' %}" type="audio/mp3" />
     </audio>
 
-</body>
-</html>
+    <br />
+    <span>Phone Number : </span>
+    <input type="text" id="phone_number" value="0357115513"/>
+    <br /><br />
+    <span>Contents : </span>
+    <input type="text" id="contents" value="test" />
+    <input type="button" value="send" onclick="test()" />
+
+    <br /><br /><br /><br /><br />
+    <input type="button" value="테이블 새로 고침" onclick="refresh_table()"/>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>msg_id</th>
+                <th>phone_number</th>
+                <th>contents</th>
+                <th>상태</th>
+                <th>보낸 날짜</th>
+                <th>응답 코드</th>
+                <th>응답 날짜</th>
+            </tr>
+        </thead>
+        <tbody id="recv_table">
+
+        </tbody>
+    </table>
+
+</div>
+
+
+{% endblock %}

@@ -98,10 +98,16 @@
                 </tr>
                 
                 <tr>
-                    <td colspan="2">
-                    <div class="input-group input-group-long"> 
+                    <td>
+                        <div class="input-group"> 
                         <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('C / C') }}</span>
                         {{reception.chief_complaint}}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group"> 
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Memo') }}</span>
+                        <input type="text" name="phone" id="patient_memo" class="form-control" aria-describedby="basic-addon1" autocomplete="off" required="">
                         </div>
                     </td>
                 </tr>
@@ -139,12 +145,14 @@
                 </tr>
                     -->
                 <tr>
-                    <td>
+                    <td colspan="2">
+                        <div style="float:left;">
                         <input type="button" value="{{ _('Inform Tax Invoice') }}" class="btn btn-default" id="patient_tax_invoice_click" />
                         <input type="button" value="{{ _('Initial Report') }}" class="btn btn-success" id="patient_initial_report_click" />
-                        <label class="btn btn-warning need_medical_report" ><input type="checkbox" value="" id="need_medical_report" /><text>{{_('Medical Report') }}</text></label>
-                    </td>
-                    <td >
+                        <label class="btn btn-warning need_medical_report" ><input type="checkbox" id="need_medical_report" /><text>{{_('Medical Report') }}</text></label>
+                        <label class="btn btn-danger need_medical_report" ><input type="checkbox" id="need_invoice" /><text>{{_('Red Invoice') }}</text></label>
+                        <label class="btn btn-info need_medical_report" ><input type="checkbox" id="need_insurance" /><text>{{_('Insurance') }}</text></label>
+                         </div>
                         <div style="float:right;">
                             <input class="btn btn-default save_cancel_btn"  value="{{ _('Cancel') }}" onclick="set_cancel()" />
                             <input class="btn btn-info save_cancel_btn" value="{{ _('Save') }}" onclick="save_patient()"/>

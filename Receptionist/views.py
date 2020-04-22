@@ -92,7 +92,7 @@ def save_patient(request):
     address = request.POST.get('address')
     email = request.POST.get('email')
     nationality = request.POST.get('nationality')
-
+    memo = request.POST.get('memo')
 
     past_history = request.POST.get('past_history')
     family_history = request.POST.get('family_history')
@@ -121,6 +121,7 @@ def save_patient(request):
     patient.address = address
     patient.nationality = nationality
     patient.email = email
+    patient.memo = memo
     patient.save()
 
     try:
@@ -202,7 +203,7 @@ def set_patient_data(request):
         'nationality':patient.nationality,
         'phone':patient.phone,
         'address':patient.address,
-
+        'memo':patient.memo,
 
         'tax_invoice_number':'' if taxinvoice is None else taxinvoice.number,
         'tax_invoice_company_name':'' if taxinvoice is None else taxinvoice.company_name,
@@ -351,6 +352,7 @@ def save_reception(request):
     address = request.POST.get('address')
     email = request.POST.get('email')
     nationality = request.POST.get('nationality')
+    memo = request.POST.get('memo')
 
     past_history = request.POST.get('past_history')
     family_history = request.POST.get('family_history')
@@ -383,6 +385,7 @@ def save_reception(request):
     patient.address = address
     patient.nationality = nationality
     patient.email = email
+    patient.memo = memo
     patient.save()
 
     try:
@@ -648,6 +651,7 @@ def reservation_search(request):
             'depart': reservation.depart.name,
             'doctor': reservation.doctor.name_kor,
             'time':reservation.reservation_date.strftime('%Y-%m-%d %H:%M:00'),
+            'memo':reservation.memo,
             }
       
         try:
@@ -1015,7 +1019,7 @@ def waiting_selected(request):
             })
         medicines.append(medicine)
 
-    print(payment.total)
+
     datas = {
         'chart':reception.patient.get_chart_no(),
         'name_kor':reception.patient.name_kor,
@@ -1092,26 +1096,31 @@ def storage_page_save(request):
 
     #REC 7시 이후 및 이전 날 수정 방지
     #혹시 모르니 REC 계정만 차단
-    if request.user.is_receptionist:
-        #이전 날 수정 확인
-        reception = Reception.objects.get(id = reception_id)
-        data_date = reception.recorded_date.replace(hour=0, minute=0, second=0) + datetime.timedelta(days=1)
-        today = datetime.datetime.now().replace(hour=0, minute=0, second=0)
-        if data_date < today:
-            return JsonResponse({
-                'result':False,
-                'msg':_('Cannot edit past payment')
-                                 })
-
-        #7시 이후 수납 안되게
-
-        today = datetime.datetime.now()
-        limit = datetime.datetime.now().replace(hour=19, minute=0, second=0)
-        if today > limit:
-            return JsonResponse({
-                'result':False,
-                'msg':_('Cannot edit payment after 7 PM.')
-                                 })
+    #if request.user.is_receptionist():
+    #    print(request.user.is_receptionist)
+    #    print(request.user.is_doctor)
+    #    #이전 날 수정 확인
+    #    reception = Reception.objects.get(id = reception_id)
+    #    data_date = reception.recorded_date.replace(hour=0, minute=0, second=0) #+ datetime.timedelta(days=1)
+    #    today = datetime.datetime.now().replace(hour=0, minute=0, second=0)
+    #
+    #    print(data_date)
+    #    print(today)
+    #    if data_date < today:
+    #        return JsonResponse({
+    #            'result':False,
+    #            'msg':_('Cannot edit past payment')
+    #                             })
+    #
+    #    #7시 이후 수납 안되게
+    #
+    #    today = datetime.datetime.now()
+    #    limit = datetime.datetime.now().replace(hour=19, minute=0, second=0)
+    #    if today > limit:
+    #        return JsonResponse({
+    #            'result':False,
+    #            'msg':_('Cannot edit payment after 7 PM.')
+    #                             })
 
     if payment.progress == 'paid':
         context = {'result':'paid'}
@@ -1211,7 +1220,48 @@ def reservation_events(request):
         data = { 
             'id':reservation.id, 
             'start':reservation.reservation_date.strftime('%Y-%m-%d %H:%M:00'),
+            #'backgroundColor':'red',
             }
+
+        if reservation.depart.id == 1:  #1	PED
+            pass
+            #data.update({
+            #    'backgroundColor':'grba(249,167,82,0.5)',
+            #    'eventBorderColor':'grba(249,167,82,1)',
+            #    })
+        elif reservation.depart.id == 2:  #2	IM
+            data.update({
+                'backgroundColor':'rgb(254,154,202)',
+                'borderColor':'rgb(254,154,202)',
+                })
+        elif reservation.depart.id == 3:  #3	URO
+            pass
+            #data.update({
+            #    'backgroundColor':'rgb(249,167,82)',
+            #    'borderColor':'rgb(249,167,82)',
+            #    })
+        elif reservation.depart.id == 4:  #4	PS
+            data.update({
+                'backgroundColor':'rgb(255,81,255)',
+                'borderColor':'rgb(255,81,255)',
+                })
+        elif reservation.depart.id == 5:  #5	ENT
+            data.update({
+                'backgroundColor':'rgb(255,205,100)',
+                'borderColor':'rgb(255,205,100)',
+                })
+        elif reservation.depart.id == 6:  #6	DERM
+            data.update({
+                'backgroundColor':'rgb(183,164,210)',
+                'borderColor':'rgb(183,164,210)',
+                })
+        elif reservation.depart.id == 7:  #7	PM
+            data.update({
+                'backgroundColor':'rgb(147,203,249)',
+                'borderColor':'rgb(147,203,249)',
+                })
+
+
         try:
             patient = Patient.objects.get(pk = reservation.patient_id)
             data.update({
@@ -1270,6 +1320,13 @@ def reservation_events_modify(request):
 
 def reservation_events_delete(request):
     id = request.POST.get('id')
+
+    try:
+        reception = Reception.objects.get(reservation_id = id)
+        reception.reservation_id = None
+        reception.save()
+    except Reception.DoesNotExist:
+        pass
 
     reservation = Reservation.objects.get(pk = id)
     reservation.delete()
@@ -2401,9 +2458,8 @@ def document_medical_receipt_old(request,reception_id):
 
     additional = reception.payment.additional
     sub_total = reception.payment.sub_total + additional
-    total = reception.payment.total - discount
+    total = reception.payment.sub_total - discount + additional
     
-    print(no)
     return render(request,
     'Receptionist/form_medical_receipt_old.html',
             {
@@ -2421,7 +2477,7 @@ def document_medical_receipt_old(request,reception_id):
                 'doctor':reception.doctor.name_eng,
                 'diagnostic':reception.diagnosis.diagnosis,
                 'nationality':reception.patient.nationality,
-
+                'date_today':reception.recorded_date.strftime('%Y-%m-%d'),
 
                 'sub_total':f"{sub_total:,}",
                 'total':f"{total:,}",
@@ -2557,8 +2613,6 @@ def document_subclinical(request,reception_id):
                 })
                 no += 1
 
-
-    print(reception.diagnosis.diagnosis,)
 
     return render(request,
     'Receptionist/form_subclinical.html',

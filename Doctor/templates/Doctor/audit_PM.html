@@ -6,7 +6,7 @@
     <div class="contents_wrap">
 
         <!--Doctor-->
-        <input type="hidden" id="doctors_search_doctor" value="{{ user.doctor.id }}"/>
+        <input type="hidden" id="doctors_search_doctor" value="{{ user.doctor.id }}" />
         <div id="DOCTORS">
 
             <div>
@@ -80,6 +80,7 @@
                                 <th>{{ _('Procedure') }}</th>
                                 <th>{{ _('Radiography') }}</th>
                                 <th>{{ _('Sub Total') }}( ₫ )</th>
+                                <th>{{ _('Additional') }}( ₫ )</th>
                                 <th>{{ _('Discount') }}( ₫ )</th>
                                 <th>{{ _('Total') }}( ₫ )</th>
                             </tr>
@@ -91,6 +92,7 @@
                                 <td colspan="6"></td>
                                 <td style="font-weight:700">Total</td>
                                 <td colspan="2" id="profit_total_subtotal"></td>
+                                <td id="profit_total_additional"></td>
                                 <td id="profit_total_discounted"></td>
                                 <td id="profit_total_total"></td>
                             </tr>

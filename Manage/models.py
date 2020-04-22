@@ -1,8 +1,19 @@
 from django.db import models
 
+from django.utils.text import slugify
+from django.dispatch import receiver
+import datetime
+import os
+
 # Create your models here.
 
 class Board_Contents(models.Model):
+    #보드 종류
+    board_type = models.CharField(
+        max_length = 8,
+        null=True,
+        )
+
     #제목
     title = models.CharField(
         max_length = 64
@@ -37,9 +48,54 @@ class Board_Contents(models.Model):
         blank=True,
         )
 
-    is_notice = models.CharField(
+    #상위 출력
+    top_seq = models.CharField(
         max_length = 1,
-        default='N',
+        null=True,
+        default=0,
+        )
+
+    #구분
+    options = models.CharField(
+        max_length = 8,
+        null=True,
+        default="GENERAL",
+        )
+
+    #부서
+    depart_from = models.CharField(
+        max_length = 16,
+        default=''
+        )
+
+    #요청부서
+    depart_to = models.CharField(
+        max_length = 8,
+        default=''
+        )
+    
+    #완료 예정일
+    date_to_be_done = models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+
+    #완료일
+    date_done = models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+
+    #상태
+    status = models.CharField(
+        max_length = 8,
+        default=''
+        )
+
+    #조회수
+    view_count = models.IntegerField(
+        null=True,
+        default=0,
         )
 
     def __str__(self):
@@ -101,3 +157,70 @@ class Board_Comment(models.Model):
 
     def __str__(self):
         return self.comment
+
+
+class Board_File(models.Model):
+    #보드 아이디 논리 연결
+    board_id = models.CharField(
+        max_length = 8,
+        null=True
+        )
+
+    #실제 파일 경로
+    file = models.FileField(
+        upload_to='board/',
+        null=True,
+        blank=True,
+        )
+
+    registered_date = models.DateTimeField(
+        auto_now_add=True,
+        blank=True,
+        null=True
+        )
+
+    #사용 유무
+    use_yn = models.CharField(
+        max_length = 2,
+        default = 'Y',
+        )
+
+    #파일 오리지날 이름
+    origin_name = models.CharField(
+        max_length = 64,
+        null=True,
+        default = None,
+        )
+
+class Board_View_Log(models.Model):
+    
+    #보드 아이디 논리 연결
+    board_id = models.CharField(
+        max_length = 8,
+        null=True
+        )
+
+    #사용자 아이디 논리 연결
+    user_id = models.CharField(
+        max_length = 8,
+        null=True
+        )
+
+    
+    registered_date = models.DateTimeField(
+        auto_now_add=True,
+        blank=True,
+        null=True
+        )
+
+
+@receiver(models.signals.post_delete, sender=Board_File)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """
+    Deletes file from filesystem
+    when corresponding `MediaFile` object is deleted.
+    """
+    print(sender)
+    if instance.file:
+        if os.path.isfile(instance.file.path):
+            os.remove(instance.file.path)

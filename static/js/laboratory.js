@@ -10,25 +10,28 @@ $(function () {
             format: 'YYYY-MM-DD'
         }
     });
+
+    //언어 별 날짜 출력
+    //초기값
+    if ($("#language").val() == 'vi') {
+        var today = moment().format('DD[/]MM[/]YYYY');
+        $('#laboratory_list_calendar_start,#laboratory_list_calendar_end').val(today);
+    }
+    //선택 시 
+    $('#laboratory_list_calendar_start, #laboratory_list_calendar_end').on('apply.daterangepicker', function (ev, picker) {
+        var today = moment().format('YYYY[-]MM[-]DD');
+        if ($("#language").val() == 'vi') {
+            $(this).val(picker.startDate.format('DD/MM/YYYY'));
+            today = moment().format('DD[/]MM[/]YYYY');
+        }
+        date = $('#reception_waiting_date').val();
+        if (date == today) {
+            worker_on(true);
+        } else {
+            worker_on(false);
+        }
+    });
     worker_on(true);
-    $('#laboratory_list_calendar_start').on('apply.daterangepicker', function () {
-        today = moment().format('YYYY[-]MM[-]DD');
-        date = $('#laboratory_list_calendar_start').val();
-        if (date == today) {
-            worker_on(true);
-        } else {
-            worker_on(false);
-        }
-    });
-    $('#laboratory_list_calendar_end').on('apply.daterangepicker', function () {
-        today = moment().format('YYYY[-]MM[-]DD');
-        date = $('#laboratory_list_calendar_end').val();
-        if (date == today) {
-            worker_on(true);
-        } else {
-            worker_on(false);
-        }
-    });
 
 
     $('#date_examination').daterangepicker({
@@ -195,6 +198,12 @@ function waiting_list(Today = false, alarm = false) {
 
     start = $('#laboratory_list_calendar_start').val();
     end = $('#laboratory_list_calendar_end').val();
+
+    //언어에 따라 날짜가 다르기 때문에 서버 형식에 맞게 재설정 후 전송
+    if ($("#language").val() == 'vi') {
+        start = moment(start, 'DD/MM/YYYY').format('YYYY-MM-DD');
+        end = moment(end, 'DD/MM/YYYY').format('YYYY-MM-DD');
+    }
 
 
     $.ajax({

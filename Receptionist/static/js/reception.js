@@ -763,11 +763,20 @@ function new_patient_option(on_off) {
         $('#patient_tax_invoice_click').attr('disabled', false);
         $('#patient_initial_report_click').attr('disabled', false);
         $('#need_medical_report').attr('disabled', false);
+        $('#need_invoice').attr('disabled', false);
+        $('#need_insurance').attr('disabled', false);
+
     } else {
         $('#patient_tax_invoice_click').attr('disabled', true);
         $('#patient_initial_report_click').attr('disabled', true);
         $('#need_medical_report').attr('disabled', true);
         $('#need_medical_report').prop('checked', false);
+        $('#need_invoice').attr('disabled', false);
+        $('#need_invoice').prop('checked', false);
+        $('#need_insurance').attr('disabled', false);
+        $('#need_insurance').prop('checked', false);
+
+
     }
 }
 
@@ -895,7 +904,7 @@ function save_patient() {
     var address = $('#patient_address').val();
     var phone = $('#patient_phone').val();
     var email = $('#patient_email').val();
-
+    var memo = $('#patient_memo').val();
       
     var past_history = $('#history_past').val();
     var family_history = $('#history_family').val();
@@ -930,6 +939,7 @@ function save_patient() {
             'past_history': past_history,
             'family_history': family_history,
             'email': email,
+            'memo': memo,
 
             'tax_invoice_number': tax_invoice_number,
             'tax_invoice_company_name': tax_invoice_company_name,
@@ -1006,6 +1016,10 @@ function reception_check_required() {
 }
 
 function save_recept() {
+    if (!patient_check_required()) {
+        return;
+    }
+
     var id = $('#patient_id').val();
     var chart_no = $('#patient_chart').val();
     var name_kor = $('#patient_name_kor').val();
@@ -1017,6 +1031,7 @@ function save_recept() {
     var address = $('#patient_address').val();
     var phone = $('#patient_phone').val();
     var email = $('#patient_email').val();
+    var memo = $('#patient_memo').val();
 
 
     var past_history = $('#history_past').val();
@@ -1059,6 +1074,10 @@ function save_recept() {
             'depart': depart,
             'doctor': doctor,
             'chief_complaint': chief_complaint,
+            'nationality': nationality,
+            'email': email,
+            'memo':memo,
+
 
             'tax_invoice_number': tax_invoice_number,
             'tax_invoice_company_name': tax_invoice_company_name,
@@ -1134,7 +1153,7 @@ function set_patient_data(patient_id) {
             $("#patient_gender").val(response.gender);
             $('#patient_nationality').val(response.nationality);
             $('#patient_email').val(response.email);
-
+            $('#patient_memo').val(response.memo);
             
             $('#history_past').val(response.history_past);
             $('#history_family').val(response.history_family);
@@ -1414,7 +1433,7 @@ function reservation_search(Today = false) {
                 $('#Reservation_Status').append("<tr><td colspan='8'>" + gettext('No Result !!') + "</td></tr>");
             } else {
                 for (var i in response.datas) {
-                    var str = "<tr><td>" + (parseInt(i) + 1) + "</td>";
+                    var str = "<tr title='" + response.datas[i]['memo'] + "'><td>" + (parseInt(i) + 1) + "</td>";
 
                         if (response.datas[i]['has_unpaid']) {
                             str += "<td style=color:rgb(228,97,131);>";

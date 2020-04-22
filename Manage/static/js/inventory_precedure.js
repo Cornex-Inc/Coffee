@@ -318,8 +318,6 @@ function save_database_precedure(id = null) {
     var precedure_class = $("#add_edit_database_class").val();
     var type = $("#add_edit_database_type").val();
 
-
-
     $.ajax({
         type: 'POST',
         url: '/manage/precedure_add_edit_set/',
