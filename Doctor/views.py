@@ -638,6 +638,8 @@ def reception_select(request):
         'history_past':history.past_history,
         'history_family':history.family_history,
         'need_medical_report':reception.need_medical_report,
+        'need_invoice':reception.need_invoice,
+        'need_insurance':reception.need_insurance,
         }
 
     try:
@@ -736,7 +738,8 @@ def diagnosis_save(request):
         reception = Reception.objects.get(pk = reception_id)
         reception.chief_complaint = chief_complaint
         reception.save()
-        
+
+        print(reception.patient.email)
          #delete all order then save again
 
         if reserve_date:
@@ -924,6 +927,7 @@ def diagnosis_save(request):
             payment.progress = 'unpaid'
         except Payment.DoesNotExist:
             payment = Payment(reception_id = reception_id)
+        print(total_amount)
         payment.sub_total = total_amount;
         payment.total = total_amount;
         payment.save()
@@ -931,14 +935,14 @@ def diagnosis_save(request):
     family_history = request.POST.get('family_history')
     past_history = request.POST.get('past_history')
 
-    try:
-        patient_history = History.objects.get(patient = reception.patient)
-    except History.DoesNotExist:
-        patient_history = History()
-        patient_history.patient = reception.patient
-    patient_history.family_history = family_history
-    patient_history.past_history = past_history
-    patient_history.save()
+    #try:
+    #    patient_history = History.objects.get(patient = reception.patient)
+    #except History.DoesNotExist:
+    #    patient_history = History()
+    #    patient_history.patient = reception.patient
+    #patient_history.family_history = family_history
+    #patient_history.past_history = past_history
+    #patient_history.save()
 
             
 

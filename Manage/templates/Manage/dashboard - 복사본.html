@@ -1,0 +1,63 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+<div class="inventory_grid">
+    <div class="inventory_database partition">
+        <div class="table_title">
+            <span class="btn btn-danger title_span">{{ _('Dash Board') }}</span>
+        </div>
+        <div class="dashboard_board_part">
+            <div class="dashboard_board_title">
+                <span>
+                    <i class="fa fa-2x fa-calendar">{{ _('Every Notice') }}</i>
+                </span>
+                <div class="dashboard_board_see_more">
+                    <a href="{% url 'Manage:board_list'%}">More</a>
+                </div>
+            </div>
+                <div class="dashboard_board_contents">
+                    <table class="table">
+                        {% for data in dashboard_board %}
+                        <tr>
+                            <td></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+        </div>
+        <div class="dashboard_board_part">
+            <div>
+
+            </div>
+        </div>
+        <!--
+        <div class="database_part">
+            
+        </div>
+        <div class="database_part">
+            
+        </div>
+        -->
+    </div>
+
+</div>
+
+
+
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<script src="{% static 'js/dashboard.js' %}" type="text/javascript"></script>
+{% endblock %}

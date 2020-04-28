@@ -5,75 +5,26 @@ function numberWithCommas(x) {
 }
 $(function () {
 
-    $('#payment_search_date').daterangepicker({
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-            'This Year': [moment().startOf('year'), moment().endOf('year')],
-            'Last Year': [moment().subtract(1, 'year').add(1, 'day'), moment()],
-        },
+    $(".date_input").daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
         drops: "down",
-        "alwaysShowCalendars": true,
         locale: {
-            format: 'YYYY-MM-DD',
+            format: "YYYY-MM-DD",
         },
     });
 
 
-    $('#doctor_search_date').daterangepicker({
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-            'This Year': [moment().startOf('year'), moment().endOf('year')],
-            'Last Year': [moment().subtract(1, 'year').add(1, 'day'), moment()],
-        },
-        drops: "down",
-        "alwaysShowCalendars": true,
-        locale: {
-            format: 'YYYY-MM-DD',
-        },
-    });
-
-
-    $('#medicine_search_date').daterangepicker({
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-            'This Year': [moment().startOf('year'), moment().endOf('year')],
-            'Last Year': [moment().subtract(1, 'year').add(1, 'day'), moment()],
-        },
-        drops: "down",
-        "alwaysShowCalendars": true,
-        locale: {
-            format: 'YYYY-MM-DD',
-        },
-    });
 
 
 
     search_payment();
-    search_doctor_profit();
-    search_medicine();
-    $('#patient_filter_top select, #patient_filter_top input,.payment_search_table_filter select,#payment_search_date').change(function () {
+    //search_doctor_profit();
+    //search_medicine();
+    $('.contents_filter_wrap select, .date_input').change(function () {
         search_payment();
     })
 
-    
-    $('#doctor_filter_top select, #doctor_filter_top input,.doctor_search_table_filter select, .doctor_search_table_filter input').change(function () {
-        search_doctor_profit();
-    })
 
     $('.doctor_profit_control').keyup(function () {
         var regex = /[^0-9]/g;
@@ -151,104 +102,225 @@ function get_doctor(part, depart = null) {
 }
 
 
-function search_payment(page=null) {
+function search_payment(page = null) {
+    var page_context = $("#contents_filter_context_count").val();
+
     $.ajax({
         type: 'POST',
         url: '/manage/search_payment/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
-            'start_end_date': $('#payment_search_date').val(),
-            'depart': $('#payment_search_depart option:selected').val(),
-            'doctor': $('#payment_search_doctor option:selected').val(),
 
-            'general': $('#payment_search_general option:selected').val(),
-            'medicine': $('#payment_search_medicine option:selected').val(),
-            'lab': $('#payment_search_lab option:selected').val(),
+            'page_context': page_context,
 
-            'input': $('#payment_search_input').val(),
-            'pup': $('#payment_search_check_paid option:selected').val(),
-            'paid_by': $('#payment_search_paid_by option:selected').val(),
+            'start': $("#payment_search_date_start").val(),
+            'end': $("#payment_search_date_end").val(),
+
+            'depart': $('#contents_filter_depart').val(),
+            'doctor': $('#contents_filter_doctor').val(),
+
+            //'general': $('#payment_search_general option:selected').val(),
+            //'medicine': $('#payment_search_medicine option:selected').val(),
+            //'lab': $('#payment_search_lab option:selected').val(),
+
+            'payment_method': $('#contents_filter_payment_method').val(),
+            'payment_status': $('#contents_filter_payment_status').val(),
+
+
             'page': page, 
         },
         dataType: 'Json',
         success: function (response) {
             $('#payment_table_result').empty();
-            for (var i = 0; i < 10; i++){//response.datas) {
-                var str ='<tr>'
+
+            var str = '';
+            for (var i = 0; i < page_context; i++) {//response.datas) {
+                
                 if (response.datas[i]) {
+                    str += '<tr>';
+
+                    //진료 기본 정보
                     str += '<td>' + response.datas[i]['no'] + '</td>' +
-                        '<td>' + response.datas[i]['date'] + '</td>' + 
+                        '<td>' + response.datas[i]['date'] + '</td>' +
                         '<td>' + response.datas[i]['patient_eng'] + '<br/>' +
                         response.datas[i]['Patient'] + ' (' +
                         response.datas[i]['date_of_birth'] +
                         ')</td>' +
                         '<td>' + response.datas[i]['Depart'] + '</td>' +
-                        '<td>' + response.datas[i]['Doctor'] + '</td>';
+                        '<td>' + response.datas[i]['Doctor_kor'] + '<br/>' + response.datas[i]['Doctor_eng'] + '</td>';
 
-                    // exam fee
+
+
+                    //진룍 목록
+                    ////진료비
                     str += '<td>';
-                    if (response.datas[i]['lab'].length == 0) {
-                        str += ' - ';
-                    } else {
-                        for (var j = 0; j < response.datas[i]['lab'].length; j++) {
-                            str += response.datas[i]['lab'][j]['value'];
-                            if (j != response.datas[i]['lab'].length - 1) {
-                                str += '<br/>';
-                            }
+                    for (var j = 0; j < response.datas[i]['list_exam_fee'].length; j++) {
+                        str += '<span title="' + response.datas[i]['list_exam_fee'][j].value + '">';
+                        if (response.datas[i]['list_exam_fee'][j].checked == 'True') {
+                            str += "<i class='fa fa-check-circle '></i> "
                         }
+                        str += response.datas[i]['list_exam_fee'][j].code + '</span><br/>';
                     }
-                    str += '</td><td>';
-                    
-                    if (response.datas[i]['general'].length == 0) {
-                        str += ' - ';
-                    } else {
-                        
-                        for (var j = 0; j < response.datas[i]['general'].length; j++) {
-                            str += response.datas[i]['general'][j]['value'] ;
-                            if (j != response.datas[i]['general'].length - 1) {
-                                str += '<br/>';
-                            }
-                        }
-                    }
-                    
-                    str += '</td><td>';
-                    if (response.datas[i]['medi'].length == 0) {
-                        str += ' - ';
-                    } else {
-                        for (var j = 0; j < response.datas[i]['medi'].length; j++) {
-                            str += response.datas[i]['medi'][j]['value'];
-                            if (j != response.datas[i]['medi'].length - 1) {
-                                str += '<br/>';
-                            }
-                        }
-                    }
-                    
                     str += '</td>';
 
-                    var method = '<td>'
-                    if (response.datas[i]['paid_by_card'] != '')
-                        method += 'card<br/>';
-                    if (response.datas[i]['paid_by_cash'] != '')
-                        method += 'cash<br/>';
-                    if (response.datas[i]['paid_by_remit'] != '')
-                        method += 'remit<br/>';
-                    if (response.datas[i]['paid_by_card'] == '' && response.datas[i]['paid_by_cash'] == '' && response.datas[i]['paid_by_remit'] == '')
-                        method += '-<br/>';
-                    str += method.substring(0,method.length-5);
-                    str += '</td>'
+                    ////검사
+                    str += '<td>';
+                    for (var j = 0; j < response.datas[i]['list_lab'].length; j++) {
+                        str += '<span title="' + response.datas[i]['list_lab'][j].value + '">';
+                        if (response.datas[i]['list_lab'][j].checked == 'True') {
+                            str += "<i class='fa fa-check-circle '></i> "
+                        }
+                        str += response.datas[i]['list_lab'][j].code + '</span><br/>';
+                    }
+                    str += '</td>';
 
-                    str += '<td>' + numberWithCommas(response.datas[i]['total']) + '</td>';
 
+                    ////처치
+                    str += '<td>';
+                    for (var j = 0; j < response.datas[i]['list_precedure'].length; j++) {
+                        str += '<span title="' + response.datas[i]['list_precedure'][j].value + '">';
+                        if (response.datas[i]['list_precedure'][j].checked == 'True') {
+                            str += "<i class='fa fa-check-circle '></i> "
+                        }
+                        str += response.datas[i]['list_precedure'][j].code + '</span><br/>';
+                    }
+                    str += '</td>';
+
+
+                    ////방사선
+                    str += '<td>';
+                    for (var j = 0; j < response.datas[i]['list_radiation'].length; j++) {
+                        str += '<span title="' + response.datas[i]['list_radiation'][j].value + '">';
+                        if (response.datas[i]['list_radiation'][j].checked == 'True') {
+                            str += "<i class='fa fa-check-circle '></i> "
+                        }
+                        str += response.datas[i]['list_radiation'][j].code + ' x ' + response.datas[i]['list_radiation'][j].amount + '</span><br/>';
+                    }
+                    str += '</td>';
+
+                    ////약
+                    str += '<td>';
+                    for (var j = 0; j < response.datas[i]['list_medicine'].length; j++) {
+                        if (response.datas[i]['list_medicine'][j].checked == 'True') {
+                            str += "<i class='fa fa-check-circle '></i> "
+                        }
+                        str += response.datas[i]['list_medicine'][j].value + ' x ' + response.datas[i]['list_medicine'][j].amount +'<br/>';
+                    }
+                    str += '</td>';
+
+                        
+                    //수납 정보
+
+                    str += '<td>' + response.datas[i]['paid_by'] +
+                        '</td><td>' + numberWithCommas(response.datas[i]['sub_total']) +
+                        '</td><td>' + numberWithCommas(response.datas[i]['additional']) +
+                        '</td><td>' + numberWithCommas(response.datas[i]['discount']) +
+                        '</td><td>' + numberWithCommas(response.datas[i]['total']) +
+                        '</td><td';
+                    if (response.datas[i]['unpaid'] == 0) {
+                        str += "> - </td>";
+                    } else {
+                        str += " style='color:red;'>" + numberWithCommas(response.datas[i]['unpaid']) + '</td>';
+                    }
+                    //str +="<td>-</td><td>-</td><td>-</td><td></td></tr>';"
+                    str += "</tr>';"
+
+
+                } else {
+                    //str += '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+                    str += '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
 
                 }
-                else {
-                    str +="<td colspan='10'></td></tr>"
-                }
-
-                $('#payment_table_result').append(str);
             }
+            $('#payment_table_result').append(str);
 
-            $('#payment_total_total').html(numberWithCommas(response.payment_total_total));
+            $("#payment_sub_total_total").html(numberWithCommas(response['payment_total_subtotal']));
+            $("#payment_additional_total").html(numberWithCommas(response.payment_total_additional));
+            $("#payment_discount_total").html(numberWithCommas(response.payment_total_discount));
+            $("#payment_total_total").html(numberWithCommas(response.payment_total_total));
+            $("#payment_unpaid_total").html(numberWithCommas(response.payment_total_unpaid));
+
+
+
+            //총계
+
+
+
+            //    var str ='<tr>'
+            //    if (response.datas[i]) {
+            //        str += '<td>' + response.datas[i]['no'] + '</td>' +
+            //            '<td>' + response.datas[i]['date'] + '</td>' + 
+            //            '<td>' + response.datas[i]['patient_eng'] + '<br/>' +
+            //            response.datas[i]['Patient'] + ' (' +
+            //            response.datas[i]['date_of_birth'] +
+            //            ')</td>' +
+            //            '<td>' + response.datas[i]['Depart'] + '</td>' +
+            //            '<td>' + response.datas[i]['Doctor'] + '</td>';
+            //
+            //        // exam fee
+            //        str += '<td>';
+            //        if (response.datas[i]['lab'].length == 0) {
+            //            str += ' - ';
+            //        } else {
+            //            for (var j = 0; j < response.datas[i]['lab'].length; j++) {
+            //                str += response.datas[i]['lab'][j]['value'];
+            //                if (j != response.datas[i]['lab'].length - 1) {
+            //                    str += '<br/>';
+            //                }
+            //            }
+            //        }
+            //        str += '</td><td>';
+            //        
+            //        if (response.datas[i]['general'].length == 0) {
+            //            str += ' - ';
+            //        } else {
+            //            
+            //            for (var j = 0; j < response.datas[i]['general'].length; j++) {
+            //                str += response.datas[i]['general'][j]['value'] ;
+            //                if (j != response.datas[i]['general'].length - 1) {
+            //                    str += '<br/>';
+            //                }
+            //            }
+            //        }
+            //        
+            //        str += '</td><td>';
+            //        if (response.datas[i]['medi'].length == 0) {
+            //            str += ' - ';
+            //        } else {
+            //            for (var j = 0; j < response.datas[i]['medi'].length; j++) {
+            //                str += response.datas[i]['medi'][j]['value'];
+            //                if (j != response.datas[i]['medi'].length - 1) {
+            //                    str += '<br/>';
+            //                }
+            //            }
+            //        }
+            //        
+            //        str += '</td>';
+            //
+            //        var method = '<td>'
+            //        if (response.datas[i]['paid_by_card'] != '')
+            //            method += 'card<br/>';
+            //        if (response.datas[i]['paid_by_cash'] != '')
+            //            method += 'cash<br/>';
+            //        if (response.datas[i]['paid_by_remit'] != '')
+            //            method += 'remit<br/>';
+            //        if (response.datas[i]['paid_by_card'] == '' && response.datas[i]['paid_by_cash'] == '' && response.datas[i]['paid_by_remit'] == '')
+            //            method += '-<br/>';
+            //        str += method.substring(0,method.length-5);
+            //        str += '</td>'
+            //
+            //        str += '<td>' + numberWithCommas(response.datas[i]['total']) + '</td>';
+            //
+            //
+            //    }
+            //    else {
+            //        str +="<td colspan='10'></td></tr>"
+            //    }
+            //
+            //    $('#payment_table_result').append(str);
+            //}
+
+            //$('#payment_total_total').html(numberWithCommas(response.payment_total_total));
 
             //페이징
             $('#payment_pagnation').html('');
@@ -277,7 +349,7 @@ function search_payment(page=null) {
             }
             $('#payment_pagnation').html(str);
             //그래프 연동
-            payment_set_graph(response.datas);
+            //payment_set_graph(response.datas);
 
         },
         error: function (request, status, error) {
@@ -533,5 +605,31 @@ function search_medicine(page = null) {
 
         },
     })
+}
+
+
+function excel_download() {
+
+    var url = '/manage/audit_excel?'
+    url += 'date_start=' + '2020-04-21' + '&';
+    url += 'date_end=' + '2020-04-27' + '&';
+
+    window.open(url);
+    ///$.ajax({
+    ///    type: 'POST',
+    ///    url: '/manage/audit_excel/',
+    ///    data: {
+    ///        'csrfmiddlewaretoken': $('#csrf').val(),
+    ///    },
+    ///    dataType: 'Json',
+    ///    success: function (response) {
+    ///        
+    ///
+    ///    },
+    ///    error: function (request, status, error) {
+    ///        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+    ///
+    ///    },
+    ///})
 }
 

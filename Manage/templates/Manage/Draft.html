@@ -1,0 +1,90 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+<div class="inventory_grid">
+    <div class="inventory_database partition">
+        <div class="draft_table_wrap">
+            <div class="table_title">
+                <span class="btn btn-danger title_span">{{ _('Draft') }}</span>
+            </div>
+
+            <div class="draft_table_div">
+                <table class="table table-bordered table-hover table-striped" id="draft_table">
+                    <thead>
+                        <tr>
+                            <th>{{ _('No') }}</th>
+                            <th>{{ _('Status') }}</th>
+                            <th>{{ _('Type') }}</th>
+                            <th>{{ _('Title') }}</th>
+                            <th>{{ _('Depart') }}</th>
+                            <th>{{ _('RQSTR') }}</th>
+                            <th>{{ _('RQSTD_DATE') }}</th>
+                            <th>{{ _('Approve') }} / {{ _('Date') }}<br />( {{ _('In Charge') }} )</th>
+                            <th>{{ _('Approve') }} / {{ _('Date') }}<br />( {{ _('Leader') }} )</th>
+                            <th>{{ _('Approve') }} / {{ _('Date') }}<br />( {{ _('ACCOUNTING') }} )</th>
+                            <th>{{ _('Approve') }} / {{ _('Date') }}<br />( {{ _('CEO') }} )</th>
+                            <th>{{ _('File') }}</th>
+                            <th>{{ _('Manage') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <input type="button" class="btn btn-primary" id="btn_new" value="{{ _('New') }}" />
+        </div>
+    </div>
+
+</div>
+
+
+<!-- New Draft -->
+<div id="new_edit_draft" class="modal fade">
+    <div class="modal-dialog" style="width:500px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4 id="password_database_header">{{ _('New Draft') }}</h4>
+                <div id="modalBody" class="modal-body">
+                    
+                    <div class="forn-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Type') }}</span>
+                        <select id="new_edit_type" class="form-control">
+                            <option value="">----------</option>
+                            {% for data in list_division %}
+                            <option value="{{ data.id }}">{{ data.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                    <a class="btn btn-primary" id="save_draft">{{ _('Save') }}</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/Draft.css' %}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<script src="{% static 'js/Draft.js' %}" type="text/javascript"></script>
+{% endblock %}

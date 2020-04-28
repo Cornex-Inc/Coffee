@@ -107,8 +107,23 @@ $(function () {
     $('#Bill').click(function () {
         id = $("#selected_reception").val();
 
+        var for_bf = '';
+        if ($("#check_bf_af").val() == 'bf') {
+            var discount_input = $("#discount_input").val();
+            var discount_amount = $("#discount_amount").val();
+            var additional_amount = $("#additional_amount").val();
+            var total_amount = $("#total_amount").val();
+
+            for_bf += '?type=bf';
+
+            for_bf += '&discount_input=' + discount_input;
+            for_bf += '&discount_amount=' + discount_amount;
+            for_bf += '&additional_amount=' + additional_amount;
+            for_bf += '&total_amount=' + total_amount;
+        }
+
         $("#dynamic_div").html('');
-        $('#dynamic_div').load('/receptionist/document_medical_receipt_old/' + id);
+        $('#dynamic_div').load('/receptionist/document_medical_receipt_old/' + id + for_bf);
 
         $('#dynamic_div').printThis({
         });
@@ -262,15 +277,15 @@ function payment_record_list(page = null) {
             for (var i = 0; i < context; i++) {
                 var str = '';
                 if (response.datas[i]) {
-                    str += '<tr style="height:6.4vh; vertical-align:middle;"><td>' + response.datas[i].chart + '</td>' +
-                        '<td style="vertical-align:middle;">' + response.datas[i].name_eng + '<br/>' + response.datas[i].name_kor + '</td>' +
-                        '<td style="vertical-align:middle;">' + response.datas[i].date + '</td>' +
-                        '<td style="vertical-align:middle;">' + response.datas[i].paid + '</td>' +
-                        '<td style="vertical-align:middle;">' + response.datas[i].method + '</td>' +
+                    str += '<tr><td>' + response.datas[i].chart + '</td>' +
+                        '<td>' + response.datas[i].name_eng + '<br/>' + response.datas[i].name_kor + '</td>' +
+                        '<td>' + response.datas[i].date + '</td>' +
+                        '<td>' + response.datas[i].paid + '</td>' +
+                        '<td>' + response.datas[i].method + '</td>' +
                         '<td style="cursor:pointer; vertical-align:middle;" onclick="delete_payment(' + response.datas[i].id + ')">X</td > ';
                 }
                 else {
-                    str += '<tr style="height:6.4vh;"><td colspan="6"></td></tr>'
+                    str += '<tr><td colspan="6"></td></tr>'
                 }
                 $("#payment_record").append(str);
             }
@@ -438,6 +453,7 @@ function waiting_selected(paymentrecord_id) {
         },
         dataType: 'Json',
         success: function (response) {
+            $("#check_bf_af").val('af');
             $('#selected_reception').val(response.reception_id);
 
             $('#storage_bills tbody').empty();
@@ -448,14 +464,23 @@ function waiting_selected(paymentrecord_id) {
             $('#patient_doctor').val(response.datas['doctor_kor'] + ' / ' + response.datas['doctor_eng'])
             $('#id_follow_update').val(response.datas['reservation']);
             $('#recommendation').val(response.datas['recommendation']);
-            
+
+            $('#need_invoice').prop('checked', response.need_invoice);
+            $('#need_insurance').prop('checked', response.need_invoice);
+
+            $("#storage_memo").val(response.datas['payment_memo']);
+
             var recepts_table = '';
             var str = '';
             var no = 1;
             if (response.datas['exams'].length != 0) {
                 
                 for (var i in response.datas['exams']) {
-                    str += "<tr><td style='width: 380px;' colspan='2'>" + response.datas['exams'][i].code + " / " + response.datas['exams'][i].name + "</td>" +
+                    str += "<tr><td style='width: 380px;' colspan='2'><label class='check_discount_label'><input type='checkbox' id='exam_item_" + response.datas['exams'][i].manager_id + "' class='discount_item'";
+                    if (response.datas['exams'][i].is_checked == 'True') {
+                        str += ' checked ';
+                    }
+                    str += "/>" + response.datas['exams'][i].code + " / " + response.datas['exams'][i].name + "</label ></td > " +
                         //"<td style='width: 80px;'></td>" +
                         "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['exams'][i].price) + "</td>" +
                         "<td ></td>" +
@@ -473,7 +498,11 @@ function waiting_selected(paymentrecord_id) {
 
             if (response.datas['tests'].length != 0) {
                 for (var i in response.datas['tests']) {
-                    str += "<tr><td style='width: 300px;' colspan='2'>" + response.datas['tests'][i].code+" / " + response.datas['tests'][i].name + "</td>" +
+                    str += "<tr><td style='width: 300px;' colspan='2'<label class='check_discount_label'><input type='checkbox' id='exam_item_" + response.datas['tests'][i].manager_id + "' class='discount_item'"
+                    if (response.datas['tests'][i].is_checked == 'True') {
+                        str += ' checked ';
+                    }
+                    str += " /> " + response.datas['tests'][i].code+" / " + response.datas['tests'][i].name + "</label ></td > " +
                         //"<td style='width: 80px;'></td>" +
                         "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['tests'][i].price) + "</td>" +
                         "<td ></td>" +
@@ -492,8 +521,12 @@ function waiting_selected(paymentrecord_id) {
                 //str += '<tr><td colspan="3">Precedure</td></tr>';
                 for (var i in response.datas['precedures']) {
 
-                    str += "<tr><td style='width: 380px;' colspan='2'>" + response.datas['precedures'][i].code + " / " +
-                        response.datas['precedures'][i].name + "</td>" +
+                    str += "<tr><td style='width: 380px;' colspan='2'><label class='check_discount_label'><input type='checkbox' id='exam_item_" + response.datas['precedures'][i].manager_id + "' class='discount_item'";
+                    if (response.datas['precedures'][i].is_checked == 'True') {
+                        str += ' checked ';
+                    }
+                    str += "/>" + response.datas['precedures'][i].code + " / " +
+                        response.datas['precedures'][i].name + "</label></td>" +
                         //"<td style='width: 80px;'></td>" +
                         "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['precedures'][i].price) + "</td>";
 
@@ -526,7 +559,11 @@ function waiting_selected(paymentrecord_id) {
                 var medication_total = 0;
                 //str += '<tr><td colspan="3">Medicine</td></tr>';
                 for (var i in response.datas['medicines']) {
-                    str += "<tr class='medication_contents'><td style='width: 380px;' colspan='2'>" + response.datas['medicines'][i].code + " / " + response.datas['medicines'][i].name + "</td>" +
+                    str += "<tr class='medication_contents'><td style='width: 380px;' colspan='2'><label class='check_discount_label'><input type='checkbox' id='exam_item_" + response.datas['medicines'][i].manager_id + "' class='discount_item'";
+                    if (response.datas['medicines'][i].is_checked == 'True') {
+                        str += ' checked ';
+                    }
+                    str += "/>" + response.datas['medicines'][i].code + " / " + response.datas['medicines'][i].name + "</label ></td > " +
                         //"<td style='width: 80px;'></td>" +
                         "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['medicines'][i].unit) + "</td>" +
                         "<td style='text-align:center; vertical-align:middle;'>" + response.datas['medicines'][i].quantity + "</td>" +
@@ -711,7 +748,9 @@ function waiting_selected(paymentrecord_id) {
                     $('.chart_table_medicine_contents').hide();
                 }
             })
-            $("#discount_input, #discount_amount,#is_emergency,#additional_amount").prop('disabled', true);
+            $("#discount_input, #discount_amount,#is_emergency,#additional_amount,.discount_item").prop('disabled', true);
+
+
             $('#show_medication_contents').prop("checked", false);
 
 
@@ -783,6 +822,9 @@ function waiting_list(Today = false) {
         },
         dataType: 'Json',
         success: function (response) {
+            var total_paid = 0;
+            var total_balance = 0;
+
             $('#storage_list_table > tbody ').empty();
             for (var i = 0; i < response.datas.length; i++) {
                 var tr_class = "";
@@ -808,12 +850,18 @@ function waiting_list(Today = false) {
                     "<td style='vertical-align:middle;' >" + response.datas[i]['date'] + "</td>" +
                     "<td style='vertical-align:middle;' >" + response.datas[i]['Depart'] + '<br/>' + response.datas[i]['Doctor'] + "</td>" +
                     "<td style='vertical-align:middle;' >" + numberWithCommas( response.datas[i]['paid'] )+ '</td>' +
-                        "<td style='vertical-align:middle;' >" + numberWithCommas(Number(response.datas[i]['unpaid_total']) )+ '</td></td>'; 
+                    "<td style='vertical-align:middle;' >" + numberWithCommas(Number(response.datas[i]['unpaid_total']) )+ '</td></td>'; 
                  
-                    
-
                 $('#storage_list_table').append(str);
+
+                total_paid += response.datas[i]['paid'];
+                total_balance = response.datas[i]['unpaid_total'];
             }
+
+            $("#storage_list_total_paid").html(numberWithCommas(total_paid));
+            $("#storage_list_total_balance").html(numberWithCommas(total_balance));
+
+
         },
         error: function (request, status, error) {
             console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -836,6 +884,7 @@ function get_today_list() {
         },
         dataType: 'Json',  
         success: function (response) {
+            $("#check_bf_af").val('bf');
             $('#storage_today_table > tbody ').empty();
             for (var i in response.datas) {
                 var tr_class = "";
@@ -891,12 +940,18 @@ function get_today_selected(reception_id) {
             $('#id_follow_update').val(response.datas['reservation']);
             $('#recommendation').val(response.datas['recommendation']);
 
+            $('#need_invoice').prop('checked', response.need_invoice);
+            $('#need_insurance').prop('checked', response.need_invoice);
+
+            $("#storage_memo").val('');
+            $("#id_payment_info").val('');
+
             var recepts_table = ''
             var str = ''
             var no = 1;
             if (response.datas['exams'].length != 0) {
                 for (var i in response.datas['exams']) {
-                    str += "<tr><td style='width: 380px;' colspan='2'>" + response.datas['exams'][i].code + " / " + response.datas['exams'][i].name + "</td>" +
+                    str += "<tr><td style='width: 380px;' colspan='2'><label class='check_discount_label'><input type='checkbox' id='exam_item_" + response.datas['exams'][i].manager_id + "' class='discount_item'/>" + response.datas['exams'][i].code + " / " + response.datas['exams'][i].name + "</label></td>" +
                         //"<td style='width: 80px;'></td>" +
                         "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['exams'][i].price) + "</td>" +
                         "<td ></td>" +
@@ -914,7 +969,7 @@ function get_today_selected(reception_id) {
             if (response.datas['tests'].length != 0) {
                 
                 for (var i in response.datas['tests']) {
-                    str += "<tr><tr><td style='width: 380px;' colspan='2'>" + response.datas['tests'][i].code + " / " + response.datas['tests'][i].name + "</td>" +
+                    str += "<tr><tr><td style='width: 380px;' colspan='2'><label class='check_discount_label'><input type='checkbox' id='test_item_" + response.datas['tests'][i].manager_id + "' class='discount_item'/>" + response.datas['tests'][i].code + " / " + response.datas['tests'][i].name + "</label></td>" +
                         //"<td style='width: 80px;'></td>" +
                         "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['tests'][i].price) + "</td>" +
                         "<td ></td>" +
@@ -932,8 +987,8 @@ function get_today_selected(reception_id) {
             if (response.datas['precedures'].length != 0) {
                 //str += '<tr><td colspan="3">Precedure</td></tr>';
                 for (var i in response.datas['precedures']) {
-                    str += "<tr><td style='width: 380px;' colspan='2'>" + response.datas['precedures'][i].code + " / " +
-                        response.datas['precedures'][i].name + "</td>" +
+                    str += "<tr><td style='width: 380px;' colspan='2'><label class='check_discount_label'><input type='checkbox' id='precedure_item_" + response.datas['precedures'][i].manager_id + "' class='discount_item'/>" + response.datas['precedures'][i].code + " / " +
+                        response.datas['precedures'][i].name + "</label></td>" +
                         //"<td style='width: 80px;'></td>" +
                         "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['precedures'][i].price) + "</td>";
 
@@ -967,7 +1022,7 @@ function get_today_selected(reception_id) {
                 var medication_total = 0;
                 //str += '<tr><td colspan="3">Medicine</td></tr>';
                 for (var i in response.datas['medicines']) {
-                    str += "<tr class='medication_contents'><td style='width: 380px;' colspan='2'>" + response.datas['medicines'][i].code + " / " + response.datas['medicines'][i].name + "</td>" +
+                    str += "<tr class='medication_contents'><td style='width: 380px;' colspan='2'><label class='check_discount_label'><input type='checkbox' id='medicine_item_" + response.datas['medicines'][i].manager_id + "' class='discount_item'/>" + response.datas['medicines'][i].code + " / " + response.datas['medicines'][i].name + "</label></td>" +
                         //"<td style='width: 80px;'></td>" +
                         "<td style='text-align:right; vertical-align:middle; padding-right:10px;'>" + numberWithCommas(response.datas['medicines'][i].unit) + "</td>" +
                         "<td style='text-align:center; vertical-align:middle;'>" + response.datas['medicines'][i].quantity + "</td>" +
@@ -1002,7 +1057,7 @@ function get_today_selected(reception_id) {
             str += "<tr><td></td><td></td><td rowspan='2' style='vertical-align:middle; text-align:center; font-weight:bold;'>Discount</td>" +
                 '<td><input type="text" autocomplete="off" id="discount_input" class="form-control" style="display:inline; width:2.5vw;" aria-describedby="basic-addon1" value="' + response.datas['discount'] +'"/> %</td>' +
                 '<td id="discount_show" style="text-align:right; padding-right:0.6vw;"></td>';
-            str += "<tr><td></td><td></td><td></td><td style='text-align:right; padding-right:10px;'><input autocomplete='off' style='width:70px;display:inline;' text-align:right; id='discount_amount' class='form-control' value='" + response.datas['discount_amount'] + "'/>VND</td></tr>";
+            str += "<tr><td></td><td></td><td></td><td style='text-align:right; padding-right:10px;'><input autocomplete='off' style='width:70px;display:inline; text-align:right;' id='discount_amount' class='form-control' value='" + response.datas['discount_amount'] + "'/>VND</td></tr>";
 
             
             str += "<tr><td></td><td></td><td style = 'vertical-align:middle; text-align:center; font-weight:bold;' > Add </td > ";
@@ -1183,8 +1238,31 @@ function save_storage() {
     }
 
     paid = $('#id_pay').val();
-
+    console.log(paid)
+    pay_method = $("#id_payment_info").val();
+    if (pay_method == '') {
+        alert(gettext('Select Payment method'));
+        return;
+    }
     amount = $('#total_amount').val();
+
+
+
+
+    var list_checked = Array();
+    var checkboxs = $(".discount_item");
+    for (i = 0; i < checkboxs.length; i++) {
+        checkbox_id = checkboxs[i].id.split('_');
+
+        list_checked[i] = {
+            'type': checkbox_id[0],
+            'id': checkbox_id[2],
+            'value': checkboxs[i].checked,
+        };
+        
+    }
+
+    console.log(JSON.stringify(list_checked))
 
     $.ajax({
         type: 'POST',
@@ -1197,7 +1275,11 @@ function save_storage() {
             'discount': $('#discount_input').val(),
             'discount_amount': $('#discount_amount').val(),
             'total': $("#discount_total").html(),
-            
+            'payment_memo': $("#storage_memo").val(),
+
+
+            'list_checked': JSON.stringify(list_checked),
+
             'is_emergency': $('#is_emergency').prop("checked"),
             'additional': $('#additional_amount').val()
         },

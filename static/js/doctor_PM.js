@@ -285,6 +285,168 @@ $(function () {
         }
     })
 
+    $("#save").click(function () {
+        var regex = /^[0-9]*$/;
+        //vital sign
+
+        var vital_height = $('#input_vital_height').val();
+        var vital_weight = $('#input_vital_weight').val();
+        var vital_bmi = $('#input_vital_bmi').val();
+        var vital_bp = $('#input_vital_bp').val();
+        var vital_bt = $('#input_vital_bt').val();
+
+
+
+        //2.
+        var q2_item = "";
+        var q2_date = "";
+        //$('.pain_location_text:checkbox:checked').each(function () {
+        //    q2_item += (this.checked ? $(this).val() + "," : "");
+        //})
+
+        q2_date = $('#occurred_date').val();
+        $('.q2_items:visible').each(function () {
+            q2_item += $(this).attr('data_seq') + ',';
+        });
+        $('#pain_location_text_23, #pain_location_text_24, #pain_location_text_25, #pain_location_text_26, #pain_location_text_27').each(function () {
+            q2_item += (this.checked ? $(this).val() + "," : "");
+        });
+
+
+        //3.
+        var q3_yn = $('#treatment_history_yn').prop("checked");
+        var q3_phy_yn, q3_inject_yn, q3_medi_yn, q3_needle_yn;
+        var q3_phy_cnt, q3_inject_cnt, q3_medi_cnt, q3_needle_cnt;
+        q3_phy_yn = $('#physiotherapy_yn').prop("checked");
+        if (q3_phy_yn) {
+            q3_phy_cnt = $("#physiotherapy_count").val();
+        }
+
+        q3_inject_yn = $('#injection_treatment_yn').prop("checked");
+        if (q3_inject_yn) {
+            q3_inject_cnt = $("#injection_treatment_count").val();
+        }
+
+        q3_medi_yn = $('#taking_medicine_yn').prop("checked");
+        if (q3_medi_yn) {
+            q3_medi_cnt = $("#taking_medicine_count").val();
+        }
+
+        q3_needle_yn = $('#acupuncture_yn').prop("checked");
+        if (q3_needle_yn) {
+            q3_needle_cnt = $("#acupuncture_count").val();
+        }
+
+        //4.
+        var q4 = $(".js-range-slider").val();
+
+        //5.
+        var q5_yn = $(':radio[name="operation_yn"]:checked').val();
+        var q5_year = '';
+        var q5_name = '';
+        if (q5_yn == undefined) {
+            alert(gettext('Question 5 is empty.'));
+            return;
+        }
+        if (q5_yn == 1) {
+            q5_year = $("#operation_year").val();
+            q5_name = $("#operation_name").val();
+        }
+
+        //6.
+        var q6_item = '';
+        var q6_film = '';
+        var q6_etc = $('#test_etc').val();
+        $('.test_kinds:checkbox:checked').each(function () {
+            q6_item += (this.checked ? $(this).val() + "," : "");
+        })
+
+
+        $('.cd_film_yn:checkbox:checked').each(function () {
+            q6_film += (this.checked ? $(this).val() + "," : "");
+        })
+
+        //7.
+        var q7_item = '';
+        var q7_etc = $('#disease_etc').val();
+        var q7_medi = $('#medication').val();
+        $('.disease_history_kinds:checkbox:checked').each(function () {
+            q7_item += (this.checked ? $(this).val() + "," : "");
+        });
+
+        //8.
+        var q8_yn = $(':radio[name="medicine_side_effects"]:checked').val();
+        if (q8_yn == undefined) {
+            alert(gettext('Question 8 is empty.'));
+            return;
+        }
+
+        //9.
+        var q9_yn = $(':radio[name="pregnant_radio"]:checked').val();
+        if (q9_yn == undefined) {
+            alert(gettext('Question 9 is empty.'));
+            return;
+        }
+
+        //10.
+        var q10_etc = $('#visit_motiv_etc').val();
+        var q10_friend = $('#visit_motiv_friend').val();
+        var q10_item = "";
+        $('.visit_motiv_item:checkbox:checked').each(function () {
+            q10_item += (this.checked ? $(this).val() + "," : "");
+        })
+
+        $.ajax({
+            type: 'POST',
+            url: '/receptionist/Question/save/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+                'patient_id': $('#patient_id').val(),
+
+
+                'vital_height': vital_height,
+                'vital_weight': vital_weight,
+                'vital_bmi': vital_bmi,
+                'vital_bp': vital_bp,
+                'vital_bt': vital_bt,
+                'pain_posi_text': q2_item,
+                'sick_date': q2_date,
+                'cure_yn': q3_yn,
+                'cure_phy_yn': q3_phy_yn,
+                'cure_phy_cnt': q3_phy_cnt,
+                'cure_inject_yn': q3_inject_yn,
+                'cure_inject_cnt': q3_inject_cnt,
+                'cure_medi_yn': q3_medi_yn,
+                'cure_medi_cnt': q3_medi_cnt,
+                'cure_needle_yn': q3_needle_yn,
+                'cure_needle_cnt': q3_needle_cnt,
+                'pain_level': q4,
+                'surgery_yn': q5_yn,
+                'surgery_year': q5_year,
+                'surgery_name': q5_name,
+                'exam_kind': q6_item,
+                'exam_etc': q6_etc,
+                'cd_film_yn': q6_film,
+                'disease_kind': q7_item,
+                'disease_etc': q7_etc,
+                'medication': q7_medi,
+                'side_effect_yn': q8_yn,
+                'pregnant_yn': q9_yn,
+                'visit_motiv_etc': q10_etc,
+                'visit_motiv_friend': q10_friend,
+                'visit_motiv_item': q10_item,
+            },
+            dataType: 'Json',
+            success: function (response) {
+                $('#medical_exam_EventModal').modal('hide');
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+            },
+        })
+    });
+
     //문2 선택
     $(".q2_item_select ").change(function () {
         var data_code = $(this).attr('data_code');
@@ -308,6 +470,9 @@ $(function () {
 
 
         $('#q2_items_' + str).show();
+        $('#dx_image_items_' + str).show();
+
+        
     })
     //문2 해제
     $('.pain_location_text').change(function () {
@@ -319,6 +484,8 @@ $(function () {
             str += $("#q2_item_select2_" + data_code).val();
 
             $('#q2_items_' + str).hide();
+            $('#dx_image_items_' + str).hide();
+
 
             $("#q2_item_select1_" + data_code).val($("#q2_item_select1_" + data_code + " option:first").val());
             $("#q2_item_select2_" + data_code).val($("#q2_item_select2_" + data_code + " option:first").val());
@@ -342,176 +509,7 @@ $(function () {
 
 
     $('#initial_report').click(function () {
-        var patient_id = $('#patient_id').val();
-        if (patient_id == null || patient_id == '') {
-            alert(gettext('Select patient first.'));
-            return;
-        }
 
-        $.ajax({
-            type: 'POST',
-            url: '/receptionist/Question/get/',
-            data: {
-                'csrfmiddlewaretoken': $('#csrf').val(),
-                'patient_id': $('#patient_id').val(),
-            },
-            dataType: 'Json',
-            success: function (response) {
-                //문진 
-
-
-                //init
-                $('#medical_exam_EventModal .q2_items').hide();
-
-                $('.medical_exam_pm input[type="text"]').val('');
-                $('.medical_exam_pm input[type="checkbox"]').each(function () {
-                    $(this).prop('checked', false);
-                });
-                $('#occurred_date').val();
-                $('.medical_exam_pm input[type="radio"]').prop('checked', false);
-
-                $("#physiotherapy_count,#acupuncture_count,#injection_treatment_count,#taking_medicine_count").attr('disabled', true);
-                $("#operation_year, #operation_name").attr('disabled', true);
-
-                pain_slider.update({
-                    from: 0,
-                })
-
-
-                if (response.result == false) {
-                    return;
-                }
-                //vital
-                $('#input_vital_height').val(response.vital_height);
-                $('#input_vital_weight').val(response.vital_weight);
-                $('#input_vital_bmi').val(response.vital_bmi);
-                $('#input_vital_bp').val(response.vital_bp);
-                $('#input_vital_bt').val(response.vital_bt);
-
-
-                //2
-
-                var q2_item = response.pain_posi_text.split(',');
-                for (var item in q2_item) {
-                    if (q2_item[item] == "") {
-                    }
-                    else {
-                        var code = q2_item[item].split('-')
-                        if (code.length == 1) {
-                            $('#pain_location_text_' + code[0]).prop('checked', true);
-                        } else {
-                            $('#pain_location_text_' + code[0]).prop('checked', true);
-                            $('#q2_item_select1_' + code[0] + ' option[value=' + code[1] + ']').attr('selected', 'selected');
-                            $('#q2_item_select2_' + code[0] + ' option[value=' + code[2] + ']').attr('selected', 'selected');
-
-                            $('#q2_items_' + q2_item[item]).show();
-                            //$('input[class=pain_location_text]:input[value=' + q2_item[item] + ']').prop("checked", true);
-                        }
-                    }
-                }
-
-
-
-
-                $('#occurred_date').val(response.sick_date);
-                //3
-                if (response.cure_yn == "true") {
-                    $('#treatment_history_yn').attr("checked", true);
-                }
-                if (response.cure_phy_yn == "true") {
-                    $('#physiotherapy_yn').prop("checked", true);
-                    $("#physiotherapy_count").prop('disabled', false);
-                    $('#physiotherapy_count').val(response.cure_phy_cnt);
-                }
-                if (response.cure_inject_yn == "true") {
-                    $('#injection_treatment_yn').prop("checked", true);
-                    $("#injection_treatment_count").prop('disabled', false);
-                    $('#injection_treatment_count').val(response.cure_inject_cnt);
-                }
-                if (response.cure_medi_yn == "true") {
-                    $('#taking_medicine_yn').prop("checked", true);
-                    $("#taking_medicine_count").prop('disabled', false);
-                    $('#taking_medicine_count').val(response.cure_medi_cnt);
-                }
-                if (response.cure_needle_yn == "true") {
-                    $('#acupuncture_yn').prop("checked", true);
-                    $("#acupuncture_count").prop('disabled', false);
-                    $('#acupuncture_count').val(response.cure_needle_cnt);
-                }
-
-
-                //4
-                pain_slider.update({
-                    from: response.pain_level,
-                })
-                //5
-                $("input:radio[name=operation_yn]:input[value=" + response.surgery_yn + " ]").prop("checked", true);
-                if (response.surgery_yn == "1") {
-                    $("#operation_year").prop('disabled', false);
-                    $("#operation_year").val(response.surgery_year);
-                    $("#operation_name").prop('disabled', false);
-                    $("#operation_name").val(response.surgery_name);
-                }
-
-                //6
-                var q6_item = response.exam_kind.split(',');
-                for (var item in q6_item) {
-                    if (q6_item[item] == "") {
-                    }
-                    else {
-                        $('input[class=test_kinds]:input[value=' + q6_item[item] + ']').prop("checked", true);
-                    }
-                }
-
-                $('#test_etc').val(response.exam_etc);
-                var q6_film = response.cd_film_yn.split(',');
-                for (var item in q6_film) {
-                    if (q6_film[item] == "") {
-                    }
-                    else {
-                        $('input[class=cd_film_yn]:input[value=' + q6_film[item] + ']').prop("checked", true);
-                    }
-                }
-
-                //7
-                var q7_item = response.disease_kind.split(',');
-                for (var item in q7_item) {
-                    if (q7_item[item] == "") {
-                    }
-                    else {
-                        $('input[class=disease_history_kinds]:input[value=' + q7_item[item] + ']').prop("checked", true);
-                    }
-                }
-                $('#disease_etc').val(response.disease_etc);
-                $('#medication').val(response.medication);
-                //8
-                $("input:radio[name=medicine_side_effects]:input[value=" + response.side_effect_yn + " ]").prop("checked", true);
-                //9
-                $("input:radio[name=pregnant_radio]:input[value=" + response.pregnant_yn + " ]").prop("checked", true);
-
-                //10
-                $('#visit_motiv_item').val(response.visit_motiv_item);
-
-                var q10_item = response.visit_motiv_item.split(',');
-                for (var item in q10_item) {
-                    if (q10_item[item] == "") {
-
-                    }
-                    else {
-                        $('input[class=visit_motiv_item]:input[value=' + q10_item[item] + ']').prop("checked", true);
-                    }
-                }
-
-                $('#visit_motiv_friend').val(response.visit_motiv_friend);
-                $('#visit_motiv_etc').val(response.visit_motiv_etc);
-
-
-
-            },
-            error: function (request, status, error) {
-                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-            },
-        });
 
         $('#medical_exam_EventModal').modal({ backdrop: 'static', keyboard: false });
         $("#medical_exam_EventModal").scrollTop(0);
@@ -690,6 +688,184 @@ function selected_table_title(title) {
 }
 
 
+function get_question_set(patient_id = null) {
+    var patient_id = $('#patient_id').val();
+    if (patient_id == null || patient_id == '') {
+        alert(gettext('Select patient first.'));
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/Question/get/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'patient_id': $('#patient_id').val(),
+        },
+        dataType: 'Json',
+        success: function (response) {
+            //문진 
+
+
+            //init
+            $('#medical_exam_EventModal .q2_items').hide();
+
+            $('.medical_exam_pm input[type="text"]').val('');
+            $('.medical_exam_pm input[type="checkbox"]').each(function () {
+                $(this).prop('checked', false);
+            });
+            $('#occurred_date').val();
+            $('.medical_exam_pm input[type="radio"]').prop('checked', false);
+
+            $("#physiotherapy_count,#acupuncture_count,#injection_treatment_count,#taking_medicine_count").attr('disabled', true);
+            $("#operation_year, #operation_name").attr('disabled', true);
+
+
+            let pain_slider = $(".js-range-slider").data("ionRangeSlider");
+            pain_slider.update({
+                from: 0,
+            })
+
+
+            if (response.result == false) {
+                return;
+            }
+            //vital
+            $('#input_vital_height').val(response.vital_height);
+            $('#input_vital_weight').val(response.vital_weight);
+            $('#input_vital_bmi').val(response.vital_bmi);
+            $('#input_vital_bp').val(response.vital_bp);
+            $('#input_vital_bt').val(response.vital_bt);
+
+
+            //2
+
+            var q2_item = response.pain_posi_text.split(',');
+            for (var item in q2_item) {
+                if (q2_item[item] == "") {
+                }
+                else {
+                    var code = q2_item[item].split('-')
+                    if (code.length == 1) {
+                        $('#pain_location_text_' + code[0]).prop('checked', true);
+                    } else {
+                        $('#pain_location_text_' + code[0]).prop('checked', true);
+                        $('#q2_item_select1_' + code[0] + ' option[value=' + code[1] + ']').attr('selected', 'selected');
+                        $('#q2_item_select2_' + code[0] + ' option[value=' + code[2] + ']').attr('selected', 'selected');
+
+                        $('#q2_items_' + q2_item[item]).show();
+                        $('#dx_image_items_' + q2_item[item]).show();
+                        //$('input[class=pain_location_text]:input[value=' + q2_item[item] + ']').prop("checked", true);
+                    }
+                }
+            }
+
+
+
+
+            $('#occurred_date').val(response.sick_date);
+            //3
+            if (response.cure_yn == "true") {
+                $('#treatment_history_yn').attr("checked", true);
+            }
+            if (response.cure_phy_yn == "true") {
+                $('#physiotherapy_yn').prop("checked", true);
+                $("#physiotherapy_count").prop('disabled', false);
+                $('#physiotherapy_count').val(response.cure_phy_cnt);
+            }
+            if (response.cure_inject_yn == "true") {
+                $('#injection_treatment_yn').prop("checked", true);
+                $("#injection_treatment_count").prop('disabled', false);
+                $('#injection_treatment_count').val(response.cure_inject_cnt);
+            }
+            if (response.cure_medi_yn == "true") {
+                $('#taking_medicine_yn').prop("checked", true);
+                $("#taking_medicine_count").prop('disabled', false);
+                $('#taking_medicine_count').val(response.cure_medi_cnt);
+            }
+            if (response.cure_needle_yn == "true") {
+                $('#acupuncture_yn').prop("checked", true);
+                $("#acupuncture_count").prop('disabled', false);
+                $('#acupuncture_count').val(response.cure_needle_cnt);
+            }
+
+
+            //4
+            pain_slider.update({
+                from: response.pain_level,
+            })
+            //5
+            $("input:radio[name=operation_yn]:input[value=" + response.surgery_yn + " ]").prop("checked", true);
+            if (response.surgery_yn == "1") {
+                $("#operation_year").prop('disabled', false);
+                $("#operation_year").val(response.surgery_year);
+                $("#operation_name").prop('disabled', false);
+                $("#operation_name").val(response.surgery_name);
+            }
+
+            //6
+            var q6_item = response.exam_kind.split(',');
+            for (var item in q6_item) {
+                if (q6_item[item] == "") {
+                }
+                else {
+                    $('input[class=test_kinds]:input[value=' + q6_item[item] + ']').prop("checked", true);
+                }
+            }
+
+            $('#test_etc').val(response.exam_etc);
+            var q6_film = response.cd_film_yn.split(',');
+            for (var item in q6_film) {
+                if (q6_film[item] == "") {
+                }
+                else {
+                    $('input[class=cd_film_yn]:input[value=' + q6_film[item] + ']').prop("checked", true);
+                }
+            }
+
+            //7
+            var q7_item = response.disease_kind.split(',');
+            for (var item in q7_item) {
+                if (q7_item[item] == "") {
+                }
+                else {
+                    $('input[class=disease_history_kinds]:input[value=' + q7_item[item] + ']').prop("checked", true);
+                }
+            }
+            $('#disease_etc').val(response.disease_etc);
+            $('#medication').val(response.medication);
+            //8
+            $("input:radio[name=medicine_side_effects]:input[value=" + response.side_effect_yn + " ]").prop("checked", true);
+            //9
+            $("input:radio[name=pregnant_radio]:input[value=" + response.pregnant_yn + " ]").prop("checked", true);
+
+            //10
+            $('#visit_motiv_item').val(response.visit_motiv_item);
+
+            var q10_item = response.visit_motiv_item.split(',');
+            for (var item in q10_item) {
+                if (q10_item[item] == "") {
+
+                }
+                else {
+                    $('input[class=visit_motiv_item]:input[value=' + q10_item[item] + ']').prop("checked", true);
+                }
+            }
+
+            $('#visit_motiv_friend').val(response.visit_motiv_friend);
+            $('#visit_motiv_etc').val(response.visit_motiv_etc);
+
+
+
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+        },
+    });
+
+}
+
+
 
 function get_all_diagnosis() {
     $('#diagnosis_table tbody').empty();
@@ -853,6 +1029,12 @@ function reception_select(reception_id) {
 
             get_vital();
             get_all_diagnosis();
+
+
+            ///문진
+            $(".q2_items").hide();
+            get_question_set(response.id);
+
         },
         error: function (request, status, error) {
             console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -934,6 +1116,8 @@ function set_vital_clear() {
 }
 
 function get_diagnosis(reception_no) {
+
+
     $.ajax({
         type: 'POST',
         url: '/doctor/get_diagnosis/',
@@ -1002,11 +1186,14 @@ function get_diagnosis(reception_no) {
             })
 
             show_total_price();
+
         },
         error: function (request, status, error) {
             console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
-    })
+    });
+
+
 }
 
 

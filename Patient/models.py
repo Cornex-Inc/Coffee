@@ -35,25 +35,25 @@ class Patient(models.Model):
 
     past_id = models.CharField(
         null = True,
-        default = None,
+        default = '',
         max_length = 32,
         )
 
     nationality = models.CharField(
         null = True,
-        default = None,
+        default = '',
         max_length = 16,
         )
 
     email = models.CharField(
         null = True,
-        default = None,
+        default = '',
         max_length = 64,
         )
 
     memo = models.CharField(
         null = True,
-        default = None,
+        default = '',
         max_length = 128,
         )
 
@@ -112,32 +112,34 @@ class History(models.Model):
 
     past_history = models.CharField(
         max_length = 2048,
-        null = True,
+        blank=True,
+        default = '',
         )
     family_history = models.CharField(
         max_length = 2048,
-        null = True,
+        blank=True,
+        default = '',
         )
     
 class TaxInvoice(models.Model):
     patient = models.OneToOneField(
         to = Patient,
         on_delete = models.DO_NOTHING,
-        null=True,
+        default = '',
         )
 
     number = models.CharField(
         max_length = 2048,
-        null = True,
+        default = '',
         )
 
     company_name = models.CharField(
         max_length = 2048,
-        null = True,
+        default = '',
         )
     address = models.CharField(
         max_length = 2048,
-        null = True,
+        default = '',
         )
 
 

@@ -96,7 +96,9 @@
     font-size: 20px;
     margin-bottom:10px;
 }
-
+#reception_table {
+    margin-bottom: 0px
+}
 .diagnosis_select_title div {
     display: inline;
     border: 1px solid #bcbcbc;

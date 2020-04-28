@@ -9,7 +9,6 @@
         <div class="reception_patient partition">
             <div class="status_table_title">
                 <span class="btn btn-danger">{{ _('New Patient') }}</span>
-
             </div>
             <table class="table patient_table" id="reception_table">
                 <tr>
@@ -147,11 +146,11 @@
                 <tr>
                     <td colspan="2">
                         <div style="float:left;">
-                        <input type="button" value="{{ _('Inform Tax Invoice') }}" class="btn btn-default" id="patient_tax_invoice_click" />
-                        <input type="button" value="{{ _('Initial Report') }}" class="btn btn-success" id="patient_initial_report_click" />
-                        <label class="btn btn-warning need_medical_report" ><input type="checkbox" id="need_medical_report" /><text>{{_('Medical Report') }}</text></label>
-                        <label class="btn btn-danger need_medical_report" ><input type="checkbox" id="need_invoice" /><text>{{_('Red Invoice') }}</text></label>
-                        <label class="btn btn-info need_medical_report" ><input type="checkbox" id="need_insurance" /><text>{{_('Insurance') }}</text></label>
+                            <input type="button" value="{{ _('Inform Tax Invoice') }}" class="btn btn-default" id="patient_tax_invoice_click" />
+                            <input type="button" value="{{ _('Initial Report') }}" class="btn btn-success" id="patient_initial_report_click" />
+                            <label class="btn btn-warning need_medical_report" ><input type="checkbox" id="need_medical_report" /><text> {{_('Medical Report') }}</text></label>
+                            <label class="need_medical_report" style="margin-right:10px;"><input type="checkbox" id="need_invoice" /><text> {{_('Red Invoice') }}</text></label>
+                            <label class="need_medical_report"><input type="checkbox" id="need_insurance" /><text> {{_('Insurance') }}</text></label>
                          </div>
                         <div style="float:right;">
                             <input class="btn btn-default save_cancel_btn"  value="{{ _('Cancel') }}" onclick="set_cancel()" />
@@ -174,7 +173,6 @@
                         <option value="chart">{{_('Chart No') }}</option>
                         <option value="date_of_birth">{{_('Date of Birth') }}</option>
                         <option value="phone">{{_('Phone Number') }}</option>
-
                     </select>
                     <input type="text" name="search_input" id="patient_search_input" class="form-control patient_search_input" aria-describedby="basic-addon1" required="">
                     <input type="button" value="{{ _('Search') }}" class="btn btn-default" onclick="patient_search()"/>

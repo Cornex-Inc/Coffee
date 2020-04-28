@@ -771,9 +771,9 @@ function new_patient_option(on_off) {
         $('#patient_initial_report_click').attr('disabled', true);
         $('#need_medical_report').attr('disabled', true);
         $('#need_medical_report').prop('checked', false);
-        $('#need_invoice').attr('disabled', false);
+        //$('#need_invoice').attr('disabled', true);
         $('#need_invoice').prop('checked', false);
-        $('#need_insurance').attr('disabled', false);
+        //$('#need_insurance').attr('disabled', true);
         $('#need_insurance').prop('checked', false);
 
 
@@ -861,7 +861,12 @@ function patient_check_required() {
     var $t, t;
     var fields = [$('#patient_name_kor'),
         $('#patient_name_eng'),
-        $('#patient_date_of_birth'),]
+        $('#patient_date_of_birth'),
+        $('#patient_address'),
+        $('#patient_phone'),
+        $('#patient_email'),
+
+    ]
 
     if ($('#patient_gender').val() == '' ){
         alert(gettext("'Gender' is necessary."));
@@ -1038,7 +1043,16 @@ function save_recept() {
     var family_history = $('#history_family').val();
 
     var depart = $('#depart_select').val();
+    if (depart == '') {
+        alert(gettext('Select Depart.'));
+        return;
+    }
+
     var doctor = $('#doctor_select').val();
+    if (doctor == '') {
+        alert(gettext('Select Doctor.'));
+        return;
+    }
     var chief_complaint = $('#chief_complaint').val();
 
     var tax_invoice_number = $('#tax_invoice_number').val();
@@ -1046,6 +1060,8 @@ function save_recept() {
     var tax_invoice_address = $('#tax_invoice_address').val();
 
     var need_medical_report = $('#need_medical_report').prop("checked");
+    var need_invoice = $("#need_invoice").prop("checked");
+    var need_insurance = $("#need_insurance").prop("checked");
 
     var patient_table_vital_ht = $('#patient_table_vital_ht').val();
     var patient_table_vital_wt = $('#patient_table_vital_wt').val();
@@ -1084,6 +1100,8 @@ function save_recept() {
             'tax_invoice_address': tax_invoice_address,
 
             'need_medical_report': need_medical_report,
+            'need_invoice': need_invoice,
+            'need_insurance': need_insurance,
 
             'patient_table_vital_ht': patient_table_vital_ht,
             'patient_table_vital_wt': patient_table_vital_wt,

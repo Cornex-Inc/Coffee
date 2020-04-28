@@ -26,22 +26,39 @@ th{
 
 
 
-.contents_filter_top {
-    display: inline;
-    text-align:right;
-    float:right;
+
+.contents_filter_div{
+    display:inline-table;
 }
 
-    .contents_filter_top select, .contents_filter_top input{
-        margin-right:20px;
-    }
-    .contents_filter_top select:last-child{
-        margin-right:0px;
-    }
+#contents_filter_div_context_count {
+    float: right;
+    width: 130px;
+}
 
-    .search_table_No {
-        width: 3vw;
-    }
+
+#contents_filter_div_depart {
+    width: 150px;
+}
+
+#contents_filter_div_doctor{
+    width:150px;
+}
+
+
+#contents_filter_div_method{
+    width:230px;
+}
+
+#contents_filter_div_status{
+    width:200px;
+}
+
+
+
+.search_table_No {
+    width: 3vw;
+}
 
 .search_table_Date {
     width: 5vw;
@@ -103,36 +120,24 @@ th{
 }
 
 .payment_total {
-    float: right;
-    width: 50%;
+
     font-weight: bold;
     font-size: 18px;
     text-align: right;
 }
 
-.payment_total div{
+
+
+
+
+.date_input_div {
+    display:inline;
+    margin-right:20px;
 }
 
-.payment_search_table_filter {
-    text-align: right;
-    margin-top: 10px;
-    margin-bottom:10px;
-}
-    .payment_search_table_filter select{
-        margin-right:20px;
-    }
-        .payment_search_table_filter select:last-child{
-            margin-right:0px;
-        }
-        .payment_search_table {
-            width: 100%;
-        }
-
-
-
-.payment_search_date {
+.date_input {
     display: inline;
-    width: 170px;
+    width: 90px;
 }
 
 .payment_search_depart {
@@ -161,11 +166,101 @@ th{
         margin-left: 3.4vw;
     }
 
-.doctor_search_table_filter {
-    text-align: right;
-    margin-top: 10px;
-    margin-bottom: 10px;
+.contents_filter_top{
+    margin-top:20px;
 }
+
+
+#payment_search_table {
+    margin-top: 20px;
+    width: 100%;
+    table-layout: fixed;
+    letter-spacing: -1px;
+}
+
+    #payment_search_table thead tr th{
+        vertical-align:middle;
+        text-align:center;
+    }
+        #payment_search_table thead tr th:nth-child(1) {
+            width: 50px;
+        }
+    #payment_search_table thead tr th:nth-child(2) {
+        width: 70px;
+    }
+        #payment_search_table thead tr th:nth-child(3) {
+            width: 120px;
+        }
+    #payment_search_table thead tr th:nth-child(4) {
+        width: 60px;
+    }
+    #payment_search_table thead tr th:nth-child(5) {
+        width: 60px;
+    }
+
+
+
+
+
+    #payment_search_table thead tr th:nth-child(11) {
+        width: 60px;
+    }
+        #payment_search_table thead tr th:nth-child(12), #payment_search_table thead tr th:nth-child(13), #payment_search_table thead tr th:nth-child(14), #payment_search_table thead tr th:nth-child(15), #payment_search_table thead tr th:nth-child(16) {
+            width: 80px;
+        }
+
+
+    #payment_search_table tbody tr td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+        #payment_search_table tbody tr td:nth-child(6), #payment_search_table tbody tr td:nth-child(7), #payment_search_table tbody tr td:nth-child(8), #payment_search_table tbody tr td:nth-child(9), #payment_search_table tbody tr td:nth-child(10) {
+            line-height:15px;
+        }
+        #payment_search_table tbody tr td:nth-child(12), #payment_search_table tbody tr td:nth-child(13), #payment_search_table tbody tr td:nth-child(14), #payment_search_table tbody tr td:nth-child(15), #payment_search_table tbody tr td:nth-child(16) {
+            text-align: right;
+        }
+
+.empty_cell {
+    border: none;
+    background: none;
+}
+
+.total_table {
+    table-layout: fixed;
+    border: none;
+    letter-spacing: -1px;
+    font-weight: 600;
+}
+
+    .total_table tbody tr td {
+        vertical-align: middle;
+        text-align: center;
+        
+        
+    }
+
+
+        .total_table tbody tr td:nth-child(1) {
+            width: 842px;
+            border: none;
+            background: none;
+        }
+        .total_table tbody tr td:nth-child(2) {
+            width: 177px;
+        }
+    .total_table tbody tr td:nth-child(3), .total_table tbody tr td:nth-child(4), .total_table tbody tr td:nth-child(5), .total_table tbody tr td:nth-child(6), .total_table tbody tr td:nth-child(7) {
+        text-align: right;
+        width: 80px;
+        
+    }
+    /****** Doctor Profit    *******/
+    .doctor_search_table_filter {
+        text-align: right;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
 
     .doctor_search_table_filter select {
         margin-right: 20px;
@@ -234,54 +329,6 @@ th{
 
 }
 
-#payment_search_table thead tr th:nth-child(1), #profit_table thead tr th:nth-child(1) {
-    width: 50px;
-}
-
-#payment_search_table thead tr th:nth-child(2), #profit_table thead tr th:nth-child(2) {
-    width: 85px;
-}
-
-#payment_search_table thead tr th:nth-child(3), #profit_table thead tr th:nth-child(3) {
-    width: 150px;
-}
-
-#payment_search_table thead tr th:nth-child(4), #profit_table thead tr th:nth-child(4) {
-    width: 70px;
-}
-
-#payment_search_table thead tr th:nth-child(5), #profit_table thead tr th:nth-child(5) {
-    width: 150px;
-}
-
-#payment_search_table thead tr th:nth-child(6) {
-    width: 300px;
-}
-
-#payment_search_table thead tr th:nth-child(7) {
-    width: 300px;
-}
-
-#payment_search_table thead tr th:nth-child(8) {
-    width: 300px;
-}
-
-#payment_search_table thead tr th:nth-child(9) {
-    width: 80px;
-}
-
-#payment_search_table thead tr th:nth-child(10) {
-    width: 150px;
-    text-align:center;
-}
-
-#payment_search_table tbody tr td{
-    vertical-align: middle;
-}
-
-#payment_search_table tbody tr td:nth-child(10) {
-    text-align:right;
-}
 
 
 
@@ -296,4 +343,13 @@ th{
 #profit_table thead tr th:nth-child(8) {
     width: 260px;
 }
-    
+
+@media ( min-width: 1900px ) {
+    .total_table tbody tr td:nth-child(1) {
+        width: 1145px;
+    }
+
+    .total_table tbody tr td:nth-child(2) {
+        width: 260px;
+    }
+}

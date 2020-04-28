@@ -49,6 +49,11 @@ $(function () {
         $("#add_medicine_expiry_need").prop('checked', true);
         $('#add_medicine_expiry').data('daterangepicker').setStartDate(moment(today));
 
+        
+        $("#add_medicine_input_price_need").prop('checked', false);
+        $("#add_medicine_input_price").prop('disabled', true);
+        $("#add_medicine_input_price").val('');
+
         $("#add_medicine_changes").prop("disabled", false);
         $("#add_medicine_changes").val(0);
         $('#add_medicine_memo').val('');
@@ -106,6 +111,16 @@ $(function () {
             $("#add_medicine_expiry").val(moment().format('YYYY-MM-DD'));
         }
     });
+
+    $("#add_medicine_input_price_need").change(function () {
+        if ($(this).is(":checked") == false) {
+            $("#add_medicine_input_price").prop('disabled', true);
+
+        } else {
+            $("#add_medicine_input_price").prop('disabled', false);
+        }
+    });
+
 });
 
 function numberWithCommas(x) {
@@ -116,7 +131,7 @@ function numberWithCommas(x) {
 
 
 function pharmacy_database_search(page = null) {
-    var context_in_page = 30;
+    var context_in_page = 10;
 
     var string = $('#medicine_search_input').val();
     //var filter = $('#precedure_search_select').val();
@@ -448,6 +463,12 @@ function save_database_add_medicine() {
         expiry_date = $('#add_medicine_expiry').val();
     }
 
+    
+    if ($("#add_medicine_input_price_need").is(':checked') == false) {
+        input_price = null;
+    } else {
+        input_price = $('#add_medicine_input_price').val();
+    }
 
     $.ajax({
         type: 'POST',
@@ -459,6 +480,7 @@ function save_database_add_medicine() {
             'expiry_date': expiry_date,
             'changes': changes,
             'memo': memo,
+            'input_price': input_price,
             'check': $("#add_medicine_database_id").val(),
         },
         dataType: 'Json',

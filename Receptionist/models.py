@@ -181,6 +181,11 @@ class ExamManager(models.Model):
         on_delete = models.DO_NOTHING, 
         )
 
+    #checking for discount
+    is_checked_discount = models.CharField(
+        max_length = 8,
+        default = False,
+        )
 
 class TestManager(models.Model):
     diagnosis = models.ForeignKey(
@@ -210,6 +215,12 @@ class TestManager(models.Model):
         null=True,
         )
 
+    #checking for discount
+    is_checked_discount = models.CharField(
+        max_length = 8,
+        default = False,
+        )
+
 class PrecedureManager(models.Model):
     diagnosis = models.ForeignKey(
         to = Diagnosis,
@@ -236,6 +247,12 @@ class PrecedureManager(models.Model):
     memo = models.CharField(
         max_length = 256,
         null=True,
+        )
+
+    #checking for discount
+    is_checked_discount = models.CharField(
+        max_length = 8,
+        default = False,
         )
 
 
@@ -268,6 +285,12 @@ class MedicineManager(models.Model):
         null=True,
         )
 
+    #checking for discount
+    is_checked_discount = models.CharField(
+        max_length = 8,
+        default = False,
+        )
+
 
 class Payment(models.Model):
 
@@ -282,19 +305,19 @@ class Payment(models.Model):
         )
 
     sub_total = models.IntegerField(
-        null=True,
+        default=0
         )
 
     discounted = models.IntegerField(
-        null=True,
+        default=0
         )
 
     discounted_amount = models.IntegerField(
-        null=True,
+        default=0
         )
 
     total = models.IntegerField(
-        null=True,
+        default=0
         )
 
     progress = models.CharField(
@@ -304,16 +327,15 @@ class Payment(models.Model):
 
     memo = models.CharField(
         max_length=256,
-        null=True,
+        default=''
         )
 
     is_emergency = models.BooleanField(
-        default= False
+        default= False,
         )
 
     additional = models.IntegerField(
-        null=True,
-        default=None,
+        default=0,
         )
 
 

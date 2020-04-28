@@ -1,10 +1,11 @@
 
 
 import os
+from openpyxl import Workbook
 from django.shortcuts import render
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect,HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Count, F, Min,Sum
 import operator
@@ -25,90 +26,132 @@ from django.views import View
 
 
 # Create your views here.
-@login_required
-def manage(request):
-    doctor_search_form = DoctorsSearchForm()
+def dash_board(request):
 
-    
-    list_exam_fee = []
-    list_precedures = []
-    list_radiologys = []
+    dashboard_board = Board_Contents.objects.filter(use_yn='Y',board_type='BASIC',)[5:]
 
-
-    exam_fees = ExamFee.objects.filter(Q(code = 'E0010') | Q(code = 'E0011'))
-    for exam_fee in exam_fees:
-        list_exam_fee.append({'code':exam_fee.code,'value':exam_fee.name})
-
-    precedures = Precedure.objects.filter(code__contains='PM')
-    for precedure in precedures:
-        list_precedures.append({'code':precedure.code,'value':precedure.name})
-
-    radiologys = Precedure.objects.filter(code__contains='R', precedure_class_id = 10 )
-    for radiology in radiologys:
-        list_radiologys.append({'code':radiology.code,'value':radiology.name})
 
     return render(request,
-    'Doctor/audit_PM.html',
-        {
-            'doctor_search':doctor_search_form,
-
-            'list_exam_fee':list_exam_fee,
-            'list_precedures':list_precedures,
-            'list_radiologys':list_radiologys,
-
-        }
-    )
+        'Manage/dashboard.html',
+            {
+                'dashboard_board':dashboard_board,
+            }
+        )
 
 
+
+
+
+
+
+@login_required
+def manage(request):
+    #doctor_search_form = DoctorsSearchForm()
+    #
+    #
+    #list_exam_fee = []
+    #list_precedures = []
+    #list_radiologys = []
+    #
+    #
+    #exam_fees = ExamFee.objects.filter(Q(code = 'E0010') | Q(code = 'E0011'))
+    #for exam_fee in exam_fees:
+    #    list_exam_fee.append({'code':exam_fee.code,'value':exam_fee.name})
+    #
+    #precedures = Precedure.objects.filter(code__contains='PM')
+    #for precedure in precedures:
+    #    list_precedures.append({'code':precedure.code,'value':precedure.name})
+    #
+    #radiologys = Precedure.objects.filter(code__contains='R', precedure_class_id = 10 )
+    #for radiology in radiologys:
+    #    list_radiologys.append({'code':radiology.code,'value':radiology.name})
+    #
+    #return render(request,
+    #'Doctor/audit_PM.html',
+    #    {
+    #        'doctor_search':doctor_search_form,
+    #
+    #        'list_exam_fee':list_exam_fee,
+    #        'list_precedures':list_precedures,
+    #        'list_radiologys':list_radiologys,
+    #
+    #    }
+    #)
 
     #####################################################
-    payment_search_form = PaymentSearchForm()
-    doctor_search_form = DoctorsSearchForm()
 
-
-    patient_search_form = PatientSearchForm()
-    medicine_search_form = MedicineSearchForm()
-
-    
     #filters
-    list_exam_fee = []
-    list_lab = []
-    list_precedure = []
-    list_medicine = []
+    ##list_exam_fee = []
+    ##list_lab = []
+    ##list_precedure = []
+    ##list_medicine = []
+    ##
+    ##
+    ##    
+    ##exams = ExamFee.objects.all().order_by('name')
+    ##for exam in exams:
+    ##    list_exam_fee.append({'code':exam.code,'value':exam.name})
+    ##
+    ##tests = Test.objects.all().order_by('name')
+    ##for test in tests:
+    ##    list_lab.append({'code':test.code,'value':test.name})
+    ##
+    ##precedures = Precedure.objects.all().order_by('name')
+    ##for precedure in precedures:
+    ##    list_precedure.append({'code':precedure.code,'value':precedure.name})
+    ##    
+    ##medicines = Medicine.objects.all().order_by('name')
+    ##for medicine in medicines:
+    ##    list_medicine.append({'code':medicine.code,'value':medicine.name})
+    ##    
 
 
-        
-    exams = ExamFee.objects.all().order_by('name')
-    for exam in exams:
-        list_exam_fee.append({'code':exam.code,'value':exam.name})
 
-    tests = Test.objects.all().order_by('name')
-    for test in tests:
-        list_lab.append({'code':test.code,'value':test.name})
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+    
 
-    precedures = Precedure.objects.all().order_by('name')
-    for precedure in precedures:
-        list_precedure.append({'code':precedure.code,'value':precedure.name})
-        
-    medicines = Medicine.objects.all().order_by('name')
-    for medicine in medicines:
-        list_medicine.append({'code':medicine.code,'value':medicine.name})
-        
+    #depart_medical= COMMCODE.objects.filter(use_yn = 'Y',commcode = 'DOCTOR', commcode_grp='DEPART_CLICINC',upper_commcode ='000002' ).annotate(code = F('se1'),name = f_name ).values('code','name')
+    depart_medical = []
+    depart_medical_query = Depart.objects.all()
+    for data in depart_medical_query:
+        depart_medical.append({
+            'code':data.id,
+            'name':data.name
+            })
+    #의사 정보 ? 
+    doctor = Doctor.objects.values('name_short','id')
 
+    #결제 방법
+    payment_method = COMMCODE.objects.filter(use_yn = 'Y', commcode_grp='PAYMENT_METHOD',upper_commcode ='000006' ).annotate(code = F('commcode'),name = f_name ).values('code','name')
+
+    #결제 상태
+    payment_status = COMMCODE.objects.filter(use_yn = 'Y', commcode_grp='PAYMENT_STATUS',upper_commcode ='000006' ).annotate(code = F('commcode'),name = f_name ).values('code','name')
 
     return render(request,
         'Manage/manage.html',
             {
-                'payment_search':payment_search_form,
-                'patient_search':patient_search_form,
-                'doctor_search':doctor_search_form,
-                'doctors':Doctor.objects.all(),
-                'medicine_search':medicine_search_form,
+                'depart_medical':depart_medical,
+                'doctor' : doctor,
 
-                'list_exam_fee':list_exam_fee, # general will be precedure in template
-                'list_lab':list_lab,
-                'list_precedure':list_precedure,
-                'list_medicine':list_medicine,
+                'payment_method':payment_method,
+                'payment_status':payment_status,
+
+                #'payment_search':payment_search_form,
+                #'patient_search':patient_search_form,
+                #'doctor_search':doctor_search_form,
+                #'doctors':Doctor.objects.all(),
+                #'medicine_search':medicine_search_form,
+
+                #'list_exam_fee':list_exam_fee, # general will be precedure in template
+                #'list_lab':list_lab,
+                #'list_precedure':list_precedure,
+                #'list_medicine':list_medicine,
 
             }
         )
@@ -133,275 +176,219 @@ def payment(reqeust):
 
 
 def search_payment(request):
-    page_context = 10 # 페이지 컨텐츠 
+    page_context = request.POST.get('page_context',10) # 페이지 컨텐츠 
+    page = request.POST.get('page',1)
+
+    date_start = request.POST.get('start')
+    date_end = request.POST.get('end')
 
     depart = request.POST.get('depart')
     doctor = request.POST.get('doctor')
 
-    filter_general = request.POST.get('general')
-    filter_medicine = request.POST.get('medicine')
-    filter_lab = request.POST.get('lab')
-    filter_scaling = request.POST.get('scaling')
-    filter_panorama = request.POST.get('panorama')
-
-    pup =request.POST.get('pup')
-    paid_by = request.POST.get('paid_by')
-    date_start = request.POST.get('start_end_date').split(' - ')[0]
-    date_end = request.POST.get('start_end_date').split(' - ')[1]
+    payment_method = request.POST.get('payment_method')
+    payment_status = request.POST.get('payment_status')
 
     date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
     date_max = datetime.datetime.combine(datetime.datetime.strptime(date_end, "%Y-%m-%d").date(), datetime.time.max)
 
     kwargs = {}
 
-
+    kwargs['progress'] = 'done'
     if depart != '':
-        kwargs.update({'depart_id':depart})
+        kwargs['depart_id'] = depart
     if doctor != '':
-        kwargs.update({'doctor_id':doctor})
-
+        kwargs['doctor_id'] = doctor
+    if payment_method !='':
+        kwargs['payment__paymentrecord__method'] = payment_method
+    if payment_status !='':
+        kwargs['payment__progress'] = payment_status
 
     datas = []
-    receptions = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').order_by("-id")
+    receptions = Reception.objects.filter(
+            **kwargs ,
+            recorded_date__range = (date_min, date_max), 
+        ).prefetch_related(
+            'diagnosis__exammanager_set',
+            'diagnosis__testmanager_set',
+            'diagnosis__preceduremanager_set',
+            'diagnosis__medicinemanager_set',
+            'payment__paymentrecord_set',
+        ).order_by("-id")
 
-
-    page = request.POST.get('page',1)
-    payment_total_total = 0
-    payment_total_paid = 0
-    payment_total_unpaid = 0
-    for reception in receptions:
-        data = {}
-        try:
-            general = []
-            lab = []
-            medi = []
-            scaling = []
-            panorama = []
-            total_payment=0
-            if filter_general == '' and filter_medicine == '' and filter_lab == '':
-                tmp_exam_set = reception.diagnosis.exammanager_set.all()
-                for tmp_exam in tmp_exam_set:
-                    if hasattr(tmp_exam,'doctor'):
-                        general.append({
-                            'code':tmp_exam.exam.code,
-                            'value':tmp_exam.name + tmp_exam.exam.doctor.name_kor
-                            })
-                    else:
-                        general.append({
-                            'code':tmp_exam.exam.code,
-                            'value':tmp_exam.exam.name
-                            })
-           
-                tmp_test_set = reception.diagnosis.testmanager_set.all()
-                for tmp_test in tmp_test_set:
-                    lab.append({
-                        'code':tmp_test.test.code,
-                        'value':tmp_test.test.name,
-                        })
-
-                tmp_precedure_set = reception.diagnosis.preceduremanager_set.all()
-                for tmp_precedure in tmp_precedure_set:
-                    if 'scaling' in tmp_precedure.precedure.name.lower():
-                        scaling.append({
-                            'code':tmp_precedure.precedure.code,
-                            'value':tmp_precedure.precedure.name
-                            })
-
-                    elif 'injection' in tmp_precedure.precedure.name.lower():
-                        general.append({
-                            'code':tmp_precedure.precedure.code,
-                            'value':tmp_precedure.precedure.name
-                            })
-
-                    elif 'panorama' in tmp_precedure.precedure.name.lower():
-                        panorama.append({
-                            'code':tmp_precedure.precedure.code,
-                            'value':tmp_precedure.precedure.name
-                            })
-
-                    else:
-                        general.append({
-                            'code':tmp_precedure.precedure.code,
-                            'value':tmp_precedure.precedure.name
-                            })
-            
-
-                tmp_medicine_set = reception.diagnosis.medicinemanager_set.all()
-                for tmp_medicine in tmp_medicine_set:
-                    if tmp_medicine.medicine.medicine_class_id is 31:
-                        general.append({
-                            'code':tmp_medicine.medicine.code,
-                            'value':tmp_medicine.medicine.name + ' x ' + str(tmp_medicine.days * tmp_medicine.amount),
-                            })
-                    else:
-                        medi.append({
-                            'code':tmp_medicine.medicine.code,
-                            'value':tmp_medicine.medicine.name + ' x ' + str(tmp_medicine.days * tmp_medicine.amount),
-                            })
-
-
-            else:
-                if filter_general != '':
-                    if 'E' in filter_general:
-                        tmp_exam_set = reception.diagnosis.exammanager_set.all()
-                        res = True
-                        for tmp_exam_data in tmp_exam_set:
-                            if 'E_NEW' in filter_general:
-                                if 'New' not in tmp_exam_data.exam.name:
-                                    res = False
-                            elif 'E_REP' in filter_general:
-                                if 'Rep' not in tmp_exam_data.exam.name:
-                                    res = False
-                            elif 'E_DNT' in filter_general:
-                                if 'Ora' not in tmp_exam_data.exam.name:
-                                    res = False
-                            else:
-                                tmp_exam = ExamFee.objects.get(code = filter_general)
-                                if tmp_exam.code not in tmp_exam_data.exam.code:
-                                    res = False
-                            
-                            if res:
-                                general.append({
-                                    'code':tmp_exam_data.exam.code,
-                                    'value':tmp_exam_data.exam.name
-                                    })
-                                total_payment += tmp_exam_data.exam.get_price(reception.recorded_date)
-                        if res is False or tmp_exam_set.count()==0:
-                            continue
-                                
-
-                    elif 'MR' in filter_general:
-                        tmp_exam = ExamFee.objects.get(code = filter_general)
-                        tmp_exam_set = reception.diagnosis.exammanager_set.filter(exam_id = tmp_exam.id)
-                        if tmp_exam_set.count() == 0:
-                            continue
-                        for tmp_exam_data in tmp_exam_set:
-                            general.append({
-                                'code':tmp_exam_data.exam.code,
-                                'value':tmp_exam_data.exam.name
-                                })
-                            total_payment += tmp_exam_data.exam.get_price(reception.recorded_date)
-
-                    elif 'M' in filter_general:
-                        tmp_medicine = Medicine.objects.get(code = filter_general)
-                        tmp_medi_set = reception.diagnosis.medicinemanager_set.filter(medicine_id = tmp_medicine.id)
-
-                        if tmp_medi_set.count() == 0:
-                            continue
-                        for tmp_medi_data in tmp_medi_set:
-                            general.append({
-                                'code':tmp_medi_data.medicine.code,
-                                'value':tmp_medi_data.medicine.name + ' x ' + str(tmp_medi_data.days * tmp_medi_data.amount),
-                                })
-                            total_payment += tmp_medi_data.medicine.get_price(reception.recorded_date) * tmp_medi_data.days * tmp_medi_data.amount
-
-                    else: #P D G R U O OB
-                        tmp_precedure = Precedure.objects.get(code = filter_general)
-                        tmp_precedure_set = reception.diagnosis.preceduremanager_set.filter(precedure_id = tmp_precedure.id)
-
-                        if tmp_precedure_set.count() == 0:
-                            continue
-                        for tmp_precedure_data in tmp_precedure_set:
-                            general.append({
-                                    'code':tmp_precedure_data.precedure.code,
-                                    'value':tmp_precedure_data.precedure.name
-                                    })
-                            total_payment += tmp_precedure_data.precedure.get_price(reception.recorded_date)
-
-                if filter_medicine != '':
-                    tmp_medicine = Medicine.objects.get(code = filter_medicine)
-                    tmp_set = reception.diagnosis.medicinemanager_set.filter(medicine_id = tmp_medicine.id)
-
-                    if tmp_set.count() == 0:
-                            continue
-                    for tmp_data in tmp_set:
-                        medi.append({
-                            'code':tmp_data.exam.code,
-                            'value':tmp_data.medicine.name + ' x ' + str(tmp_data.days * tmp_data.amount),
-                            })
-                        total_payment += tmp_precedure_data.precedure.get_price(reception.recorded_date)
-                if filter_lab != '':
-                    tmp_test = Test.objects.get(code = filter_lab)
-                    tmp_set = reception.diagnosis.testmanager_set.filter(test_id = tmp_test.id)
-                    if tmp_set.count() == 0:
-                            continue
-                    for tmp_data in tmp_set:
-                        lab.append({
-                           'code':tmp_data.exam.code,
-                            'value':tmp_data.exam.name
-                            })
-                        total_payment += tmp_precedure_data.precedure.get_price(reception.recorded_date)
-                
-
-            data.update({'general':general})
-            data.update({'medi':medi})
-            data.update({'lab':lab})
-            data.update({'scaling':scaling})
-            data.update({'panorama':panorama})
-
-            paid_set = reception.payment.paymentrecord_set.all()
-            paid_sum = 0
-            
-            for paid in paid_set:
-                paid_sum += paid.paid
-
-            unpaid_sum = reception.payment.total - paid_sum
-        
-            if pup == 'Paid':
-                if unpaid_sum != 0:
-                    continue
-            elif pup == 'Unpaid':
-                if unpaid_sum == 0:
-                    continue
-
-            if filter_general == '' and filter_medicine == '' and filter_lab == '':
-                payment_total_total += reception.payment.total
-                payment_total_paid += reception.payment.total - unpaid_sum
-                payment_total_unpaid += unpaid_sum
-                total_payment = reception.payment.total
-            else:
-                payment_total_total += total_payment
-                paid_sum = 0
-                unpaid_sum = 0
-
-            data.update({
-                'no':reception.id,
-                'date':reception.recorded_date.strftime('%d-%b-%y'),
-                'Patient':reception.patient.name_kor,
-                'patient_eng':reception.patient.name_eng,
-                'date_of_birth':str(reception.patient.get_age()) + '/' + reception.patient.get_gender_simple(),
-                'address':reception.patient.address,
-                'gender':reception.patient.gender,
-                'Depart':reception.depart.name,
-                'Doctor':reception.doctor.get_name(),
-
-                'paid_by_cash':'',
-                'paid_by_card':'',
-                'paid_by_remit':'',
-
-                'total' :total_payment,
-                'paid':paid_sum,
-                'unpaid':unpaid_sum,
-                })
-
-            
-
-
-            pay_records = PaymentRecord.objects.filter(payment = reception.payment)
-
-            for pay_record in pay_records:
-                if pay_record.method == 'card':
-                    data.update({'paid_by_card':'card'})
-                elif pay_record.method == 'cash':
-                    data.update({'paid_by_card':'cash'})
-                elif pay_record.method == 'remit':
-                    data.update({'paid_by_card':'remit'})
-
-            datas.append(data)
-        except Diagnosis.DoesNotExist:
-            pass
+    #print(receptions)
+    payment_total = receptions.filter().aggregate(
+        Sum('payment__sub_total'),
+        Sum('payment__total'),
+        Sum('payment__additional'),
+        )
 
     
+
+
+    #unpaid 구하기
+    real_paid_total = receptions.aggregate(
+        Sum('payment__paymentrecord__paid'),
+        )
+    payment_total_paid_amount =  0 if real_paid_total['payment__paymentrecord__paid__sum'] is None else real_paid_total['payment__paymentrecord__paid__sum']
+
+    
+
+    datas = []
+
+    payment_total_subtotal = 0 if payment_total['payment__sub_total__sum'] is None else payment_total['payment__sub_total__sum']
+    payment_total_additional = 0 if payment_total['payment__additional__sum'] is None else payment_total['payment__additional__sum']
+    payment_total_total = 0 if payment_total['payment__total__sum'] is None else payment_total['payment__total__sum']
+    payment_total_discount = payment_total_subtotal + payment_total_additional - payment_total_total
+    payment_total_unpaid = payment_total_total - payment_total_paid_amount
+
+
+    for reception in receptions:
+        data = {
+            'no':reception.id,
+            'date':reception.recorded_date.strftime('%Y-%m-%d'),
+            'Patient':reception.patient.name_kor,
+            'patient_eng':reception.patient.name_eng,
+            'date_of_birth':str(reception.patient.get_age()) + '/' + reception.patient.get_gender_simple(),
+            'address':reception.patient.address,
+            'gender':reception.patient.gender,
+            'Depart':reception.depart.name,
+            'Doctor_kor':reception.doctor.name_kor,
+            'Doctor_eng': reception.doctor.name_eng,
+            }
+
+        list_exam_fee = []
+        list_lab = []
+        list_precedure= []
+        list_radiation= []
+        list_medicine= []
+
+
+
+
+        #진료 아이템
+        ##진료비
+        tmp_exam_set = reception.diagnosis.exammanager_set.all()
+        for tmp_exam in tmp_exam_set:
+            list_exam_fee.append({
+                'checked':tmp_exam.is_checked_discount,
+                'code':tmp_exam.exam.code,
+                'value':tmp_exam.exam.name
+                })
+
+        ##검사
+        tmp_test_set = reception.diagnosis.testmanager_set.all()
+        for tmp_test in tmp_test_set:
+            list_lab.append({
+                'checked':tmp_test.is_checked_discount,
+                'code':tmp_test.test.code,
+                'value':tmp_test.test.name,
+                })
+
+
+        ##처치 및 방사선
+        tmp_precedure_set = reception.diagnosis.preceduremanager_set.all()
+        for tmp_precedure in tmp_precedure_set:
+            if 'R' in tmp_precedure.precedure.code:
+                list_radiation.append({
+                    'checked':tmp_precedure.is_checked_discount,
+                    'code':tmp_precedure.precedure.code,
+                    'value':tmp_precedure.precedure.name,
+                    'amount':tmp_precedure.amount,
+                    })
+            else:
+                list_precedure.append({
+                    'checked':tmp_precedure.is_checked_discount,
+                    'code':tmp_precedure.precedure.code,
+                    'value':tmp_precedure.precedure.name,
+                    'amount':tmp_precedure.amount,
+                    })
+
+        ##약
+        tmp_medicine_set = reception.diagnosis.medicinemanager_set.all()
+        for tmp_medicine in tmp_medicine_set:
+            list_medicine.append({
+                'checked':tmp_medicine.is_checked_discount,
+                'code':tmp_medicine.medicine.code,
+                'value':tmp_medicine.medicine.name,
+                'amount':tmp_medicine.amount,
+                })
+
+
+        #수납 정보
+        paid_by = '-'
+        
+        sub_total = reception.payment.sub_total
+        additional = 0 if reception.payment.additional is None else reception.payment.additional
+        discount = reception.payment.discounted_amount
+        total = reception.payment.total
+        unpaid = 0
+
+        if discount is None:
+            discount_percent = reception.payment.discounted
+            if discount_percent is None:
+                discount = 0
+            else:
+                discount = discount_percent / 100 * sub_total
+        
+        #수납 상태 및 방법
+        #if reception.payment.progress != 'paid':
+        list_paid_record = reception.payment.paymentrecord_set.all()
+        all_paid = 0
+            
+        paid_by = ''
+        paid_by_remit = False
+        paid_by_card = False
+        paid_by_cash = False
+
+        #print(reception.payment.total)
+
+
+
+        #if list_paid_record.count() != 0:
+        for paid_record in list_paid_record:
+            all_paid += paid_record.paid
+            if paid_record.method == 'cash':
+                paid_by_cash = True
+            if paid_record.method == 'card':
+                paid_by_card = True
+            if paid_record.method == 'remit':
+                paid_by_remit = True
+        unpaid = total - all_paid
+        #else:
+        #    unpaid = total
+                
+            
+        
+            
+
+        if paid_by_cash is True:
+            paid_by += 'Cash<br/>'
+        if paid_by_card is True:
+            paid_by += 'Card<br/>'
+        if paid_by_remit is True:
+            paid_by += 'Remit<br/>'
+
+
+
+
+        data.update({
+            'list_exam_fee':list_exam_fee,
+            'list_lab':list_lab,
+            'list_precedure':list_precedure,
+            'list_radiation':list_radiation,
+            'list_medicine':list_medicine,
+
+            'paid_by':paid_by,
+            'sub_total':sub_total,
+            'additional':additional,
+            'discount':discount,
+            'total':total,
+            'unpaid':unpaid,
+
+            })
+
+        datas.append(data)
+
     paginator = Paginator(datas, page_context)
     try:
         paging_data = paginator.page(page)
@@ -409,26 +396,314 @@ def search_payment(request):
         paging_data = paginator.page(1)
     except EmptyPage:
         paging_data = paginator.page(paginator.num_pages)
-    
+
 
     context = {
-               'datas':list(paging_data),
-               'page_range_start':paging_data.paginator.page_range.start,
-               'page_range_stop':paging_data.paginator.page_range.stop,
-               'page_number':paging_data.number,
-               'has_previous':paging_data.has_previous(),
-               'has_next':paging_data.has_next(),
+            'datas':list(paging_data),
+            'page_range_start':paging_data.paginator.page_range.start,
+            'page_range_stop':paging_data.paginator.page_range.stop,
+            'page_number':paging_data.number,
+            'has_previous':paging_data.has_previous(),
+            'has_next':paging_data.has_next(),
 
-               #for graph
-               'days':(date_max - date_min).days +1 ,
+ 
 
-               'payment_total_total':payment_total_total,
-               'payment_total_paid':payment_total_paid,
-               'payment_total_unpaid':payment_total_unpaid,
-
-               }
+            'payment_total_subtotal':payment_total_subtotal,
+            'payment_total_additional':payment_total_additional,
+            'payment_total_discount':payment_total_discount,
+            'payment_total_total':payment_total_total,
+            'payment_total_unpaid':payment_total_unpaid,
+            }
     
     return JsonResponse(context)
+
+    #filter_general = request.POST.get('general')
+    #filter_medicine = request.POST.get('medicine')employee_add_edit_get
+    #filter_lab = request.POST.get('lab')
+    #
+    #pup =request.POST.get('pup')
+    #paid_by = request.POST.get('paid_by')
+    #
+    #date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
+    #date_max = datetime.datetime.combine(datetime.datetime.strptime(date_end, "%Y-%m-%d").date(), datetime.time.max)
+    #
+    #
+    #
+    #
+    #
+    #if depart != '':
+    #    kwargs.update({'depart_id':depart})
+    #if doctor != '':
+    #    kwargs.update({'doctor_id':doctor})
+    #
+    #
+    #datas = []
+    #receptions = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').order_by("-id")
+    #
+    #
+    #page = request.POST.get('page',1)
+    #payment_total_total = 0
+    #payment_total_paid = 0
+    #payment_total_unpaid = 0
+    #for reception in receptions:
+    #    data = {}
+    #    try:
+    #        general = []
+    #        lab = []
+    #        medi = []
+    #        scaling = []
+    #        panorama = []
+    #        total_payment=0
+    #        if filter_general == '' and filter_medicine == '' and filter_lab == '':
+    #            tmp_exam_set = reception.diagnosis.exammanager_set.all()
+    #            for tmp_exam in tmp_exam_set:
+    #                if hasattr(tmp_exam,'doctor'):
+    #                    general.append({
+    #                        'code':tmp_exam.exam.code,
+    #                        'value':tmp_exam.name + tmp_exam.exam.doctor.name_kor
+    #                        })
+    #                else:
+    #                    general.append({
+    #                        'code':tmp_exam.exam.code,
+    #                        'value':tmp_exam.exam.name
+    #                        })
+    #       
+    #            tmp_test_set = reception.diagnosis.testmanager_set.all()
+    #            for tmp_test in tmp_test_set:
+    #                lab.append({
+    #                    'code':tmp_test.test.code,
+    #                    'value':tmp_test.test.name,
+    #                    })
+    #
+    #            tmp_precedure_set = reception.diagnosis.preceduremanager_set.all()
+    #            for tmp_precedure in tmp_precedure_set:
+    #                if 'scaling' in tmp_precedure.precedure.name.lower():
+    #                    scaling.append({
+    #                        'code':tmp_precedure.precedure.code,
+    #                        'value':tmp_precedure.precedure.name
+    #                        })
+    #
+    #                elif 'injection' in tmp_precedure.precedure.name.lower():
+    #                    general.append({
+    #                        'code':tmp_precedure.precedure.code,
+    #                        'value':tmp_precedure.precedure.name
+    #                        })
+    #
+    #                elif 'panorama' in tmp_precedure.precedure.name.lower():
+    #                    panorama.append({
+    #                        'code':tmp_precedure.precedure.code,
+    #                        'value':tmp_precedure.precedure.name
+    #                        })
+    #
+    #                else:
+    #                    general.append({
+    #                        'code':tmp_precedure.precedure.code,
+    #                        'value':tmp_precedure.precedure.name
+    #                        })
+    #        
+    #
+    #            tmp_medicine_set = reception.diagnosis.medicinemanager_set.all()
+    #            for tmp_medicine in tmp_medicine_set:
+    #                if tmp_medicine.medicine.medicine_class_id is 31:
+    #                    general.append({
+    #                        'code':tmp_medicine.medicine.code,
+    #                        'value':tmp_medicine.medicine.name + ' x ' + str(tmp_medicine.days * tmp_medicine.amount),
+    #                        })
+    #                else:
+    #                    medi.append({
+    #                        'code':tmp_medicine.medicine.code,
+    #                        'value':tmp_medicine.medicine.name + ' x ' + str(tmp_medicine.days * tmp_medicine.amount),
+    #                        })
+    #
+    #
+    #        else:
+    #            if filter_general != '':
+    #                if 'E' in filter_general:
+    #                    tmp_exam_set = reception.diagnosis.exammanager_set.all()
+    #                    res = True
+    #                    for tmp_exam_data in tmp_exam_set:
+    #                        if 'E_NEW' in filter_general:
+    #                            if 'New' not in tmp_exam_data.exam.name:
+    #                                res = False
+    #                        elif 'E_REP' in filter_general:
+    #                            if 'Rep' not in tmp_exam_data.exam.name:
+    #                                res = False
+    #                        elif 'E_DNT' in filter_general:
+    #                            if 'Ora' not in tmp_exam_data.exam.name:
+    #                                res = False
+    #                        else:
+    #                            tmp_exam = ExamFee.objects.get(code = filter_general)
+    #                            if tmp_exam.code not in tmp_exam_data.exam.code:
+    #                                res = False
+    #                        
+    #                        if res:
+    #                            general.append({
+    #                                'code':tmp_exam_data.exam.code,
+    #                                'value':tmp_exam_data.exam.name
+    #                                })
+    #                            total_payment += tmp_exam_data.exam.get_price(reception.recorded_date)
+    #                    if res is False or tmp_exam_set.count()==0:
+    #                        continue
+    #                            
+    #
+    #                elif 'MR' in filter_general:
+    #                    tmp_exam = ExamFee.objects.get(code = filter_general)
+    #                    tmp_exam_set = reception.diagnosis.exammanager_set.filter(exam_id = tmp_exam.id)
+    #                    if tmp_exam_set.count() == 0:
+    #                        continue
+    #                    for tmp_exam_data in tmp_exam_set:
+    #                        general.append({
+    #                            'code':tmp_exam_data.exam.code,
+    #                            'value':tmp_exam_data.exam.name
+    #                            })
+    #                        total_payment += tmp_exam_data.exam.get_price(reception.recorded_date)
+    #
+    #                elif 'M' in filter_general:
+    #                    tmp_medicine = Medicine.objects.get(code = filter_general)
+    #                    tmp_medi_set = reception.diagnosis.medicinemanager_set.filter(medicine_id = tmp_medicine.id)
+    #
+    #                    if tmp_medi_set.count() == 0:
+    #                        continue
+    #                    for tmp_medi_data in tmp_medi_set:
+    #                        general.append({
+    #                            'code':tmp_medi_data.medicine.code,
+    #                            'value':tmp_medi_data.medicine.name + ' x ' + str(tmp_medi_data.days * tmp_medi_data.amount),
+    #                            })
+    #                        total_payment += tmp_medi_data.medicine.get_price(reception.recorded_date) * tmp_medi_data.days * tmp_medi_data.amount
+    #
+    #                else: #P D G R U O OB
+    #                    tmp_precedure = Precedure.objects.get(code = filter_general)
+    #                    tmp_precedure_set = reception.diagnosis.preceduremanager_set.filter(precedure_id = tmp_precedure.id)
+    #
+    #                    if tmp_precedure_set.count() == 0:
+    #                        continue
+    #                    for tmp_precedure_data in tmp_precedure_set:
+    #                        general.append({
+    #                                'code':tmp_precedure_data.precedure.code,
+    #                                'value':tmp_precedure_data.precedure.name
+    #                                })
+    #                        total_payment += tmp_precedure_data.precedure.get_price(reception.recorded_date)
+    #
+    #            if filter_medicine != '':
+    #                tmp_medicine = Medicine.objects.get(code = filter_medicine)
+    #                tmp_set = reception.diagnosis.medicinemanager_set.filter(medicine_id = tmp_medicine.id)
+    #
+    #                if tmp_set.count() == 0:
+    #                        continue
+    #                for tmp_data in tmp_set:
+    #                    medi.append({
+    #                        'code':tmp_data.exam.code,
+    #                        'value':tmp_data.medicine.name + ' x ' + str(tmp_data.days * tmp_data.amount),
+    #                        })
+    #                    total_payment += tmp_precedure_data.precedure.get_price(reception.recorded_date)
+    #            if filter_lab != '':
+    #                tmp_test = Test.objects.get(code = filter_lab)
+    #                tmp_set = reception.diagnosis.testmanager_set.filter(test_id = tmp_test.id)
+    #                if tmp_set.count() == 0:
+    #                        continue
+    #                for tmp_data in tmp_set:
+    #                    lab.append({
+    #                       'code':tmp_data.exam.code,
+    #                        'value':tmp_data.exam.name
+    #                        })
+    #                    total_payment += tmp_precedure_data.precedure.get_price(reception.recorded_date)
+    #            
+    #
+    #        data.update({'general':general})
+    #        data.update({'medi':medi})
+    #        data.update({'lab':lab})
+    #        data.update({'scaling':scaling})
+    #        data.update({'panorama':panorama})
+    #
+    #        paid_set = reception.payment.paymentrecord_set.all()
+    #        paid_sum = 0
+    #        
+    #        for paid in paid_set:
+    #            paid_sum += paid.paid
+    #
+    #        unpaid_sum = reception.payment.total - paid_sum
+    #    
+    #        if pup == 'Paid':
+    #            if unpaid_sum != 0:
+    #                continue
+    #        elif pup == 'Unpaid':
+    #            if unpaid_sum == 0:
+    #                continue
+    #
+    #        if filter_general == '' and filter_medicine == '' and filter_lab == '':
+    #            payment_total_total += reception.payment.total
+    #            payment_total_paid += reception.payment.total - unpaid_sum
+    #            payment_total_unpaid += unpaid_sum
+    #            total_payment = reception.payment.total
+    #        else:
+    #            payment_total_total += total_payment
+    #            paid_sum = 0
+    #            unpaid_sum = 0
+    #
+    #        data.update({
+    #            'no':reception.id,
+    #            'date':reception.recorded_date.strftime('%d-%b-%y'),
+    #            'Patient':reception.patient.name_kor,
+    #            'patient_eng':reception.patient.name_eng,
+    #            'date_of_birth':str(reception.patient.get_age()) + '/' + reception.patient.get_gender_simple(),
+    #            'address':reception.patient.address,
+    #            'gender':reception.patient.gender,
+    #            'Depart':reception.depart.name,
+    #            'Doctor':reception.doctor.get_name(),
+    #
+    #            'paid_by_cash':'',
+    #            'paid_by_card':'',
+    #            'paid_by_remit':'',
+    #
+    #            'total' :total_payment,
+    #            'paid':paid_sum,
+    #            'unpaid':unpaid_sum,
+    #            })
+    #
+    #        
+    #
+    #
+    #        pay_records = PaymentRecord.objects.filter(payment = reception.payment)
+    #
+    #        for pay_record in pay_records:
+    #            if pay_record.method == 'card':
+    #                data.update({'paid_by_card':'card'})
+    #            elif pay_record.method == 'cash':
+    #                data.update({'paid_by_card':'cash'})
+    #            elif pay_record.method == 'remit':
+    #                data.update({'paid_by_card':'remit'})
+    #
+    #        datas.append(data)
+    #    except Diagnosis.DoesNotExist:
+    #        pass
+    #
+    #paginator = Paginator(datas, page_context)
+    #try:
+    #    paging_data = paginator.page(page)
+    #except PageNotAnInteger:
+    #    paging_data = paginator.page(1)
+    #except EmptyPage:
+    #    paging_data = paginator.page(paginator.num_pages)
+    #
+    #
+    #context = {
+    #           'datas':list(paging_data),
+    #           'page_range_start':paging_data.paginator.page_range.start,
+    #           'page_range_stop':paging_data.paginator.page_range.stop,
+    #           'page_number':paging_data.number,
+    #           'has_previous':paging_data.has_previous(),
+    #           'has_next':paging_data.has_next(),
+    #
+    #           #for graph
+    #           'days':(date_max - date_min).days +1 ,
+    #
+    #           'payment_total_total':payment_total_total,
+    #           'payment_total_paid':payment_total_paid,
+    #           'payment_total_unpaid':payment_total_unpaid,
+    #
+    #           }
+    #
+    #return JsonResponse(context)
 
 @login_required
 def doctor_profit(request):
@@ -450,7 +725,6 @@ def doctor_profit(request):
     
     if doctor != '':
         kwargs.update({'doctor_id':doctor})
-
 
     context = {}
 
@@ -709,6 +983,283 @@ def doctor_profit(request):
 
                 })
     return JsonResponse(context)
+
+
+
+
+def audit_excel(request):
+
+
+    date_start = request.GET.get('date_start')
+    date_end = request.GET.get('date_end')
+
+    date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
+    date_max = datetime.datetime.combine(datetime.datetime.strptime(date_end, "%Y-%m-%d").date(), datetime.time.max)
+
+    kwargs = {}
+    kwargs['progress'] = 'done'
+
+    datas = []
+    receptions = Reception.objects.filter(
+            **kwargs ,
+            recorded_date__range = (date_min, date_max), 
+        ).prefetch_related(
+            'diagnosis__exammanager_set',
+            'diagnosis__testmanager_set',
+            'diagnosis__preceduremanager_set',
+            'diagnosis__medicinemanager_set',
+            'payment__paymentrecord_set',
+        ).order_by("-id")
+
+    #payment_total = receptions.filter().aggregate(
+    #    Sum('payment__sub_total'),
+    #    Sum('payment__total'),
+    #    Sum('payment__additional'),
+    #    )
+    #
+    #
+    ##########
+    ##unpaid 구하기
+    #real_paid_total = receptions.aggregate(
+    #    Sum('payment__paymentrecord__paid'),
+    #    )
+    #payment_total_paid_amount =  0 if real_paid_total['payment__paymentrecord__paid__sum'] is None else real_paid_total['payment__paymentrecord__paid__sum']
+    #
+    #datas = []
+    #
+    #payment_total_subtotal = 0 if payment_total['payment__sub_total__sum'] is None else payment_total['payment__sub_total__sum']
+    #payment_total_additional = 0 if payment_total['payment__additional__sum'] is None else payment_total['payment__additional__sum']
+    #payment_total_total = 0 if payment_total['payment__total__sum'] is None else payment_total['payment__total__sum']
+    #payment_total_discount = payment_total_subtotal + payment_total_additional - payment_total_total
+    #payment_total_unpaid = payment_total_total - payment_total_paid_amount
+
+
+    for reception in receptions:
+        data = {
+            'no':reception.id,
+            'date':reception.recorded_date.strftime('%Y-%m-%d'),
+            'Patient':reception.patient.name_kor,
+            'patient_eng':reception.patient.name_eng,
+            'date_of_birth':str(reception.patient.get_age()) + '/' + reception.patient.get_gender_simple(),
+            'address':reception.patient.address,
+            'gender':reception.patient.gender,
+            'Depart':reception.depart.name,
+            'Doctor_kor':reception.doctor.name_kor,
+            'Doctor_eng': reception.doctor.name_eng,
+            }
+
+        list_exam_fee = []
+        list_lab = []
+        list_precedure= []
+        list_radiation= []
+        list_medicine= []
+
+
+        #진료 아이템
+        ##진료비
+        recorded_date = reception.recorded_date
+        tmp_exam_set = reception.diagnosis.exammanager_set.all()
+        for tmp_exam in tmp_exam_set:
+            list_exam_fee.append({
+                'checked':tmp_exam.is_checked_discount,
+                'code':tmp_exam.exam.code,
+                'value':tmp_exam.exam.name,
+                'price':tmp_exam.exam.get_price(recorded_date),
+                })
+
+        ##검사
+        tmp_test_set = reception.diagnosis.testmanager_set.all()
+        for tmp_test in tmp_test_set:
+            list_lab.append({
+                'checked':tmp_test.is_checked_discount,
+                'code':tmp_test.test.code,
+                'value':tmp_test.test.name,
+                'price':tmp_test.test.get_price(recorded_date),
+                })
+
+        ##처치 및 방사선
+        tmp_precedure_set = reception.diagnosis.preceduremanager_set.all()
+        for tmp_precedure in tmp_precedure_set:
+            if 'R' in tmp_precedure.precedure.code:
+                list_radiation.append({
+                    'checked':tmp_precedure.is_checked_discount,
+                    'code':tmp_precedure.precedure.code,
+                    'value':tmp_precedure.precedure.name,
+                    'amount':tmp_precedure.amount,
+                    'price':tmp_precedure.precedure.get_price(recorded_date),
+                    })
+            else:
+                list_precedure.append({
+                    'checked':tmp_precedure.is_checked_discount,
+                    'code':tmp_precedure.precedure.code,
+                    'value':tmp_precedure.precedure.name,
+                    'amount':tmp_precedure.amount,
+                    'price':tmp_precedure.precedure.get_price(recorded_date),
+                    })
+
+        ##약
+        tmp_medicine_set = reception.diagnosis.medicinemanager_set.all()
+        for tmp_medicine in tmp_medicine_set:
+            list_medicine.append({
+                'checked':tmp_medicine.is_checked_discount,
+                'code':tmp_medicine.medicine.code,
+                'value':tmp_medicine.medicine.name,
+                'amount':tmp_medicine.amount,
+                'price':tmp_medicine.medicine.get_price(recorded_date),
+                })
+
+    ###################
+
+
+
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="ThePythonDjango.xlsx"'
+    wb = Workbook()
+    ws = wb.active# grab the active worksheet
+
+    ws.merge_cells('B2:J2')
+    ws['B2']='AUDIT REPORT FOR I-MEDICARE'
+    ws['A3']='Date:'
+    ws['A4']= date_start + ' - ' + date_end
+
+    ws.merge_cells('A6:A7')
+    ws['A6'] = 'STT'
+    ws.merge_cells('B6:B7')
+    ws['B6'] = 'STT'
+    ws.merge_cells('C6:C7')
+    ws['C6'] = 'STT'
+    ws.merge_cells('D6:D7')
+    ws['D6'] = 'STT'
+    ws.merge_cells('E6:E7')
+    ws['E6'] = 'STT'
+    ws.merge_cells('F6:F7')
+    ws['F6'] = 'STT'
+    ws.merge_cells('G6:G7')
+    ws['G6'] = 'STT'
+    ws.merge_cells('H6:H7')
+    ws['H6'] = 'STT'
+    ws.merge_cells('I6:I7')
+    ws['I6'] = 'STT'
+    ws.merge_cells('J6:J7')
+    ws['J6'] = 'STT'
+    ws.merge_cells('K6:K7')
+    ws['K6'] = 'STT'
+    ws.merge_cells('L6:L7')
+    ws['L6'] = 'STT'
+    ws.merge_cells('M6:M7')
+    ws['M6'] = 'STT'
+    ws.merge_cells('N6:N7')
+    ws['N6'] = 'STT'
+    ws.merge_cells('O6:O7')
+    ws['O6'] = 'STT'
+    ws.merge_cells('P6:P7')
+    ws['P6'] = 'STT'
+    ws.merge_cells('Q6:Q7')
+    ws['Q6'] = 'STT'
+    ws.merge_cells('R6:R7')
+    ws['H6'] = 'STT'
+    ws.merge_cells('S6:S7')
+    ws['H6'] = 'STT'
+
+
+
+
+
+   #     #수납 정보
+   #     paid_by = '-'
+   #     
+   #     sub_total = reception.payment.sub_total
+   #     additional = 0 if reception.payment.additional is None else reception.payment.additional
+   #     discount = reception.payment.discounted_amount
+   #     total = reception.payment.total
+   #     unpaid = 0
+   #
+   #     if discount is None:
+   #         discount_percent = reception.payment.discounted
+   #         if discount_percent is None:
+   #             discount = 0
+   #         else:
+   #             discount = discount_percent / 100 * sub_total
+   #     
+   #     #수납 상태 및 방법
+   #     #if reception.payment.progress != 'paid':
+   #     list_paid_record = reception.payment.paymentrecord_set.all()
+   #     all_paid = 0
+   #         
+   #     paid_by = ''
+   #     paid_by_remit = False
+   #     paid_by_card = False
+   #     paid_by_cash = False
+   #
+   #     #print(reception.payment.total)
+   #
+   #
+   #
+   #     #if list_paid_record.count() != 0:
+   #     for paid_record in list_paid_record:
+   #         all_paid += paid_record.paid
+   #         if paid_record.method == 'cash':
+   #             paid_by_cash = True
+   #         if paid_record.method == 'card':
+   #             paid_by_card = True
+   #         if paid_record.method == 'remit':
+   #             paid_by_remit = True
+   #     unpaid = total - all_paid
+   #     #else:
+   #     #    unpaid = total
+   #             
+   #         
+   #     
+   #         
+   #
+   #     if paid_by_cash is True:
+   #         paid_by += 'Cash<br/>'
+   #     if paid_by_card is True:
+   #         paid_by += 'Card<br/>'
+   #     if paid_by_remit is True:
+   #         paid_by += 'Remit<br/>'
+   #
+   #
+   #
+   #
+   #     data.update({
+   #         'list_exam_fee':list_exam_fee,
+   #         'list_lab':list_lab,
+   #         'list_precedure':list_precedure,
+   #         'list_radiation':list_radiation,
+   #         'list_medicine':list_medicine,
+   #
+   #         'paid_by':paid_by,
+   #         'sub_total':sub_total,
+   #         'additional':additional,
+   #         'discount':discount,
+   #         'total':total,
+   #         'unpaid':unpaid,
+   #
+   #         })
+   #
+   #     datas.append(data)
+   #
+   # paginator = Paginator(datas, page_context)
+   # try:
+   #     paging_data = paginator.page(page)
+   # except PageNotAnInteger:
+   #     paging_data = paginator.page(1)
+   # except EmptyPage:
+   #     paging_data = paginator.page(paginator.num_pages)
+
+
+
+
+
+    wb.save(response)
+    return response
+
+
+
+
+
+
 
 
 
@@ -1664,6 +2215,32 @@ def save_database_add_medicine(request):
     medicine_logs.save()
 
 
+
+
+    input_price = request.POST.get('input_price',None)
+    if input_price:
+        try:
+            str_now = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+            old_price_input = Pricechange.objects.get(type="Medicine",country='VI',type2='INPUT',code=medicine.code, date_end="99999999999999")
+            
+            if old_price_input.price != int(input_price):
+                old_price_input.date_end = str_now
+                old_price_input.save()
+
+                new_price = Pricechange(type="Medicine",country='VI',type2='INPUT',code=medicine.code)
+                new_price.price = price_input
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
+
+        except Pricechange.DoesNotExist:
+            if medicine.price_input != int(input_price):
+                new_price = Pricechange(type="Medicine",country='VI',type2='INPUT',code=medicine.code)
+                new_price.price = input_price
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
+
     return JsonResponse({'result':True})
 
 
@@ -1742,6 +2319,170 @@ def save_database_disposal_medicine(request):
     return JsonResponse({'result':True,})
 
 
+
+#기안서
+def draft(request):
+
+
+
+
+    return render(request,
+        'Manage/Draft.html',
+            {
+
+            }
+        )
+
+
+
+
+#고객 관리
+def customer_manage(request):
+    
+
+    return render(request,
+        'Manage/CRM.html',
+            {
+
+            }
+        )
+
+
+def customer_manage_get_patient_list(request):
+
+    category = request.POST.get('category')
+    string = request.POST.get('string')
+
+
+    argument_list = [] 
+    if category=='':
+        argument_list.append( Q(**{'name_kor__icontains':string} ) )
+        argument_list.append( Q(**{'name_eng__icontains':string} ) )
+        argument_list.append( Q(**{'id__icontains':string} ) ) 
+        argument_list.append( Q(**{'phone__icontains':string} ) ) 
+        argument_list.append( Q(**{'date_of_birth__icontains':string} ) ) 
+    elif category=='name':
+        argument_list.append( Q(**{'name_kor__icontains':string} ) )
+        argument_list.append( Q(**{'name_eng__icontains':string} ) )
+    elif category=='chart':
+        argument_list.append( Q(**{'id__icontains':string} ) ) 
+    elif category=='date_of_birth':
+        argument_list.append( Q(**{'date_of_birth__icontains':string} ) ) 
+    elif category=='phone':
+        argument_list.append( Q(**{'phone__icontains':string} ) ) 
+
+
+
+    patients = Patient.objects.filter( functools.reduce(operator.or_, argument_list) )
+
+    datas=[]
+    for patient in patients:
+
+        data = {}
+        data.update({
+            'id':patient.id,
+            'chart':patient.get_chart_no(),
+            'name_kor':patient.name_kor,
+            'name_eng':patient.name_eng,
+            'gender':patient.get_gender_simple(),
+            'date_of_birth':patient.date_of_birth.strftime('%Y-%m-%d'),
+            'phonenumber':patient.phone,
+            'age' : patient.get_age(),
+            'address':patient.address,
+
+            'memo':patient.memo,
+            'date_registered':patient.date_registered.strftime('%Y-%m-%d'),
+            })
+        datas.append(data)
+
+
+    page_context = request.POST.get('context_in_page',10)
+    page = request.POST.get('page',1)
+    paginator = Paginator(datas, page_context)
+    try:
+        paging_data = paginator.page(page)
+    except PageNotAnInteger:
+        paging_data = paginator.page(1)
+    except EmptyPage:
+        paging_data = paginator.page(paginator.num_pages)
+
+
+
+    return JsonResponse({
+        'result':True,
+        'datas':list(paging_data),
+
+        'page_range_start':paging_data.paginator.page_range.start,
+        'page_range_stop':paging_data.paginator.page_range.stop,
+        'page_number':paging_data.number,
+        'has_previous':paging_data.has_previous(),
+        'has_next':paging_data.has_next(),
+
+
+        })
+
+
+
+
+def customer_manage_get_patient_info(request):
+    patient_id = request.POST.get('patient_id')
+
+    context={}
+    patient = Patient.objects.get(pk=int(patient_id))
+
+
+    context.update({
+        'id':patient.id,
+        'chart':patient.get_chart_no(),
+        'name_kor':patient.name_kor,
+        'name_eng':patient.name_eng,
+        'date_of_birth':patient.date_of_birth,
+        'gender':patient.gender,
+        'email':patient.email,
+        'nationality':patient.nationality,
+        'phone':patient.phone,
+        'address':patient.address,
+        'memo':patient.memo,
+        })
+    return JsonResponse(context)
+
+
+def customer_manage_get_patient_visit(request):
+
+    patient_id = request.POST.get('patient_id')
+
+    context={}
+    receptions = Reception.objects.filter(patient_id=int(patient_id)).exclude(progress='deleted').order_by('recorded_date')
+
+    datas = []
+    for reception in receptions:
+        datas.append({
+            'reception_id':reception.id,
+            'depart':reception.depart.name,
+            'doctor':reception.doctor.name_short,
+            'date_visited':reception.recorded_date.strftime('%Y-%m-%d'),
+            })
+
+    context.update({
+        'datas':datas,
+        })
+    return JsonResponse(context)
+
+
+
+def customer_manage_get_patient_sms_info(request):
+    patient_id = request.POST.get('patient_id')
+        
+    context={}
+    patient = Patient.objects.get(pk=int(patient_id))
+
+    context.update({
+        'id':patient.id,
+        'name_kor':patient.name_kor,
+        'name_eng':patient.name_eng,
+        'phone':patient.phone,
+        })
+    return JsonResponse(context)
 
 
 
@@ -1958,11 +2699,12 @@ def employee_add_edit(request):
         user.lastest_modified_date = datetime.datetime.now()
     except User.DoesNotExist:
         user = User()
+        user.set_password(password)
     
-    
+
     user.user_id = user_id
     #기본 정보
-    user.set_password(password)
+    
     user.name_ko = name_ko
     user.name_en = name_en
     user.name_vi = name_vi
@@ -1984,15 +2726,33 @@ def employee_add_edit(request):
     user.division_type = division
 
     #권한 설정 #superuser / staff / 
-
-    if "DOCTOR" in depart:
+    user.save()
+    if "DOCTOR" in depart: #의사 권한은 별도로 ... 
         str_split = depart.split('_')
-        commcode = COMMCODE.objects.get(upper_commcode = '0002', commcode_grp='DEPART_CLICINC', commcode='DOCTOR',se1 = str_split[1])
-      
+        
+        print(str_split)
+        commcode = COMMCODE.objects.get(upper_commcode = '000002', commcode_grp='DEPART_CLICINC', commcode='DOCTOR',se1 = str_split[1])
+       
         user.depart_doctor = str_split[1]
         user.depart = str_split[0]
 
-    user.save()
+
+        try:#의사 정보 변경
+            doctor = Doctor.objects.get(user_id=user.id)
+        except Doctor.DoesNotExist:#의사 신규
+            doctor = Doctor()
+
+        depart = Depart.objects.get(name = user.depart_doctor)
+        doctor.depart = depart
+        doctor.name_kor = name_en
+        doctor.name_eng = name_en
+        doctor.name_short = name_en
+        doctor.user_id = user.id
+
+        user.save()
+        doctor.save()
+
+    
 
     return JsonResponse({
         'result':True,
@@ -2007,6 +2767,8 @@ def employee_add_edit_get(request):
 
     if user.depart == 'DOCTOR':
         depart = user.depart + "_" + user.depart_doctor
+
+
     else:
         depart = user.depart
 

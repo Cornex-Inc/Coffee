@@ -6,6 +6,9 @@ from . import views
 app_name = 'Manage'
 
 urlpatterns = [
+    #path('',views.dash_board,name='dash_board'),
+
+
     path('',views.manage,name='manage'),
     path('patient/',views.patient,name='manage_patient'),
     path('payment/',views.payment,name='manage_payment'),
@@ -15,7 +18,9 @@ urlpatterns = [
     path('search_patient/',views.search_patient,name='search_patient'),
     path('search_medicine/',views.search_medicine,name='search_medicine'),
 
-    
+    path('audit_excel/',views.audit_excel),
+    #path('Rec_excel/',views.audit_excel),
+
 
     #검사 아이템
     path('inventory_test/',views.inventory_test,name='inventory_test'),
@@ -44,6 +49,18 @@ urlpatterns = [
     path('get_expiry_date/',views.get_expiry_date,name='get_expiry_date'),
     path('get_edit_database_add_medicine/',views.get_edit_database_add_medicine,name='get_edit_database_add_medicine'),
     path('save_database_disposal_medicine/',views.save_database_disposal_medicine,name='save_database_disposal_medicine'),
+
+    #기안서
+    path('draft/',views.draft,name='draft'),
+
+
+    #고객 관리
+    path('customer_manage/',views.customer_manage,name='customer_manage'),
+    path('customer_manage_get_patient_list/',views.customer_manage_get_patient_list),
+    path('customer_manage_get_patient_info/',views.customer_manage_get_patient_info),
+    path('customer_manage_get_patient_visit/',views.customer_manage_get_patient_visit),
+    path('customer_manage_get_patient_sms_info/',views.customer_manage_get_patient_sms_info),
+
 
     #사원 관리
     path('manage_employee/',views.manage_employee,name='manage_employee'),

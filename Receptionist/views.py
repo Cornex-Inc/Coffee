@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, redirect
 import datetime ,calendar
 from django.utils import timezone
@@ -24,7 +25,6 @@ from django.utils.translation import gettext as _
 
 @login_required
 def index(request):
-
 
 
     #reception
@@ -84,22 +84,22 @@ def set_new_patient(request):
 
 def save_patient(request):
     cahrt_no = request.POST.get('cahrt_no')
-    name_kor = request.POST.get('name_kor')
-    name_eng = request.POST.get('name_eng')
-    date_of_birth = request.POST.get('date_of_birth')
-    phone = request.POST.get('phone')
-    gender = request.POST.get('gender')
-    address = request.POST.get('address')
-    email = request.POST.get('email')
-    nationality = request.POST.get('nationality')
-    memo = request.POST.get('memo')
+    name_kor = request.POST.get('name_kor','')
+    name_eng = request.POST.get('name_eng','')
+    date_of_birth = request.POST.get('date_of_birth','')
+    phone = request.POST.get('phone','')
+    gender = request.POST.get('gender','')
+    address = request.POST.get('address','')
+    email = request.POST.get('email','')
+    nationality = request.POST.get('nationality','')
+    memo = request.POST.get('memo','')
 
-    past_history = request.POST.get('past_history')
-    family_history = request.POST.get('family_history')
+    past_history = request.POST.get('past_history','')
+    family_history = request.POST.get('family_history','')
 
-    tax_invoice_number = request.POST.get('tax_invoice_number')
-    tax_invoice_company_name = request.POST.get('tax_invoice_company_name')
-    tax_invoice_address = request.POST.get('tax_invoice_address')
+    tax_invoice_number = request.POST.get('tax_invoice_number','')
+    tax_invoice_company_name = request.POST.get('tax_invoice_company_name','')
+    tax_invoice_address = request.POST.get('tax_invoice_address','')
 
     id = request.POST.get('id')
     if request.POST.get('id') is None or request.POST.get('id') is '':
@@ -119,9 +119,14 @@ def save_patient(request):
     patient.phone = phone
     patient.gender = gender
     patient.address = address
-    patient.nationality = nationality
-    patient.email = email
-    patient.memo = memo
+
+    if nationality != '' and nationality != None:
+        patient.nationality = nationality
+    if email != '' and email != None:
+        patient.email = email
+    if memo != '' and memo != None:
+        patient.memo = memo
+
     patient.save()
 
     try:
@@ -129,9 +134,10 @@ def save_patient(request):
     except History.DoesNotExist:
         history = History(patient = patient)
 
-        
-    history.past_history = past_history
-    history.family_history = family_history
+    if past_history != '' and past_history != None:
+        history.past_history = past_history
+    if family_history != '' and family_history != None:
+        history.family_history = family_history
     history.save()
 
     if tax_invoice_number != '' or tax_invoice_company_name != '' or tax_invoice_address != '':
@@ -351,21 +357,23 @@ def save_reception(request):
     gender = request.POST.get('gender')
     address = request.POST.get('address')
     email = request.POST.get('email')
-    nationality = request.POST.get('nationality')
-    memo = request.POST.get('memo')
+    nationality = request.POST.get('nationality','')
+    memo = request.POST.get('memo','')
 
-    past_history = request.POST.get('past_history')
-    family_history = request.POST.get('family_history')
+    past_history = request.POST.get('past_history','')
+    family_history = request.POST.get('family_history','')
 
     depart = request.POST.get('depart')
     doctor = request.POST.get('doctor')
     chief_complaint = request.POST.get('chief_complaint')
 
-    tax_invoice_number = request.POST.get('tax_invoice_number')
-    tax_invoice_company_name = request.POST.get('tax_invoice_company_name')
-    tax_invoice_address = request.POST.get('tax_invoice_address')
+    tax_invoice_number = request.POST.get('tax_invoice_number','')
+    tax_invoice_company_name = request.POST.get('tax_invoice_company_name','')
+    tax_invoice_address = request.POST.get('tax_invoice_address','')
 
-    need_medical_report = request.POST.get('need_medical_report')
+    need_medical_report = request.POST.get('need_medical_report',False)
+    need_invoice = request.POST.get('need_invoice',False)
+    need_insurance = request.POST.get('need_insurance',False)
 
     id = request.POST.get('id')
     if request.POST.get('id') is None or request.POST.get('id') is '':
@@ -388,25 +396,29 @@ def save_reception(request):
     patient.memo = memo
     patient.save()
 
-    try:
-        history = History.objects.get(patient=patient)
-    except History.DoesNotExist:
-        history = History(patient = patient)
-
-        
-    history.past_historyf = past_history
-    history.family_history = family_history
-    history.save()
+    #try:
+    #    history = History.objects.get(patient=patient)
+    #except History.DoesNotExist:
+    #    history = History(patient = patient)
+    #
+    #    
+    #history.past_historyf = past_history
+    #history.family_history = family_history
+    #history.save()
 
     
     reception = Reception(patient = patient)
     reception.depart = Depart.objects.get(pk = depart)
     reception.doctor = Doctor.objects.get(pk = doctor)
     reception.chief_complaint = chief_complaint
+        
     if need_medical_report == 'true':
         reception.need_medical_report = True
-    else:
-        reception.need_medical_report = False
+    if need_invoice == 'true':
+        reception.need_invoice = True
+    if need_insurance == 'true':
+        reception.need_insurance = True
+
     reception.save()
 
 
@@ -483,7 +495,7 @@ def patient_search(request):
 
 
 
-    receptions = Reception.objects.select_related('patient').values('patient_id','depart_id').filter( functools.reduce(operator.or_, argument_list) ).annotate(c_pt=Count('patient_id'),c_dp=Count('depart_id'))
+    receptions = Reception.objects.select_related('patient').values('patient_id','depart_id').filter( functools.reduce(operator.or_, argument_list) ).exclude(progress='deleted').annotate(c_pt=Count('patient_id'),c_dp=Count('depart_id'))
 
     datas=[]
     for reception in receptions:
@@ -503,6 +515,7 @@ def patient_search(request):
             'has_unpaid':reception_last.patient.has_unpaid(),
             'depart':reception_last.depart.name,
             'last_visit':reception_last.recorded_date.strftime('%Y-%m-%d'),
+
             })
         datas.append(data)
 
@@ -776,7 +789,7 @@ def waiting_list(request):
                             'Doctor':pay_record.payment.reception.doctor.name_kor,
                             'unpaid_total': pay_record.get_rest_total(),
                             'paid':pay_record.paid,
-                            'date':pay_record.date.strftime('%Y-%m-%d'),
+                            'date':reception.recorded_date.strftime('%Y-%m-%d'),
                             'status':'paid' if reception.payment.progress=='paid' else 'unpaid',
                             'has_unpaid':reception.patient.has_unpaid()
                             }
@@ -850,6 +863,7 @@ def get_today_selected(request):
     for data in exam_set:
         exam = {}
         exam.update({
+            'manager_id':data.id,
             'code':data.exam.code,
             'name':data.exam.name,
             'price':data.exam.get_price(),
@@ -860,6 +874,7 @@ def get_today_selected(request):
     for data in test_set:
         test = {}
         test.update({
+            'manager_id':data.id,
             'code':data.test.code,
             'name':data.test.name,
             'price':data.test.get_price(),
@@ -870,6 +885,7 @@ def get_today_selected(request):
     for data in precedure_set:
         precedure = {}
         precedure.update({
+            'manager_id':data.id,
             'code':data.precedure.code,
             'name':data.precedure.name,
             'amount': data.amount,
@@ -886,6 +902,7 @@ def get_today_selected(request):
         unit = data.medicine.get_price()
         price = quantity * int(data.medicine.get_price())
         medicine.update({
+            'manager_id':data.id,
             'code':data.medicine.code,
             'name':data.medicine.name,
             'quantity':quantity,
@@ -929,8 +946,9 @@ def get_today_selected(request):
         'is_emergency':payment.is_emergency,
         'additional':0 if payment.additional is None else payment.additional,
 
-        'date':reception.recorded_date.strftime('%d/%m/%Y')
-        
+        'date':reception.recorded_date.strftime('%d/%m/%Y'),
+
+
     }
     if reception.reservation:
         datas.update({
@@ -955,6 +973,12 @@ def get_today_selected(request):
         'tax_invoice_number':'' if taxinvoice is None else taxinvoice.number,
         'tax_invoice_company_name':'' if taxinvoice is None else taxinvoice.company_name,
         'tax_invoice_address':'' if taxinvoice is None else taxinvoice.address,
+
+                
+        'need_invoice':reception.need_invoice,
+        'need_insurance':reception.need_insurance,
+
+
         }
     return JsonResponse(context)
 
@@ -977,6 +1001,8 @@ def waiting_selected(request):
     for data in exam_set:
         exam = {}
         exam.update({
+            'manager_id':data.id,
+            'is_checked':data.is_checked_discount,
             'code':data.exam.code,
             'name':data.exam.name,
             'price':data.exam.get_price(reception.recorded_date),
@@ -987,6 +1013,8 @@ def waiting_selected(request):
     for data in test_set:
         test = {}
         test.update({
+            'manager_id':data.id,
+            'is_checked':data.is_checked_discount,
             'code':data.test.code,
             'name':data.test.name,
             'price':data.test.get_price(reception.recorded_date),
@@ -997,6 +1025,8 @@ def waiting_selected(request):
     for data in precedure_set:
         precedure = {}
         precedure.update({
+            'manager_id':data.id,
+            'is_checked':data.is_checked_discount,
             'code':data.precedure.code,
             'name':data.precedure.name,
             'amount':data.amount,
@@ -1011,6 +1041,8 @@ def waiting_selected(request):
         unit = data.medicine.get_price(reception.recorded_date)
         price = quantity * int(data.medicine.get_price(reception.recorded_date))
         medicine.update({
+            'manager_id':data.id,
+            'is_checked':data.is_checked_discount,
             'code':data.medicine.code,
             'name':data.medicine.name,
             'quantity':quantity,
@@ -1029,6 +1061,8 @@ def waiting_selected(request):
         'phone':reception.patient.phone,
         'address':reception.patient.address,
 
+        
+
         'exams':exams,
         'tests':tests,
         'precedures':precedures,
@@ -1043,7 +1077,9 @@ def waiting_selected(request):
         'paid':payment_record.paid,
         'total_payment':payment.total,
         
-        'is_emergency':payment.is_emergency,
+        'paid_by':'' if payment.memo is None else payment.memo,
+        'payment_memo':'' if payment.memo is None else payment.memo,
+       
         'emergency_amount':payment.sub_total * 0.3 if payment.is_emergency is True else 0,
         'additional':0 if payment.additional is None else payment.additional,
 
@@ -1070,6 +1106,10 @@ def waiting_selected(request):
         'tax_invoice_company_name':'' if taxinvoice is None else taxinvoice.company_name,
         'tax_invoice_address':'' if taxinvoice is None else taxinvoice.address,
         'reception_id':reception.id,
+
+        'need_invoice':reception.need_invoice,
+        'need_insurance':reception.need_insurance,
+
         }
     return JsonResponse(context)
 
@@ -1079,6 +1119,11 @@ def storage_page_save(request):
     paid = request.POST.get('paid')
     paid = int(paid)
     method = request.POST.get('method')
+    
+    memo = request.POST.get('payment_memo')
+
+    
+
     discount = request.POST.get('discount',0)
     discount_amount = request.POST.get('discount_amount',0)
     total = request.POST.get('total').split(' ')[0].replace(',','')
@@ -1092,35 +1137,24 @@ def storage_page_save(request):
     payment.is_emergency = True if is_emergency == 'true' else False
     payment.additional = additional
     payment.total = total
+    payment.memo = memo
 
+    #72시간 이후 수정 불가
+    #혹시 모르니 관리자 계정만 가능
+    if request.user.is_superuser == False:
+        reception = Reception.objects.get(id = reception_id)
+        print(reception.recorded_date)
+        data_date = reception.recorded_date + datetime.timedelta(hours=72)
+        print(data_date)
+        today = datetime.datetime.now()
+        print(today)
 
-    #REC 7시 이후 및 이전 날 수정 방지
-    #혹시 모르니 REC 계정만 차단
-    #if request.user.is_receptionist():
-    #    print(request.user.is_receptionist)
-    #    print(request.user.is_doctor)
-    #    #이전 날 수정 확인
-    #    reception = Reception.objects.get(id = reception_id)
-    #    data_date = reception.recorded_date.replace(hour=0, minute=0, second=0) #+ datetime.timedelta(days=1)
-    #    today = datetime.datetime.now().replace(hour=0, minute=0, second=0)
-    #
-    #    print(data_date)
-    #    print(today)
-    #    if data_date < today:
-    #        return JsonResponse({
-    #            'result':False,
-    #            'msg':_('Cannot edit past payment')
-    #                             })
-    #
-    #    #7시 이후 수납 안되게
-    #
-    #    today = datetime.datetime.now()
-    #    limit = datetime.datetime.now().replace(hour=19, minute=0, second=0)
-    #    if today > limit:
-    #        return JsonResponse({
-    #            'result':False,
-    #            'msg':_('Cannot edit payment after 7 PM.')
-    #                             })
+        if data_date < today:
+            return JsonResponse({
+                'result':False,
+                'msg':_('Cannot edit past payment after 72 hours'),
+                                 })
+
 
     if payment.progress == 'paid':
         context = {'result':'paid'}
@@ -1149,6 +1183,24 @@ def storage_page_save(request):
         payment.progress = 'unpaid'
     payment.save()
     add_record.save()
+
+    list_checked = request.POST.get('list_checked')
+    list_checked = json.loads(list_checked)
+    print(list_checked)
+
+
+    for data in list_checked:
+        if data['type']=='exam':
+            query = ExamManager.objects.get(id = data['id'])
+        elif data['type']=='test':
+            query = TestManager.objects.get(id = data['id'])
+        elif data['type']=='precedure':
+            query = PrecedureManager.objects.get(id = data['id'])
+        elif data['type']=='medicine':
+            query = MedicineManager.objects.get(id = data['id'])
+        query.is_checked_discount = data['value']
+        query.save()
+
 
     context = {'result':'done'}
     return JsonResponse(context)
@@ -2447,19 +2499,41 @@ def document_medical_receipt_old(request,reception_id):
         no += 1
         medicines.append(medicine)
 
+    type= request.GET.get('type')
+    if type == 'bf':
+        discount_input= request.GET.get('discount_input',0) 
+        discount_amount= request.GET.get('discount_amount',0) 
+        additional_amount= int( request.GET.get('additional_amount',0) )
+        total_amount= request.GET.get('total_amount',0)
+        total_amount = int(total_amount.replace(',', ''))
+
+        print(discount_input)
+        if discount_input is not 0 and discount_input is not '':
+            discount = round( ( int( discount_input) / 100) * total_amount )
+        elif discount_amount is not 0 and discount_amount is not '':
+            discount = int( discount_amount )
+        else:
+            discount = 0
+
+        additional = additional_amount
+        sub_total = total_amount + additional
+        total = total_amount - discount + additional
 
 
-    if reception.payment.discounted is not None :
-        discount = (reception.payment.discounted / 100) * reception.payment.sub_total
-    elif reception.payment.discounted_amount is not None:
-        discount = reception.payment.discounted_amount
     else:
-        discount = 0
 
-    additional = reception.payment.additional
-    sub_total = reception.payment.sub_total + additional
-    total = reception.payment.sub_total - discount + additional
+        if reception.payment.discounted is not 0 :
+            discount = (reception.payment.discounted / 100) * reception.payment.sub_total
+        elif reception.payment.discounted_amount is not 0:
+            discount = reception.payment.discounted_amount
+        else:
+            discount = 0
+
+        additional = reception.payment.additional
+        sub_total = reception.payment.sub_total + additional
+        total = reception.payment.sub_total - discount + additional
     
+
     return render(request,
     'Receptionist/form_medical_receipt_old.html',
             {

@@ -24,10 +24,6 @@ from .models import *
 #@login_required
 def home(request):
 
-    tmp_user = User.objects.get(pk=23)
-    tmp_user.set_password('IM1234')
-    tmp_user.save()
-
     """Renders the home page."""
     if not translation.LANGUAGE_SESSION_KEY in request.session:
         translation.activate('en')
@@ -38,11 +34,14 @@ def home(request):
     #    if request.user.is_anonymous:
     #        return redirect('login')
     #else:
+    print(request.user)
     if request.user.is_anonymous:
         return redirect('login')
 
     if request.user.is_doctor():
         return redirect('/doctor')
+    if request.user.is_nurse():
+        return redirect('/manage/inventory_medical_tool')
     elif request.user.is_receptionist():
         return redirect('/receptionist')
     elif request.user.is_pharmacy():
@@ -58,8 +57,11 @@ def home(request):
 
 
 def login(request):
+
+
+
     #아이메디
-    if request.META['SERVER_PORT'] == '9090':
+    if request.META['SERVER_PORT'] == '9090' or request.META['SERVER_PORT'] == '11111':#테스트서버
         authentication_form=BootstrapAuthenticationForm()
         err_msg = ''
         if request.method == 'POST':

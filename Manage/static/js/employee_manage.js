@@ -382,12 +382,16 @@ function edit_database(id = null) {
             },
             error: function (request, status, error) {
                 console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-
+               
             },
         })
     }
     else {
         $("#add_edit_database_header").html(gettext('New Employee'));
+        $("#add_edit_database_id").val('');
+        $("#add_edit_database_user_ID").prop("disabled", false);
+        $("#add_edit_database_password").prop("disabled", false);
+        $("#add_edit_database_password_confirm").prop("disabled", false);
     }
     $('#add_edit_database').modal({ backdrop: 'static', keyboard: false });
     $('#add_edit_database').modal('show');

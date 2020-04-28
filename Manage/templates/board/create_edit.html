@@ -21,7 +21,6 @@
                         <div class="input-group option_select_div">
                             <span class="input-group-addon" id="basic-addon1">{{ _('Division') }}</span>
                             <select name="select_division" class="form-control" required>
-                                <option value="">----------</option>
                                 {% for division in list_division %}
                                     <option value="{{division.id}}" {% if division.id == division_selected %} selected {% endif %}>{{ division.name }}</option>
                                 {% endfor %}

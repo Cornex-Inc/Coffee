@@ -1381,6 +1381,9 @@
     <Content Include="Manage\static\css\board\create_edit.css" />
     <Content Include="Manage\static\css\board_work\create_edit.css" />
     <Content Include="Manage\static\css\board_work\list.css" />
+    <Content Include="Manage\static\css\CRM.css" />
+    <Content Include="Manage\static\css\Draft.css" />
+    <Content Include="Manage\static\css\dashboard.css" />
     <Content Include="Manage\static\css\inventory_medical_tool.css" />
     <Content Include="Manage\static\css\employee_manage.css" />
     <Content Include="Manage\static\css\login.css" />
@@ -1390,6 +1393,9 @@
     <Content Include="Manage\static\js\board\create_edit.js" />
     <Content Include="Manage\static\js\board_work\create_edit.js" />
     <Content Include="Manage\static\js\board_work\list.js" />
+    <Content Include="Manage\static\js\CRM.js" />
+    <Content Include="Manage\static\js\Draft.js" />
+    <Content Include="Manage\static\js\dashboard.js" />
     <Content Include="Manage\static\js\inventory_medical_tool.js" />
     <Content Include="Manage\static\js\employee_manage.js" />
     <Content Include="Manage\static\js\inventory_precedure.js" />
@@ -1401,6 +1407,9 @@
     <Content Include="Manage\templates\board_work\create_edit.html" />
     <Content Include="Manage\templates\board_work\list.html" />
     <Content Include="Manage\templates\board_work\read.html" />
+    <Content Include="Manage\templates\Manage\CRM.html" />
+    <Content Include="Manage\templates\Manage\dashboard.html" />
+    <Content Include="Manage\templates\Manage\Draft.html" />
     <Content Include="Manage\templates\Manage\inventory_medical_tool.html" />
     <Content Include="Manage\templates\Manage\inventory_test.html" />
     <Content Include="Manage\templates\Manage\temp_manage.html" />

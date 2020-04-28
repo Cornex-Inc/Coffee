@@ -472,6 +472,10 @@
     width:55px;
 
 }
+
+
+
+
 @media ( min-width: 1900px ) {
     .reception_grid {
         grid-template-columns: 50%;

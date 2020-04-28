@@ -276,7 +276,7 @@ class StorageSearchForm(forms.Form):
 
 class StorageForm(forms.Form):
     METHOD = (
-        ('card',_('Remit')),
+        ('remit',_('Remit')),
         ('card',_('Card')),
         ('cash',_('Cash')),
         )

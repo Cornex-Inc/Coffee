@@ -238,3 +238,7 @@ body {
     overflow: hidden;
     white-space: nowrap;
 }
+
+#add_medicine_input_price_need {
+    vertical-align: middle;
+}

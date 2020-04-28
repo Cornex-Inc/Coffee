@@ -7,11 +7,12 @@
 <!--Payment-->
 <div class="contents_wrap" >
     <div id="REVENUE_TOTAL">
+         <!--
         <div class="contents_Title_wrap">
             <span class="contents_Title">{{ _('REVENUE TOTAL') }}</span>
         </div>
 
-
+       
         <div class="payment_graph">
             <div id="payment_graph_wrap" class="payment_graph_wrap">
                 <canvas id="payment_graph" style="height:300px"></canvas>
@@ -20,101 +21,147 @@
                 <canvas id="payment_graph_doughnut" style="height:300px; width:540px;"></canvas>
             </div>
         </div>
-
-        <div>
+            -->
+        <div class="contents_filter_wrap">
             <div class="contents_Title_wrap">
                 <span class="contents_Title">{{ _('REVENUE STATUS') }}</span>
-                 {{ _('Date')}}:
-                <input type="text" id="payment_search_date" class="form-control costom-select payment_search_date" aria-describedby="basic-addon1"/>
+                <!--페이지 수-->
+                <div class="input-group contents_filter_div" id="contents_filter_div_context_count">
+                    <span class="input-group-addon">{{ _('Per Page') }}</span>
+                    <select id="contents_filter_context_count" class="form-control costom-select" aria-describedby="basic-addon1" >
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="contents_filter_top" id="patient_filter_top">
+            <div class="contents_filter_top">
+                <!--날짜-->
+                <div class="date_input_div">
+                    {{ _('Date')}}:
+                    <input type="text" class="form-control date_input" id="payment_search_date_start" /> ~ 
+                    <input type="text" class="form-control date_input" id="payment_search_date_end" />
+                </div>
+                <!-- 과 -->
+               <div class="input-group contents_filter_div" id="contents_filter_div_depart">
+                    <span class="input-group-addon">{{ _('Depart') }}</span>
+                    <select id="contents_filter_depart" class="form-control costom-select" aria-describedby="basic-addon1">
+                        <option value="">{{ _('All') }}</option>
+                        {% for data in depart_medical %}
+                        <option value="{{ data.code }}">{{ data.name }}</option>
+                        {% endfor %}
+                        <!--
+                        {% for data in depart_medical %}
+                        <option value="{{ data.code }}">{{ data.name }}</option>
+                        {% endfor %}
+                        -->
+                    </select>
+                </div>
+                <!-- 의사 -->
+               <div class="input-group contents_filter_div" id="contents_filter_div_doctor">
+                    <span class="input-group-addon">{{ _('Doctor') }}</span>
+                    <select id="contents_filter_doctor" class="form-control costom-select" aria-describedby="basic-addon1">
+                        <option value="">{{ _('All') }}</option>
+                        
+                        {% for data in doctor %}
+                        <option value="{{ data.id }}">{{ data.name_short }}</option>
+                        {% endfor %}
+                        
+                    </select>
+                </div>
+                <!--결제 방법-->
+                <div class="input-group contents_filter_div" id="contents_filter_div_method">
+                    <span class="input-group-addon">{{ _('Payment Method') }}</span>
+                    <select id="contents_filter_payment_method" class="form-control costom-select" aria-describedby="basic-addon1" >
+                        <option value="">{{ _('All') }}</option>
+                        {% for data in payment_method %}
+                        <option value="{{ data.code }}">{{ data.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!--결제 상태-->
+                <div class="input-group contents_filter_div" id="contents_filter_div_status">
+                    <span class="input-group-addon">{{ _('Payment Status') }}</span>
+                    <select id="contents_filter_payment_status" class="form-control costom-select" aria-describedby="basic-addon1" >
+                        <option value="">{{ _('All') }}</option>
+                        {% for data in payment_status %}
+                        <option value="{{ data.code }}">{{ data.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
+                <div style="float:right;">
+                    <a class="btn btn-default" onclick="excel_download()"><i class="fa fa-file-excel-o"></i>{{ _('Download') }}</a>
+                </div>
             </div>
         </div>
-        <div id="payment_search" class="payment_search_table_filter">
-                           
-            {{ payment_search.depart_filter.label }}:
-            {{ payment_search.depart_filter }}
-            {{ payment_search.doctor_filter.label }}:
-            {{ payment_search.doctor_filter }}
-            {{ payment_search.paid_by.label}}:
-            {{ payment_search.paid_by}}
-            <!--{{ payment_search.check_paid.label }}:
-            {{ payment_search.check_paid }}-->
-
-            {{ _('Exam Fee') }}:
-            <select id="payment_search_exam_fee" class="form-control costom-select payment_search_lab">
-                <option value="" selected>{{ _('ALL') }}</option>
-                {% for exam in list_exam_fee %}
-                    <option value="{{ exam.code }}">{{ exam.value }}</option>
-                {% endfor%}
-            </select>
-
-            {{ _('Lab')}}:
-            <select id="payment_search_lab" class="form-control costom-select payment_search_lab">
-                <option value="" selected>{{ _('ALL') }}</option>
-                {% for lab in list_lab %}
-                    <option value="{{ lab.code }}">{{ lab.value }}</option>
-                {% endfor %}
-            </select>
-
-            {{ _('Precedure')}}:
-            <select id="payment_search_precedure" class="form-control costom-select payment_search_general">
-                <option value="" selected >{{ _('ALL') }}</option>
-                {% for precedure in list_precedure  %}
-                    <option value="{{ precedure.code }}">{{ precedure.value }}</option>
-                {% endfor %}
-            </select>
-
-            {{ _('Medicine')}}:
-            <select id="payment_search_medicine" class="form-control costom-select payment_search_medicine">
-                <option value="" selected>{{ _('ALL') }}</option>
-                {% for medicine in list_medicine %}
-                    <option value="{{ medicine.code }}">{{ medicine.value }}</option>
-                {% endfor %}
-            </select>
-
-
-        </div>
-        <div id="payment_search_table" class="payment_search_table">
-            <table class="table table-striped ">
-                <thead>
-                    <tr>
-                        <th class="search_table_No" >{{_('No')}}</th>
-                        <th class="search_table_Date">{{_('Date')}}</th>
-                        <th class="search_table_Patient">{{_('Patient')}}</th>
-                        <th class="search_table_Depart">{{_('Depart')}}</th>
-                        <th class="search_table_Doctor">{{_('Doctor')}}</th>
-                        <th class="search_table_Order">{{_('Lab')}}</th>
-                        <th class="search_table_Address">{{_('Precedure')}}</th>
-                        <th class="search_table_Order">{{_('Medicine')}}</th>
-                        <th class="search_table_PaidBy">{{_('Paid by')}}</th>
-                        <th class="search_table_Total">{{_('Total')}}( ₫ )</th>
-                    </tr>
-                </thead>
-                <tbody id="payment_table_result" class="payment_table_result">
+        <div class="payment_search">
+          
+            <div class="payment_search_table_div">
+                <table class="table table-bordered table-hover table-striped revenue_table" id="payment_search_table">
+                    <thead>
+                        <tr>
+                            <th>{{_('No')}}</th>
+                            <th>{{_('Date')}}</th>
+                            <th>{{_('Patient')}}</th>
+                            <th>{{_('Depart')}}</th>
+                            <th>{{_('Doctor')}}</th>
+                            <th>{{_('Exam Fee')}}</th>
+                            <th>{{_('Lab')}}</th>
+                            <th>{{_('Procedure')}}</th>
+                            <th>{{_('Radiation')}}</th>
+                            <th>{{_('Medicine')}}</th>
+                            <th>{{_('Paid by')}}</th>
+                            <th>{{_('Sub Total')}}</th>
+                            <!--<th>{{_('Medicine Fee')}}</th>-->
+                            <th>{{_('Additional')}}</th>
+                            <th>{{_('Discount')}}</th>
+                            <!--<th>{{_('Refund')}}</th>-->
+                            <th>{{_('Total')}}</th>
+                            <th>{{_('Unpaid')}}</th>
+                            <!--<th>{{_('Remain')}}</th>-->
+                            <!--<th>{{_('Remark')}}</th>-->
+                        </tr>
+                    </thead>
+                    <tbody id="payment_table_result" class="payment_table_result">
                
-                </tbody>
-            
-            </table>
-            <!--페이징-->
-            <ul class="pagination" id="payment_pagnation">
+                    </tbody>
+                </table>
+                <table class="table table-bordered table-striped total_table">
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td>{{_('Total')}} ( ₫ ) </td>
+                            <td><span id="payment_sub_total_total"></span></td>
+                            <td><span id="payment_additional_total"></span></td>
+                            <td><span id="payment_discount_total"></span></td>
+                            <td><span id="payment_total_total"></span></td>
+                            <td><span id="payment_unpaid_total"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
 
-            </ul>
-            <table class="table payment_total">
-                <tr>
-                    <td>{{_('Total')}} ( ₫ ) </td>
-                    <td><span id="payment_total_total"></span></td>
-                </tr>
-            </table>
 
+                <!--페이징-->
+        
+                <ul class="pagination" id="payment_pagnation">
+
+                </ul>
+                <table class="table table-bordered table-hover table-striped payment_total">
+                    <tr>
+
+                    </tr>
+                </table>
+        
+            </div>
         </div>
     </div>
 
 
-
     <!--의사 별로 소팅-->
+    <!--
     <div id="DOCTOR_PROFIT">
         
         <div style="margin-top:100px;">
@@ -231,11 +278,12 @@
             </div>
         </div>
     </div>
-
+        -->
 
 
 
     <!--MediCine-->
+    <!--
     <div id="MEDICINE_TOTAL">
         <div class="contents_Title_wrap">
             <span class="contents_Title">{{ _('MEDICINE') }}</span>
@@ -279,9 +327,10 @@
             </div>
         </div>
     </div>
+        -->
 </div>
 
-
+    <!--
 <script>
 
     var bar_labels = []//'total','dental','medical'];
@@ -543,7 +592,7 @@
 
 
 </script>
-
+        -->
 
 
 

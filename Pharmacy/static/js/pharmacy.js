@@ -48,19 +48,19 @@ $(function () {
 
 //알람
 function play_alarm() {
-    var x = document.getElementById("audio").play();
-
-
-    if (x !== undefined) {
-        x.then(_ => {
-            console.log(_);
-            // Autoplay started!
-        }).catch(error => {
-            console.log(error);
-            // Autoplay was prevented.
-            // Show a "Play" button so that user can start playback.
-        });
-    }
+    //var x = document.getElementById("audio").play();
+    //
+    //
+    //if (x !== undefined) {
+    //    x.then(_ => {
+    //        console.log(_);
+    //        // Autoplay started!
+    //    }).catch(error => {
+    //        console.log(error);
+    //        // Autoplay was prevented.
+    //        // Show a "Play" button so that user can start playback.
+    //    });
+    //}
 }
 
 function save_data_control() {
@@ -197,6 +197,9 @@ function waiting_selected(diagnosis_id) {
 
                 $('#pharmacy_contents_table').append(str);
             }
+            $('#need_invoice').prop('checked', response.need_invoice);
+            $('#need_insurance').prop('checked', response.need_invoice);
+
             $('#show_patient_selected').html(response.patient_name);
         },
         error: function (request, status, error) {

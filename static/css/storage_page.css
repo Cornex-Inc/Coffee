@@ -82,6 +82,15 @@
         display: inline-block;
     }
 
+.need_something_check {
+    font-weight: 300;
+}
+
+.need_something_check input {
+    vertical-align: middle;
+    margin-top: -1px;
+}
+
 .storage_list_calendar {
     display: inline;
     padding: 5px;
@@ -104,11 +113,53 @@
     display: inline;
 }
 
-
-
-.page_bill{
-    display:none;
+#payment_record_table {
 }
+
+    #payment_record_table thead tr th {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    #payment_record_table tbody tr {
+        height: 50px;
+    }
+
+        #payment_record_table tbody tr td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+#show_medication_contents {
+    vertical-align: middle;
+    margin-top: -2px;
+    margin-right: 2px;
+}
+.check_discount_label{
+    font-size:13px;
+    font-weight:400;
+    letter-spacing:-1px;
+}
+
+    .check_discount_label input[type=checkbox] {
+        vertical-align: middle;
+        margin-top: -2px;
+        margin-right:5px;
+    }
+
+#patient_tax_invoice .input-group{
+    width:100%;
+}
+
+#patient_tax_invoice_click {
+    margin-bottom: 5px;
+}
+
+.page_bill {
+    display: none;
+}
+
+
 
 .page_report {
     display: none;

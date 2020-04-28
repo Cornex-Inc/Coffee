@@ -61,6 +61,9 @@ def waiting_selected(request):
         'datas':medicines,
         'status':diagnosis.medicinemanage.progress,
         'patient_name':diagnosis.reception.patient.get_name_kor_eng(),
+
+        'need_invoice':diagnosis.reception.need_invoice,
+        'need_insurance':diagnosis.reception.need_insurance,
                }
     return JsonResponse(context)
 
@@ -385,12 +388,12 @@ def medicine_add_edit_set(request):
     if int(id) == 0 :
         data = Medicine()
         if type in 'Medicine':
-            last_code =Medicine.objects.filter(code__icontains="M").last()
+            last_code =Medicine.objects.filter(code__icontains="M",type='PHARM').last()
             temp_code = last_code.code.split('M')
             code = 'M' + str('%04d' % (int(temp_code[1]) + 1))
 
         elif type in 'Injection':
-            last_code =Medicine.objects.filter(code__icontains="I").last()
+            last_code =Medicine.objects.filter(code__icontains="I",type='PHARM').last()
             temp_code = last_code.code.split('I')
             code = 'I' + str('%04d' % (int(temp_code[1]) + 1))
         data.code = code
@@ -578,6 +581,30 @@ def save_database_add_medicine(request):
     medicine_logs.type='add'
     medicine_logs.save()
 
+
+    input_price = request.POST.get('input_price',None)
+    if input_price:
+        try:
+            str_now = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+            old_price_input = Pricechange.objects.get(type="Medicine",country='VI',type2='INPUT',code=medicine.code, date_end="99999999999999")
+            
+            if old_price_input.price != int(input_price):
+                old_price_input.date_end = str_now
+                old_price_input.save()
+
+                new_price = Pricechange(type="Medicine",country='VI',type2='INPUT',code=medicine.code)
+                new_price.price = price_input
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
+
+        except Pricechange.DoesNotExist:
+            if medicine.price_input != int(input_price):
+                new_price = Pricechange(type="Medicine",country='VI',type2='INPUT',code=medicine.code)
+                new_price.price = input_price
+                new_price.date_start = str_now
+                new_price.date_end = "99999999999999"
+                new_price.save()
 
     return JsonResponse({'result':True})
 

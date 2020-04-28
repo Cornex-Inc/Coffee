@@ -681,6 +681,8 @@ function reception_select(reception_id) {
             if (response.need_medical_report) {
                 $('#need_medical_report').show();
             }
+            $('#need_invoice').prop('checked', response.need_invoice);
+            $('#need_insurance').prop('checked', response.need_invoice);
 
 
             get_vital();

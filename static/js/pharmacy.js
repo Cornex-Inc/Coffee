@@ -197,6 +197,9 @@ function waiting_selected(diagnosis_id) {
 
                 $('#pharmacy_contents_table').append(str);
             }
+            $('#need_invoice').prop('checked', response.need_invoice);
+            $('#need_insurance').prop('checked', response.need_invoice);
+
             $('#show_patient_selected').html(response.patient_name);
         },
         error: function (request, status, error) {

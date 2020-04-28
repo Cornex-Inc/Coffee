@@ -24,7 +24,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="storage_today_table_wrap">
                 <table class="table table-striped table-hover storage_list_table" id="storage_today_table">
                     <thead>
@@ -45,6 +44,7 @@
         <div class="storage_contents partition">
             <div class="storage_list_title">
             <span class="btn btn-danger" >{{ _('Reciept') }}</span>
+                <input type="hidden" id="check_bf_af" value="" />
             </div>
             <table class="table table-bordered" style="margin-bottom:10px;">
                 <tr>
@@ -80,7 +80,6 @@
             <input type="hidden" id="selected_reception"/>
             <input type="hidden" id="total_amount" />
             <div class="storage_item_table">
-                
                 <table class="table table-bordered table-hover table-striped" id="storage_bills">
                     <thead class="storage_item_table_contents">
                         <tr>
@@ -109,7 +108,12 @@
                         <td>
                             <div class="input-group" style="display:inline-table">
                                 <span class="input-group-addon" id="basic-addon1" style="">{{ _('Paid by') }}</span>
-                                {{storage.payment_info}}
+                                <select name="payment_info" class="form-control costom-select" aria-describedby="basic-addon1" id="id_payment_info">
+                                    <option value="">----------</option>
+                                    <option value="remit">{{ _('Remit') }}</option>
+                                    <option value="card">{{ _('Card') }}</option>
+                                    <option value="cash">{{ _('Cash') }}</option>
+                                </select>
                             </div>
                         </td>
                     </tr>
@@ -129,32 +133,42 @@
             </table>
             <table class="table">
                 <tr><!--Next Visiting Date-->
-                    <td >
+                    <td>
                         <div class="input-group" >
-                        <span class="input-group-addon storage_contents_table_title" id="basic-addon1">{{ _('Next Visiting Date') }}</span>
-                        <input type="text" name="follow_update" class="form-control costom-select" aria-describedby="basic-addon1" required="" id="id_follow_update" autocomplete="off">
+                            <span class="input-group-addon storage_contents_table_title" id="basic-addon1">{{ _('Next Visiting Date') }}</span>
+                            <input type="text" name="follow_update" class="form-control costom-select" aria-describedby="basic-addon1" required="" id="id_follow_update" autocomplete="off">
+                        </div>
+
+                    </td>
+                    <td>
+                        <div class="input-group" >
+                            <span class="input-group-addon" id="basic-addon1">{{ _('Memo') }}</span>
+                            <input type="text" class="form-control costom-select" aria-describedby="basic-addon1" id="storage_memo" autocomplete="off">
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
                         <a class='btn btn-default btn-xs' href='javascript: void (0);' id="patient_tax_invoice_click"><i class='fa fa-lg fa-caret-down'></i> {{ _('Inform Tax Invoice')}}</a>
+                        <div style="float:right;">
+                            <label class="need_something_check" style="margin-right:10px;"><input type="checkbox" id="need_invoice" /><text>{{_('Red Invoice') }}</text></label>
+                            <label class="need_something_check"><input type="checkbox" id="need_insurance" /><text>{{_('Insurance') }}</text></label>
+                        </div>
                         <div id="patient_tax_invoice" style="display:none;">
-                            <div class="input-group" style="width:480px">
+                            <div class="input-group">
                                 <span class="input-group-addon storage_contents_table_title" id="basic-addon1">{{ _('Number') }}</span>
                                 <input type="text" class="form-control" aria-describedby="basic-addon1">
                             </div>
-                            <div class="input-group" style="width:480px">
-                            <span class="input-group-addon storage_contents_table_title" id="basic-addon1">{{ _('Company Name') }}</span>
-                            <input type="text" class="form-control" aria-describedby="basic-addon1">
+                            <div class="input-group">
+                                <span class="input-group-addon storage_contents_table_title" id="basic-addon1">{{ _('Company Name') }}</span>
+                                <input type="text" class="form-control" aria-describedby="basic-addon1">
                             </div>
-
-                            <div class="input-group" style="width:480px">
+                            <div class="input-group">
                                 <span class="input-group-addon storage_contents_table_title" id="basic-addon1">{{ _('Address') }}</span>
                                 <input type="text" class="form-control" aria-describedby="basic-addon1">
                             </div>
                         </div>
-
+     
                     </td> 
                 </tr>
             </table>
@@ -199,19 +213,35 @@
                 <table class="table table-striped table-hover storage_today_table" id="storage_list_table">
                     <thead>
                         <tr>
-                            <th style="width:15px">{{ _('No')}}</th>
-                            <th style="width:70px">{{ _('Chart No')}}</th>
-                            <th style="width:76.8px;">{{ _('Name')}}</th>
-                            <th style="width:76.8px;">{{ _('Date')}}</th>
-                            <th style="width:76.8px;">{{ _('Depart')}}</th>
-                            <th style="width:76.8px;">{{ _('Paid')}}</th>
-                            <th style="width:76.8px;">{{ _('Balance')}}</th>
+                            <th>{{ _('No')}}</th>
+                            <th>{{ _('Chart No')}}</th>
+                            <th>{{ _('Name')}}</th>
+                            <th>{{ _('Date')}}</th>
+                            <th>{{ _('Depart')}}</th>
+                            <th>{{ _('Paid')}}</th>
+                            <th>{{ _('Balance')}}</th>
                         </tr>
                     </thead>
                     <tbody>
                     </tbody>
                 </table>
             </div>
+            <table class="table" id="storage_list_total">
+                <tr>
+                    <th><div>{{ _('Total') }} : </div></th>
+                    <th>
+                        <div>
+                            <span id="storage_list_total_paid">0</span>
+                        </div>
+                    </th>
+                    <th>
+                        <div>
+                            <span id="storage_list_total_balance">0</span>
+                        </div>
+                    </th>
+                    <th></th>
+                </tr>
+            </table>
         </div>
     </div>
 <script>
@@ -453,7 +483,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
                 <h4>{{ _('Payment Record') }}</h4>
                 <div id="modalBody" class="modal-body">
-                    <table class="table table-hover">
+                    <table class="table table-hover" id="payment_record_table">
                         <thead>
                             <tr>
                                 <th>{{ _('Chart No.') }}</th>

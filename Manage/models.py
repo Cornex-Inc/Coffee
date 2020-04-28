@@ -214,6 +214,84 @@ class Board_View_Log(models.Model):
         )
 
 
+class Draft(models.Model):
+
+    #상태
+    status = models.CharField(
+        max_length = 8,
+        default ='',
+        )
+    #구분
+    type = models.CharField(
+        max_length = 8,
+        default ='',
+        )
+    #부서
+    depart = models.CharField(
+        max_length = 8,
+        default ='',
+        )
+    #작성자 - FK 논리
+    creator = models.CharField(
+        max_length = 8,
+        default ='',
+        )
+    #작성 일 / 신청일
+    date_registered = models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+    #제목
+    title = models.CharField(
+        max_length = 256,
+        default ='',
+        )
+    #내용
+    contents = models.TextField(
+        default ='',
+        )
+    #추가의견
+    additional = models.CharField(
+        max_length = 256,
+        null=True
+        )
+    #마지막 수정자  - FK 논리
+    modifier = models.CharField(
+        max_length = 8,
+        null=True
+        )
+
+    #마지막 수정 일 / 신청일
+    date_last_modified = models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+
+    #결재 / 담당
+    date_in_charge = models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+    #결재 / 팀장
+    date_leader = models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+    #결재 / 회계
+    date_accounting = models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+    #결재 / 대표
+    date_ceo = models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+
+
+
+
+
 @receiver(models.signals.post_delete, sender=Board_File)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
     """
@@ -224,3 +302,4 @@ def auto_delete_file_on_delete(sender, instance, **kwargs):
     if instance.file:
         if os.path.isfile(instance.file.path):
             os.remove(instance.file.path)
+

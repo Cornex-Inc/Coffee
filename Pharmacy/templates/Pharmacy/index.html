@@ -50,6 +50,12 @@
             <div class="medicine_table_title">
                 <span class="btn btn-danger medicine_table_title_span" >{{ _('Ordered Medicine') }}</span>
                 <span class="show_patient_selected" id="show_patient_selected"></span>
+
+                <div style="display:inline;">
+                    <label class="need_something_check" style="margin-right:10px;"><input type="checkbox" id="need_invoice" /><text>{{_('Red Invoice') }}</text></label>
+                    <label class="need_something_check"><input type="checkbox" id="need_insurance" /><text>{{_('Insurance') }}</text></label>
+                </div>
+
                 <div style="float:right; display:inline;">
                     <input type="button" class="btn btn-dark" id="pharmacy_control_cancel" value="{{ _('Cancel') }}"/>
                     <input type ="button" class="btn btn-danger" value="{{ _('Done') }}" onclick="pharmacy_control_save(true)"/>

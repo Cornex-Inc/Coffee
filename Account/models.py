@@ -200,7 +200,9 @@ class User(AbstractBaseUser,PermissionsMixin):
 
 
     def is_doctor(self):
-        return str(self.depart) == 'DOCTOR'
+        return str(self.depart) == 'DOCTOR'    
+    def is_nurse(self):
+        return str(self.depart) == 'NURSE'
     def is_receptionist(self):
         return str(self.depart) == 'RECEPTIONIST'
     def is_pharmacy(self):

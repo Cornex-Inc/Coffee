@@ -50,6 +50,10 @@ $(function () {
             $('#add_medicine_reg').data('daterangepicker').setStartDate(moment(today));
             $('#add_medicine_expiry').data('daterangepicker').setStartDate(moment(today));
 
+            $("#add_medicine_input_price_need").prop('checked', false);
+            $("#add_medicine_input_price").prop('disabled', true);
+            $("#add_medicine_input_price").val('');
+
             $("#add_medicine_changes").prop("disabled", false);
             $("#add_medicine_changes").val(0);
             $('#add_medicine_memo').val('');
@@ -98,6 +102,14 @@ $(function () {
     });
 
 
+    $("#add_medicine_input_price_need").change(function () {
+        if ($(this).is(":checked") == false) {
+            $("#add_medicine_input_price").prop('disabled', true);
+
+        } else {
+            $("#add_medicine_input_price").prop('disabled', false);
+        }
+    });
 });
 
 function numberWithCommas(x) {
@@ -544,6 +556,12 @@ function save_database_add_medicine() {
     memo = $('#add_medicine_memo').val();
 
 
+    if ($("#add_medicine_input_price_need").is(':checked') == false) {
+        input_price = null;
+    } else {
+        input_price = $('#add_medicine_input_price').val();
+    }
+
 
     $.ajax({
         type: 'POST',
@@ -555,6 +573,7 @@ function save_database_add_medicine() {
             'expiry_date': expiry_date,
             'changes': changes,
             'memo': memo,
+            'input_price': input_price,
             'check': $("#add_medicine_database_id").val(),
         },
         dataType: 'Json',
