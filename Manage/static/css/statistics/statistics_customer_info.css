@@ -1,0 +1,147 @@
+
+.statistics_grid {
+    margin: 0 auto;
+    min-height:800px;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    /*grid-template-columns: 70%;
+    grid-template-rows: 50%;*/
+}
+
+
+.partition {
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: rgba(180, 180, 180, 0.15);
+    border: 3.7px solid white;
+    overflow: hidden;
+}
+
+
+
+.inventory_table_title_span {
+    margin-bottom: 15px;
+    font-size: 15px;
+    height: 30px;
+    padding-top: 1px;
+    background: rgb(90,64,129);
+    border-color: rgb(90,64,129);
+}
+
+    .inventory_table_title_span:hover {
+        background: rgb(90,64,129);
+        border-color: rgb(90,64,129);
+    }
+
+
+.statistics_table_grid {
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 50%;
+    grid-template-rows: 33% 33% 33%
+}
+.sub_label{
+    margin-bottom:10px;
+}
+
+.statistics_table_grid > div {
+    padding: 10px 20px;
+}
+
+    #statistics_div_gender {
+        grid-column-start: 1;
+        grid-column-end: 2;
+        grid-row-start: 1;
+        grid-row-end: 2;
+        overflow-y: hidden;
+    }
+
+#statistics_div_nation{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    overflow-y: hidden;
+}
+
+#statistics_div_payment_method{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 3;
+    grid-row-end: 4;
+    overflow-y: hidden;
+}
+
+#statistics_div_age{
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 4;
+    overflow-y: hidden;
+}
+
+
+
+#statistics_table {
+    table-layout: fixed;
+}
+
+.statistics_table_wrap table th, .statistics_table_wrap table td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+    .statistics_table_wrap table td:nth-child(3){
+        text-align:right;
+        padding-right:20px;
+    }
+
+
+    .statistics_table_wrap {
+        width: 1200px;
+        margin: 0 auto
+    }
+
+.date_input_div {
+    display: inline;
+    margin-right: 20px;
+}
+
+.date_input {
+    display: inline;
+    width: 90px;
+}
+
+
+.total_div{
+    width:100%;
+    text-align:right;
+    font-weight:700;
+    font-size:15px;
+}
+
+    .total_div span:first-child{
+        display:inline-block;
+    }
+    .total_div span:nth-child(2){
+        display: inline-block;
+        width: 150px;
+    }
+
+    .contents_filter_div {
+        display: inline-table;
+    }
+
+#contents_filter_div_depart {
+    width: 150px;
+}
+    @media ( min-height: 1900px ) {
+        .statistics_grid {
+        width: 1920px;
+        height: 800px;
+    }
+}

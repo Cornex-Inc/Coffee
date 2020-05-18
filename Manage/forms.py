@@ -218,3 +218,6 @@ class board_file_form(forms.ModelForm):
         fields = ['file']
 
         files = forms.FileField(required=False)#widget=forms.ClearableFileInput(attrs={'multiple': True,'required':False}))
+
+
+

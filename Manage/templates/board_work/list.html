@@ -86,7 +86,7 @@
             {% for file in content.list_file %}
             <li>
                 <i class="fa fa-file"></i>
-                <a href="{{ file.file_name}}" download> {{ file.origin_name }}</a>
+                <a href="{{ file.file_name}}" download="{{ file.origin_name }}"> {{ file.origin_name }}</a>
             </li>
 
             {% endfor %}
@@ -192,11 +192,11 @@
                             <th>{{ _('No.') }}</th>
                             <th>{{ _('Division') }}</th>
                             <th>{{ _('Title') }}</th>
-                            <th>{{ _('RQSTR') }}</th>
+                            <th>{{ _('Requester') }}</th>
                             <th>{{ _('Written by') }}</th>
-                            <th>{{ _('RQSTD_DATE') }}</th>
-                            <th>{{ _('RQSTD') }}</th>
-                            <th>{{ _('EXPCT_DAT') }}</th>
+                            <th>{{ _('Requestd Date') }}</th>
+                            <th>{{ _('Requested') }}</th>
+                            <th>{{ _('Expected Date') }}</th>
                             <th>{{ _('Due Date') }}</th>
                             <th>{{ _('File') }}</th>
                             <th>{{ _('Views') }}</th>

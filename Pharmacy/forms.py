@@ -23,7 +23,7 @@ class WaitingSearchForm(forms.Form):
     search_input = forms.CharField(
         label=_('Input'),
         widget=forms.TextInput(attrs={
-            'id': 'pharmacy_search_input ',
+            'id': 'pharmacy_search_input',
             'class':'form-control pharmacy_search_input',
             'aria-describedby':"basic-addon1"
         }),

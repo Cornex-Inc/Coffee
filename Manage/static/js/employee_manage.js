@@ -479,35 +479,35 @@ function delete_database(id = null, user_id = '') {
 
         $('#edit_database_resignation').modal({ backdrop: 'static', keyboard: false });
         $('#edit_database_resignation').modal('show');
-
-        $("#delete_database_ok").click(function () {
-
-            $.ajax({
-                type: 'POST',
-                url: '/manage/employee_delete/',
-                data: {
-                    'csrfmiddlewaretoken': $('#csrf').val(),
-                    'id': id,
-                    'date_of_resignation': $("#delete_database_date_of_resignation").val(),
-                    'resignation_reason': $("#delete_database_resignation_reason").val(),
-                },
-                dataType: 'Json',
-                success: function (response) {
-                    if (response.result == true) {
-                        database_search();
-
-                        $("#edit_database_resignation").modal('hide');
-                    } else {
-                        alert(gettext('Please Refresh this page.'));
-                    }
-                },
-                error: function (request, status, error) {
-                    console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-
-                },
-            })
-        })        
     }
+}
+
+function delete_user() {
+
+    $.ajax({
+        type: 'POST',
+        url: '/manage/employee_delete/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'id': id,
+            'date_of_resignation': $("#delete_database_date_of_resignation").val(),
+            'resignation_reason': $("#delete_database_resignation_reason").val(),
+        },
+        dataType: 'Json',
+        success: function (response) {
+            if (response.result == true) {
+                database_search();
+
+                $("#edit_database_resignation").modal('hide');
+            } else {
+                alert(gettext('Please Refresh this page.'));
+            }
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    }) 
 }
 
 
@@ -531,40 +531,39 @@ function edit_database_password(id = null, user_id = '') {
 
         $('#edit_database_password').modal({ backdrop: 'static', keyboard: false });
         $('#edit_database_password').modal('show');
-
-        $("#password_database_ok").click(function () {
-
-            var test = $("#edit_database_password_password").val();
-            console.log(test)
-
-            $.ajax({
-                type: 'POST',
-                url: '/manage/employee_change_password/',
-                data: {
-                    'csrfmiddlewaretoken': $('#csrf').val(),
-                    'id': id,
-                    'password': test,
-                },
-                dataType: 'Json',
-                success: function (response) {
-                    if (response.result == true) {
-                        database_search();
-                    
-                        $("#edit_database_password").modal('hide');
-                    } else {
-                        alert(gettext('Please Refresh this page.'));
-                    }
-                },
-                error: function (request, status, error) {
-                    console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-
-                },
-            })
-
-        })
-
     }
+}
 
+
+function change_password() {
+    var id = $("#password_database_id").val();
+
+    var test = $("#edit_database_password_password").val();
+    console.log(test)
+
+    $.ajax({
+        type: 'POST',
+        url: '/manage/employee_change_password/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'id': id,
+            'password': test,
+        },
+        dataType: 'Json',
+        success: function (response) {
+            if (response.result == true) {
+                database_search();
+
+                $("#edit_database_password").modal('hide');
+            } else {
+                alert(gettext('Please Refresh this page.'));
+            }
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
 
 }
 

@@ -7,7 +7,6 @@ th{
     width: 95%;
     margin: 0 auto;
     margin-top: 40px;
-    overflow:auto;
 }
     .contents_wrap > div{
         margin-bottom:20px;
@@ -199,13 +198,23 @@ th{
     }
 
 
-
-
-
-    #payment_search_table thead tr th:nth-child(11) {
-        width: 60px;
-    }
-        #payment_search_table thead tr th:nth-child(12), #payment_search_table thead tr th:nth-child(13), #payment_search_table thead tr th:nth-child(14), #payment_search_table thead tr th:nth-child(15), #payment_search_table thead tr th:nth-child(16) {
+        #payment_search_table thead tr th:nth-child(6),
+        #payment_search_table thead tr th:nth-child(7),
+        #payment_search_table thead tr th:nth-child(8),
+        #payment_search_table thead tr th:nth-child(9) {
+            /*width: 70px;*/
+        }
+#payment_search_table thead tr th:nth-child(11) {
+    width: 60px;
+}
+        #payment_search_table thead tr th:nth-child(12),
+        #payment_search_table thead tr th:nth-child(13),
+        #payment_search_table thead tr th:nth-child(14),
+        #payment_search_table thead tr th:nth-child(15),
+        #payment_search_table thead tr th:nth-child(16),
+        #payment_search_table thead tr th:nth-child(17),
+        #payment_search_table thead tr th:nth-child(18),
+        #payment_search_table thead tr th:nth-child(19) {
             width: 80px;
         }
 
@@ -215,10 +224,21 @@ th{
         text-align: center;
     }
 
-        #payment_search_table tbody tr td:nth-child(6), #payment_search_table tbody tr td:nth-child(7), #payment_search_table tbody tr td:nth-child(8), #payment_search_table tbody tr td:nth-child(9), #payment_search_table tbody tr td:nth-child(10) {
+        #payment_search_table tbody tr td:nth-child(6),
+        #payment_search_table tbody tr td:nth-child(7),
+        #payment_search_table tbody tr td:nth-child(8),
+        #payment_search_table tbody tr td:nth-child(9),
+        #payment_search_table tbody tr td:nth-child(10) {
             line-height:15px;
         }
-        #payment_search_table tbody tr td:nth-child(12), #payment_search_table tbody tr td:nth-child(13), #payment_search_table tbody tr td:nth-child(14), #payment_search_table tbody tr td:nth-child(15), #payment_search_table tbody tr td:nth-child(16) {
+        #payment_search_table tbody tr td:nth-child(12),
+        #payment_search_table tbody tr td:nth-child(13),
+        #payment_search_table tbody tr td:nth-child(14),
+        #payment_search_table tbody tr td:nth-child(15),
+        #payment_search_table tbody tr td:nth-child(16),
+        #payment_search_table tbody tr td:nth-child(17),
+        #payment_search_table tbody tr td:nth-child(18),
+        #payment_search_table tbody tr td:nth-child(19){
             text-align: right;
         }
 

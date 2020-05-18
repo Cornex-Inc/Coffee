@@ -1,0 +1,199 @@
+{% extends "app/layout_KBL.html" %}
+
+{% load staticfiles %}
+{% block content %}
+
+{% csrf_token %}
+    <div class="background_grid">
+        <div class="customer_list partition">
+            <div class="status_table_title">
+                <span class="btn btn-danger title_span">{{ _('Project Management') }}</span>
+            
+                <div class="search_control_div">
+                    <div class="input-group depart_select">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Status') }}</span>
+                        <select id="estimate_type" class="form-control costom-select " aria-describedby="basic-addon1" >
+                            <option value="" selected="">{{ _('ALL') }}</option>          
+                        </select>
+                    </div>
+                    <div class="input-group depart_select">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Type') }}</span>
+                        <select id="estimate_in_charge" class="form-control costom-select " aria-describedby="basic-addon1" >
+                            <option value="" selected="">{{ _('ALL') }}</option>          
+                        </select>
+                    </div>
+                    <input type="text" id="estimate_date_start" class="form-control date_input">
+                    <input type="text" id="estimate_date_end" class="form-control date_input">
+                    <input type="text" id="estimate_search" class="form-control"/>
+                    <input type="button" id="patient_search_btn" class="btn btn-default" value="{{ _('Search') }}" style="display:inline;"/>
+                </div>
+            </div>
+               
+            <div class="patient_list_table_wrap">
+                <table class="table table-bordered table-hover table-striped" id="patient_list_table">
+                    <thead>
+                        <tr>
+                            <th>{{ _('No') }}</th>
+                            <th>{{ _('Status') }}</th>
+                            <th>{{ _('Company Name') }}</th>
+                            <th>{{ _('Customer Name (KOR / ENG)') }}</th>
+                            <th>{{ _('Position') }}</th>
+                            <th>{{ _('Phone') }}</th>
+                            <th>{{ _('Necessary / Supplementary Documents') }}</th>
+                            <th>{{ _('Employment Apporval Application Date') }}</th>
+                            <th>{{ _('Expected Date') }}</th>
+                            <th>{{ _('Work Permit Application Date') }}</th>
+                            <th>{{ _('Expected Date') }}</th>
+                            <th>{{ _('Note') }}</th>
+                            <th>{{ _('File') }}</th>
+                            <th>{{ _('Manage') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <ul class="pagination" id="table_pagnation">
+
+                </ul>
+                <button class="btn btn-primary" style="float:right" onclick="work_permit_modal()">+ {{ _('Register') }}</button>
+            </div>
+        </div>
+    </div>
+
+
+
+<!--Project Management Modal-->
+<div id="work_permit_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h2>{{ _('Work Permit Register / Edit') }}</h2>
+                <div id="modalBody" class="modal-body" >
+
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Company Name') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Employment Approval Application Date') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('EA Exp.Date') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('WP Submit Date') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('WP Exp.Date') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Exp.Date') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Required documents') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Note') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Status') }}</span>
+						<select id="sms_class" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+							<option value="1">Submit</option>
+							<option value="2">Order</option>
+							<option value="3">Completion</option>
+						</select>
+					</div>
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" onclick="">{{ _('Save') }}</a>
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--Detailed Info Modal-->
+<div id="detailed_info_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h2>{{ _('Project Detail Information Register / Edit') }}</h2>
+                <div id="modalBody" class="modal-body" >
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Type') }}</span>
+						<select id="register_register" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+						<option value="">Korean</option>
+						<option value="">Foreigner</option>
+					</select>
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Project Progress Status') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Date') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Note') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" onclick="">{{ _('Save') }}</a>
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="overlay">
+	<div class="cv-spinner">
+		<span class="spinner"></span>
+	</div>
+</div>
+
+
+
+
+{% endblock %}
+
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/work_permit.css' %}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<script src="{% static 'js/work_permit.js' %}" type="text/javascript"></script>
+{% endblock %}

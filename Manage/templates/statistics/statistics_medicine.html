@@ -1,0 +1,85 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+<div class="inventory_precedure_grid">
+    <div class="statistics_grid partition">
+        <div class="statistics_table_wrap">
+            <span class="btn btn-danger inventory_table_title_span">{{ _('Medicine Statistics') }}</span>
+            <div style="float:right;">
+                <input type="hidden" value="MEDICINE" id="revenue_search_type" />
+                <!--Date-->
+                <div class="date_input_div">
+                    {{ _('Date')}}:
+                    <input type="text" class="form-control date_input" id="date_start" /> ~
+                    <input type="text" class="form-control date_input" id="date_end" />
+                </div>
+
+                <!--Depart-->
+                <div class="input-group contents_filter_div" id="contents_filter_div_depart">
+                    <span class="input-group-addon">{{ _('Depart') }}</span>
+                    <select id="contents_filter_depart" class="form-control" aria-describedby="basic-addon1">
+                        <option value="">{{ _('All') }}</option>
+                        {% for data in depart_medical %}
+                        <option value="{{ data.code }}">{{ data.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+            </div>
+            <div class="total_div">
+                <span>{{ _('Total Revenue') }} : </span>
+                <span></span>
+            </div>
+            <br />
+            <div class="precedure_database_list">
+                <div class="precedure_database_table">
+                    <table class="table table-hover table-striped" id="statistics_table">
+                        <thead>
+                            <tr>
+                                <th>{{ _('Nmae') }}</th>
+                                <th>{{ _('Count') }}</th>
+                                <th>{{ _('Revenue') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statistics_table_body">
+                        </tbody>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </table>
+                    <br />
+                    <div class="total_div">
+                        <span>{{ _('Total Revenue') }} : </span>
+                        <span></span>
+                    </div>
+
+                    <br />
+                    <br />
+                </div>
+
+             </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/statistics/statistics.css' %}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<script src="{% static 'js/statistics/statistics.js' %}" type="text/javascript"></script>
+{% endblock %}

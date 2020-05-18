@@ -1,0 +1,85 @@
+<p>
+  <b>1.&emsp;Mục đích (목적) :</b>
+</p>
+<p>
+  <br/>
+</p>
+<p>
+  <b>2.&emsp;Đối tượng chi trả (지출 대상) :</b>
+</p>
+<p>
+  <br/>
+</p>
+<p>
+  <b>3. Nội dung (내용) :&emsp;&emsp;&emsp;&emsp; Tiền thanh toán (금액)</b>
+</p>
+<span style="float:right;">ĐVT (단위): VNĐ</span>
+<table class="table table-bordered new_edit_title_content_table">
+  <thead>
+    <tr>
+      <th style="font-size:10px;">STT</th>
+      <th style="font-size:10px;">Nội dung</th>
+      <th style="font-size:10px;">Tổng giá trị</th>
+      <th style="font-size:10px;">Đặt cọc khi kí hợp đồng (20%)</th>
+      <th style="font-size:10px;">Ghi chú</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+<p>
+  <br/>
+</p>
+<p>
+  <b>4 .Vấn đề dự kiến (예상 문제)&nbsp; :&nbsp;</b>
+</p>
+<p>
+  <br/>
+</p>
+<p>
+  <b>5. Phương thức thanh toán (결제 방식) :&nbsp;</b>
+</p>
+<table class="table table-bordered" id="new_edit_title_payment_method_table">
+  <tbody>
+    <tr>
+      <td style="text-align: right; border:none !important;">
+        <p >
+          <span style="font-size: 10px;">Chuyển khoản (송금)&nbsp;</span>
+          <input type="checkbox"/>
+            <br/>
+        </p>
+      </td>
+      <td style="text-align: right; border:none !important;">
+        <span style="font-size: 10px;">Tiền mặt (현금)&nbsp;</span>
+        <input type="checkbox"/>
+          <br/>
+      </td>
+      <td style="text-align: right; border:none !important;"></td>
+    </tr>
+    <tr>
+      <td style="text-align: right; border:none !important;">
+        <span style="font-size: 10px;">Hóa đơn đỏ (세금계산서)&nbsp; Yes&nbsp;</span>
+        <input type="checkbox"/>
+      </td>
+      <td style="text-align: right; border:none !important;">
+        <span style="font-size: 10px;">No&nbsp;</span>
+        <input type="checkbox"/>
+      </td>
+      <td style="text-align: right; border:none !important;"></td>
+    </tr>
+  </tbody>
+</table>
+<p style="margin-left: 25px;"># Thời hạn thanh toán (결제 시한) :&nbsp;</p>
+<p>
+  <b>6. Thông tin Chuyển khoản (송금 정보) : </b>
+  <br/>
+  <br/>
+  <br/>
+</p>

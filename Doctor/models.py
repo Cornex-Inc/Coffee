@@ -436,6 +436,12 @@ class MedicineClass(models.Model):
     def __str__(self):
         return self.name
 
+
+class MedicineQueryManage(models.Manager):
+    def get_queryset(self):
+        return super(MedicineQueryManage,self).get_queryset().filter(is_showing = 'Y')
+
+
 class Medicine(models.Model):
     name_display = models.CharField(
         max_length = 128,
@@ -532,10 +538,16 @@ class Medicine(models.Model):
         default = 'PHARM',
         )
 
+    is_showing = models.CharField(
+        max_length = 2,
+        default = 'Y',
+        )
+
     def __str__(self):
         if self.name is None:
             return self.name_vie
         return self.name
+
 
     def get_price_input(self,get_date = None):
         date = datetime.datetime.now().strftime("%Y%m%d%H%M%S") if get_date is None else get_date.strftime("%Y%m%d%H%M%S")
@@ -629,6 +641,8 @@ class Medicine(models.Model):
                 return self.country_vie
         else:
             return self.country
+
+    objects = MedicineQueryManage()
 
 
 class MedicineShort(models.Model):

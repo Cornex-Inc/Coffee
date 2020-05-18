@@ -31,6 +31,8 @@
                             <th>{{ _('Phone Number') }}</th>
                             <th>{{ _('Date Registered')}}</th>
                             <th>{{ _('Remark') }}</th>
+                            <th>{{ _('Visits') }}</th>
+                            <th>{{ _('Total Paid') }}</th>
                             <th>{{ _('Manage') }}</th>
                         </tr>
                     </thead>
@@ -41,6 +43,7 @@
                 <ul class="pagination" id="table_pagnation">
 
                 </ul>
+                <!--<a class="btn btn-default" onclick="download_excel()" style="float:right;"><i class="fa fa-lg fa-file-excel-o"> {{ _('Download All') }}</i></a>-->
             </div>
         </div>
 
@@ -97,7 +100,8 @@
                                     <th>{{ _('Depart') }}</th>
                                     <th>{{ _('Doctor') }}</th>
                                     <th>{{ _('Date Visited') }}</th>
-                                    <th>{{ _('Manage') }}</th>
+                                    <th>{{ _('Paid') }}</th>
+                                    <th>{{ _('History') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -143,14 +147,36 @@
                     <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
                     <a class="btn btn-primary" onclick="send_sms()">{{ _('Send') }}</a>
                 </div>
-
+                 
             </div>
         </div>
-
     </div>
 </div>
 
- 
+<div id="overlay">
+	<div class="cv-spinner">
+		<span class="spinner"></span>
+	</div>
+</div>
+
+<div id="past_diagnosis_showlarge_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h2>{{ _('Past History') }}</h2>
+                <div id="modalBody" class="modal-body" >
+                    <table class="table" id="past_diagnosis_showlarge_table">
+                        <tbody>
+                    
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 {% endblock %}
 

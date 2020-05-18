@@ -1,0 +1,150 @@
+<p>
+</p>
+<p>
+  <b>1. Ngày (dự kiến) chi trả :&nbsp; &nbsp; &nbsp;&nbsp;</b>
+  <u>Ngày&nbsp; &nbsp; &nbsp; &nbsp; Tháng&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Năm</u>
+</p>
+
+<p>
+  <b>2. Nội dung chi trả :</b>
+</p>
+<table class="table table-bordered new_edit_title_content_table_demand">
+  <thead>
+    <tr>
+      <th style="font-size:11px;">No.</th>
+      <th style="font-size:11px;">Nội dung</th>
+      <th style="font-size:11px;">Giá trị</th>
+      <th style="font-size:11px;">Số tiền VAT</th>
+      <th style="font-size:11px;">Tổng phải thanh toánchú</th>
+      <th style="font-size:11px;">P/T</th>
+      <th style="font-size:11px;">Đối tượng</th>
+      <th style="font-size:11px;">Số hồ sơ đối chiếu</th>
+      <th style="font-size:11px;">Ghi chú</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+<p>
+
+</p>
+<p></p>
+<p>
+  <br/>
+</p>
+<p>
+  <br/>
+</p>
+<p>
+  <u>
+    Trong đó :&nbsp;
+  </u>
+</p>
+<table class="table table-bordered" style="width:50%;" id="payment_method_table">
+  <tbody>
+    <tr>
+      <td rowspan="4">
+        <i>Phân loại theo phương thức thanh toán</i><br/>
+      </td>
+      <td colspan="2">
+        Chi tiền mặt (TM)<br/>
+      </td>
+      <td>
+        <br/>
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="3">
+        Chuyển khoản<br/>
+      </td>
+      <td>
+        Techcombank (Tech)<br/>
+      </td>
+      <td>
+        <br/>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        VP bank (VP)<br/>
+      </td>
+      <td>
+        <br/>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        BIDV<br/>
+      </td>
+      <td>
+        <br/>
+      </td>
+    </tr>
+  </tbody>
+</table>

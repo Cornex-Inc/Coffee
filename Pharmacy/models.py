@@ -31,6 +31,12 @@ class MedicineManage(models.Model):
         auto_now_add=True,
         )
 
+class MedicineLogQueryManage(models.Manager):
+    def get_queryset(self):
+        return super(MedicineLogQueryManage,self).get_queryset().filter(medicine__is_showing = 'Y')
+
+
+
 class MedicineLog(models.Model):
     type_chices = (
         ('new',_('new')),
@@ -76,3 +82,5 @@ class MedicineLog(models.Model):
     tmp_count = models.IntegerField(
         null = True,
         )
+
+    objects = MedicineLogQueryManage()

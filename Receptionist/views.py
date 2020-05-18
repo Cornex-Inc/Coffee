@@ -46,6 +46,8 @@ def index(request):
                 
     list_depart = Depart.objects.all().values('id','name')
         
+    patient_mark = COMMCODE.objects.filter(upper_commcode = '000006',commcode_grp = 'PT_INFO',use_yn="Y").values('commcode','se1').order_by('seq')
+
     return render(request,
     'Receptionist/index.html',
             {
@@ -56,6 +58,8 @@ def index(request):
                 'receptionsearch':receptionsearch_form,
                 'payment':payment_form,
                 'reservation':reservation_form,
+
+                'patient_mark':patient_mark,
 
                 'initial_report_q2':initial_report_q2,
                 'initial_report_q2_title':initial_report_q2_title,
@@ -93,6 +97,7 @@ def save_patient(request):
     email = request.POST.get('email','')
     nationality = request.POST.get('nationality','')
     memo = request.POST.get('memo','')
+    marking = request.POST.get('marking','')
 
     past_history = request.POST.get('past_history','')
     family_history = request.POST.get('family_history','')
@@ -126,6 +131,8 @@ def save_patient(request):
         patient.email = email
     if memo != '' and memo != None:
         patient.memo = memo
+    if marking != '' and marking != None:
+        patient.marking = marking
 
     patient.save()
 
@@ -210,6 +217,7 @@ def set_patient_data(request):
         'phone':patient.phone,
         'address':patient.address,
         'memo':patient.memo,
+        'marking':patient.marking,
 
         'tax_invoice_number':'' if taxinvoice is None else taxinvoice.number,
         'tax_invoice_company_name':'' if taxinvoice is None else taxinvoice.company_name,
@@ -359,6 +367,7 @@ def save_reception(request):
     email = request.POST.get('email')
     nationality = request.POST.get('nationality','')
     memo = request.POST.get('memo','')
+    marking = request.POST.get('marking','')
 
     past_history = request.POST.get('past_history','')
     family_history = request.POST.get('family_history','')
@@ -385,15 +394,25 @@ def save_reception(request):
     #except Patient.DoesNotExist:
     #    patient = Patient(pk = int(id))
 
-    patient.name_kor = name_kor
-    patient.name_eng = name_eng
+
+    if name_kor != '' and name_kor != None:
+        patient.name_kor = name_kor
+    if name_eng != '' and name_eng != None:
+        patient.name_eng = name_eng
     patient.date_of_birth = date_of_birth
     patient.phone = phone
     patient.gender = gender
     patient.address = address
-    patient.nationality = nationality
-    patient.email = email
-    patient.memo = memo
+
+    if nationality != '' and nationality != None:
+        patient.nationality = nationality
+    if email != '' and email != None:
+        patient.email = email
+    if memo != '' and memo != None:
+        patient.memo = memo
+    if marking != '' and marking != None:
+        patient.marking = marking
+
     patient.save()
 
     #try:
@@ -760,6 +779,12 @@ def waiting_list(request):
         if hasattr(reception,'payment'):
             if hasattr(reception.payment,'paymentrecord_set'):
                 payment_set = PaymentRecord.objects.filter(payment_id = reception.payment.id)
+                try:
+                    query = COMMCODE.objects.get(upper_commcode = '000006',commcode_grp='PT_INFO',commcode = reception.patient.marking)
+                    marking = query.se1
+                except COMMCODE.DoesNotExist:
+                    marking=''
+
                 if payment_set.count() is 0:
                     if reception.recorded_date.strftime('%Y%m%d') == datetime.datetime.today().strftime('%Y%m%d'):
                         continue
@@ -774,8 +799,9 @@ def waiting_list(request):
                         'paid':0,
                         'date':reception.recorded_date.strftime('%Y-%m-%d'),
                         'status':'paid' if reception.payment.progress=='paid' else 'unpaid',
-                        'has_unpaid':reception.patient.has_unpaid()
+                        'has_unpaid':reception.patient.has_unpaid(),
                         #'is_unpaid':pay_record.payment.reception.patient.has_unpaid(),
+                        'marking':marking,
                         }  
                     datas.append(record)
                 else:
@@ -791,7 +817,9 @@ def waiting_list(request):
                             'paid':pay_record.paid,
                             'date':reception.recorded_date.strftime('%Y-%m-%d'),
                             'status':'paid' if reception.payment.progress=='paid' else 'unpaid',
-                            'has_unpaid':reception.patient.has_unpaid()
+                            'has_unpaid':reception.patient.has_unpaid(),
+
+                            'marking':marking,
                             }
 
                         datas.append(record)
@@ -823,6 +851,13 @@ def get_today_list(request):
 
     datas=[]
     for reception in receptions:
+        try:
+            query = COMMCODE.objects.get(upper_commcode = '000006',commcode_grp='PT_INFO',commcode = reception.patient.marking)
+            marking = query.se1
+        except COMMCODE.DoesNotExist:
+            marking= ''
+
+
         count = PaymentRecord.objects.filter(payment = reception.payment).count()
         if count is not 0:
             continue
@@ -836,7 +871,9 @@ def get_today_list(request):
             'status':reception.payment.progress,
             'total_amount':reception.payment.total,
             'DateTime':reception.recorded_date.strftime('%H:%M'),
-            'has_unpaid':reception.patient.has_unpaid()
+            'has_unpaid':reception.patient.has_unpaid(),
+
+            'marking':marking,
             }
         datas.append(data)
         
@@ -997,6 +1034,8 @@ def waiting_selected(request):
     precedure_set = PrecedureManager.objects.filter(diagnosis_id = diagnosis.id)
     medicine_set = MedicineManager.objects.filter(diagnosis_id = diagnosis.id)
 
+    standard_date = reception.payment.paymentrecord_set.first().date
+
     exams = []
     for data in exam_set:
         exam = {}
@@ -1005,7 +1044,7 @@ def waiting_selected(request):
             'is_checked':data.is_checked_discount,
             'code':data.exam.code,
             'name':data.exam.name,
-            'price':data.exam.get_price(reception.recorded_date),
+            'price':data.exam.get_price(standard_date),
             })
         exams.append(exam)
 
@@ -1017,7 +1056,7 @@ def waiting_selected(request):
             'is_checked':data.is_checked_discount,
             'code':data.test.code,
             'name':data.test.name,
-            'price':data.test.get_price(reception.recorded_date),
+            'price':data.test.get_price(standard_date),
             })
         tests.append(test)
 
@@ -1030,7 +1069,7 @@ def waiting_selected(request):
             'code':data.precedure.code,
             'name':data.precedure.name,
             'amount':data.amount,
-            'price':data.precedure.get_price(reception.recorded_date),
+            'price':data.precedure.get_price(standard_date),
             })
         precedures.append(precedure)
 
@@ -1038,8 +1077,8 @@ def waiting_selected(request):
     for data in medicine_set:
         medicine = {}
         quantity = int(data.days) * int(data.amount)
-        unit = data.medicine.get_price(reception.recorded_date)
-        price = quantity * int(data.medicine.get_price(reception.recorded_date))
+        unit = data.medicine.get_price(standard_date)
+        price = quantity * int(data.medicine.get_price(standard_date))
         medicine.update({
             'manager_id':data.id,
             'is_checked':data.is_checked_discount,
@@ -1132,8 +1171,8 @@ def storage_page_save(request):
     additional = request.POST.get('additional',0)
 
     payment = Payment.objects.get(reception_id = reception_id)
-    payment.discounted = None if discount is '' else discount
-    payment.discounted_amount = None if discount_amount is '' else discount_amount
+    payment.discounted = 0 if discount is '' else discount
+    payment.discounted_amount = 0 if discount_amount is '' else discount_amount
     payment.is_emergency = True if is_emergency == 'true' else False
     payment.additional = additional
     payment.total = total
@@ -1141,19 +1180,19 @@ def storage_page_save(request):
 
     #72시간 이후 수정 불가
     #혹시 모르니 관리자 계정만 가능
-    if request.user.is_superuser == False:
-        reception = Reception.objects.get(id = reception_id)
-        print(reception.recorded_date)
-        data_date = reception.recorded_date + datetime.timedelta(hours=72)
-        print(data_date)
-        today = datetime.datetime.now()
-        print(today)
-
-        if data_date < today:
-            return JsonResponse({
-                'result':False,
-                'msg':_('Cannot edit past payment after 72 hours'),
-                                 })
+    #if request.user.is_superuser == False:
+    #    reception = Reception.objects.get(id = reception_id)
+    #    print(reception.recorded_date)
+    #    data_date = reception.recorded_date + datetime.timedelta(hours=72)
+    #    print(data_date)
+    #    today = datetime.datetime.now()
+    #    print(today)
+    #
+    #    if data_date < today:
+    #        return JsonResponse({
+    #            'result':False,
+    #            'msg':_('Cannot edit past payment after 72 hours'),
+    #                             })
 
 
     if payment.progress == 'paid':
@@ -1317,11 +1356,11 @@ def reservation_events(request):
         try:
             patient = Patient.objects.get(pk = reservation.patient_id)
             data.update({
-                'title': reservation.patient.get_name_kor_eng() + ' - (' + reservation.depart.name + ' / ' + reservation.doctor.name_kor + ')',
+                'title': reservation.patient.name_kor + '\n' + reservation.patient.name_eng + '\n(' + reservation.depart.name + ' / ' + reservation.doctor.name_kor + ')\n- ' + reservation.memo,
                 })
         except Patient.DoesNotExist:
             data.update({
-                'title': reservation.name + ' - (' + reservation.depart.name + ' / ' + ('' if reservation.doctor is None else reservation.doctor.name_kor) + ')',
+                'title': reservation.name + '\n' + reservation.depart.name + ' / ' + ('' if reservation.doctor is None else reservation.doctor.name_kor) + ')\n- ' + reservation.memo,
                 })
     
         datas.append(data)

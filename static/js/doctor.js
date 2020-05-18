@@ -393,7 +393,7 @@ $(function () {
         });
 
 
-
+    //진료창 크게 보기
     $("#past_diagnosis_showlarge").click(function () {
         $('#past_diagnosis_showlarge_table tbody').empty();
         $.ajax({
@@ -461,6 +461,9 @@ $(function () {
         $('#past_diagnosis_showlarge_modal').modal('show');
     });
 
+
+
+
     get_medicine_count();
 
 
@@ -475,19 +478,19 @@ $(function () {
 
 //알람
 function play_alarm() {
-    var x = document.getElementById("audio").play();
-    
-
-    if (x !== undefined) {
-        x.then(_ => {
-            console.log(_);
-            // Autoplay started!
-        }).catch(error => {
-            console.log(error);
-            // Autoplay was prevented.
-            // Show a "Play" button so that user can start playback.
-        });
-    }
+    //var x = document.getElementById("audio").play();
+    //
+    //
+    //if (x !== undefined) {
+    //    x.then(_ => {
+    //        console.log(_);
+    //        // Autoplay started!
+    //    }).catch(error => {
+    //        console.log(error);
+    //        // Autoplay was prevented.
+    //        // Show a "Play" button so that user can start playback.
+    //    });
+    //}
 }
 
 
@@ -658,6 +661,7 @@ function reception_select(reception_id) {
             $('#patient_date_of_birth').val(response.date_of_birth);
             $('#patient_address').val(response.address);
             $('#patient_phone').val(response.phone);
+            $("#patient_mark").val(response.marking)
 
             $('#history_past').val(response.history_past);
             $('#history_family').val(response.history_family);
@@ -965,8 +969,24 @@ function diagnosis_save(set) {
         return;
     }
     
+    if ($('#chief_complaint').val().trim() == '') {
+        alert(gettext('Subjective Data is Empty.\nPlease fill in all the input of History Taking.'));
+        return;
+    }
+    if ($('#objective_data').val().trim() == '') {
+        alert(gettext('Objective Data is Empty.\nPlease fill in all the input of History Taking.'));
+        return;
+    }
+    if ($('#assessment').val().trim() == '') {
+        alert(gettext('Assessment is Empty.\nPlease fill in all the input of History Taking.'));
+        return;
+    }
+    if ($('#plan').val().trim() == '') {
+        alert(gettext('Plan is Empty.\nPlease fill in all the input of History Taking.'));
+        return;
+    }
     if ($('#diagnosis').val().trim() == '') {
-        alert(gettext('Diagnosis is empty.'));
+        alert(gettext('Diagnosis is Empty.\nPlease fill in all the input of History Taking.'));
         return;
     }
 
@@ -1104,6 +1124,7 @@ function diagnosis_save(set) {
     var gender = $('input[name="gender"]:checked').val();
     var address = $('#patient_address').val();
     var phone = $('#patient_phone').val();
+    var marking = $("#patient_mark").val();
 
     var past_history = $('#history_past').val();
     var history_family = $('#history_family').val();
@@ -1118,6 +1139,7 @@ function diagnosis_save(set) {
             'phone': phone,
             'gender': gender,
             'address': address,
+            'marking': marking,
             'past_history': past_history,
             'family_history': history_family,
         },

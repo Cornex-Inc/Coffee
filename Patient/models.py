@@ -57,6 +57,11 @@ class Patient(models.Model):
         max_length = 128,
         )
 
+    marking = models.CharField(
+        null = True,
+        default = '',
+        max_length = 2,
+        )
 
     def getID(self):
         self.gender 

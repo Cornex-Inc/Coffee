@@ -1,0 +1,327 @@
+﻿<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <style>
+        @media print {
+            body{
+                margin: 0px;
+                padding: 45px;
+                padding-bottom:0px;
+                font-size: 10px;
+                font-family: "Times New Roman", Times, serif;
+            }
+
+            tr, td {
+                font-size:10px;
+            }
+
+            input[type=checkbox] {
+                -moz-appearance: none;
+                -webkit-appearance: none;
+                outline: none;
+                content: none;
+            }
+                input[type=checkbox]:before {
+                    font-family: "FontAwesome";
+                    content: "\f00c";
+                    font-size: 15px;
+                    color: transparent !important;
+                    background: #fff;
+                    display: block;
+                    border: 1px solid black;
+                    margin-right: 7px;
+                }
+
+                input[type=checkbox]:checked:before {
+                    color: black !important;
+                }
+
+            .f_size_10 {
+                font-size:10px;
+            }
+            .f_size_20 {
+                font-size: 20px;
+            }
+            .underline {
+                text-decoration: underline;
+            }
+            .b {
+                font-weight:700;
+            }
+            .bg_gray {
+                background:rgb(242,242,242) !important;
+            }
+            .fl {
+                float:left;
+            }
+            .border_thin {
+                border:1px solid black;
+            }
+            .border_thicnk {
+                border: 2px solid black;
+            }
+
+
+            #table_first {
+                table-layout:fixed;
+            }
+
+                #table_first tr td {
+                    text-align:center;
+                    vertical-align:middle;
+                }
+
+                #table_first tr:nth-child(1) {height:33px;}
+                #table_first tr:nth-child(2) {height:29.25px;}
+
+                #table_first tr td:nth-child(1) {width: 23.51px;}
+                #table_first tr td:nth-child(2) {width: 16px;}
+                #table_first tr td:nth-child(3) {width: 16px;}
+                #table_first tr td:nth-child(4) {width: 16px;}
+                #table_first tr td:nth-child(5) {width: 25px;}
+                #table_first tr td:nth-child(6) {width: 19px;}
+
+            #table_second {
+                table-layout:fixed;
+                border-top:none;
+            }
+
+                #table_second tr:nth-child(1) {height: 30.75px;}
+                #table_second tr:nth-child(2) {height: 30px;}
+                #table_second tr:nth-child(3) {height: 34.5px;}
+                #table_second tr:nth-child(4) {height: 36.75px;}
+
+                #table_second tr td:nth-child(1) {width:23.51px;}
+                #table_second tr td:nth-child(2) {width:19px;}
+                #table_second tr td:nth-child(3) {width:16px;}
+                #table_second tr td:nth-child(4) {width:15px;}
+                #table_second tr td:nth-child(5) {width:17px;}
+                #table_second tr td:nth-child(6) {width:24px;}
+
+
+            #table_third {
+                table-layout: fixed;
+                border-top: none;
+            }
+
+                #table_third tr{height: 20px;}
+
+
+            #table_fourth {
+                table-layout: fixed;
+                border-top: none;
+            }
+
+                #table_fourth tr{height: 21.7px;}
+
+                #table_fourth tr td:nth-child(1) {width:30px;}
+                #table_fourth tr td:nth-child(2) {width:84px;}
+
+
+            #table_last {
+                table-layout: fixed;
+            }
+
+                #table_last tr td:nth-child(1) {width:23.51px;}
+                #table_last tr td:nth-child(2) {width:77px;}
+
+                
+        }
+    </style>
+
+</head>
+<body>
+    <div style=" width: 100%; text-align: center;">
+        <span class="b f_size_10 fl">CÔNG TY TNHH KBL VIET NAM (경천애인 유한책임회사)</span>
+        <br />
+        <br />
+        <span class="f_size_20 underline b" >GIẤY ĐỀ NGHỊ  (품의서)</span>
+        <table style="width:100%" id="table_first" class="border_thicnk">
+            <tr>
+                <td rowspan="2" class="bg_gray border_thin b">
+                    <span>
+                        Tên chi phí<br />(비용 계정)
+                    </span>
+                </td>
+                <td rowspan="2"></td>
+                <td class="bg_gray border_thin b">
+                    <sapn>
+                        Hình thức đề nghị<br />(요청 형식)
+                    </sapn>
+                </td>
+                <td class="bg_gray border_thin b">
+                    <span>
+                        Bộ phận đề nghị<br />(요청 부서)
+                    </span>
+                </td>
+                <td class="bg_gray border_thin b">
+                    Số hồ sơ<br />(서류번호)
+                </td>
+                <td class="bg_gray border_thin b">
+                    Ngày/tháng/năm<br />(작성일)
+                </td>
+            </tr>
+            <tr>
+                <td class="border_thin">{{type_vi}}<br />{{type_ko}}</td>
+                <td class="border_thin">{{depart_vi}}<br />{{depart_ko}}</td>
+                <td class="border_thin"></td>
+                <td class="border_thin" style="color:red !important;">{{ date_registered }}</td>
+            </tr>
+        </table>
+
+        <table style="width:100%" id="table_second" class="border_thicnk">
+            <tr>
+                <td class="bg_gray border_thin b">
+                    Người đề nghị<br />(작성자)
+                </td>
+                <td class="bg_gray border_thin b">
+                    N.xem xét 1<br />(기획 검토자1)
+                </td>
+                <td class="bg_gray border_thin b">
+                    N.xem xét 2<br />(내용 검토자2)
+                </td>
+                <td class="bg_gray border_thin b">
+                    Kiểm soát chi<br />(계산 검토자....)
+                </td>
+                <td class="bg_gray border_thin b">
+                    Phê duyệt<br />(승인자)
+                </td>
+                <td class="bg_gray border_thin b">
+                    Ý kiến  bổ sung<br />(보충 의견)
+                </td>
+            </tr>
+            <tr>
+                <td class="border_thin"></td>
+                <td class="border_thin"></td>
+                <td class="border_thin"></td>
+                <td class="border_thin"></td>
+                <td class="border_thin"></td>
+                <td class="border_thin">
+                    <div>
+                        <div style="display:inline-table;height:30px;float:left;">
+                            <span style="margin:5px; vertical-align:middle;">tái kiểm tra<br />(재검토 요망)
+                            </span>
+                        </div>
+                        <div style="display:inline;height:100%;vertical-align:middle;">
+                            <input type="checkbox" {% if status == 'WAITING' %}checked {%endif%}/>
+                        </div>
+                        <div style="display:inline;width:30%;height:100%;">
+                            <span>(&emsp;&emsp;&emsp;)</span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2" class="border_thin"></td>
+                <td rowspan="2" class="border_thin"></td>
+                <td rowspan="2" class="border_thin"></td>
+                <td rowspan="2" class="border_thin"></td>
+                <td rowspan="2" class="border_thin"></td>
+                <td class="border_thin">
+                    <div>
+                        <div style="display:inline-table;height:30px;float:left;">
+                            <span style="margin:5px; line-height:30px; vertical-align:middle;">
+                                bảo lưu (보류)
+                            </span>
+                        </div>
+                        <div style="display:inline;height:100%;vertical-align:middle;">
+                            <input type="checkbox" {% if status == 'PENDING' %}checked {%endif%} />
+                        </div>
+                        <div style="display:inline;width:30%;height:100%;">
+                            <span>(&emsp;&emsp;&emsp;)</span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="border_thin">
+                    <div>
+                        <div style="display:inline-table;height:30px;float:left;">
+                            <span style="margin:5px; line-height:30px; vertical-align:middle;">
+                                huỷ bỏ (폐기)
+                            </span>
+                        </div>
+                        <div style="display:inline;height:100%;vertical-align:middle;">
+                            <input type="checkbox" {% if status == 'CANCEL' %}checked {%endif%}/>
+                        </div>
+                        <div style="display:inline;width:30%;height:100%;">
+                            <span>&emsp;&emsp;&emsp;&nbsp;&nbsp;</span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <table style="width:100%" id="table_third" class="border_thicnk">
+            <colgroup>
+                <col style="width:2px;" />
+                <col style="width:21.51px;" />
+                <col style="width:19px;" />
+                <col style="width:72px;" />
+            </colgroup>
+            <tr>
+                <td colspan="2" class="bg_gray border_thin b">
+                    # Bộ phận hợp tác (협력 부서)
+                </td>
+                <td class="bg_gray border_thin b">
+                    N.xem xét (검토자)
+                </td>
+                <td class="bg_gray border_thin b">
+                    Ý kiến xem xét (협력부서 검토 의견)
+                </td>
+            </tr>
+            <tr>
+                <td class="border_thin"></td>
+                <td class="border_thin"></td>
+                <td class="border_thin"></td>
+                <td class="border_thin"></td>
+            </tr>
+            <tr>
+                <td class="border_thin"></td>
+                <td class="border_thin"></td>
+                <td class="border_thin"></td>
+                <td class="border_thin"></td>
+            </tr>
+            <tr>
+                <td class="border_thin"></td>
+                <td class="border_thin"></td>
+                <td class="border_thin"></td>
+                <td class="border_thin"></td>
+            </tr>
+        </table>
+
+        <table style="width:100%" id="table_fourth" class="border_thicnk">
+            <tr>
+                <td class="border_thin b" style="font-size:14px;">Tiêu đề (제목)</td>
+                <td class="border_thin" style="font-size:12px;">{{ title }}</td>
+            </tr>
+        </table>
+        <!--main contents-->
+        <table style="width:100%;" class="border_thin">
+            <tr>
+                <td style="text-align:left; font-size:10px;" id="main_contents">
+                    {{ contents | safe }}
+                </td>
+            </tr>
+        </table>
+
+        <table style="width:100%" id="table_last" class="border_thicnk">
+            <tr>
+                <td rowspan="{{ file_rowspan }}" class="border_thin b">7. Đính kèm (첨부) :</td>
+                {% if file_list %}
+                {% for data in file_list%}
+                <td class="border_thin" style="text-align:left;">&emsp;{{data.id}}.&emsp; {{ data.title }} </td>
+            </tr>
+            <tr>
+                {% endfor %}
+                {% else %}
+                <td class="border_thin" style="text-align:left;">&emsp;-&emsp;</td>
+                {% endif %}
+
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

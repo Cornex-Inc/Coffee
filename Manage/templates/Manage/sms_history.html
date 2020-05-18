@@ -1,0 +1,136 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+<div class="inventory_precedure_grid">
+    <div class="inventory_database partition">
+        <div class="medicine_table_title">
+            <span class="btn btn-danger title_span">{{ _('SMS History') }}</span>
+            <div style="float:right;">
+                <!--날짜-->
+                <div class="date_input_div">
+                    {{ _('Date')}}:
+                    <input type="text" class="form-control date_input" id="search_date_start" /> ~ 
+                    <input type="text" class="form-control date_input" id="search_date_end" />
+                </div>
+                <div class="input-group" id="search_type_div">
+                    <span class="input-group-addon" id="basic-addon1">{{ _('Type') }}</span>
+                    <select id="search_type" class="form-control">
+                        <option value="">{{ _('ALL') }}</option>
+                        {% for data in list_type %}
+                        <option value="{{ data.id }}">{{ data.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group" id="search_option_div">
+                    <span class="input-group-addon" id="basic-addon1">{{ _('Searching Option') }}</span>
+                    <select id="search_option" class="form-control">
+                        <option value="">{{ _('ALL') }}</option>
+                        {% for data in list_search %}
+                        <option value="{{ data.id }}">{{ data.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <input type="text" id="sms_history_search_input" class="form-control search_input" aria-describedby="basic-addon1" required="">
+                <input type="button" class="btn btn-default" value="{{ _('Search')}}" onclick="sms_history_search()" />
+            </div>
+        </div>
+        <div class="precedure_database_list">
+            <div class="database_table">
+                <table class="table table-bordered table-hover table-striped" id="list_database_table">
+                    <thead>
+                        <tr>
+                            <th>{{ _('No') }}</th>
+                            <th>{{ _('Type') }}</th>
+                            <th>{{ _('Company') }}</th>
+                            <th>{{ _('Name Received') }}</th>
+                            <th>{{ _('Phone Number') }}</th>
+                            <th>{{ _('DateTime Sent') }}</th>
+                            <th>{{ _('Sender') }}</th>
+                            <th>{{ _('Status') }}</th>
+                            <th>{{ _('Remark') }}</th>
+                            <th>{{ _('Content') }}</th>
+                            <th>{{ _('') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <ul class="pagination" id="pagnation">
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- SMS - personal -->
+<div id="sms_modal" class="modal fade">
+    <div class="modal-dialog" style="width:500px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4 id="delete_database_header">{{ _('Send SMS') }}</h4>
+                <div id="modalBody" class="modal-body">
+                    <!--Patient Name-->
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Name') }}</span>
+                        <input type="text" id="sms_modal_name" class="form-control" aria-describedby="basic-addon1">
+                    </div>
+                    <!--Patient's phone-->
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Phone Number') }}</span>
+                        <input type="text" id="sms_modal_phone" class="form-control" aria-describedby="basic-addon1">
+                    </div>
+                    <!--content-->
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Content') }}</span>
+                        <textarea type="text" id="sms_modal_content" class="form-control" aria-describedby="basic-addon1"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                </div>
+                 
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/sms_history.css' %}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<script src="{% static 'js/sms_history.js' %}" type="text/javascript"></script>
+{% endblock %}

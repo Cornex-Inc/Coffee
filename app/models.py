@@ -8,50 +8,50 @@ from django.db import models
 class COMMCODE(models.Model):
     #상위코드
     upper_commcode = models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
 
     #상위코드 명
     upper_commcode_name = models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
 
     #공통코드 그룹
     commcode_grp= models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
     #공통코드 그룹명
     commcode_grp_name= models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
 
     #공통코드
     commcode = models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
     #공통코드 명_ko
     commcode_name_ko = models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
     #공통코드 명_en
     commcode_name_en = models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
     #공통코드 명_vi
     commcode_name_vi = models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
     #공통코드 별칭
     commcode_ncm = models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
 
@@ -62,54 +62,54 @@ class COMMCODE(models.Model):
         )
     #순번
     seq = models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
     #구분1
     se1 = models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
     #구분2
     se2 = models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
     #구분3
     se3 = models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
     #구분4
     se4 = models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
     #구분5
     se5 = models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
     #구분6
     se6 = models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
     #구분7
     se7 = models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
     #구분8
     se8 = models.CharField(
-        null=True,
+        default='',
         max_length = 18,
         )
 
     #등록자 - 논리 FK = user_id
     registrerer = models.CharField(
         max_length = 8,
-        null=True,
+        default='',
         )
 
     #최초 작성 일자

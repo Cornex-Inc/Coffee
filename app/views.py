@@ -53,59 +53,62 @@ def home(request):
     elif request.user.is_physical_therapist():
         return redirect('/physical_therapist')
     elif request.user.is_admin:
-        return redirect('/manage')
+        if request.META['SERVER_PORT'] == '9090' or request.META['SERVER_PORT'] == '11111':#테스트서버
+            return redirect('/manage')
+        elif request.META['SERVER_PORT'] == '8888':#경천애인 관리자
+            return redirect('/manage')
 
 
 def login(request):
 
 
+    commcode = 0
+    authentication_form=BootstrapAuthenticationForm()
+    err_msg = ''
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
 
-    #아이메디
-    if request.META['SERVER_PORT'] == '9090' or request.META['SERVER_PORT'] == '11111':#테스트서버
-        authentication_form=BootstrapAuthenticationForm()
-        err_msg = ''
-        if request.method == 'POST':
-            username = request.POST['username']
+        temp_user = User.objects.get(user_id = username)
 
-            password = request.POST['password']
-            user = auth.authenticate(request,username = username, password = password)
-            if user is not None:
-                auth.login(request,user)
-                
+        
 
 
-                return redirect('/')
-            else:
-                err_msg = _('Please enter a correct user name and password.')
+        #아이메디
+        if request.META['SERVER_PORT'] == '9090' or request.META['SERVER_PORT'] == '11111':#테스트서버
+            commcode = COMMCODE.objects.filter(commcode_grp = 'DEPART_CLICINC',commcode = temp_user.depart ).count()
+        elif request.META['SERVER_PORT'] == '8888':#경천애인
+            commcode = COMMCODE.objects.filter(commcode_grp = 'DEPART_KBL',commcode = temp_user.depart ).count()
 
 
-        return render(request,
-            'app/login.html',
-                {
-                    'title':_('Log in'),
-                    'form':authentication_form,
-                    'year':datetime.now().year,
-                    'register_user':UserRegisterForm(),
-                    'register_role':UserRuleChoiceForm(),
-                    'register_doctor':DoctorDepartChoiceForm(),
-                    'error':None if err_msg is '' else err_msg,
-                }
-            )
-    elif request.META['SERVER_PORT'] == '8888':#경천애인
+        if temp_user.depart == 'ADMIN':
+            commcode = COMMCODE.objects.filter(commcode_grp = 'DEPART_ADMIN',commcode = temp_user.depart ).count()
 
-        return render(request,
-            'app/login.html',
-                {
-                    'title':_('Log in'),
-                    'form':authentication_form,
-                    'year':datetime.now().year,
-                    'register_user':UserRegisterForm(),
-                    'register_role':UserRuleChoiceForm(),
-                    'register_doctor':DoctorDepartChoiceForm(),
-                    'error':None if err_msg is '' else err_msg,
-                }
-            )
+    if commcode == 0:
+        user = None
+    else:
+        user = auth.authenticate(request,username = username, password = password)
 
+    if user is not None:
+        auth.login(request,user)
+
+        return redirect('/')
+    else:
+        err_msg = _('Please enter a correct user name and password.')
+
+    return render(request,
+        'app/login.html',
+            {
+                'title':_('Log in'),
+                'form':authentication_form,
+                'year':datetime.now().year,
+                'register_user':UserRegisterForm(),
+                'register_role':UserRuleChoiceForm(),
+                'register_doctor':DoctorDepartChoiceForm(),
+                'error':None if err_msg is '' else err_msg,
+            }
+        )
+    
 
 
 

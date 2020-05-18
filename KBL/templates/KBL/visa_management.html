@@ -1,0 +1,189 @@
+{% extends "app/layout_KBL.html" %}
+
+{% load staticfiles %}
+{% block content %}
+
+{% csrf_token %}
+    <div class="background_grid">
+        <div class="customer_list partition">
+            <div class="status_table_title">
+                <span class="btn btn-danger title_span">{{ _('Visa Management') }}</span>
+            
+                <div class="search_control_div">
+                    <div class="input-group depart_select">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Visa Type') }}</span>
+                        <select id="estimate_type" class="form-control costom-select " aria-describedby="basic-addon1" >
+                            <option value="" selected="">{{ _('ALL') }}</option>          
+                        </select>
+                    </div>
+                    <div class="input-group depart_select">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Status') }}</span>
+                        <select id="estimate_in_charge" class="form-control costom-select " aria-describedby="basic-addon1" >
+                            <option value="" selected="">{{ _('ALL') }}</option>          
+                        </select>
+                    </div>
+                    <input type="text" id="estimate_date_start" class="form-control date_input">
+                    <input type="text" id="estimate_date_end" class="form-control date_input">
+                    <input type="text" id="estimate_search" class="form-control"/>
+                    <input type="button" id="patient_search_btn" class="btn btn-default" value="{{ _('Search') }}" style="display:inline;"/>
+                </div>
+            </div>
+               
+            <div class="patient_list_table_wrap">
+                <table class="table table-bordered table-hover table-striped" id="patient_list_table">
+                    <thead>
+                        <tr>
+                            <th>{{ _('No') }}</th>
+                            <th>{{ _('Status') }}</th>
+                            <th>{{ _('Company Name( KOR / ENG )') }}</th>
+                            <th>{{ _('Company Name') }}</th>
+                            <th>{{ _('Garanteed Company') }}</th>
+                            <th>{{ _('Receipt Application') }}</th>
+                            <th>{{ _('Visa Type') }}</th>
+                            <th>{{ _('Date of Entry') }}</th>
+                            <th>{{ _('Receipt Document') }}</th>
+                            <th>{{ _('Submit Document') }}</th>
+                            <th>{{ _('Exp. Result Date') }}</th>
+                            <th>{{ _('File') }}</th>
+                            <th>{{ _('Manage') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <ul class="pagination" id="table_pagnation">
+
+                </ul>
+                <button class="btn btn-primary" style="float:right" onclick="visa_management_modal()">+ {{ _('Register') }}</button>
+            </div>
+        </div>
+    </div>
+
+
+
+<!--Visa Management Modal-->
+<div id="visa_management_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h2>{{ _('Visa Register / Edit') }}</h2>
+                <div id="modalBody" class="modal-body" >
+
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Customer Name(KOR)') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Customer Name(ENG)') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Company Name') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Garanteed Company') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Date of Entry') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Visa Exp. Date') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Date of Submission') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Doc. Reception Date') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Result Exp. Date') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Ordered Date') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Receipt of Application') }}</span>
+						<input type="text" id="register_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Visa Status') }}</span>
+						<select id="sms_class" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+							<option value="1">Submit</option>
+							<option value="2">Order</option>
+							<option value="3">Etc</option>
+						</select>
+					</div>
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('is Emergency') }}</span>
+						<select id="sms_class" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+							<option value="1">Emergency</option>
+							<option value="2">General</option>
+						</select>
+					</div>
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Status') }}</span>
+						<select id="sms_class" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+							<option value="1">Recept</option>
+							<option value="2">Order</option>
+							<option value="3">Complete</option>
+						</select>
+					</div>
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" onclick="">{{ _('Save') }}</a>
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div id="overlay">
+	<div class="cv-spinner">
+		<span class="spinner"></span>
+	</div>
+</div>
+
+
+
+
+{% endblock %}
+
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/visa_management.css' %}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<script src="{% static 'js/visa_management.js' %}" type="text/javascript"></script>
+{% endblock %}

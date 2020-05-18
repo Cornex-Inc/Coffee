@@ -240,6 +240,6 @@ body {
     white-space: nowrap;
 }
 
-#add_medicine_expiry_need{
-    vertical-align:middle;
+#add_medicine_expiry_need, #add_medicine_input_price_need {
+    vertical-align: middle;
 }

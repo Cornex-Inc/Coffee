@@ -49,10 +49,14 @@ urlpatterns = [
     path('manage/',include('Manage.urls',namespace='Manage')),
 
 
-    #admin 접속
+    ##admin 접속
     path('admin/',views.admin,name='admin'),
-
-
+     
+    #KBL ERP
+    path('KBL/',include('KBL.urls',namespace='KBL')), 
+     
+    ##admin 접속
+    path('admin/',views.admin,name='admin'),
 
 
     #번역

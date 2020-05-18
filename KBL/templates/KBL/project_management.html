@@ -1,0 +1,632 @@
+{% extends "app/layout_KBL.html" %}
+
+{% load staticfiles %}
+{% block content %}
+
+{% csrf_token %}
+    <div class="background_grid">
+        <div class="customer_list partition">
+            <div class="status_table_title">
+                <span class="btn btn-danger title_span">{{ _('Project Management') }}</span>
+            
+                <div class="search_control_div">
+                    <div class="input-group depart_select">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Type') }}</span>
+                        <select id="project_type" class="form-control costom-select " aria-describedby="basic-addon1" >
+                            <option value="" selected>{{ _('ALL') }}</option>
+                            {% for data in list_type %}
+                            <option value="{{ data.id }}">{{ data.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="input-group depart_select">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Status') }}</span>
+                        <select id="project_status" class="form-control costom-select " aria-describedby="basic-addon1" >
+                            <option value="" selected="">{{ _('ALL') }}</option>
+                            {% for data in list_status %}
+                            <option value="{{ data.id }}">{{ data.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="input-group depart_select">
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('In Charge') }}</span>
+                        <select id="project_in_charge" class="form-control costom-select " aria-describedby="basic-addon1" >
+                            <option value="" selected="">{{ _('ALL') }}</option>          
+                        </select>
+                    </div>
+                    <input type="text" id="project_date_start" class="form-control date_input">
+                    <input type="text" id="project_date_end" class="form-control date_input">
+                    <input type="text" id="project_search" class="form-control"/>
+                    <input type="button" id="project_search_btn" class="btn btn-default" value="{{ _('Search') }}" style="display:inline;"/>
+                </div>
+            </div>
+               <input type="hidden" id="selected_project_id" value=""/>
+            <div class="patient_list_table_wrap">
+                <table class="table table-bordered table-hover table-striped" id="project_list_table">
+                    <thead>
+                        <tr>
+                            <th>{{ _('No') }}</th>
+                            <th>{{ _('Customer Name') }}</th>
+                            <th>{{ _('Type') }}</th>
+                            <th>{{ _('Project Name') }}</th>
+                            <th>{{ _('Level') }}</th>
+                            <th>{{ _('Priority') }}</th>
+                            <th>{{ _('Start Date') }}</th>
+                            <th>{{ _('Ended Date') }}</th>
+                            <th>{{ _('Expected Date') }}</th>
+                            <th>{{ _('Progress') }}</th>
+                            <th>{{ _('In Charge') }}</th>
+                            <th>{{ _('Approval') }}</th>
+                            <th>{{ _('Note') }}</th>
+                            <th>{{ _('Manage') }}</th>
+                            <th></th><!--Type-->
+                            <th></th><!--Company id-->
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <ul class="pagination" id="table_pagnation">
+
+                </ul>
+                <button class="btn btn-primary" style="float:right" onclick="project_manage_modal()">+ {{ _('Register') }}</button>
+            </div>
+        </div>
+
+        <div class="customer_info partition">
+            <div class="status_table_title">
+                  <!-- Nav tabs -->
+                  <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active" id="tab_detailed_info"><a href="#detailed_info" aria-controls="detailed_info" role="tab" data-toggle="tab"> {{ _('Detail Information') }} </a></li>
+                    <li role="presentation" class="" id="tab_visa_list"><a href="#visa_list" aria-controls="visa_list" role="tab" data-toggle="tab"> {{ _('Visa List') }} </a></li>
+                    <li role="presentation" class="" id="tab_work_permit_list"><a href="#work_permit_list" aria-controls="visa_info" role="tab" data-toggle="tab"> {{ _('Work Permit List') }} </a></li>
+                  </ul>
+                  <!-- Tab panes -->
+                  <div class="tab-content">
+                     <!--Detil Info-->
+                    <div role="tabpanel" class="tab-pane active" id="detailed_info">
+                        <div style="height:240px; margin-bottom:5px; overflow-y:auto;">
+                            <table class="table table-bordered table-hover table-striped" id="detail_list">
+                                <thead>
+                                    <tr>
+                                        <th>{{ _('No') }}</th>
+                                        <th></th>
+                                        <th>{{ _('Type') }}</th>
+                                        <th>{{ _('Project Progress Detail') }}</th>
+                                        <th>{{ _('Date') }}</th>
+                                        <th>{{ _('Note') }}</th>
+                                        <th>{{ _('File') }}</th>
+                                        <th>{{ _('Manage') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="text-align:right;">
+                            <input type="button" value="+ {{ _('Register') }}" class="btn btn-primary" onclick="detailed_info_modal()" />
+                        </div>
+
+                    </div>
+                     <!--Visa list-->
+                    <div role="tabpanel" class="tab-pane" id="visa_list">
+                        <div style="height:240px; margin-bottom:5px; overflow-y:auto;">
+                            <table class="table table-bordered table-hover table-striped" id="visa_list_table">
+                                <thead>
+                                    <tr>
+                                        <th>{{ _('No') }}</th>
+                                        <th>{{ _('Status') }}</th>
+                                        <th>{{ _('Company Name') }}</th>
+                                        <th>{{ _('Customer Name') }}</th>
+                                        <th>{{ _('Garanteed Company') }}</th>
+                                        <th>{{ _('Receipt Application') }}</th>
+                                        <th>{{ _('Visa Type') }}</th>
+                                        <th>{{ _('Date of Entry') }}</th>
+                                        <th>{{ _('Receipt Document') }}</th>
+                                        <th>{{ _('Submit Document') }}</th>
+                                        <th>{{ _('Exp. Result Date') }}</th>
+                                        <th>{{ _('File') }}</th>
+                                        <th>{{ _('Manage') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                         </div>
+                        <div style="text-align:right;">
+                            <input type="button" value="+ {{ _('Register') }}" class="btn btn-primary" onclick="visa_modal()" />
+                        </div>
+                    </div>
+                      <!--WP list-->
+                        <div role="tabpanel" class="tab-pane" id="work_permit_list">
+                            <div style="height:240px; margin-bottom:5px; overflow-y:auto;">
+                            <table class="table table-bordered table-hover table-striped" id="work_permit_list_table">
+                                <thead>
+                                    <tr>
+                                        <th>{{ _('No') }}</th>
+                                        <th>{{ _('Status') }}</th>
+                                        <th>{{ _('Customer Name ( ENG )') }}</th>
+                                        <th>{{ _('Position') }}</th>
+                                        <th>{{ _('Requiredment Documents') }}</th>
+                                        <th>{{ _('Employment Apporval Application Date') }}</th>
+                                        <th>{{ _('Employment Apporval Expected Date') }}</th>
+                                        <th>{{ _('Work Permit Application Date') }}</th>
+                                        <th>{{ _('Work Permit Expected Date') }}</th>
+                                        <th>{{ _('Expected Date') }}</th>
+                                        <th>{{ _('Note') }}</th>
+                                        <th>{{ _('File') }}</th>
+                                        <th>{{ _('Manage') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                            </div>
+                            <div style="text-align:right;">
+                                <input type="button" value="+ {{ _('Register') }}" class="btn btn-primary" onclick="work_permit_modal()" />
+                            </div>
+                        </div>
+                  </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+<!--Project Management Modal-->
+<div id="project_manage_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h2>{{ _('Project Register') }}</h2>
+                <div id="modalBody" class="modal-body" >
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Company') }}</span>
+						<input type="text" id="project_manage_company" class="form-control" aria-describedby="basic-addon1">
+                        <input type="hidden" id="project_manage_company_id" value=""/>
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Type') }}</span>
+						<select id="project_manage_type" class="form-control" aria-describedby="basic-addon1">
+							<option value="">----------</option>
+							{% for data in list_type %}
+                            <option value="{{ data.id }}">{{ data.name }}</option>
+                            {% endfor %}
+						</select>
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Project Name') }}</span>
+						<input type="text" id="project_manage_project_name" class="form-control" aria-describedby="basic-addon1">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Level') }}</span>
+						<input type="text" id="project_manage_level" class="form-control" aria-describedby="basic-addon1">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Priority') }}</span>
+						<input type="text" id="project_manage_priority" class="form-control" aria-describedby="basic-addon1">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Start Date') }}</span>
+						<input type="text" id="project_manage_date_start" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('End Date') }}</span>
+						<input type="text" id="project_manage_date_end" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Expected Date') }}</span>
+						<input type="text" id="project_manage_date_expected" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Progress') }}</span>
+						<select id="project_manage_progress" class="form-control" aria-describedby="basic-addon1">
+							<option value="">----------</option>
+							{% for data in list_status %}
+                            <option value="{{ data.id }}">{{ data.name }}</option>
+                            {% endfor %}
+						</select>
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('In Charge') }}</span>
+						<input type="text" id="project_manage_in_charge" class="form-control" aria-describedby="basic-addon1">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Approval') }}</span>
+						<select id="project_manage_approval" class="form-control" aria-describedby="basic-addon1">
+							<option value="">----------</option>
+                            {% for data in list_approval %}
+                            <option value="{{ data.id }}">{{ data.name }}</option>
+                            {% endfor %}
+                            
+						</select>
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Note') }}</span>
+						<input type="text" id="project_manage_note" class="form-control" aria-describedby="basic-addon1">
+					</div>
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" onclick="project_save()">{{ _('Save') }}</a>
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--Detailed Info Modal-->
+<div id="detailed_info_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h2>{{ _('Project Detail Information') }}</h2>
+                <div id="modalBody" class="modal-body" >
+
+                    <input type="hidden" id="selected_detail" value="">
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Type') }}</span>
+						<select id="detail_type" class="form-control" aria-describedby="basic-addon1">
+						<option value="">---------</option>
+						<option value="SUBMIT">Submit</option>
+						<option value="DOCUMENT">Document</option>
+						<option value="APPROVAL">Approval</option>
+					</select>
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Project Progress Detail') }}</span>
+						<input type="text" id="detail_project_details" class="form-control" aria-describedby="basic-addon1">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Date') }}</span>
+						<input type="text" id="detail_date" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00"/>
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Note') }}</span>
+						<input type="text" id="detail_note" class="form-control" aria-describedby="basic-addon1">
+					</div>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" onclick="detailed_info_save()">{{ _('Save') }}</a>
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Visa Modal-->
+<div id="visa_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h2>{{ _('Visa') }}</h2>
+                <div id="modalBody" class="modal-body" >
+
+                    <input type="hidden" id="selected_visa" value="" />
+                    
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Company Name') }}</span>
+						<input type="text" id="visa_company" class="form-control" aria-describedby="basic-addon1" readonly>
+						<input type="hidden" id="visa_company_id" value="">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Customer Name') }}</span>
+						<input type="text" id="visa_employee" class="form-control" aria-describedby="basic-addon1">
+						<input type="hidden" id="visa_employee_id" value="">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Garanteed Company') }}</span>
+						<input type="text" id="visa_granted_company" class="form-control" aria-describedby="basic-addon1">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Visa Type') }}</span>
+						<select id="visa_type" class="form-control" aria-describedby="basic-addon1">
+							<option value="">----------</option>
+							{% for data in list_visa_type %}
+                            <option value="{{ data.id }}">{{ data.name }}</option>
+                            {% endfor %}
+						</select>
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Date of Entry') }}</span>
+						<input type="text" id="visa_date_entry" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Visa Exp. Date') }}</span>
+						<input type="text" id="visa_date_receipt_application" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Date of Submission') }}</span>
+						<input type="text" id="visa_date_receipt_doc" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Doc. Reception Date') }}</span>
+						<input type="text" id="visa_date_subbmit_doc" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Result Exp. Date') }}</span>
+						<input type="text" id="visa_date_expected" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Ordered Date') }}</span>
+						<input type="text" id="visa_date_ordered" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00">
+					</div>
+
+
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Receipt of Application') }}</span>
+						<select id="visa_application_status" class="form-control" aria-describedby="basic-addon1">
+							<option value="">----------</option>
+							<option value="1">Submit</option>
+							<option value="2">Order</option>
+							<option value="3">Etc</option>
+						</select>
+					</div>
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('is Emergency') }}</span>
+						<select id="visa_emergency" class="form-control" aria-describedby="basic-addon1">
+							<option value="0">General</option>
+							<option value="1">Emergency</option>
+						</select>
+					</div>
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Status') }}</span>
+						<select id="visa_status" class="form-control" aria-describedby="basic-addon1">
+                            <option value="">----------</option>
+							{% for data in list_status %}
+                            <option value="{{ data.id }}">{{ data.name }}</option>
+                            {% endfor %}
+						</select>
+					</div>
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" onclick="visa_save()">{{ _('Save') }}</a>
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Work Permit Modal-->
+<div id="work_permit_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h2>{{ _('Work Permit') }}</h2>
+                <div id="modalBody" class="modal-body" >
+
+                    <input type="hidden" id="selected_wp" value="" />
+                    
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Company Name') }}</span>
+						<input type="text" id="wp_company_name" class="form-control" aria-describedby="basic-addon1" readonly>
+						<input type="hidden" id="wp_company_id" value="">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Customer Name') }}</span>
+						<input type="text" id="wp_employee_name" class="form-control" aria-describedby="basic-addon1">
+						<input type="hidden" id="wp_employee_id" value="">
+					</div>
+
+
+                    <span style="font-size:9px; letter-spacing:0px;"> {{ _('* Employment Approval') }}</span>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('EA Application Date') }}</span>
+						<input type="text" id="wp_EA_application_date" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00"/>
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('EA Expected Date') }}</span>
+						<input type="text" id="wp_EA_exp_date" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00"/>
+					</div>
+
+                    <span style="font-size:9px; letter-spacing:0px;"> {{ _('* Work Permit') }}</span>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('WP Submit Date') }}</span>
+						<input type="text" id="wp_application_date" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00"/>
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('WP Expected Date') }}</span>
+						<input type="text" id="wp_WP_exp_date" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00"/>
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Expected Date') }}</span>
+						<input type="text" id="wp_exp_date" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00"/>
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Required Documents') }}</span>
+						<input type="text" id="wp_requirement" class="form-control" aria-describedby="basic-addon1">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Note') }}</span>
+						<input type="text" id="wp_note" class="form-control" aria-describedby="basic-addon1">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Status') }}</span>
+						<select id="wp_status" class="form-control" aria-describedby="basic-addon1">
+							<option value="">----------</option>
+							{% for data in list_status %}
+                            <option value="{{ data.id }}">{{ data.name }}</option>
+                            {% endfor %}
+						</select>
+					</div>
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" onclick="work_permit_save()">{{ _('Save') }}</a>
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- File -->
+<form enctype="multipart/form-data" id="id_ajax_upload_form" method="POST" novalidate="">
+<div id="new_edit_file_list" class="modal fade">
+    <div class="modal-dialog" style="width:1100px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4 id="password_database_header">{{ _('File List') }}</h4>
+                <div id="modalBody" class="modal-body">
+                    <input type="hidden" value="" id="selected_file_list" name="selected_file_list"/>
+                    <input type="hidden" value="" id="board_type" name="board_type"/>
+                    <table class="table table-hover table-striped" id="file_table">
+                        <thead>
+                            <tr>
+                                <th>{{ _('No') }}</th>
+                                <th>{{ _('Document Name') }}</th>
+                                <th>{{ _('Registered Date') }}</th>
+                                <th>{{ _('User ID') }}</th>
+                                <th>{{ _('Remark') }}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" onclick="file_add_modal()">+ {{ _('New') }}</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- File Add Edit-->
+<div id="new_edit_file" class="modal fade">
+    <div class="modal-dialog" style="width:600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4 id="password_database_header">{{ _('New File') }}</h4>
+                <div id="modalBody" class="modal-body">
+                    
+                        <input type="hidden" name="selected_file_id" id="selected_file_id" value="" />
+                    
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('Document Name') }}</span>
+                            <input id="new_edit_file_name" name="new_edit_file_name" class="form-control"/>
+                        </div>
+
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('Remark') }}</span>
+                            <input id="new_edit_file_remark" name="new_edit_file_remark" class="form-control"/>
+                        </div>
+
+                    
+                        
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('File') }}</span>
+                            <input type="text" id="new_edit_file_filename" class="form-control" readonly/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" id="btn_file">{{ _('Find File') }}</button>
+                            </span>
+                            {{ file_form.file }}
+                        </div>
+                    
+                        <div style="margin-left:120px;" id="new_edit_file_old_file_div">
+                            <i class="fa fa-file-o"></i> <span id="new_edit_file_old_file"></span>
+                        </div>
+                </div>
+
+
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                    <a class="btn btn-primary" onclick="save_file()">{{ _('Save') }}</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</form>
+
+
+
+<div id="overlay">
+	<div class="cv-spinner">
+		<span class="spinner"></span>
+	</div>
+</div>
+
+
+
+
+{% endblock %}
+
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/project_management.css' %}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<script src="{% static 'js/project_management.js' %}" type="text/javascript"></script>
+{% endblock %}

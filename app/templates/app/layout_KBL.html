@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+{% load i18n %}
+<html >
+<head>
+    {% load staticfiles %}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+    <title>KBL</title>
+
+
+    <script src="{% static 'js/jquery.min.js'%}"></script>
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/daterangepicker.min.js'%} "></script>
+    
+    <script type="text/javascript" src="{% static 'js/printThis.min.js' %}"></script>
+    
+    <script src="{% static 'app/scripts/bootstrap.js' %}"></script>
+    <script src="{% static 'app/scripts/respond.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/wrapper.css' %}" />
+    <script src="{% static 'app/scripts/modernizr-2.6.2.js' %}"></script>
+    <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
+    <link rel="stylesheet" href="{% static 'jquery-ui-1.8.18/themes/base/jquery-ui.css' %}" type="text/css" /> 
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/daterangepicker.min.css' %}" />
+    
+    <link rel="Shortcut Icon" href="{% static 'favicon.ico'%}" type="image/x-icon" />
+    <link rel="icon" href="{% static 'favicon.ico'%}" type="image/x-icon" />
+
+    {% block style %}{% endblock %}
+    {% block scripts %}{% endblock %}
+
+    <script>
+        window.onbeforeunload = function (e) {
+            //return confirm();
+        }
+
+
+        function set_lang(lang) {
+            if (lang == 'en') {
+                str_url = '/TranslateEN/';
+            } else if (lang == 'ko') {
+                str_url = '/TranslateKO/';
+            } else if (lang == 'vie') {
+                str_url = '/TranslateVIE/';
+            }
+            $.ajax({
+                type: 'POST',
+                url: str_url,
+                data: {
+                    'csrfmiddlewaretoken': $('#csrf').val(),
+                },
+                dataType: 'Json',
+                success: function (response) {
+                    location.reload();
+                },
+                error: function (request, status, error) {
+                    console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                },
+            })
+        }
+    </script>
+</head>
+
+<body>
+    <input id="csrf" type="hidden" value="{{ csrf_token }}" />
+    <input id="language" type="hidden" value="{{ request.LANGUAGE_CODE }}" />
+    <div class="navbar navbar-inverse navbar-fixed-top" style=" margin:0px; position:inherit; background:rgb(255, 255, 255); border-bottom:4px solid rgba(206, 17, 39, 1);border-color:rgba(206, 17, 39, 1);">
+        <div class="">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+                <a href="{% url 'index' %}" class="navbar-brand" style="padding-top:7.5px; padding-left:15px; padding-right:15px; color:rgba(0,0,0, 1); font-size:20px; ">
+                <img src="{% static 'img/KBL_menu.png' %}" style="height:47px;"/></a>
+            </div>
+            <div class="navbar-collapse collapse top_menu" >
+                <ul class="nav menu_contents_ul" style="display:inline-block">
+                    {% with url_name=request.resolver_match.url_name %}
+                    {% if user.is_receptionist %}
+                        
+                    {% elif user.is_admin %}
+                    <li><a href="" data-toggle="dropdown" >{{ _('CRM') }}<span class="caret"></span></a>
+                       <ul class="dropdown-menu">
+                          <li><a href="{% url 'KBL:customer_management'%}">{{ _('Customer Management') }}</a></li>
+                          <li><a href="{% url 'KBL:estimate_sheet'%}">{{ _('Estimate Sheet') }}</a></li>
+                       </ul>
+                    </li>
+                    <li><a href="" data-toggle="dropdown" >{{ _('Work Management') }}<span class="caret"></span></a>
+                       <ul class="dropdown-menu">
+                          <li><a href="{% url 'KBL:project_management'%}">{{ _('Project Management') }}</a></li>
+                          <li><a href="{% url 'KBL:scheduler'%}">{{ _('Work Scheduler') }}</a></li>
+                          <li><a href="{% url 'KBL:work_permit'%}">{{ _('Work Permit') }}</a></li>
+                          <li><a href="{% url 'KBL:visa_management'%}">{{ _('VISA Management') }}</a></li>
+                       </ul>
+                    </li>
+                    <li><a href="{% url 'Manage:draft'%}">{{ _('Drafts') }}</a></li>
+                    <li><a href="{% url 'KBL:document_management'%}">{{ _('Document Management') }}</a></li>
+                    <li><a href="" data-toggle="dropdown" >{{ _('Audit') }}<span class="caret"></span></a>
+                       <ul class="dropdown-menu">
+                          <li><a href="{% url 'KBL:audit_management'%}">{{ _('Audit Management') }}</a></li>
+                          <li><a href="{% url 'KBL:invoice_management'%}">{{ _('Invoice History') }}</a></li>
+                       </ul>
+                    </li>
+                    <li><a href="" data-toggle="dropdown" >{{ _('Statistics') }}<span class="caret"></span></a>
+                       <ul class="dropdown-menu">
+                          <li><a href="#">{{ _('Project') }}</a></li>
+                          <li><a href="#">{{ _('...') }}</a></li>
+                       </ul>
+                    </li>
+
+                    <li {% if url_name == 'sms_history_index' %}class="active"{% endif %}><a href="{% url 'Manage:sms_history_index'%}">{{ _('SMS History') }}</a></li>
+
+                    <li><a href="" data-toggle="dropdown" >{{ _('Board') }}<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="{% url 'Manage:board_list'%}">{{ _('Notice Board') }}</a></li>
+                          <li><a href="{% url 'Manage:board_work_list'%}">{{ _('Co-Work Board') }}</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="" data-toggle="dropdown" >{{ _('Setting') }}<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="{% url 'Manage:manage_employee'%}">{{ _('Employee Management') }}</a></li>
+                          <li><a href="{% url 'Manage:code_setting'%}">{{ _('Code Setting') }}</a></li>
+                        </ul>
+                    </li>
+
+                            
+                    
+                    {% endif %}
+                    
+
+                    {% endwith %}
+                </ul>
+                
+                {% include 'app/loginpartial.html' %}
+                <ul class="nav navbar-nav navbar-right" id="language_ul">
+                    <li><a href="" onclick="set_lang('vie')"><image src="{% static 'img/vie.png' %}" style='height:30px;' /></a></li>
+                    <li><a href="" onclick="set_lang('ko')"><image src="{% static 'img/ko.png' %} " style='height:26px;'/></a></li>
+                    <li><a href="" onclick="set_lang('en')"><image src="{% static 'img/en.png' %} " style='height:26px;'/></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="sub_title"></div>
+    <div class="body-content">
+{% block content %}{% endblock %}
+    </div>
+
+
+
+
+</body>
+</html>

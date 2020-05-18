@@ -393,7 +393,7 @@ $(function () {
         });
 
 
-
+    //진료창 크게 보기
     $("#past_diagnosis_showlarge").click(function () {
         $('#past_diagnosis_showlarge_table tbody').empty();
         $.ajax({
@@ -460,6 +460,9 @@ $(function () {
         $("#past_diagnosis_showlarge_modal").scrollTop(0);
         $('#past_diagnosis_showlarge_modal').modal('show');
     });
+
+
+
 
     get_medicine_count();
 
@@ -658,6 +661,7 @@ function reception_select(reception_id) {
             $('#patient_date_of_birth').val(response.date_of_birth);
             $('#patient_address').val(response.address);
             $('#patient_phone').val(response.phone);
+            $("#patient_mark").val(response.marking)
 
             $('#history_past').val(response.history_past);
             $('#history_family').val(response.history_family);
@@ -1120,6 +1124,7 @@ function diagnosis_save(set) {
     var gender = $('input[name="gender"]:checked').val();
     var address = $('#patient_address').val();
     var phone = $('#patient_phone').val();
+    var marking = $("#patient_mark").val();
 
     var past_history = $('#history_past').val();
     var history_family = $('#history_family').val();
@@ -1134,6 +1139,7 @@ function diagnosis_save(set) {
             'phone': phone,
             'gender': gender,
             'address': address,
+            'marking': marking,
             'past_history': past_history,
             'family_history': history_family,
         },

@@ -1,0 +1,391 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <style>
+        @media print {
+            html, body {
+                min-width: 210mm;
+                max-width: 210mm;
+                /*max-height: 297mm;
+            min-height: 297mm;*/
+            }
+
+            body {
+                margin: 0px;
+                padding: 45px;
+                padding-bottom: 0px;
+                font-size: 9px;
+                font-family: "Times New Roman", Times, serif;
+            }
+
+            table {
+                border-spacing: 1px !important;
+                border-collapse: collapse;
+            }
+
+            tr, td {
+                font-size: 10px;
+            }
+
+            input[type=checkbox] {
+                -moz-appearance: none;
+                -webkit-appearance: none;
+                outline: none;
+                content: none;
+            }
+
+                input[type=checkbox]:before {
+                    font-family: "FontAwesome";
+                    content: "\f00c";
+                    font-size: 15px;
+                    color: transparent !important;
+                    background: #fff;
+                    display: block;
+                    border: 1px solid black;
+                    margin-right: 7px;
+                }
+
+                input[type=checkbox]:checked:before {
+                    color: black !important;
+                }
+
+            .f_size_10 {
+                font-size: 10px;
+            }
+
+            .f_size_11 {
+                font-size: 11px;
+            }
+
+            .f_size_12 {
+                font-size: 12px;
+            }
+
+            .f_size_13 {
+                font-size: 13px;
+            }
+
+            .f_size_14 {
+                font-size: 14px;
+            }
+
+            .f_size_15 {
+                font-size: 15px;
+            }
+
+            .f_size_16 {
+                font-size: 16px;
+            }
+
+            .f_size_17 {
+                font-size: 17px;
+            }
+
+            .f_size_18 {
+                font-size: 18px;
+            }
+
+            .f_size_20 {
+                font-size: 20px;
+            }
+
+            .f_size_23 {
+                font-size: 23px;
+            }
+
+            .f_size_25 {
+                font-size: 25px;
+            }
+
+            .f_size_30 {
+                font-size: 30px;
+            }
+
+            .underline {
+                text-decoration: underline;
+            }
+
+            .b {
+                font-weight: 700;
+            }
+
+            .bg_gray {
+                background: rgb(242,242,242) !important;
+            }
+
+            .fl {
+                float: left;
+            }
+
+            .fr {
+                float: right;
+            }
+
+            .border_thin {
+                border: 1px solid black;
+            }
+
+            .border_thicnk {
+                border: 2px solid black;
+            }
+
+
+            #table_first {
+                table-layout: fixed;
+            }
+
+                #table_first tr td {
+                    text-align: center;
+                    vertical-align: middle;
+                }
+
+                #table_first tr:nth-child(1) {
+                    height: 33px;
+                }
+
+                #table_first tr:nth-child(2) {
+                    height: 29.25px;
+                }
+
+                #table_first tr td:nth-child(1) {
+                    width: 23.51px;
+                }
+
+                #table_first tr td:nth-child(2) {
+                    width: 16px;
+                }
+
+                #table_first tr td:nth-child(3) {
+                    width: 16px;
+                }
+
+                #table_first tr td:nth-child(4) {
+                    width: 16px;
+                }
+
+                #table_first tr td:nth-child(5) {
+                    width: 25px;
+                }
+
+                #table_first tr td:nth-child(6) {
+                    width: 19px;
+                }
+
+            #table_second {
+                table-layout: fixed;
+                border-top: none;
+            }
+
+                #table_second tr {
+                    height: 15px;
+                }
+
+                    #table_second tr td {
+                        height: 15px;
+                        font-size: 10px;
+                    }
+
+                    #table_second tr:nth-child(1) {
+                        height: 30.75px;
+                    }
+
+                    #table_second tr:nth-child(2) {
+                        height: 30px;
+                    }
+
+                    #table_second tr:nth-child(3) {
+                        height: 34.5px;
+                    }
+
+                    #table_second tr:nth-child(4) {
+                        height: 36.75px;
+                    }
+
+                    #table_second tr td:nth-child(1) {
+                        width: 120px;
+                    }
+
+                    #table_second tr td:nth-child(2) {
+                        /*width: 234px;*/
+                    }
+
+                    #table_second tr td:nth-child(3) {
+                        width: 70px;
+                    }
+
+                    #table_second tr td:nth-child(4) {
+                        width: 70px;
+                    }
+
+                    #table_second tr td:nth-child(5) {
+                        width: 80px;
+                    }
+
+                    #table_second tr td:nth-child(6) {
+                        width: 200px;
+                    }
+
+
+            #table_third {
+                table-layout: fixed;
+                border-top: none;
+            }
+
+                #table_third tr {
+                    height: 20px;
+                }
+
+
+            #table_fourth {
+                table-layout: fixed;
+                border-top: none;
+            }
+
+                #table_fourth tr {
+                    height: 21.7px;
+                }
+
+                    #table_fourth tr td:nth-child(1) {
+                        width: 30px;
+                    }
+
+                    #table_fourth tr td:nth-child(2) {
+                        width: 84px;
+                    }
+
+
+            #table_last {
+                table-layout: fixed;
+            }
+
+                #table_last tr td:nth-child(1) {
+                    width: 23.51px;
+                }
+
+                #table_last tr td:nth-child(2) {
+                    width: 77px;
+                }
+        }
+        
+    </style>
+
+</head>
+<body>
+	<!-- 상단 제목 -->
+	<div style=" width: 100%;text-align:center">
+		<span class="f_size_17 b " style="text-align:left !important">
+		  <b>경천애인 종합컨설팅(KBL)</b>
+		</span>
+		<br />
+		<br />
+		<span class="f_size_12 underline b " style="text-align:left !important">
+		  <b>KBL VIETNAM CO.,LTD Room 1805, PH floor, The Garden Officetel, My Dinh Me Tri Urban Area, My Dinh 1 ward, Nam Tu Liem district , Ha Noi</b>
+		</span>
+		<br />
+		<br />
+		<span class="f_size_23 underline b " style="text-align:center">
+		  <b>견적서(Quotation)</b>
+		</span>
+		<br />
+		<br />
+	</div>
+
+	<!-- 수신 정보 -->
+	<div style=" width: 100%;">
+		<p class="f_size_16 underline b">
+			한국 해외 인프라 도시개발자원 공사
+		</p>
+		<p class="f_size_11 b">
+			1. 귀사의 일익 번창하심을 기원합니다. <br/>
+			2. 하기와 같이 견적을 드리오니 검토하여 주시기 바랍니다. 
+		</p>
+	</div>
+
+	<div style=" width: 100%;">
+		<p class="f_size_16 underline b">
+			제목 : {{ title }}
+		</p>
+		<p class="f_size_11 b">
+			수신: {{ recipient }}  <br/>
+			견적일 : {{ date }}<br/>
+		</p>
+		<p class="f_size_11 b">
+			의뢰하신 다음 업무에 대하여 다음과 같이 견적을 드립니다. (VAT별도)
+			<span class="f_size_12 underline b fr" >(금액표기 단위 : {{ paid_by }})</span>
+		</p>
+	</div>
+
+	<!-- 견적항목 테이블 시작 -->
+    <div style=" width: 100%; text-align: center;">
+	
+        <table style="width:100%" id="table_second" class="">
+              <!--<colgroup>
+                <col style='width="50%"'/>
+                <col style='width="20%"'/>
+                <col style='width="30%"'/>
+              </colgroup> -->
+            <tr>
+                <td class="bg_gray border_thin b">
+                   <!-- Người đề nghị<br />(구분)-->
+				   구분
+                </td>
+                <td class="bg_gray border_thin b">
+                    내용
+                </td>
+                <td class="bg_gray border_thin b">
+                    단가
+                </td>
+                <td class="bg_gray border_thin b">
+                    수량
+                </td>
+                <td class="bg_gray border_thin b">
+                    비용
+                </td>
+                <td class="bg_gray border_thin b">
+                    비고
+                </td>
+            </tr>
+			<!-- 항목 줄 시작 -->
+            {{ str_table_content | safe  }}
+			<!-- 항목 줄 끝 -->
+
+        </table>
+        
+        <!--main contents-->
+        <table class="border_thin" style="width:100%; border-spacing: 1px !important;  border-top:none;">
+            <tr>
+                <td style="text-align:left; font-size:10px;" id="main_contents">
+                    
+					<p>
+					</p>
+					<p class="f_size_15 b">
+					  <b>* Remarks</b>
+					</p>
+
+					<p>
+					  <b>{{ remark | linebreaks }}</b>
+					</p>
+
+                </td>
+            </tr>
+        </table>
+		<br/>
+        <table style="width:100%" id="table_last" class="">
+            <tr>
+                <!--<td rowspan="4" class=" b"><img src="main_logo.png"></td>-->
+                <td class=" f_size_11" style="text-align:left;">General Director : An Young Hee</td>
+            </tr>
+            <tr>
+                <td class=" f_size_11" style="text-align:left;">Tel : (+84) 04 - 3787-8685 / FAX: (+84) 04 - 3787-8685</td>
+            </tr>
+			<tr>
+                <td class=" f_size_11" style="text-align:left;">Internet Phone : 070-4068-8685 / M.Phone: (+84) 094-7756-114</td>
+            </tr>
+			<tr>
+                <td class=" f_size_11" style="text-align:left;">E-mail : kblbiztown@gmail.com</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

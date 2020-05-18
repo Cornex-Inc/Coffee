@@ -208,18 +208,26 @@
 }
 
     #storage_list_total tr th:nth-child(1) {
-        width: 353px;
+        width: 1px;
+        font-size: 12px;
+        text-align: left;
+    }
+        #storage_list_total tr th:nth-child(1) a {
+            font-size: 11.2px;
+        }
+    #storage_list_total tr th:nth-child(2) {
+        width: 230px;
         text-align: right;
     }
-    #storage_list_total tr th:nth-child(2) {
+    #storage_list_total tr th:nth-child(3) {
         text-align:right;
         width: 76.8px;
     }
-    #storage_list_total tr th:nth-child(3) {
+    #storage_list_total tr th:nth-child(4) {
         text-align: right;
         width: 76.8px;
     }
-    #storage_list_total tr th:nth-child(4) {
+    #storage_list_total tr th:nth-child(5) {
         text-align: right;
         width: 13px;
     }
@@ -234,6 +242,10 @@
     overflow-y:auto;
 }
 
+#patient_mark{
+    width:50px;
+    padding:3px;
+}
 
 @media ( min-width: 1900px ) {
     .storage_item_table {

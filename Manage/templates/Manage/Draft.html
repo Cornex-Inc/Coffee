@@ -9,6 +9,42 @@
             <div class="table_title">
                 <span class="btn btn-danger title_span">{{ _('Draft') }}</span>
             </div>
+            <div style="float:right;">
+                <div class="input-group search">
+                    <span class="input-group-addon" id="basic-addon1">{{ _('Type') }}</span>
+                    <select id="new_edit_search_type" class="form-control">
+                        <option value="" selected>{{ _('All') }}</option>
+                        {% for data in draft_type %}
+                        <option value="{{ data.code }}">{{ data.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group search">
+                    <span class="input-group-addon" id="basic-addon1">{{ _('Requester') }}</span>
+                    <select id="new_edit_search_requester" class="form-control">
+                        <option value="" selected>{{ _('All') }}</option>
+                        {% for data in depart_type %}
+                        <option value="{{ data.code }}">{{ data.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-group search">
+                    <span class="input-group-addon" id="basic-addon1">{{ _('Status') }}</span>
+                    <select id="new_edit_search_status" class="form-control">
+                        <option value="" selected>{{ _('All') }}</option>
+                        {% for data in draft_status %}
+                        <option value="{{ data.code }}">{{ data.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                Date : 
+                <input id="new_edit_search_date_start" class="form-control search_date"/>
+                 ~ 
+                <input id="new_edit_search_date_end" class="form-control search_date"/>
+                <input id="new_edit_search_title" class="form-control search_title" placeholder="{{ _('Title') }}"/>
+                <input class="btn btn-default" type="button" value="{{ _('Search') }}" onclick="draft_search()"/>
+                
+            </div>
 
             <div class="draft_table_div">
                 <table class="table table-bordered table-hover table-striped" id="draft_table">
@@ -19,8 +55,8 @@
                             <th>{{ _('Type') }}</th>
                             <th>{{ _('Title') }}</th>
                             <th>{{ _('Depart') }}</th>
-                            <th>{{ _('RQSTR') }}</th>
-                            <th>{{ _('RQSTD_DATE') }}</th>
+                            <th>{{ _('Requester Depart') }}</th>
+                            <th>{{ _('Date Requested') }}</th>
                             <th>{{ _('Approve') }} / {{ _('Date') }}<br />( {{ _('In Charge') }} )</th>
                             <th>{{ _('Approve') }} / {{ _('Date') }}<br />( {{ _('Leader') }} )</th>
                             <th>{{ _('Approve') }} / {{ _('Date') }}<br />( {{ _('ACCOUNTING') }} )</th>
@@ -32,6 +68,9 @@
                     <tbody>
                     </tbody>
                 </table>
+            <ul class="pagination" id="table_pagnation">
+
+            </ul>
             </div>
             <input type="button" class="btn btn-primary" id="btn_new" value="{{ _('New') }}" />
         </div>
@@ -42,29 +81,75 @@
 
 <!-- New Draft -->
 <div id="new_edit_draft" class="modal fade">
-    <div class="modal-dialog" style="width:500px;">
+    <div class="modal-dialog" style="width:1100px;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
                 <h4 id="password_database_header">{{ _('New Draft') }}</h4>
                 <div id="modalBody" class="modal-body">
-                    
-                    <div class="forn-group">
+                    <input type="hidden" value="" id="selected_form_id"/><!--selected_form_id-->
+                    <div class="input-group input-group-left">
                         <span class="input-group-addon" id="basic-addon1">{{ _('Type') }}</span>
                         <select id="new_edit_type" class="form-control">
-                            <option value="">----------</option>
-                            {% for data in list_division %}
-                            <option value="{{ data.id }}">{{ data.name }}</option>
+                            <option value="" selected>----------</option>
+                            {% for data in draft_type %}
+                            <option value="{{ data.code }}">{{ data.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
 
+                    <div class="input-group input-group-right">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Depart') }}</span>
+                        <select id="new_edit_depart" class="form-control">
+                            <option value="">----------</option>
 
+                            {% for data in depart_type %}
+                            <option value="{{ data.id }}">{{ data.name }}</option>
+                            {% endfor %}
+
+
+       
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Name') }}</span>
+                        <input id="new_edit_name" class="form-control" value="{{ user.name_en }}"/>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Title') }}</span>
+                        <input id="new_edit_title" class="form-control"/>
+                    </div>
+
+                    <div id="new_edit_content"></div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('CNSLT_DPRTM') }}</span>
+                        <input id="new_edit_consultation" class="form-control"/>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('MORE_CMNTS') }}</span>
+                        <input id="new_edit_MORE_CMNTS" class="form-control"/>
+                    </div>
+
+                    
+
+
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Status') }}</span>
+                        <select id="new_edit_status" class="form-control">
+                            {% for data in draft_status %}
+                            <option value="{{ data.code }}">{{ data.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
                 </div>
                 <div class="modal-footer">
                     <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
-                    <a class="btn btn-primary" id="save_draft">{{ _('Save') }}</a>
+                    <a class="btn btn-primary" onclick="save_draft()">{{ _('Save') }}</a>
                 </div>
 
             </div>
@@ -73,9 +158,106 @@
 </div>
 
 
+<!-- File -->
+<form enctype="multipart/form-data" id="id_ajax_upload_form" method="POST" novalidate="">
+<div id="new_edit_file_list" class="modal fade">
+    <div class="modal-dialog" style="width:1100px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4 id="password_database_header">{{ _('File List') }}</h4>
+                <div id="modalBody" class="modal-body">
+                    <input type="hidden" value="" id="selected_file_list" name="selected_file_list"/>
+                    <table class="table table-hover table-striped" id="file_table">
+                        <thead>
+                            <tr>
+                                <th>{{ _('No') }}</th>
+                                <th>{{ _('Document Name') }}</th>
+                                <th>{{ _('Registered Date') }}</th>
+                                <th>{{ _('User ID') }}</th>
+                                <th>{{ _('Remark') }}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" onclick="file_add_modal()">+ {{ _('New') }}</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- File Add Edit-->
+<div id="new_edit_file" class="modal fade">
+    <div class="modal-dialog" style="width:600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4 id="password_database_header">{{ _('New File') }}</h4>
+                <div id="modalBody" class="modal-body">
+                    
+                        <input type="hidden" name="selected_file_id" id="selected_file_id" value="" />
+                    
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('Document Name') }}</span>
+                            <input id="new_edit_file_name" name="new_edit_file_name" class="form-control"/>
+                        </div>
+
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('Remark') }}</span>
+                            <input id="new_edit_file_remark" name="new_edit_file_remark" class="form-control"/>
+                        </div>
+
+                    
+                        
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('File') }}</span>
+                            <input type="text" id="new_edit_file_filename" class="form-control" readonly/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" id="btn_file">{{ _('Find File') }}</button>
+                            </span>
+                            {{ file_form.file }}
+                        </div>
+                    
+                        <div style="margin-left:120px;" id="new_edit_file_old_file_div">
+                            <i class="fa fa-file-o"></i> <span id="new_edit_file_old_file"></span>
+                        </div>
+                </div>
+
+
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                    <a class="btn btn-primary" onclick="save_file()">{{ _('Save') }}</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</form>
+
+
+<div id="dynamic_div">
+
+</div>
+
+
+
+
 {% endblock %}
 
 {% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'summernote-0.8.16-dist/summernote.min.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'css/Draft.css' %}" />
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -84,6 +266,7 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{% static 'summernote-0.8.16-dist/summernote.js' %}"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
 <script src="{% static 'js/Draft.js' %}" type="text/javascript"></script>

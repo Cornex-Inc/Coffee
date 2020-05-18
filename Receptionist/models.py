@@ -47,7 +47,9 @@ class Reservation(models.Model):
         )
 
     
-
+class ReceptionQueryManager(models.Manager):
+    def get_queryset(self):
+        return super(ReceptionQueryManager,self).get_queryset().filter()#need_invoice = 1,need_insurance = 1)
 
 class Reception(models.Model):
     progress_choice = (
@@ -106,6 +108,7 @@ class Reception(models.Model):
         default = False,
         )
 
+    objects=ReceptionQueryManager()
     
     
 
@@ -165,6 +168,11 @@ class Diagnosis(models.Model):
     ICD_code = models.CharField(
         max_length = 8,
         null = True,
+        )
+
+
+    posi_text = models.TextField(
+        default='',
         )
 
 
@@ -423,7 +431,8 @@ class Report(models.Model):
         null=True,
         )
 
-    
+
+
 
 class FIRST_VISIT_SURVEY(models.Model):
     PT_ID = models.CharField(

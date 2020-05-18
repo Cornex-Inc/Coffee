@@ -169,7 +169,7 @@
             slotDuration: '00:05',
             minTime : "09:00:00",
             maxTime : "19:15:00",
-            defaultTimedEventDuration:'00:10',
+            defaultTimedEventDuration:'00:20',
             editable:true,
             height: 'parent',
             hiddenDays: [1],
@@ -214,14 +214,11 @@
                     success: function (response) {
                         successCallback(response.datas);
 
-                        
-    
     
                         for ( var i in response.count_patient){
                             $("th[data-date='" + i + "']").html( response.count_patient[i].date + " ( " + response.count_patient[i].count + " )");
                             
                         }
-    console.log(response)
 
                         
 

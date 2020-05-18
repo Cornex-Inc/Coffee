@@ -1,0 +1,314 @@
+
+
+
+.background_grid {
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 55%;
+}
+
+.partition {
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: rgba(180, 180, 180, 0.15);
+    border: 3.7px solid white;
+    overflow: hidden;
+}
+
+
+.title_span {
+    margin-bottom: 15px;
+    font-size: 15px;
+    height: 30px;
+    padding-top: 1px;
+    background: rgb(90,64,129);
+    border-color: rgb(90,64,129);
+}
+
+    .title_span:hover {
+        background: rgb(90,64,129);
+        border-color: rgb(90,64,129);
+    }
+
+.customer_list {
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+.customer_info {
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+
+.patient_list_table_wrap {
+    height: 550px;
+}
+
+
+
+
+
+#search_string {
+    width: 110px;
+    display: inline;
+}
+
+.radiation_waiting_control {
+    text-align: right;
+    float: right;
+}
+
+#list_table {
+    table-layout: fixed;
+    letter-spacing: -1px;
+}
+
+    #list_table thead tr th {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    #list_table tbody tr td {
+        vertical-align: middle;
+        text-align: center;
+        height: 47px;
+    }
+
+    #list_table thead tr th:nth-child(1) {
+        width: 50px;
+    }
+
+    #list_table thead tr th:nth-child(2) {
+        width: 70px;
+    }
+
+    #list_table thead tr th:nth-child(3) {
+        width: 110px;
+    }
+
+    #list_table thead tr th:nth-child(4){
+
+    }
+    #list_table thead tr th:nth-child(5),
+    #list_table thead tr th:nth-child(6),
+    #list_table thead tr th:nth-child(7) {
+        width: 120px;
+    }
+
+    #list_table thead tr th:nth-child(8) {
+    }
+
+    #list_table thead tr th:nth-child(9) {
+        width: 60px;
+    }
+
+
+
+
+#emplyoee_table{
+    table-layout:fixed;
+    letter-spacing:-1px;
+}
+    #emplyoee_table th, #emplyoee_table td{
+        vertical-align:middle;
+        text-align:center;
+    }
+
+        #emplyoee_table th:nth-child(1) {
+            width: 40px;
+        }
+        #emplyoee_table th:nth-child(2) {
+            width: 30px;
+        }
+        #emplyoee_table th:nth-child(3) {
+            width: 60px;
+        }
+        #emplyoee_table th:nth-child(4),
+        #emplyoee_table th:nth-child(5) {
+            width: 90px;
+        }
+        #emplyoee_table th:nth-child(6) {
+            width: 80px;
+        }
+        #emplyoee_table th:nth-child(7) {
+            width: 90px;
+        }
+        #emplyoee_table th:nth-child(8) {
+            width: 60px;
+        }
+        #emplyoee_table th:nth-child(9){}
+        #emplyoee_table th:nth-child(10) {
+            width: 85px;
+        }
+
+    #emplyoee_table .btn:first-child {
+        margin-right: 10px;
+    }
+
+    .input-group {
+        width: 100%;
+    }
+
+.select_div {
+    width: 115px;
+    display: inline-table;
+}
+
+    .select_div span, .select_div select {
+        padding: 5px;
+    }
+
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+    color: #fff;
+    cursor: default;
+    background-color: rgb(90,64,129);
+    border: 1px solid rgb(90,64,129);
+    border-bottom-color: transparent;
+}
+
+.nav-tabs > li > a {
+    background-color: #eee;
+    height: 30px;
+    padding: 5px;
+}
+
+.tab-pane {
+    margin-bottom: 10px;
+    height: 600px;
+    border: 1.4px solid rgb(90,64,129);
+    padding: 10px;
+}
+.half {
+    width: 49%;
+}
+
+.half-fl {
+    width: 49%;
+    float: left;
+}
+
+.half-fr {
+    width: 49%;
+    float: right;
+}
+
+    .tab-pane .input-group {
+        margin-bottom: 10px;
+
+    }
+
+
+    .tab-pane .input-group-addon {
+        width: 135px;
+    }
+
+
+
+
+#customer_modal .input-group, #employee_modal .input-group {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+    #customer_modal .input-group:last-child, #employee_modal .input-group:last-child {
+        margin-bottom: 0;
+    }
+
+
+#customer_modal .input-group-addon {
+    width: 140px;
+}
+
+#employee_modal .input-group-addon {
+    width: 120px;
+}
+
+    #customer_modal textarea {
+    resize: none;
+    height: 100px;
+}
+
+
+#visit_history {
+    height: 600px;
+    overflow-y: auto;
+}
+
+
+    #visit_history thead tr th, #visit_history tbody tr td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    #visit_history th:nth-child(4) {
+        width: 120px;
+    }
+
+    #visit_history th:nth-child(5) {
+        width: 120px;
+    }
+
+    #visit_history th:nth-child(6) {
+        width: 120px;
+    }
+
+
+
+@media ( min-width: 1900px ) {
+}
+
+
+
+
+
+#overlay {
+    position: fixed;
+    top: 0;
+    z-index: 5555;
+    width: 100%;
+    height: 100%;
+    display: none;
+    background: rgba(0,0,0,0.6);
+}
+
+.cv-spinner {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px #ddd solid;
+    border-top: 4px #2e93e6 solid;
+    border-radius: 50%;
+    animation: sp-anime 0.8s infinite linear;
+}
+
+@keyframes sp-anime {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.is-hide {
+    display: none;
+}
+
+.btn_default_tmp {
+    background-color: #fff !important ;
+}
+
+.btn_dnager_tmp {
+    background-color: #d9534f !important ;
+}
+

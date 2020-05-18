@@ -662,19 +662,19 @@ $(function () {
 
 //알람
 function play_alarm() {
-    var x = document.getElementById("audio").play();
-    //var x = document.getElementById("ifr_audio").getElementById('audio').play();
-
-    if (x !== undefined) {
-        x.then(_ => {
-            console.log(_);
-            // Autoplay started!
-        }).catch(error => {
-            console.log(error);
-            // Autoplay was prevented.
-            // Show a "Play" button so that user can start playback.
-        });
-    }
+    //var x = document.getElementById("audio").play();
+    ////var x = document.getElementById("ifr_audio").getElementById('audio').play();
+    //
+    //if (x !== undefined) {
+    //    x.then(_ => {
+    //        console.log(_);
+    //        // Autoplay started!
+    //    }).catch(error => {
+    //        console.log(error);
+    //        // Autoplay was prevented.
+    //        // Show a "Play" button so that user can start playback.
+    //    });
+    //}
 }
 
 function selected_table_title(title) {
@@ -1319,10 +1319,35 @@ function diagnosis_save(set) {
         return;
     }
 
-    if ($('#diagnosis').val().trim() == '') {
-        alert(gettext('Diagnosis is empty.'));
+    if ($('#chief_complaint').val().trim() == '') {
+        alert(gettext('Subjective Data is Empty.\nPlease fill in all the input of History Taking.'));
         return;
     }
+    if ($('#objective_data').val().trim() == '') {
+        alert(gettext('Objective Data is Empty.\nPlease fill in all the input of History Taking.'));
+        return;
+    }
+    if ($('#assessment').val().trim() == '') {
+        alert(gettext('Assessment is Empty.\nPlease fill in all the input of History Taking.'));
+        return;
+    }
+    if ($('#plan').val().trim() == '') {
+        alert(gettext('Plan is Empty.\nPlease fill in all the input of History Taking.'));
+        return;
+    }
+    if ($('#diagnosis').val().trim() == '') {
+        alert(gettext('Diagnosis is Empty.\nPlease fill in all the input of History Taking.'));
+        return;
+    }
+
+
+
+
+
+
+
+
+
 
 
     chief_complaint = $('#chief_complaint').val();

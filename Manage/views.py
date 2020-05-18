@@ -1,13 +1,18 @@
 
-
+import calendar
 import os
-from openpyxl import Workbook
+from django.utils.translation import gettext as _
+
+from openpyxl import Workbook,load_workbook
+from openpyxl.styles import Color, Font,Border,Side,Alignment
+from copy import copy
 from django.shortcuts import render
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 
 from django.http import JsonResponse, HttpResponseRedirect,HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q, Count, F, Min,Sum
+from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.db.models import Q, Count, F, Min,Sum, Case,When ,Value,CharField
 import operator
 import functools
 
@@ -986,7 +991,6 @@ def doctor_profit(request):
 
 
 
-
 def audit_excel(request):
 
 
@@ -1011,244 +1015,145 @@ def audit_excel(request):
             'payment__paymentrecord_set',
         ).order_by("-id")
 
-    #payment_total = receptions.filter().aggregate(
-    #    Sum('payment__sub_total'),
-    #    Sum('payment__total'),
-    #    Sum('payment__additional'),
-    #    )
-    #
-    #
-    ##########
-    ##unpaid 구하기
-    #real_paid_total = receptions.aggregate(
-    #    Sum('payment__paymentrecord__paid'),
-    #    )
-    #payment_total_paid_amount =  0 if real_paid_total['payment__paymentrecord__paid__sum'] is None else real_paid_total['payment__paymentrecord__paid__sum']
-    #
-    #datas = []
-    #
-    #payment_total_subtotal = 0 if payment_total['payment__sub_total__sum'] is None else payment_total['payment__sub_total__sum']
-    #payment_total_additional = 0 if payment_total['payment__additional__sum'] is None else payment_total['payment__additional__sum']
-    #payment_total_total = 0 if payment_total['payment__total__sum'] is None else payment_total['payment__total__sum']
-    #payment_total_discount = payment_total_subtotal + payment_total_additional - payment_total_total
-    #payment_total_unpaid = payment_total_total - payment_total_paid_amount
+    #이름 설정
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="AUDIT REPORT ' + date_start + '_' + date_end +'.xlsx"'
+    
+    #기본 양식 경로
+    path = static('excel_form/I-MEDICARE_REPORT.xlsx')
 
+    #엑셀 파일 불러오기
+    wb = load_workbook('static/excel_form/audit_report.xlsx') #Workbook()
+    ws = wb.active# grab the active worksheet
 
+    #선택한 날짜
+    ws['B3'] = date_start + ' - ' + date_end
+
+    #처음 시작 A7 ~ W7
+    current_row = 7
+    data_num = 1
     for reception in receptions:
-        data = {
-            'no':reception.id,
-            'date':reception.recorded_date.strftime('%Y-%m-%d'),
-            'Patient':reception.patient.name_kor,
-            'patient_eng':reception.patient.name_eng,
-            'date_of_birth':str(reception.patient.get_age()) + '/' + reception.patient.get_gender_simple(),
-            'address':reception.patient.address,
-            'gender':reception.patient.gender,
-            'Depart':reception.depart.name,
-            'Doctor_kor':reception.doctor.name_kor,
-            'Doctor_eng': reception.doctor.name_eng,
-            }
+        recorded_date = reception.recorded_date
+        #기본 정보
+        ws['A' + str(current_row)] = data_num
+        ws['B' + str(current_row)] = reception.recorded_date.strftime('%Y-%m-%d')
+        ws['C' + str(current_row)] = reception.patient.get_chart_no()
+        ws['D' + str(current_row)] = reception.patient.name_kor + ' / ' + reception.patient.name_eng
+        ws['E' + str(current_row)] = reception.depart.name
+        ws['F' + str(current_row)] = reception.doctor.name_short
 
-        list_exam_fee = []
-        list_lab = []
-        list_precedure= []
-        list_radiation= []
-        list_medicine= []
 
 
         #진료 아이템
         ##진료비
-        recorded_date = reception.recorded_date
+        temp_row = current_row
+        highest = 1
         tmp_exam_set = reception.diagnosis.exammanager_set.all()
         for tmp_exam in tmp_exam_set:
-            list_exam_fee.append({
-                'checked':tmp_exam.is_checked_discount,
-                'code':tmp_exam.exam.code,
-                'value':tmp_exam.exam.name,
-                'price':tmp_exam.exam.get_price(recorded_date),
-                })
+            ws['G' + str(temp_row)] = tmp_exam.exam.name
+            ws['H' + str(temp_row)] = "-"
+            ws['I' + str(temp_row)] = tmp_exam.exam.get_price(recorded_date)
+
+            temp_row += 1
+  
+        if tmp_exam_set.count() > highest:
+            highest = tmp_exam_set.count() 
+
+        ##약
+        temp_row = current_row
+        tmp_medicine_set = reception.diagnosis.medicinemanager_set.all()
+        for tmp_medicine in tmp_medicine_set:
+            ws['J' + str(temp_row)] = tmp_medicine.medicine.name
+            ws['K' + str(temp_row)] = tmp_medicine.amount
+            ws['L' + str(temp_row)] = tmp_medicine.amount * tmp_medicine.medicine.get_price(recorded_date)
+
+            temp_row += 1
+
+        if tmp_medicine_set.count() > highest:
+            highest = tmp_medicine_set.count() 
+
 
         ##검사
+        temp_row = current_row
         tmp_test_set = reception.diagnosis.testmanager_set.all()
         for tmp_test in tmp_test_set:
-            list_lab.append({
-                'checked':tmp_test.is_checked_discount,
-                'code':tmp_test.test.code,
-                'value':tmp_test.test.name,
-                'price':tmp_test.test.get_price(recorded_date),
-                })
+            ws['M' + str(temp_row)] = tmp_test.test.name
+            ws['N' + str(temp_row)] = "-"
+            ws['O' + str(temp_row)] = tmp_test.test.get_price(recorded_date)
+
+            temp_row += 1
+        
+        if tmp_test_set.count() > highest:
+            highest = tmp_test_set.count() 
+
 
         ##처치 및 방사선
         tmp_precedure_set = reception.diagnosis.preceduremanager_set.all()
+        temp_row = current_row
+        temp_row_p = current_row
         for tmp_precedure in tmp_precedure_set:
             if 'R' in tmp_precedure.precedure.code:
-                list_radiation.append({
-                    'checked':tmp_precedure.is_checked_discount,
-                    'code':tmp_precedure.precedure.code,
-                    'value':tmp_precedure.precedure.name,
-                    'amount':tmp_precedure.amount,
-                    'price':tmp_precedure.precedure.get_price(recorded_date),
-                    })
+                ws['P' + str(temp_row)] = tmp_precedure.precedure.name
+                ws['Q' + str(temp_row)] = tmp_precedure.amount
+                ws['R' + str(temp_row)] = tmp_precedure.precedure.get_price(recorded_date)
+
+                temp_row += 1
+        
             else:
-                list_precedure.append({
-                    'checked':tmp_precedure.is_checked_discount,
-                    'code':tmp_precedure.precedure.code,
-                    'value':tmp_precedure.precedure.name,
-                    'amount':tmp_precedure.amount,
-                    'price':tmp_precedure.precedure.get_price(recorded_date),
-                    })
+                ws['S' + str(temp_row_p)] = tmp_precedure.precedure.name
+                ws['T' + str(temp_row_p)] = tmp_precedure.amount
+                ws['U' + str(temp_row_p)] = tmp_precedure.precedure.get_price(recorded_date)
 
-        ##약
-        tmp_medicine_set = reception.diagnosis.medicinemanager_set.all()
-        for tmp_medicine in tmp_medicine_set:
-            list_medicine.append({
-                'checked':tmp_medicine.is_checked_discount,
-                'code':tmp_medicine.medicine.code,
-                'value':tmp_medicine.medicine.name,
-                'amount':tmp_medicine.amount,
-                'price':tmp_medicine.medicine.get_price(recorded_date),
-                })
+                temp_row_p += 1
+        
+        if tmp_precedure_set.filter(precedure__code__icontains='R').count() > highest:
+            highest = tmp_precedure_set.filter(precedure__code__icontains='R').count()
+        
+        if tmp_precedure_set.exclude(precedure__code__icontains='R').count() > highest:
+            highest = tmp_precedure_set.exclude(precedure__code__icontains='R').count()
+        
+        
+        paid_sum = reception.payment.paymentrecord_set.aggregate(Sum('paid')).get('paid__sum')
 
-    ###################
-
-
-
-    response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="ThePythonDjango.xlsx"'
-    wb = Workbook()
-    ws = wb.active# grab the active worksheet
-
-    ws.merge_cells('B2:J2')
-    ws['B2']='AUDIT REPORT FOR I-MEDICARE'
-    ws['A3']='Date:'
-    ws['A4']= date_start + ' - ' + date_end
-
-    ws.merge_cells('A6:A7')
-    ws['A6'] = 'STT'
-    ws.merge_cells('B6:B7')
-    ws['B6'] = 'STT'
-    ws.merge_cells('C6:C7')
-    ws['C6'] = 'STT'
-    ws.merge_cells('D6:D7')
-    ws['D6'] = 'STT'
-    ws.merge_cells('E6:E7')
-    ws['E6'] = 'STT'
-    ws.merge_cells('F6:F7')
-    ws['F6'] = 'STT'
-    ws.merge_cells('G6:G7')
-    ws['G6'] = 'STT'
-    ws.merge_cells('H6:H7')
-    ws['H6'] = 'STT'
-    ws.merge_cells('I6:I7')
-    ws['I6'] = 'STT'
-    ws.merge_cells('J6:J7')
-    ws['J6'] = 'STT'
-    ws.merge_cells('K6:K7')
-    ws['K6'] = 'STT'
-    ws.merge_cells('L6:L7')
-    ws['L6'] = 'STT'
-    ws.merge_cells('M6:M7')
-    ws['M6'] = 'STT'
-    ws.merge_cells('N6:N7')
-    ws['N6'] = 'STT'
-    ws.merge_cells('O6:O7')
-    ws['O6'] = 'STT'
-    ws.merge_cells('P6:P7')
-    ws['P6'] = 'STT'
-    ws.merge_cells('Q6:Q7')
-    ws['Q6'] = 'STT'
-    ws.merge_cells('R6:R7')
-    ws['H6'] = 'STT'
-    ws.merge_cells('S6:S7')
-    ws['H6'] = 'STT'
+        ws['V' + str(current_row)] = reception.payment.sub_total
+        if reception.payment.discounted != 0:
+            ws['W' + str(current_row)] = reception.payment.sub_total / 100 * reception.payment.discounted
+        else:
+            ws['W' + str(current_row)] = reception.payment.discounted_amount
+        ws['X' + str(current_row)] = reception.payment.additional
+        ws['Y' + str(current_row)] = reception.payment.total
+        ws['Z' + str(current_row)] = reception.payment.total - paid_sum
+        ws['AA' + str(current_row)] = paid_sum
+        ws['AB' + str(current_row)] = reception.payment.memo 
 
 
+        if highest != 0:
+            ws.merge_cells('A' + str(current_row) + ':A' + str(current_row + highest-1))
+            ws.merge_cells('B' + str(current_row) + ':B' + str(current_row + highest-1))
+            ws.merge_cells('C' + str(current_row) + ':C' + str(current_row + highest-1))
+            ws.merge_cells('D' + str(current_row) + ':D' + str(current_row + highest-1))
+            ws.merge_cells('E' + str(current_row) + ':E' + str(current_row + highest-1))
+            ws.merge_cells('F' + str(current_row) + ':F' + str(current_row + highest-1))
+            ws.merge_cells('V' + str(current_row) + ':V' + str(current_row + highest-1))
+            ws.merge_cells('W' + str(current_row) + ':W' + str(current_row + highest-1))
+            ws.merge_cells('X' + str(current_row) + ':X' + str(current_row + highest-1))
+            ws.merge_cells('Y' + str(current_row) + ':Y' + str(current_row + highest-1))
+            ws.merge_cells('Z' + str(current_row) + ':Z' + str(current_row + highest-1))
+            ws.merge_cells('AA' + str(current_row) + ':AA' + str(current_row + highest-1))
+            ws.merge_cells('AB' + str(current_row) + ':AB' + str(current_row + highest-1))
 
+        current_row += highest 
+        data_num +=1
 
+    border_thin = Border(top=Side(border_style="thin", color="000000") ,
+                        left=Side(border_style="thin", color="000000") ,
+                       right=Side(border_style="thin", color="000000") ,
+                      bottom=Side(border_style="thin", color="000000") )
 
-   #     #수납 정보
-   #     paid_by = '-'
-   #     
-   #     sub_total = reception.payment.sub_total
-   #     additional = 0 if reception.payment.additional is None else reception.payment.additional
-   #     discount = reception.payment.discounted_amount
-   #     total = reception.payment.total
-   #     unpaid = 0
-   #
-   #     if discount is None:
-   #         discount_percent = reception.payment.discounted
-   #         if discount_percent is None:
-   #             discount = 0
-   #         else:
-   #             discount = discount_percent / 100 * sub_total
-   #     
-   #     #수납 상태 및 방법
-   #     #if reception.payment.progress != 'paid':
-   #     list_paid_record = reception.payment.paymentrecord_set.all()
-   #     all_paid = 0
-   #         
-   #     paid_by = ''
-   #     paid_by_remit = False
-   #     paid_by_card = False
-   #     paid_by_cash = False
-   #
-   #     #print(reception.payment.total)
-   #
-   #
-   #
-   #     #if list_paid_record.count() != 0:
-   #     for paid_record in list_paid_record:
-   #         all_paid += paid_record.paid
-   #         if paid_record.method == 'cash':
-   #             paid_by_cash = True
-   #         if paid_record.method == 'card':
-   #             paid_by_card = True
-   #         if paid_record.method == 'remit':
-   #             paid_by_remit = True
-   #     unpaid = total - all_paid
-   #     #else:
-   #     #    unpaid = total
-   #             
-   #         
-   #     
-   #         
-   #
-   #     if paid_by_cash is True:
-   #         paid_by += 'Cash<br/>'
-   #     if paid_by_card is True:
-   #         paid_by += 'Card<br/>'
-   #     if paid_by_remit is True:
-   #         paid_by += 'Remit<br/>'
-   #
-   #
-   #
-   #
-   #     data.update({
-   #         'list_exam_fee':list_exam_fee,
-   #         'list_lab':list_lab,
-   #         'list_precedure':list_precedure,
-   #         'list_radiation':list_radiation,
-   #         'list_medicine':list_medicine,
-   #
-   #         'paid_by':paid_by,
-   #         'sub_total':sub_total,
-   #         'additional':additional,
-   #         'discount':discount,
-   #         'total':total,
-   #         'unpaid':unpaid,
-   #
-   #         })
-   #
-   #     datas.append(data)
-   #
-   # paginator = Paginator(datas, page_context)
-   # try:
-   #     paging_data = paginator.page(page)
-   # except PageNotAnInteger:
-   #     paging_data = paginator.page(1)
-   # except EmptyPage:
-   #     paging_data = paginator.page(paginator.num_pages)
-
-
+    rows = ws['A7:AB' + str(current_row)]
+    for row in rows:
+        for cell in row:
+            cell.border = border_thin
 
 
 
@@ -1256,11 +1161,312 @@ def audit_excel(request):
     return response
 
 
+def rec_report_excel(request):
+    
+    date_start = datetime.datetime.today().strftime("%Y-%m-%d")
+
+    date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
+    date_max = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.max)
+
+    kwargs = {}
+    kwargs['progress'] = 'done'
+
+    datas = []
+    receptions = Reception.objects.filter(
+            **kwargs ,
+            recorded_date__range = (date_min, date_max), 
+        ).prefetch_related(
+            'diagnosis__exammanager_set',
+            'diagnosis__testmanager_set',
+            'diagnosis__preceduremanager_set',
+            'diagnosis__medicinemanager_set',
+            'payment__paymentrecord_set',
+        ).order_by("-id")
+
+    #이름 설정
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="RECEPTION REPORT ' + date_start +'.xlsx"'
+
+    #엑셀 파일 불러오기
+    wb = load_workbook('static/excel_form/reception_report.xlsx') #Workbook()
+    ws = wb.active# grab the active worksheet
+
+    #선택한 날짜
+    ws['B1'] = 'BÁO CÁO DOANH THU PHÒNG KHÁM NGÀY ' + date_min.strftime('%d.%m.%Y')
+
+
+    #처음 시작 A7 ~ W7
+    current_row = 7
+    form_row = 8
+    data_num = 1
+
+    #스타일 초기화
+    style_font = ws['A7'].font
+    style_border = ws['A7'].border
+    style_fill = ws['A7'].fill
+    #string
+    style_string_format = ws['A7'].number_format
+    #number
+    style_number_format = ws['G7'].number_format
+    style_protection = ws['A7'].protection
+    style_alignment = ws['A7'].alignment
+
+
+    #값 초기화
+    total_subtotal = 0
+    total_discount = 0
+    total_total = 0
+    total_paid_cash = 0
+    total_paid_transfer = 0 
+    total_debit = 0
+
+
+    for reception in receptions:
+        recorded_date = reception.recorded_date
+        ws.insert_rows(current_row+1)
+        
+        rows = ws['A' + str(current_row) + ':T' + str(current_row)]
+        new_rows =ws['A' + str(current_row + 1) + ':T' + str(current_row + 1)]
+        ws['A7'].style# = rows.style
+
+        for row in rows:
+            for cell in row:
+                ws.cell(row = cell.row+1, column=cell.column).font = copy(cell.font)
+                ws.cell(row = cell.row+1, column=cell.column).border = copy(cell.border)
+                ws.cell(row = cell.row+1, column=cell.column).fill = copy(cell.fill)
+                ws.cell(row = cell.row+1, column=cell.column).number_format = copy(cell.number_format)
+                ws.cell(row = cell.row+1, column=cell.column).protection = copy(cell.protection)
+                ws.cell(row = cell.row+1, column=cell.column).alignment = copy(cell.alignment)
+
+        #기본 정보
+        ws['A' + str(current_row)] = data_num
+        ws['B' + str(current_row)] = reception.recorded_date.strftime('%Y-%m-%d')
+        ws['C' + str(current_row)] = reception.depart.name
+        ws['D' + str(current_row)] = reception.patient.name_kor + ' / ' + reception.patient.name_eng
+
+
+        ws['E' + str(current_row)] = reception.diagnosis.diagnosis
+
+        ws['F' + str(current_row)] = reception.payment.sub_total
+        total_subtotal += reception.payment.sub_total
+        if reception.payment.discounted != 0:
+            ws['G' + str(current_row)] = reception.payment.sub_total / 100 * reception.payment.discounted
+            total_discount += reception.payment.sub_total / 100 * reception.payment.discounted
+        else:
+            ws['G' + str(current_row)] = reception.payment.discounted_amount
+            total_discount += reception.payment.discounted_amount
+        ws['H' + str(current_row)] = reception.payment.total
+        total_total += reception.payment.total
+
+        ws['I' + str(current_row)] = ''
+
+        #실제 지불금
+        if reception.payment.paymentrecord_set.count() != 0:
+            paid = reception.payment.paymentrecord_set.first()
+            ws['J' + str(current_row)] = paid.date.strftime('%Y-%m-%d')
+            if paid.method == 'cash':
+                ws['K' + str(current_row)] = paid.paid
+                total_paid_cash += paid.paid
+            elif paid.method == 'card':
+                ws['L' + str(current_row)] = paid.paid
+                total_paid_transfer += paid.paid
+
+            ws['M' + str(current_row)] = reception.payment.total - paid.paid
+            total_debit += reception.payment.total - paid.paid
+            ws['P' + str(current_row)] = reception.payment.progress
+
+            ws['Q' + str(current_row)] = 'Dr.' + reception.doctor.name_short
+            ws['R' + str(current_row)] = 0
+            ws['S' + str(current_row)] = '=IF(R' + str(current_row) + '=0,L' + str(current_row) +',"")'
+            ws['T' + str(current_row)] = reception.payment.memo
+
+        
+
+        data_num += 1
+        form_row += 1
+        current_row +=1
+
+    begin_total_sel = current_row
+    ws['A' + str(current_row)] = ''
+    ws['B' + str(current_row)] = ''
+    ws.merge_cells('C' + str(current_row) + ':E' + str(current_row))
+    ws['C' + str(current_row)] = 'Total'
+
+
+    ws['F' + str(current_row)] = total_subtotal
+    ws['G' + str(current_row)] = total_discount
+    ws['H' + str(current_row)] = total_total
+    ws['K' + str(current_row)] = total_paid_cash
+    ws['L' + str(current_row)] = total_paid_transfer
+    ws['M' + str(current_row)] = total_debit
+
+    current_row += 1
+    
+    rows = ws['C'+ str(current_row) + ':J' + str(current_row)]
+
+    ws.merge_cells('C' + str(current_row) + ':E' + str(current_row))
+    ws['C' + str(current_row)] = 'Total (1)'
+    ws['F' + str(current_row)] = total_subtotal
+
+    ws.merge_cells('G' + str(current_row) + ':K' + str(current_row))
+    ws['G' + str(current_row)] = 'Doanh thu theo Khoa'
+
+    
+    current_row +=1
+    ws.merge_cells('C' + str(current_row) + ':E' + str(current_row))
+    ws['C' + str(current_row)] = 'Tổng tiền giảm giá (2)'
+    ws['F' + str(current_row)] = total_discount
+
+    ws['G' + str(current_row)] = 'Nhi'
+    ws['H' + str(current_row)] = 'Da liễu'
+    ws['I' + str(current_row)] = 'Nội'
+    ws['J' + str(current_row)] = 'Phục hồi chức năng'
+    ws['K' + str(current_row)] = 'Phẫu thuật thẩm mỹ'
+
+    current_row +=1
+    ws.merge_cells('C' + str(current_row) + ':E' + str(current_row))
+    ws['C' + str(current_row)] = 'Doanh thu thực tế (1)-(2)'
+    ws['F' + str(current_row)] = total_total
+
+    derm_receptions = receptions.filter(depart = 6)
+    ent_receptions= receptions.filter(depart = 5)
+    ps_receptions = receptions.filter(depart = 4)
+    im_receptions = receptions.filter(depart = 2)
+    pm_receptions = receptions.filter(depart = 7)
+
+    derm_total = 0
+    derm_total_paid = 0
+    for reception in derm_receptions:
+        derm_total += reception.payment.total
+        for data in reception.payment.paymentrecord_set.all():
+            derm_total_paid += data.paid
+
+    ent_total = 0
+    ent_total_paid = 0
+    for reception in ent_receptions:
+        ent_total += reception.payment.total
+        for data in reception.payment.paymentrecord_set.all():
+            ent_total_paid += data.paid
+
+    ps_total = 0
+    ps_total_paid = 0
+    for reception in ps_receptions:
+        ps_total += reception.payment.total
+        for data in reception.payment.paymentrecord_set.all():
+            ps_total_paid += data.paid
+    
+    im_total = 0
+    im_total_paid = 0
+    for reception in im_receptions:
+        im_total += reception.payment.total
+        for data in reception.payment.paymentrecord_set.all():
+            im_total_paid += data.paid
+
+    pm_total = 0
+    pm_total_paid = 0
+    for reception in pm_receptions:
+        pm_total += reception.payment.total
+        for data in reception.payment.paymentrecord_set.all():
+            pm_total_paid += data.paid
+
+    ws['G' + str(current_row)] = derm_total
+    ws['H' + str(current_row)] = ent_total
+    ws['I' + str(current_row)] = ps_total
+    ws['J' + str(current_row)] = im_total
+    ws['K' + str(current_row)] = pm_total
+
+
+    current_row +=1
+    ws.merge_cells('C' + str(current_row) + ':C' + str(current_row+3))
+    ws['C' + str(current_row)] = 'Phương thức \nthanh toán'
+    ws.merge_cells('D' + str(current_row) + ':E' + str(current_row))
+    ws['D' + str(current_row)] = 'Tiền mặt'
+    ws['F' + str(current_row)] = total_paid_cash
+
+    ws['G' + str(current_row)] = derm_total_paid
+    ws['H' + str(current_row)] = ent_total_paid
+    ws['I' + str(current_row)] = ps_total_paid
+    ws['J' + str(current_row)] = im_total_paid
+    ws['K' + str(current_row)] = pm_total_paid
+
+    ws['L' + str(current_row)] = '=SUM(G' + str(current_row) + ':K' + str(current_row) +')-F' + str(current_row)
+
+    current_row +=1
+    ws.merge_cells('D' + str(current_row) + ':E' + str(current_row))
+    ws['D' + str(current_row)] = 'VP Bank'
+    ws['F' + str(current_row)] = 0
+
+    ws['G' + str(current_row)] = 0
+    ws['H' + str(current_row)] = 0
+    ws['I' + str(current_row)] = 0
+    ws['J' + str(current_row)] = 0
+    ws['K' + str(current_row)] = 0
+
+    current_row +=1
+    ws.merge_cells('D' + str(current_row) + ':E' + str(current_row))
+    ws['D' + str(current_row)] = 'BIDV'
+    ws['F' + str(current_row)] = 0
+
+    ws['G' + str(current_row)] = 0
+    ws['H' + str(current_row)] = 0
+    ws['I' + str(current_row)] = 0
+    ws['J' + str(current_row)] = 0
+    ws['K' + str(current_row)] = 0
+
+    current_row +=1
+    ws.merge_cells('D' + str(current_row) + ':E' + str(current_row))
+    ws['D' + str(current_row)] = 'Chưa thanh toán'
+    ws['F' + str(current_row)] = total_debit
+
+    ws['G' + str(current_row)] = derm_total - derm_total_paid
+    ws['H' + str(current_row)] = ent_total - ent_total_paid
+    ws['I' + str(current_row)] = ps_total - ps_total_paid
+    ws['J' + str(current_row)] = im_total - im_total_paid
+    ws['K' + str(current_row)] = pm_total - pm_total_paid
+
+
+    rows = ws['C'+ str(begin_total_sel) + ':K' + str(current_row)]
+    for row in rows:
+        for cell in row:
+            cell.font = copy(style_font)
+            cell.border = copy(style_border)
+            cell.fill = copy(style_fill)
+            cell.number_format = copy(style_number_format)
+            cell.protection = copy(style_protection)
+            cell.alignment = copy(style_alignment)
 
 
 
+    #ws.cell(column= 7 , row=(begin_total_sel + 1)).style.font.bold= copy(False)
+    #ws.cell(column= 3, row=(begin_total_sel + 2)).font.bold= False
+    #ws.cell(column= 4, row=(begin_total_sel + 4)).font.bold= False
+    #ws.cell(column= 4, row=(begin_total_sel + 5)).font.bold= False
+    #ws.cell(column= 4, row=(begin_total_sel + 6)).font.bold= False
+    #ws.cell(column= 4, row=(begin_total_sel + 7)).font.bold= False
 
 
+    #38.25
+
+    wb.save(response)
+    return response
+
+
+
+#고객 정보 다운로드
+def cumstomer_management_excel(request):
+    today = datetime.date.today().strftime('%Y%m%d')
+    print(today)
+    #이름 설정
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="CUSTOMER INFORMATION ' + today +'.xlsx"'
+
+    #엑셀 파일 불러오기
+    wb = load_workbook('static/excel_form/reception_report.xlsx') #Workbook()
+    ws = wb.active# grab the active worksheet
+
+
+    wb.save(response)
+    return response
 
 
 def search_medicine(request):
@@ -1694,7 +1900,6 @@ def precedure_add_edit_set(request):
         last_code = Precedure.objects.filter(precedure_class_id=precedure_class).order_by('code').last()
         precedure_class = int(precedure_class)
 
-
         if precedure_class ==1: #D
             CODE = 'D'
         elif precedure_class == 2: #CT
@@ -1713,14 +1918,18 @@ def precedure_add_edit_set(request):
             CODE = 'T'
         elif precedure_class == 10: #PM
             CODE = 'PM'
-        elif precedure_class >= 11 or precedure_class <= 30 or precedure_class == 9: #: #DERM
+        elif ( precedure_class >= 11 and precedure_class <= 30 ) or precedure_class == 9: #: #DERM
             CODE = 'DM'
-        elif precedure_class >= 31 or precedure_class <=40 or precedure_class == 42: #PS
+        elif ( precedure_class >= 31 and precedure_class <=40 ) or precedure_class == 42: #PS
             CODE = 'PS'
         elif precedure_class == 41: #MRI
             CODE = 'MRI'
         elif precedure_class == 44: #IM
             CODE = 'IM'
+        elif precedure_class == 45: #Vaccin
+            CODE = 'VC'
+        elif precedure_class == 46: #Vaccin
+            CODE = 'EC'
 
         if last_code == None:
            data.code = CODE + str('0001')
@@ -2323,15 +2532,488 @@ def save_database_disposal_medicine(request):
 #기안서
 def draft(request):
 
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    else:
+        f_name = F('commcode_name_en')
 
 
+    if request.META['SERVER_PORT'] == '9090' or request.META['SERVER_PORT'] == '11111':#테스트서버
+        url = 'Manage/Draft.html'
+        #부서 - 병원
+        depart_type = COMMCODE.objects.filter(upper_commcode = '000002',commcode_grp = 'DEPART_CLICINC',use_yn="Y").annotate(code = F('commcode'),name = f_name ).values('code','name','id')
+
+    elif request.META['SERVER_PORT'] == '8888':#경천애인
+        url = 'Manage/Draft_KBL.html'
+        #부서 - KBL
+        depart_type= COMMCODE.objects.filter(upper_commcode = '000002',commcode_grp = 'DEPART_KBL', use_yn="Y").annotate(code = F('commcode'),name = f_name ).values('code','name','id')
+
+
+
+    #기안서 종류
+    draft_type = COMMCODE.objects.filter(upper_commcode = '000007',commcode_grp = 'DRAFT_TYPE',use_yn="Y").annotate(code = F('commcode'),name = f_name ).values('code','name').order_by('seq')
+
+    #기안서 상태
+    draft_status = COMMCODE.objects.filter(upper_commcode = '000007',commcode_grp = 'DRAFT_STATUS',use_yn="Y").annotate(code = F('commcode'),name = f_name ).values('code','name','id')
+
+    file_form = board_file_form()
 
     return render(request,
-        'Manage/Draft.html',
+        url,
             {
+                'draft_type':draft_type,
 
+                'depart_type':depart_type,
+
+                'draft_status':draft_status,
+
+                'file_form':file_form,
             }
         )
+
+
+#기안서 검색
+def draft_search(request):
+    start = request.POST.get('start','')
+    end = request.POST.get('end','')
+
+
+    string = request.POST.get('string','')
+
+    type = request.POST.get('type','')
+    requester = request.POST.get('requester','')
+    status = request.POST.get('status','')
+
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+        f_user = F('name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+        f_user = F('name_ko')
+    else:
+        f_name = F('commcode_name_en')
+        f_user = F('name_en')
+
+    date_min = datetime.datetime.combine(datetime.datetime.strptime(start, "%Y-%m-%d").date(), datetime.time.min)
+    date_max = datetime.datetime.combine(datetime.datetime.strptime(end, "%Y-%m-%d").date(), datetime.time.max)
+
+
+    kwargs={}
+    if string != '':
+        kwargs['string__icontains']=string
+    if type != '':
+        kwargs['type']=type
+    if requester != '':
+        kwargs['requester']=requester
+    if status != '':
+        kwargs['status']=status
+
+    print(kwargs)
+
+    draft_list=[]
+    if request.META['SERVER_PORT'] == '8888':#경천애인
+        draft_query = Draft.objects.filter(date_registered__range = (date_min, date_max),**kwargs,use_yn='Y',is_KBL='Y').order_by('-date_registered')
+    else:
+        draft_query = Draft.objects.filter(date_registered__range = (date_min, date_max),**kwargs,use_yn='Y',is_KBL='N').order_by('-date_registered')
+
+    for draft in draft_query:
+        depart = COMMCODE.objects.filter(id = draft.depart).annotate(name = f_name ).values('name')[:1]
+        status_val = COMMCODE.objects.filter(upper_commcode = '000007',commcode_grp='DRAFT_STATUS', commcode=draft.status).annotate(name = f_name ).values('name')[:1]
+
+        user_creator = User.objects.filter(id = draft.creator).annotate(name = f_user ).values('name')[:1]
+
+        
+        if draft.date_in_charge == '0000-00-00 00:00:00':
+            in_charge = None
+        else:
+            in_charge = draft.date_in_charge[0:10]
+
+        if draft.date_leader == '0000-00-00 00:00:00':
+            leader = None
+        else:
+            leader = draft.date_leader[0:10]
+
+        if draft.date_accounting == '0000-00-00 00:00:00':
+            accounting = None
+        else:
+            accounting = draft.date_accounting[0:10]
+
+        if draft.date_ceo == '0000-00-00 00:00:00':
+            ceo = None
+        else:
+            ceo = draft.date_ceo[0:10]
+
+
+        
+
+        draft_list.append({
+            'id':draft.id,
+            'status':draft.status,
+            'type':draft.type,
+            'title':draft.title,
+            'depart':depart[0]['name'],
+            'RQSTR':user_creator[0]['name'],
+            'RQSTD_DATE':draft.date_registered[0:10],
+            'in_charge':in_charge,
+            'leader':leader,
+            'accounting':accounting,
+            'ceo': ceo,
+            
+            'status_val':status_val[0]['name'],
+            })
+
+    page = request.POST.get('page',1)
+    context_in_page = request.POST.get('page_context');
+    paginator = Paginator(draft_list, context_in_page)
+    try:
+        paging_data = paginator.page(page)
+    except PageNotAnInteger:
+        paging_data = paginator.page(1)
+    except EmptyPage:
+        paging_data = paginator.page(paginator.num_pages)
+
+
+    return JsonResponse({
+
+        'datas':list(paging_data),
+        'page_range_start':paging_data.paginator.page_range.start,
+        'page_range_stop':paging_data.paginator.page_range.stop,
+        'page_number':paging_data.number,
+        'has_previous':paging_data.has_previous(),
+        'has_next':paging_data.has_next(),
+        })
+
+
+#기안서 불러오기
+def draft_get_data(request):
+    form_id = request.POST.get('id')
+
+    query_data = Draft.objects.get(id = form_id)
+
+
+
+    return JsonResponse({
+        'result':True,
+
+        'type':query_data.type,
+        'depart':query_data.depart,
+        'creator':query_data.creator,
+        'title':query_data.title,
+        'contents':query_data.contents,
+        'consultation':query_data.consultation,
+        'additional':query_data.additional,
+        'status':query_data.status,
+        })
+
+
+
+
+
+
+#기안서 양식
+def draft_get_form(request):
+
+    form_id = request.POST.get('form_id')
+
+    path = 'static/draft/' + form_id
+    file = open(path,'rt',encoding='UTF-8')
+    data = file.read()
+
+    return JsonResponse({'result':True,
+                         'data':data,
+                         })
+
+#기안서 저장
+def draft_save(request):
+
+    id = request.POST.get("id",'')
+
+    new_edit_type=request.POST.get("new_edit_type")
+    new_edit_depart=request.POST.get("new_edit_depart")
+    new_edit_name=request.POST.get("new_edit_name")
+    new_edit_title=request.POST.get("new_edit_title")
+    new_edit_content=request.POST.get("new_edit_content")
+    new_edit_consultation=request.POST.get("new_edit_consultation")
+    new_edit_MORE_CMNTS=request.POST.get("new_edit_MORE_CMNTS")
+    new_edit_status=request.POST.get("new_edit_status")
+
+    print(id)
+
+    if id != '':
+        draft = Draft.objects.get(pk = id)
+    else:
+        draft = Draft()
+        draft.creator = request.user.id
+        draft.date_registered = datetime.datetime.now()
+
+    
+
+    draft.type = new_edit_type
+    draft.depart = new_edit_depart
+    draft.title = new_edit_title
+    draft.request_user = new_edit_name
+    draft.contents = new_edit_content
+    draft.consultation = new_edit_consultation
+    draft.additional = new_edit_MORE_CMNTS
+    draft.status = new_edit_status
+
+    
+    draft.modifier = request.user.id
+    draft.date_last_modified = datetime.datetime.now()
+
+    if request.META['SERVER_PORT'] == '8888':#경천애인
+        draft.is_KBL='Y'
+
+    draft.save()
+
+    return JsonResponse({'result':True,})
+
+
+#기안서 삭제
+def draft_delete(request):
+    id = request.POST.get('id')
+
+    draft = Draft.objects.get(id = id )
+    draft.use_yn = "N"
+    draft.save()
+
+
+
+    return JsonResponse({'result':True,})
+
+
+#기안서 파일 리스트
+def draft_list_file(request):
+    id = request.POST.get('id')
+
+    list_file = []
+    query_file = Board_File.objects.filter(board_id = id,board_type='DRAFT').order_by('registered_date')
+
+    for file in query_file:
+        list_file.append({
+            'id':file.id,
+            'url':file.file.url,
+            'name':file.title,
+            'origin_name':file.origin_name,
+            'date':file.registered_date.strftime("%Y-%m-%d"),
+            'creator':file.user,
+            'memo':file.memo,
+            });
+
+    return JsonResponse({
+        'result':True,
+        'datas':list_file,
+        })
+
+#기안서 파일 정보 불러오기
+def draft_get_file(request):
+    id = request.POST.get('id')
+
+    query_file = Board_File.objects.get(id = id)
+
+    file_name = query_file.file.url,
+
+    return JsonResponse({
+        'result':True,
+        'title':query_file.title,
+        'memo':query_file.memo,
+        'origin_name':query_file.origin_name,
+        })
+
+#기안서 파일 저장
+def draft_save_file(request):
+    id = request.POST.get('id')
+
+    if request.method == 'POST':
+
+        selected_file_id = request.POST.get('selected_file_id','')#파일 ID
+        selected_file_list = request.POST.get('selected_file_list','')#기안서 ID 
+        new_edit_file_name = request.POST.get('new_edit_file_name','')#문서 이름
+        new_edit_file_remark = request.POST.get('new_edit_file_remark','')#문서 설명
+
+        form = board_file_form(request.POST, request.FILES)
+        files = request.FILES.getlist('file') 
+
+        if form.is_valid():
+           print(selected_file_id)
+           if selected_file_id != '': #수정
+                file_instance = Board_File.objects.get(id = selected_file_id)
+           else:
+                file_instance = Board_File()
+
+
+           #    old_data
+           #file save
+           for f in files:
+               if file_instance.file:
+                    if os.path.isfile(file_instance.file.path):
+                        os.remove(file_instance.file.path)
+
+               file_instance.file = f
+               file_instance.origin_name = f._name
+               pass
+
+           file_instance.board_id = selected_file_list
+           file_instance.user = request.user.user_id
+           file_instance.board_type = 'DRAFT'
+           file_instance.title = new_edit_file_name
+           file_instance.memo = new_edit_file_remark
+           file_instance.save()
+           #form.save()
+           return JsonResponse({'error': False, 'message': 'Uploaded Successfully'})
+        else:
+           return JsonResponse({'error': True, 'errors': form.errors})
+
+    else:
+        form = board_file_form()
+        return render(request, 'django_image_upload_ajax.html', {'form': form})
+
+
+
+#기안서 파일 삭제
+def draft_delete_file(request):
+
+    id = request.POST.get('id')
+    Board_File.objects.get(id=id).delete()
+
+
+
+    return JsonResponse({
+        'result':True,
+        })
+
+
+
+#기안서 승인
+def check_appraove(request):
+
+    id = request.POST.get('id')
+    type = request.POST.get('type')
+    val = request.POST.get('val')
+
+    print(val)
+
+    draft = Draft.objects.get(id = id )
+
+    if val=='true':
+        now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+        user_id = request.user.id
+        name_en = request.user.name_en
+        name_ko = request.user.name_ko
+        name_vi = request.user.name_vi
+    else:
+        now = '0000-00-00 00:00:00'
+        user_id = ''
+        name_en = ''
+        name_ko = ''
+        name_vi = ''
+    
+
+
+    if type == 'incharge':
+        draft.date_in_charge = now
+        draft.user_id_in_charge = user_id
+        draft.name_en_in_charge = name_en
+        draft.name_ko_in_charge = name_ko
+        draft.name_vi_in_charge = name_vi
+
+
+    elif type == 'leader':
+        draft.date_leader = now
+        draft.user_id_leader= user_id
+        draft.name_en_leader= name_en
+        draft.name_ko_leader= name_ko
+        draft.name_vi_leader= name_vi
+
+
+
+    elif type == 'accounting':
+        draft.date_accounting = now
+        draft.user_id_accounting= user_id
+        draft.name_en_accounting= name_en
+        draft.name_ko_accounting= name_ko
+        draft.name_vi_accounting= name_vi
+
+    elif type == 'ceo':
+        draft.date_ceo = now
+        draft.user_id_ceo= user_id
+        draft.name_en_ceo= name_en
+        draft.name_ko_ceo= name_ko
+        draft.name_vi_ceo= name_vi
+
+    else:
+            
+        return JsonResponse({
+            'result':False ,
+            })
+
+    draft.save()
+
+
+
+    
+    return JsonResponse({
+        'result':True,
+        })
+
+
+
+
+#기안서 프린트
+def draft_print(request,id=None):
+
+    draft = Draft.objects.get(id = id)
+
+    
+    depart = COMMCODE.objects.get(id = id)
+    type = COMMCODE.objects.get(commcode = draft.type ,commcode_grp='DRAFT_TYPE',upper_commcode='000007' )
+
+    file_list= []
+    file_list_query = Board_File.objects.filter(board_id=id, board_type='DRAFT').values('title').order_by('registered_date')
+
+
+    file_rowspan = len(file_list_query)
+    if file_rowspan == 0 :
+        file_rowspan = 1
+    else:
+        tmp = 1
+        for file in file_list_query:
+
+            file_list.append({
+                'id':tmp,
+                'title':file['title'],
+                })
+            tmp +=1
+
+    #diagnostic = reception.diagnosis.diagnosis
+    return render(request,
+    'Draft_Form/basic_form.html',
+            {
+                'type_vi':type.commcode_name_vi,
+                'type_ko':type.commcode_name_ko,
+
+                'depart_vi':depart.commcode_name_vi,
+                'depart_ko':depart.commcode_name_ko,
+
+                'date_registered':draft.date_registered[0:10],
+
+                'status':draft.status,
+
+                'title':draft.title,
+                'contents':draft.contents,
+
+                'file_rowspan':file_rowspan,
+                'file_list':file_list,
+                
+            },
+        )
+
+    
+    return JsonResponse({
+        'result':True,
+        })
 
 
 
@@ -2378,6 +3060,10 @@ def customer_manage_get_patient_list(request):
     datas=[]
     for patient in patients:
 
+        visits = Reception.objects.filter(patient_id = patient.id).count()
+
+        total_amount = Reception.objects.filter(patient_id = patient.id).prefetch_related('payment__paymentrecord_set').aggregate(total_price=Sum('payment__paymentrecord__paid'))
+
         data = {}
         data.update({
             'id':patient.id,
@@ -2392,6 +3078,9 @@ def customer_manage_get_patient_list(request):
 
             'memo':patient.memo,
             'date_registered':patient.date_registered.strftime('%Y-%m-%d'),
+
+            'visits':visits,
+            'paid_total':0 if total_amount['total_price'] == None else total_amount['total_price'],
             })
         datas.append(data)
 
@@ -2454,19 +3143,114 @@ def customer_manage_get_patient_visit(request):
     context={}
     receptions = Reception.objects.filter(patient_id=int(patient_id)).exclude(progress='deleted').order_by('recorded_date')
 
+
+
     datas = []
     for reception in receptions:
+        payment = Payment.objects.filter(reception_id = reception.id).aggregate(paid_sum=Sum('paymentrecord__paid'))
+
+
+
         datas.append({
             'reception_id':reception.id,
             'depart':reception.depart.name,
             'doctor':reception.doctor.name_short,
-            'date_visited':reception.recorded_date.strftime('%Y-%m-%d'),
+            'paid':'0' if payment['paid_sum'] is None else payment['paid_sum'],
+            'date_visited':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),
             })
 
     context.update({
         'datas':datas,
         })
     return JsonResponse(context)
+
+
+def customer_manage_get_patient_visit_history(request):
+
+    reception_id = request.POST.get('reception_id')
+
+    reception = Reception.objects.get(id = reception_id)
+    res = True
+    data = {}
+    try:
+        diagnosis = Diagnosis.objects.get(reception_id = reception.id)
+
+        exam_set = ExamManager.objects.filter(diagnosis_id = diagnosis.id)
+        test_set = TestManager.objects.filter(diagnosis_id = diagnosis.id)
+        precedure_set = PrecedureManager.objects.filter(diagnosis_id = diagnosis.id)
+        medicine_set = MedicineManager.objects.filter(diagnosis_id = diagnosis.id)
+
+        exams = []
+        for data in exam_set:
+            exam = {}
+            exam.update({
+                    'name':data.exam.name,
+                })
+            exams.append(exam)
+
+        tests = []
+        for data in test_set:
+            test = {}
+            test.update({
+                    'name':data.test.name,
+                    'amount':data.amount,
+                    'days':data.days,
+                    'memo':data.memo,
+                })
+            tests.append(test)
+
+        precedures = []
+        for data in precedure_set:
+            precedure = {}
+            precedure.update({
+                    'name':data.precedure.name,
+                    'amount':data.amount,
+                    'days':data.days,
+                    'memo':data.memo,
+                })
+            precedures.append(precedure)
+
+        medicines = []
+        for data in medicine_set:
+            medicine = {}
+            medicine.update({
+                    'name':data.medicine.name,
+                    'amount':data.amount,
+                    'days':data.days,
+                    'memo':data.memo,
+                    'unit':data.medicine.unit,
+                })
+            medicines.append(medicine)
+
+        data = {'date':diagnosis.recorded_date.strftime('%Y-%m-%d'),
+        'day':diagnosis.recorded_date.strftime('%a'),
+        'subjective':reception.chief_complaint,
+        'objective':diagnosis.objective_data,
+        'assessment':diagnosis.assessment,
+        'plan':diagnosis.plan,
+        'diagnosis':diagnosis.diagnosis,
+        'ICD': diagnosis.ICD,
+        'icd_code': diagnosis.ICD_code,
+        'recommendation':diagnosis.recommendation,
+                
+
+        'doctor':reception.doctor.name_kor,
+
+        'exams':exams,
+        'tests':tests,
+        'precedures':precedures,
+        'medicines':medicines,
+        'amount':'null',
+        }
+
+    except Diagnosis.DoesNotExist:
+        res = False
+
+    return JsonResponse({
+        'result':res,
+
+        'data':data,
+    })
 
 
 
@@ -2900,7 +3684,7 @@ def board_list(request,id=None):
                 'comments_count':comments_count,
                 }
 
-            query_file = Board_File.objects.filter(board_id = id)
+            query_file = Board_File.objects.filter(board_id = id,board_type='BASIC')
 
             list_file = []
             for file in query_file:
@@ -2925,6 +3709,10 @@ def board_list(request,id=None):
     kwargs = {}
     kwargs['use_yn'] = 'Y' # 기본 
     kwargs['board_type'] = 'BASIC' #일반 게시판
+
+    kwargs['is_KBL'] = 'N'
+    if request.META['SERVER_PORT'] == '8888':#경천애인
+        kwargs['is_KBL'] = 'Y'
 
 
     search_string = request.POST.get('search_string','')
@@ -3026,6 +3814,8 @@ def board_create_edit(request,id=None):
         file_form = board_file_form()
 
         load_contents.creator = request.user.id
+        if request.META['SERVER_PORT'] == '8888':#경천애인
+            load_contents.is_KBL = 'Y' 
     else: # 글 수정 
         load_contents = Board_Contents.objects.get(id = id)
         form = board_form(instance = load_contents)
@@ -3034,7 +3824,7 @@ def board_create_edit(request,id=None):
         is_top = load_contents.top_seq
 
         file_form = board_file_form()
-        query_file = Board_File.objects.filter(board_id = id)
+        query_file = Board_File.objects.filter(board_id = id,board_type='BASIC')
         for file in query_file:
             list_file.append({
                 'id':file.id,
@@ -3049,6 +3839,7 @@ def board_create_edit(request,id=None):
         file_form = board_file_form(request.POST, request.FILES)   
         files = request.FILES.getlist('file') 
 
+
         select_valid = False
         division_selected = request.POST.get('select_division',None)
         if division_selected is not None:
@@ -3061,7 +3852,6 @@ def board_create_edit(request,id=None):
             load_contents.contents = form.cleaned_data['contents']
             load_contents.options = division_selected
 
-            
             is_notice = request.POST.get('top_seq','off')
             if is_notice == 'on':
                 load_contents.top_seq = 1
@@ -3070,13 +3860,16 @@ def board_create_edit(request,id=None):
             
             load_contents.lastest_modifier = request.user.id
             load_contents.lastest_modified_date = datetime.datetime.now()
-            
+
             load_contents.save()
 
             #file save
             for f in files:
                 file_instance = Board_File(file=f, board_id = load_contents.pk)
                 file_instance.origin_name = f.name
+                file_instance.board_type = 'BASIC'
+                file_instance.user = request.user.user_id
+
                 file_instance.save()
  
 
@@ -3331,19 +4124,21 @@ def board_work_list(request,id=None):
             })
 
     # - Depart
-    ##경천
     dict_depart = {}
-    query_depart_kbl= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL',upper_commcode ='000002' )
-    for data in query_depart_kbl.annotate(code = F('commcode'),name = fname).values('code','name'):
-        dict_depart.update({
-            data['code'] : data['name']
-            })
-    ##IMEDI
-    query_depart_medical= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC',upper_commcode ='000002' )
-    for data in query_depart_medical.annotate(code = F('commcode'),name = fname).values('code','name'):
-        dict_depart.update({
-            data['code'] : data['name']
-            })
+    if request.META['SERVER_PORT'] == '8888':#경천애인
+        ##경천
+        query_depart_kbl= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL',upper_commcode ='000002' )
+        for data in query_depart_kbl.annotate(code = F('commcode'),name = fname).values('code','name'):
+            dict_depart.update({
+                data['code'] : data['name']
+                })
+    else:
+        ##IMEDI
+        query_depart_medical= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC',upper_commcode ='000002' )
+        for data in query_depart_medical.annotate(code = F('commcode'),name = fname).values('code','name'):
+            dict_depart.update({
+                data['code'] : data['name']
+                })
 
     ##관리자
     query_depart_admin= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_ADMIN',upper_commcode ='000002' )
@@ -3399,7 +4194,7 @@ def board_work_list(request,id=None):
                 'due_date':'' if read_page.date_done == def_date else read_page.date_done,
                 }
             selected_status = read_page.status
-            query_file = Board_File.objects.filter(board_id = id)
+            query_file = Board_File.objects.filter(board_id = id,board_type='BASIC')
 
             list_file = []
             for file in query_file:
@@ -3432,6 +4227,11 @@ def board_work_list(request,id=None):
     view_division_filter = request.POST.get('view_division_filter','')
     if view_division_filter != '':
         kwargs['options'] = view_division_filter
+
+    kwargs['is_KBL'] = 'N'
+    if request.META['SERVER_PORT'] == '8888':#경천애인
+        kwargs['is_KBL'] = 'Y'
+
 
     if request.user.depart != 'ADMIN':
         argument_list.append( Q(**{'depart_to':request.user.depart} ) ) 
@@ -3564,6 +4364,10 @@ def board_work_create_edit(request,id=None):
         load_contents.depart_from = request.user.depart
         if request.user.depart =='DOCTOR':
             load_contents.depart_from = request.user.depart + "_" + request.user.depart_doctor
+
+            
+        if request.META['SERVER_PORT'] == '8888':#경천애인
+            load_contents.is_KBL = 'Y'
     else: # 글 수정 
         load_contents = Board_Contents.objects.get(id = id)
         form = board_form(instance = load_contents)
@@ -3617,6 +4421,8 @@ def board_work_create_edit(request,id=None):
             for f in files:
                 file_instance = Board_File(file=f, board_id = load_contents.pk)
                 file_instance.origin_name = f.name
+                file_instance.board_type = 'BASIC'
+                file_instance.user = request.user.user_id
                 file_instance.save()
  
 
@@ -3647,22 +4453,25 @@ def board_work_create_edit(request,id=None):
             'name':data['name']
             })
     #부서
+
     ##경천
-    list_depart_kbl = []
-    query_depart_kbl= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL',upper_commcode ='000002' ).annotate(code = F('commcode'),name = f_name ).values('code','name')
-    for data in query_depart_kbl:
-        list_depart_kbl.append({
-            'id':data['code'],
-            'name':data['name']
-            })
-    ##IMEDI
-    list_depart_medical = []
-    query_depart_medical= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC',upper_commcode ='000002' ).annotate(code = F('commcode'),name = f_name ).values('code','name')
-    for data in query_depart_medical:
-        list_depart_medical.append({
-            'id':data['code'],
-            'name':data['name']
-            })
+    list_depart = []
+    if request.META['SERVER_PORT'] == '8888':#경천애인
+        query_depart_kbl= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL',upper_commcode ='000002' ).annotate(code = F('commcode'),name = f_name ).values('code','name')
+        for data in query_depart_kbl:
+            list_depart.append({
+                'id':data['code'],
+                'name':data['name']
+                })
+    else:
+        ##IMEDI
+        list_depart_medical = []
+        query_depart_medical= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC',upper_commcode ='000002' ).annotate(code = F('commcode'),name = f_name ).values('code','name')
+        for data in query_depart_medical:
+            list_depart.append({
+                'id':data['code'],
+                'name':data['name']
+                })
 
     #게시판 상태
     list_status = []
@@ -3686,8 +4495,7 @@ def board_work_create_edit(request,id=None):
                 'list_division':list_division,
                 'division_selected':division_selected, #division
                 'depart_to_selected':depart_to_selected,
-                'list_depart_kbl':list_depart_kbl,
-                'list_depart_medical':list_depart_medical,
+                'list_depart':list_depart,
                 'list_status':list_status,
                 
                 'option_err':option_err,
@@ -3761,4 +4569,1292 @@ def board_work_comment_add(request):
 
     return JsonResponse({
         'result':True,
+        })
+
+
+
+def sms_send_sms(request):
+
+    type = request.POST.get('type','')
+    company = request.POST.get('company','')
+    receiver = request.POST.get('receiver','')
+
+    phone = request.POST.get('phone','')
+    contents = request.POST.get('contents','')
+
+    sms_send = sms_history()
+
+    sms_send.type = type
+    sms_send.company = company
+    sms_send.receiver = receiver
+
+    sms_send.sender = request.user.user_id
+    sms_send.phone = phone
+    sms_send.contents = contents
+    sms_send.date_of_registered = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    sms_send.save()
+
+    return JsonResponse({
+        'res':True,
+        'id':sms_send.id,
+        })
+
+
+def sms_recv_result(request):
+
+    context = {}
+    msg_id = request.POST.get('msg_id',None)
+    if msg_id is not None:
+        result = request.POST.get('result','')
+        code = request.POST.get('code','')
+
+
+        res_sms = sms_history.objects.get(id = msg_id)
+
+
+        res_sms.status = result
+        res_sms.res_code = code
+        res_sms.date_of_recieved = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        res_sms.save()
+
+
+    return JsonResponse({
+        'res':True,
+        })
+
+
+def sms_history_index(request):
+
+
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+
+    list_type = []
+    query_division= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='SMS_TYPE',upper_commcode ='000008').annotate(code = F('commcode'),name = f_name ).values('code','name')
+    for data in query_division:
+        list_type.append({
+            'id':data['code'],
+            'name':data['name']
+            })
+
+    list_search = []
+    query_division= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='SMS_SEARCH',upper_commcode ='000008').annotate(code = F('commcode'),name = f_name ).values('code','name')
+    for data in query_division:
+        list_search.append({
+            'id':data['code'],
+            'name':data['name']
+            })
+
+
+    return render(request,
+    'Manage/sms_history.html',
+        {
+            'list_type':list_type,
+            'list_search':list_search,
+        }
+    )
+
+
+def sms_history_search(request):
+
+    start = request.POST.get('start')
+    end = request.POST.get('end')
+
+    type = request.POST.get('type','')
+    option = request.POST.get('option','')
+    string = request.POST.get('string','')
+
+    print(type)
+    kwargs = {}
+    if type != '':
+        kwargs['type'] = type
+    #if option != '':
+    #    kwargs['type'] == type
+    #if type != '':
+    #    kwargs['type'] == type
+    kwargs['is_KBL'] = 'N'
+    if request.META['SERVER_PORT'] == '8888':#경천애인
+        kwargs['is_KBL'] = 'Y'
+
+    argument_list = [] 
+    if string !='':
+        if option != 'COMPANY':
+            argument_list.append( Q(**{'receiver__icontains':string} ) )
+        if option != 'PERSONAL':
+            argument_list.append( Q(**{'company_name__icontains':string} ) )
+        
+
+    date_min = datetime.datetime.combine(datetime.datetime.strptime(start,"%Y-%m-%d").date(), datetime.time.min)
+    date_max = datetime.datetime.combine(datetime.datetime.strptime(end,"%Y-%m-%d").date(), datetime.time.max)
+
+
+    list_sms_history = []
+
+    if len(argument_list) != 0:
+        query_sms = sms_history.objects.filter(functools.reduce(operator.or_, argument_list) ,**kwargs, date_of_registered__range = (date_min, date_max))
+    else:
+        query_sms = sms_history.objects.filter(**kwargs, date_of_registered__range = (date_min, date_max))
+
+    for query in query_sms:
+        list_sms_history.append({
+            'id':query.id,
+            'type':query.type,
+            'company':query.company_name,
+            'receiver':query.receiver,
+            'phone':query.phone,
+            'datetime':query.date_of_registered[0:16],
+            'contents':query.contents,
+            'sender':query.sender,
+            'status':query.status,
+            'remark':query.res_code,
+            })
+
+
+    #페이지네이션
+    page = request.POST.get('page',1)
+    view_contents_count = request.POST.get('context_in_page',10);
+
+    paginator = Paginator(list_sms_history, view_contents_count)
+    try:
+        paging_data = paginator.page(page)
+    except PageNotAnInteger:
+        paging_data = paginator.page(1)
+    except EmptyPage:
+        paging_data = paginator.page(paginator.num_pages)
+
+    return JsonResponse({
+        'res':True,
+
+        'datas':list_sms_history, 
+
+        'page':int(page),
+        'page_range':list( range(paging_data.paginator.page_range.start, paging_data.paginator.page_range.stop) ) ,
+        'page_range_start':paging_data.paginator.page_range.start,
+        'page_range_stop':paging_data.paginator.page_range.stop,
+        'page_number':paging_data.number,
+        'has_previous':paging_data.has_previous(),
+        'has_next':paging_data.has_next(),
+        })
+
+
+def sms_history_get(request):
+
+    history_id = request.POST.get('id')
+         
+    context={}
+    history = sms_history.objects.get(pk=int(history_id))
+
+    context.update({
+        'name':history.receiver,
+        'phone':history.phone,
+        'contents':history.contents,
+        })
+
+    return JsonResponse(context)
+
+
+
+def statistics_test(request):
+
+
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+    
+
+    #depart_medical= COMMCODE.objects.filter(use_yn = 'Y',commcode = 'DOCTOR', commcode_grp='DEPART_CLICINC',upper_commcode ='000002' ).annotate(code = F('se1'),name = f_name ).values('code','name')
+    depart_medical = []
+    depart_medical_query = Depart.objects.all()
+    for data in depart_medical_query:
+        depart_medical.append({
+            'code':data.id,
+            'name':data.name
+            })
+
+    
+    
+    return render(request,
+    'statistics/statistics_test.html',
+        {
+            'depart_medical':depart_medical,
+        }
+    )
+
+
+def statistics_procedure(request):
+
+
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+    
+
+    #depart_medical= COMMCODE.objects.filter(use_yn = 'Y',commcode = 'DOCTOR', commcode_grp='DEPART_CLICINC',upper_commcode ='000002' ).annotate(code = F('se1'),name = f_name ).values('code','name')
+    depart_medical = []
+    depart_medical_query = Depart.objects.all()
+    for data in depart_medical_query:
+        depart_medical.append({
+            'code':data.id,
+            'name':data.name
+            })
+
+    
+    
+    return render(request,
+    'statistics/statistics_procedure.html',
+        {
+            'depart_medical':depart_medical,
+        }
+    )
+
+def statistics_medicine(request):
+    
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+    
+
+    #depart_medical= COMMCODE.objects.filter(use_yn = 'Y',commcode = 'DOCTOR', commcode_grp='DEPART_CLICINC',upper_commcode ='000002' ).annotate(code = F('se1'),name = f_name ).values('code','name')
+    depart_medical = []
+    depart_medical_query = Depart.objects.all()
+    for data in depart_medical_query:
+        depart_medical.append({
+            'code':data.id,
+            'name':data.name
+            })
+
+    
+    
+    return render(request, 
+    'statistics/statistics_medicine.html',
+        {
+            'depart_medical':depart_medical,
+        }
+    )
+
+
+
+def statistics_depart(request):
+    
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+    
+
+    #depart_medical= COMMCODE.objects.filter(use_yn = 'Y',commcode = 'DOCTOR', commcode_grp='DEPART_CLICINC',upper_commcode ='000002' ).annotate(code = F('se1'),name = f_name ).values('code','name')
+    depart_medical = []
+    depart_medical_query = Depart.objects.all()
+    for data in depart_medical_query:
+        depart_medical.append({
+            'code':data.id,
+            'name':data.name
+            })
+
+    
+    
+    return render(request, 
+    'statistics/statistics_depart.html',
+        {
+            'depart_medical':depart_medical,
+        }
+    )
+
+
+def statistics_search(request):
+    type = request.POST.get('type')
+
+    start = request.POST.get('start')
+    end = request.POST.get('end')
+    depart = request.POST.get('depart')
+
+    kwargs = {}
+    if depart!='':
+        kwargs['depart'] = depart # 기본 
+
+
+    date_min = datetime.datetime.combine(datetime.datetime.strptime(start,"%Y-%m-%d").date(), datetime.time.min)
+    date_max = datetime.datetime.combine(datetime.datetime.strptime(end,"%Y-%m-%d").date(), datetime.time.max)
+
+
+    data_list = []
+
+ 
+    total_revenue = 0
+    
+
+
+    if type == 'TEST':
+        tests = Test.objects.all().order_by('code')
+        for test in tests:
+            price_sum = 0
+
+            sub_query = Reception.objects.filter(
+                **kwargs ,
+                recorded_date__range = (date_min, date_max), 
+                diagnosis__testmanager__test = test.id,
+            ).exclude(
+                progress='deleted'
+                ).prefetch_related(
+                'diagnosis__testmanager_set',
+            )
+
+            if not sub_query:
+                continue
+
+            for data in sub_query:
+                price_sum = test.get_price(data.recorded_date)
+
+
+            data_list.append({
+                'id':test.id,
+                'name':test.name,
+                'name_vi':test.name_vie,
+                'count':sub_query.count(),
+                'price_sum':price_sum,
+                })
+
+            total_revenue += price_sum
+    elif type == 'PROCEDURE':
+        procedures = Precedure.objects.all().order_by('code')
+        for procedure in procedures:
+            price_sum = 0
+            count = 0
+
+            sub_query = Reception.objects.filter(
+                **kwargs ,
+                recorded_date__range = (date_min, date_max), 
+                diagnosis__preceduremanager__precedure= procedure.id,
+            ).exclude(
+                progress='deleted'
+                ).prefetch_related(
+                'diagnosis__preceduremanager_set',
+            )
+            if not sub_query:
+                continue
+
+            for data in sub_query:
+                preceduremanager_set = PrecedureManager.objects.filter(diagnosis_id = data.diagnosis.id,precedure_id = procedure.id)
+                #price_sum = procedure.get_price(data.recorded_date)
+                if preceduremanager_set.count() != 0:
+                    for set_data in preceduremanager_set:
+                        count += set_data.amount
+                        price_sum += procedure.get_price(data.recorded_date) * set_data.amount
+
+
+            data_list.append({
+                'id':procedure.id,
+                'name':procedure.name,
+                'name_vi':procedure.name_vie,
+                'count':count,
+                'price_sum':price_sum,
+                })
+
+            total_revenue += price_sum
+
+    elif type =='MEDICINE':
+
+        medicines= Medicine.objects.all().order_by('code')
+        for medicine in medicines:
+            price_sum = 0
+            count = 0
+
+            sub_query = Reception.objects.filter(
+                **kwargs ,
+                recorded_date__range = (date_min, date_max), 
+                diagnosis__medicinemanager__medicine= medicine.id,
+            ).exclude(
+                progress='deleted'
+                ).prefetch_related(
+                'diagnosis__medicinemanager_set',
+            )
+
+            if not sub_query:
+                continue
+
+            for data in sub_query: 
+                print(data.id)
+                medicine_set = MedicineManager.objects.filter(diagnosis_id = data.diagnosis.id, medicine_id=medicine.id)
+                for set_data in medicine_set:
+                    count += set_data.amount * set_data.days
+                    price_sum += medicine.get_price(data.recorded_date) * set_data.amount * set_data.days
+                    
+            data_list.append({
+                'id':medicine.id,
+                'name':medicine.name,
+                'name_vi':medicine.name_vie,
+                'count':count,
+                'price_sum':price_sum,
+                })
+
+            total_revenue += price_sum
+
+
+    elif type == 'DEPART':
+        departs = Depart.objects.all()
+        
+        for depart in departs:
+            
+            views_count = Reception.objects.filter(
+                **kwargs ,
+                recorded_date__range = (date_min, date_max), 
+                depart_id = depart.id 
+                ).exclude(progress='deleted').count()
+
+
+            revenue_total = Reception.objects.filter(
+                **kwargs ,
+                recorded_date__range = (date_min, date_max), 
+                depart_id = depart.id 
+                ).exclude(
+                progress='deleted'
+                ).prefetch_related('payment__paymentrecord_set').aggregate(total_price=Sum('payment__paymentrecord__paid'))
+                 
+            data_list.append({
+                'id':depart.id,
+                'name':depart.name,
+                'name_vi':depart.full_name_vie,
+                'count':views_count,
+                'price_sum':0 if revenue_total['total_price'] is None else revenue_total['total_price'],
+                })
+
+
+
+
+    return JsonResponse({
+        'result':True,
+        'datas':data_list,
+
+        'total_revenue':total_revenue
+        })
+
+
+
+
+
+
+
+
+
+def statistics_customer_info(request):
+    
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+    
+
+    #depart_medical= COMMCODE.objects.filter(use_yn = 'Y',commcode = 'DOCTOR', commcode_grp='DEPART_CLICINC',upper_commcode ='000002' ).annotate(code = F('se1'),name = f_name ).values('code','name')
+    depart_medical = []
+    depart_medical_query = Depart.objects.all()
+    for data in depart_medical_query:
+        depart_medical.append({
+            'code':data.id,
+            'name':data.name
+            })
+
+    
+    
+    return render(request, 
+    'statistics/statistics_customer_info.html',
+        {
+            'depart_medical':depart_medical,
+        }
+    )
+
+
+def search_customer_info(request):
+
+    start = request.POST.get('start')
+    end = request.POST.get('end')
+    depart = request.POST.get('depart')
+
+    kwargs = {}
+    if depart!='':
+        kwargs['depart'] = depart # 기본 
+
+
+    date_min = datetime.datetime.combine(datetime.datetime.strptime(start,"%Y-%m-%d").date(), datetime.time.min)
+    date_max = datetime.datetime.combine(datetime.datetime.strptime(end,"%Y-%m-%d").date(), datetime.time.max)
+
+
+
+    data_list_gender = []
+    data_list_nation = []
+    data_list_payment_method = []
+    data_list_age = []
+
+    #gender
+    gender_count = Reception.objects.filter(
+                **kwargs ,
+                recorded_date__range = (date_min, date_max), 
+            ).exclude(
+                progress='deleted'
+            ).select_related(
+                'patient'
+            ).prefetch_related(
+                'payment__paymentrecord_set'
+            ).values(
+                'patient__gender'
+            ).annotate(
+                gender_count = Count('patient__gender'),
+                total_price = Sum('payment__paymentrecord__paid')
+            )
+
+    for data in gender_count:
+        data_list_gender.append({
+            'name':data['patient__gender'],
+            'count':data['gender_count'],
+            'price_sum':data['total_price'],
+            })
+
+    #Nationality
+    nation_count = Reception.objects.filter(
+                **kwargs ,
+                recorded_date__range = (date_min, date_max), 
+            ).exclude(
+                progress='deleted'
+            ).select_related(
+                'patient'
+            ).prefetch_related(
+                'payment__paymentrecord_set'
+            ).values(
+                'patient__nationality'
+            ).annotate(
+                nation_count= Count('patient__nationality'),
+                total_price = Sum('payment__paymentrecord__paid')
+            )
+
+    for data in nation_count:
+        data_list_nation.append({
+            'name':data['patient__nationality'],
+            'count':data['nation_count'],
+            'price_sum':data['total_price'],
+            })
+
+    #payment_method
+    payment_method_count = Reception.objects.filter(
+                **kwargs ,
+                recorded_date__range = (date_min, date_max), 
+            ).exclude(
+                progress='deleted'
+            ).prefetch_related(
+                'payment__paymentrecord_set'
+            ).values(
+                'payment__paymentrecord__method'
+            ).annotate(
+                method_count= Count('payment__paymentrecord__method'),
+                total_price = Sum('payment__paymentrecord__paid')
+            )
+
+    for data in payment_method_count:
+        if data['payment__paymentrecord__method'] == None:
+            continue
+
+        data_list_payment_method.append({
+            'name':data['payment__paymentrecord__method'],
+            'count':data['method_count'],
+            'price_sum':0 if data['total_price'] is None else data['total_price'],
+            })
+
+
+
+ #age
+    today = datetime.datetime.now()
+
+   
+    age_list=[
+            {#0~9세
+                'name':'0~9',
+                'date_start':today,
+                'date_end': (today - datetime.timedelta(days=365.25 * 10 ) ).date(),
+            },
+            {#10~19세
+                'name':'10~19',
+                'date_start':(today - datetime.timedelta(days=365.25 * 10 ) ).date(),
+                'date_end': (today - datetime.timedelta(days=365.25 * 20 ) ).date(),
+            },
+            {#20~29세
+                'name':'20~29',
+                'date_start':(today - datetime.timedelta(days=365.25 * 20 ) ).date(),
+                'date_end': (today - datetime.timedelta(days=365.25 * 30 ) ).date(),
+            },
+            {#30~39세
+                'name':'30~39',
+                'date_start':(today - datetime.timedelta(days=365.25 * 30 ) ).date(),
+                'date_end': (today - datetime.timedelta(days=365.25 * 40 ) ).date(),
+            },
+            {#40~49세
+                'name':'40~49',
+                'date_start':(today - datetime.timedelta(days=365.25 * 40 ) ).date(),
+                'date_end': (today - datetime.timedelta(days=365.25 * 50 ) ).date(),
+            },
+            {#50~59세
+                'name':'50~59',
+                'date_start':(today - datetime.timedelta(days=365.25 * 50 ) ).date(),
+                'date_end': (today - datetime.timedelta(days=365.25 * 60 ) ).date(),
+            },
+            {#60~69세
+                'name':'60~69',
+                'date_start':(today - datetime.timedelta(days=365.25 * 60 ) ).date(),
+                'date_end': (today - datetime.timedelta(days=365.25 * 70 ) ).date(),
+            },
+            {#70~79세
+                'name':'70~79',
+                'date_start':(today - datetime.timedelta(days=365.25 * 70 ) ).date(),
+                'date_end': (today - datetime.timedelta(days=365.25 * 80 ) ).date(),
+            },
+            {#80세 이상
+                'name':'80~',
+                'date_start':(today - datetime.timedelta(days=365.25 * 80 ) ).date(),
+                'date_end': (today - datetime.timedelta(days=365.25 * 150 ) ).date(),
+            },
+        ]
+
+
+
+    for age in age_list: 
+        age_count = Reception.objects.filter(
+                **kwargs ,
+                recorded_date__range = (date_min, date_max), 
+                patient__date_of_birth__lte = age['date_start'].strftime("%Y-%m-%d"),
+                patient__date_of_birth__gt = age['date_end'].strftime("%Y-%m-%d"),
+            ).exclude(
+                progress='deleted'
+            ).select_related(
+                'patient'
+            ).prefetch_related(
+                'payment__paymentrecord_set'
+            ).aggregate(
+                count = Count('id'),
+                total_price = Sum('payment__paymentrecord__paid')
+            )
+
+        data_list_age.append({
+            'name':age['name'],
+            'count':age_count['count'],
+            'price_sum':0 if age_count['total_price'] is None else age_count['total_price'],
+            })
+
+
+    return JsonResponse({
+        'result':True,
+        'datas_gender':data_list_gender,
+        'datas_nation':data_list_nation,
+        'datas_payment_method':data_list_payment_method,
+        'datas_age':data_list_age,
+
+        })
+
+
+
+def statistics_ymw(request):
+    
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+    
+
+    #depart_medical= COMMCODE.objects.filter(use_yn = 'Y',commcode = 'DOCTOR', commcode_grp='DEPART_CLICINC',upper_commcode ='000002' ).annotate(code = F('se1'),name = f_name ).values('code','name')
+    depart_medical = []
+    depart_medical_query = Depart.objects.all()
+    for data in depart_medical_query:
+        depart_medical.append({
+            'code':data.id,
+            'name':data.name
+            })
+
+    
+    
+    return render(request, 
+    'statistics/statistics_ymw.html',
+        {
+            'depart_medical':depart_medical,
+        }
+    )
+
+def search_ymw(request):
+
+
+    year = request.POST.get('year')
+    depart = request.POST.get('depart')
+
+    kwargs = {}
+    if depart!='':
+        kwargs['depart'] = depart # 기본 
+
+
+    start = datetime.date(year = int(year), month=1,day=1)
+    end = datetime.date(year = int(year), month=12,day=31)
+
+    date_min = datetime.datetime.combine(start, datetime.time.min)
+    date_max = datetime.datetime.combine(end, datetime.time.max)
+
+    print(date_min)
+    print(date_max)
+
+
+    data_list_year = []
+    data_list_monthly = []
+    data_list_week = []
+    data_list_hour = []
+
+    query = Reception.objects.filter(
+            **kwargs ,
+            recorded_date__range = (date_min, date_max), 
+        ).exclude(
+            progress='deleted'
+        ).prefetch_related(
+            'payment__paymentrecord_set'
+        )
+
+    #년도별
+    year_query = query.aggregate(
+                count = Count('id'),
+                total_price = Sum('payment__paymentrecord__paid')
+            )
+
+    data_list_year.append({
+            'name':year ,
+            'count':year_query['count'],
+            'price_sum':0 if year_query['total_price'] is None else year_query['total_price'],
+        })
+
+
+    #월 별
+    list_month = [
+        {
+            'name':'1',
+            'date_start':datetime.datetime(year=int(year), month=1,day=1),
+            'date_end': datetime.datetime(year=int(year), month=2,day=1) - datetime.timedelta(seconds = 1),
+        },
+        {
+            'name':'2',
+            'date_start':datetime.datetime(year=int(year), month=2,day=1),
+            'date_end': datetime.datetime(year=int(year), month=3,day=1) - datetime.timedelta(seconds = 1),
+        },
+        {
+            'name':'3',
+            'date_start':datetime.datetime(year=int(year), month=3,day=1),
+            'date_end': datetime.datetime(year=int(year), month=4,day=1) - datetime.timedelta(seconds = 1),
+        },
+        {
+            'name':'4',
+            'date_start':datetime.datetime(year=int(year), month=4,day=1),
+            'date_end': datetime.datetime(year=int(year), month=5,day=1) - datetime.timedelta(seconds = 1),
+        },       
+        {
+            'name':'5',
+            'date_start':datetime.datetime(year=int(year), month=5,day=1),
+            'date_end': datetime.datetime(year=int(year), month=6,day=1) - datetime.timedelta(seconds = 1),
+        },
+        {
+            'name':'6',
+            'date_start':datetime.datetime(year=int(year), month=6,day=1),
+            'date_end': datetime.datetime(year=int(year), month=7,day=1) - datetime.timedelta(seconds = 1),
+        },
+        {
+            'name':'7',
+            'date_start':datetime.datetime(year=int(year), month=7,day=1),
+            'date_end': datetime.datetime(year=int(year), month=8,day=1) - datetime.timedelta(seconds = 1),
+        },
+        {
+            'name':'8',
+            'date_start':datetime.datetime(year=int(year), month=8,day=1),
+            'date_end': datetime.datetime(year=int(year), month=9,day=1) - datetime.timedelta(seconds = 1),
+        },
+        {
+            'name':'9',
+            'date_start':datetime.datetime(year=int(year), month=9,day=1),
+            'date_end': datetime.datetime(year=int(year), month=10,day=1) - datetime.timedelta(seconds = 1),
+        },
+        {
+            'name':'10',
+            'date_start':datetime.datetime(year=int(year), month=10,day=1),
+            'date_end': datetime.datetime(year=int(year), month=11,day=1) - datetime.timedelta(seconds = 1),
+        },
+        {
+            'name':'11',
+            'date_start':datetime.datetime(year=int(year), month=11,day=1),
+            'date_end': datetime.datetime(year=int(year), month=12,day=1) - datetime.timedelta(seconds = 1),
+        },
+        {
+            'name':'12',
+            'date_start':datetime.datetime(year=int(year), month=12,day=1),
+            'date_end': datetime.datetime(year=int(year) + 1, month=1,day=1) - datetime.timedelta(seconds = 1),
+        },
+    ]
+
+
+    
+    for month in list_month: 
+        year_query = query.filter(
+            recorded_date__gte = month['date_start'],
+            recorded_date__lt = month['date_end'],
+            ).aggregate(
+                count = Count('id'),
+                total_price = Sum('payment__paymentrecord__paid')
+            )
+
+        data_list_monthly.append({
+            'name':month['name'],
+            'count':year_query['count'],
+            'price_sum':0 if year_query['total_price'] is None else year_query['total_price'],
+
+            })
+
+
+
+
+
+
+
+    #요일별: 
+    list_week= [
+        {
+            'name':_('Monday'),
+            'value':2
+        },
+        {
+            'name':_('Tuesday'),
+            'value':3,
+        },
+        {
+            'name':_('Wednesday'),
+            'value':4,
+        },
+        {
+            'name':_('Thursday'),
+            'value':5,
+        },       
+        {
+            'name':_('Friday'),
+            'value':6,
+        },
+        {
+            'name':_('Saturday'),
+            'value':7,
+        },
+        {
+            'name':_('Sunday'),
+            'value':1,
+        },
+    ]
+
+    for data in list_week:
+        week_query = query.filter(
+            recorded_date__week_day = data['value'] ,
+            ).aggregate(
+                count = Count('id'),
+                total_price = Sum('payment__paymentrecord__paid')
+            )
+
+        data_list_week.append({
+                'name':data['name'],
+                'count':week_query['count'],
+                'price_sum':0 if week_query['total_price'] is None else week_query['total_price'],
+            })
+
+
+
+    #시간별: 
+    list_hour= [
+        {'name':'8','value':8,},
+        {'name':'9','value':9,},
+        {'name':'10','value':10,},
+        {'name':'11','value':11,},
+        {'name':'12','value':12,},
+        {'name':'13','value':13,},
+        {'name':'14','value':14,},
+        {'name':'15','value':15,},
+        {'name':'16','value':16,},
+        {'name':'17','value':17,},
+        {'name':'18','value':18,},
+        {'name':'19','value':19,},
+        
+    ]
+
+    
+    for data in list_hour:
+        hour_query = query.filter(
+            recorded_date__hour = data['value'] ,
+            ).aggregate(
+                count = Count('id'),
+                total_price = Sum('payment__paymentrecord__paid')
+            )
+
+        data_list_hour.append({
+                'name':data['name'],
+                'count':hour_query['count'],
+                'price_sum':0 if hour_query['total_price'] is None else hour_query['total_price'],
+            })
+
+
+
+    return JsonResponse({
+        'result':True,
+        'datas_year':data_list_year,
+        'datas_monthly':data_list_monthly,
+        'datas_week':data_list_week,
+        'datas_hour':data_list_hour,
+
+        })
+
+
+
+
+def statistics_daily(request):
+
+
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+    
+
+    #depart_medical= COMMCODE.objects.filter(use_yn = 'Y',commcode = 'DOCTOR', commcode_grp='DEPART_CLICINC',upper_commcode ='000002' ).annotate(code = F('se1'),name = f_name ).values('code','name')
+    depart_medical = []
+    depart_medical_query = Depart.objects.all()
+    for data in depart_medical_query:
+        depart_medical.append({
+            'code':data.id,
+            'name':data.name
+            })
+
+    today_year = datetime.datetime.now().year
+    today_month= datetime.datetime.now().month
+
+    return render(request, 
+    'statistics/statistics_daily.html',
+        {
+            'depart_medical':depart_medical,
+            'today_year':today_year,
+            'today_month':today_month,
+        }
+    )
+
+def search_daily(request):
+
+    year = int( request.POST.get('year') )
+    month = int(request.POST.get('month') )
+    depart = request.POST.get('depart')
+
+    kwargs = {}
+    if depart!='':
+        kwargs['depart'] = depart # 기본 
+
+
+    date_count = calendar.monthrange(int(year), int(month))[1]
+
+
+
+    #date_min = datetime.datetime.combine(datetime.datetime.strptime(start,"%Y-%m-%d").date(), datetime.time.min)
+    #date_max = datetime.datetime.combine(datetime.datetime.strptime(end,"%Y-%m-%d").date(), datetime.time.max)
+
+
+    query = Reception.objects.filter(
+            **kwargs ,
+            recorded_date__year = year,
+            recorded_date__month= month,
+        ).exclude(
+            progress='deleted'
+        ).prefetch_related(
+            'payment__paymentrecord_set'
+        )
+
+
+    list_date_count = []
+    list_date_revenue = []
+    for count in range(1,date_count + 1):
+        tmp_date = datetime.datetime(year = year, month = month, day = count)
+
+        date_query = query.filter(
+            recorded_date__date = tmp_date,
+            ).aggregate(
+                count = Count('id'),
+                total_price = Sum('payment__paymentrecord__paid')
+            )
+
+        if date_query['count'] is 0 and date_query['total_price'] is None:
+            continue
+
+
+        list_date_count.append({
+            'id':count,
+            'start':tmp_date.strftime('%Y-%m-%d'),
+            'title':'Visits : ' + str(date_query['count'])
+            })
+
+        list_date_count.append({
+            'id':count,
+            'start':tmp_date.strftime('%Y-%m-%d'),
+            'title':'Amount : ' + str(0 if date_query['total_price'] is None else "{:,}".format(date_query['total_price'])) + " VND",
+            'backgroundColor':'rgb(254,154,202)',
+            'borderColor':'rgb(254,154,202)',
+            })
+
+
+    return JsonResponse({
+        'result':True,
+        'datas_date_count':list_date_count,
+        'datas_date_revenue':list_date_revenue,
+        })
+
+
+
+@login_required
+def code_setting(request):
+
+    return render(request,
+    'Manage/code_setting.html',
+            {
+                '':None,
+            },
+        )
+
+@login_required
+def code_search(request):
+
+
+    
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+
+    
+    string=request.POST.get("string")
+
+    kwargs = {}
+    argument_list = [] 
+    #if string != '':
+    #argument_list.append( Q(**{'name_kor__icontains':string} ) )
+    argument_list.append( Q(**{'commcode_name_ko__icontains':string} ) )
+    argument_list.append( Q(**{'commcode_name_en__icontains':string} ) )
+    argument_list.append( Q(**{'commcode_name_vi__icontains':string} ) )
+
+    #if project_type != '':
+    #    kwargs['type'] = project_type
+
+    datas = []
+    query = COMMCODE.objects.filter(
+        functools.reduce(operator.or_, argument_list),
+        **kwargs,
+        use_yn = 'Y')
+
+
+
+
+
+
+
+    for data in query:
+
+        datas.append({
+            'id':data.id,
+
+            'upper_commcode':data.upper_commcode,
+            'upper_commcode_name':data.upper_commcode_name,
+            'commcode_grp':data.commcode_grp,
+            'commcode_grp_name':data.commcode_grp_name,
+            'commcode':data.commcode,
+            'commcode_name_ko':data.commcode_name_ko,
+            'commcode_name_en':data.commcode_name_en,
+            'commcode_name_vi':data.commcode_name_vi,
+            'se1':data.se1,
+            'se2':data.se2,
+            'se3':data.se3,
+            'se4':data.se4,
+            'se5':data.se5,
+            'se6':data.se6,
+            'se7':data.se7,
+            'se8':data.se8,
+            'seq':data.seq,
+            'registrerer':data.registrerer,
+            'date_of_registered':data.date_of_registered.strftime('%Y-%m-%d'),
+            })
+
+
+    page_context = request.POST.get('page_context',10) # 페이지 컨텐츠 
+    page = request.POST.get('page',1)
+
+    paginator = Paginator(datas, page_context)
+    try:
+        paging_data = paginator.page(page)
+    except PageNotAnInteger:
+        paging_data = paginator.page(1)
+    except EmptyPage:
+        paging_data = paginator.page(paginator.num_pages)
+
+
+    context = {
+            'datas':list(paging_data),
+            'page_range_start':paging_data.paginator.page_range.start,
+            'page_range_stop':paging_data.paginator.page_range.stop,
+            'page_number':paging_data.number,
+            'has_previous':paging_data.has_previous(),
+            'has_next':paging_data.has_next(),
+
+
+
+            }
+
+
+
+    return JsonResponse(context)
+
+
+@login_required
+def code_save(request):
+
+    
+    id=request.POST.get("id")
+
+    code_upper_commcode=request.POST.get("code_upper_commcode")
+    code_upper_commcode_name=request.POST.get("code_upper_commcode_name")
+    code_commcode_grp=request.POST.get("code_commcode_grp")
+    code_commcode_grp_name=request.POST.get("code_commcode_grp_name")
+    code_commcode=request.POST.get("code_commcode")
+    code_commcode_name_ko=request.POST.get("code_commcode_name_ko")
+    code_commcode_name_en=request.POST.get("code_commcode_name_en")
+    code_commcode_name_vi=request.POST.get("code_commcode_name_vi")
+    code_se1=request.POST.get("code_se1")
+    code_se2=request.POST.get("code_se2")
+    code_se3=request.POST.get("code_se3")
+    code_se4=request.POST.get("code_se4")
+    code_se5=request.POST.get("code_se5")
+    code_se6=request.POST.get("code_se6")
+    code_se7=request.POST.get("code_se7")
+    code_se8=request.POST.get("code_se8")
+    code_seq=request.POST.get("code_seq")
+    code_use_yn=request.POST.get("code_use_yn")
+
+
+    if id == '':
+        commcode = COMMCODE()
+
+        commcode.registrerer = request.user.id
+    else:
+        commcode = COMMCODE.objects.get(id = id)
+
+
+    commcode.upper_commcode = code_upper_commcode
+    commcode.upper_commcode_name = code_upper_commcode_name
+    commcode.commcode_grp = code_commcode_grp
+    commcode.commcode_grp_name = code_commcode_grp_name
+    commcode.commcode = code_commcode
+    commcode.commcode_name_ko = code_commcode_name_ko
+    commcode.commcode_name_en = code_commcode_name_en
+    commcode.commcode_name_vi = code_commcode_name_vi
+    commcode.se1 = code_se1
+    commcode.se2 = code_se2
+    commcode.se3 = code_se3
+    commcode.se4 = code_se4
+    commcode.se5 = code_se5
+    commcode.se6 = code_se6
+    commcode.se7 = code_se7
+    commcode.se8 = code_se8
+    commcode.seq = code_seq
+
+    commcode.use_yn = code_use_yn
+
+    commcode.lastest_modifier = request.user.id
+    commcode.lastest_modified_date = datetime.datetime.now()
+
+    commcode.save()
+
+
+
+    return JsonResponse({
+        'result':True,        
+        })
+
+
+@login_required
+def code_get(request):
+
+    
+    id=request.POST.get("id")
+
+    code = COMMCODE.objects.get(id = id)
+
+
+
+    return JsonResponse({
+
+        "code_upper_commcode":code.upper_commcode,
+        "code_upper_commcode_name":code.upper_commcode_name,
+        "code_commcode_grp":code.commcode_grp,
+        "code_commcode_grp_name":code.commcode_grp_name,
+        "code_commcode":code.commcode,
+        "code_commcode_name_ko":code.commcode_name_ko,
+        "code_commcode_name_en":code.commcode_name_en,
+        "code_commcode_name_vi":code.commcode_name_vi,
+        "code_se1":code.se1,
+        "code_se2":code.se2,
+        "code_se3":code.se3,
+        "code_se4":code.se4,
+        "code_se5":code.se5,
+        "code_se6":code.se6,
+        "code_se7":code.se7,
+        "code_se8":code.se8,
+        "code_seq":code.seq,
+        "code_use_yn":code.use_yn,
+
+
+
+        })
+
+
+
+
+@login_required
+def code_delete(request):
+
+    id=request.POST.get("id")
+
+    code = COMMCODE.objects.get(id = id)
+    code.use_yn = 'N'
+
+    code.lastest_modifier = request.user.id
+    code.lastest_modified_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    code.save()
+
+
+    return JsonResponse({
+        'result':True,    
         })

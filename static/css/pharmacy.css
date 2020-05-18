@@ -7,7 +7,7 @@ body {
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: 30% ;
+    grid-template-columns: 45% ;
 }
 
 
@@ -127,6 +127,49 @@ body {
 .show_patient_selected{
     padding-left:20px;
 }
+
+#pharmacy_list_table{
+    table-layout:fixed;
+}
+
+    #pharmacy_list_table td, #pharmacy_list_table th{
+        vertical-align:middle;
+        text-align:center;
+    }
+    #pharmacy_list_table th:nth-child(1){width:30px;}
+    #pharmacy_list_table th:nth-child(2){width:70px;}
+    #pharmacy_list_table th:nth-child(3){width:200px;}
+    #pharmacy_list_table th:nth-child(4){width:140px;}
+    #pharmacy_list_table th:nth-child(5){width:100px;}
+    #pharmacy_list_table th:nth-child(6), #pharmacy_list_table th:nth-child(7) {width: 120px;}
+
+        #pharmacy_list_table tbody tr td:nth-child(3) {
+            text-align:left;
+        }
+
+#pharmacy_contents_table{
+    table-layout:fixed;
+}
+
+    #pharmacy_contents_table td, #pharmacy_contents_table th {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    #pharmacy_contents_table th:nth-child(1){width:50px;}
+    #pharmacy_contents_table th:nth-child(2){}
+    #pharmacy_contents_table th:nth-child(3){width:70px;}
+    #pharmacy_contents_table th:nth-child(4){width:70px;}
+    #pharmacy_contents_table th:nth-child(5){width:70px;}
+        #pharmacy_contents_table th:nth-child(6), #pharmacy_contents_table th:nth-child(7), #pharmacy_contents_table th:nth-child(8) {
+            width: 60px;
+        }
+    #pharmacy_contents_table th:nth-child(9){width:200px;}
+    #pharmacy_contents_table th:nth-child(10){width:70px;}
+
+        #pharmacy_contents_table td:nth-child(2), #pharmacy_contents_table td:nth-child(9) {
+            text-align: left;
+        }
 
 @media ( min-height: 965px ) {
     .pharmacy_list_calendar {

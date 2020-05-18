@@ -1,0 +1,205 @@
+{% extends "app/layout_KBL.html" %}
+
+{% load staticfiles %}
+{% block content %}
+
+{% csrf_token %}
+<div class="background_grid">
+    <div class="customer_list partition">
+        <div class="status_table_title">
+            <span class="btn btn-danger title_span">{{ _('Visa Management') }}</span>
+
+            <div class="search_control_div">
+                <div class="input-group depart_select">
+                    <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Type') }}</span>
+                    <select id="code_type" class="form-control costom-select " aria-describedby="basic-addon1">
+                        <option value="" selected="">{{ _('ALL') }}</option>
+                    </select>
+                </div>
+                <input type="text" id="code_search" class="form-control" />
+                <input type="button" id="code_search_btn" class="btn btn-default" value="{{ _('Search') }}" style="display:inline;" />
+            </div>
+        </div>
+
+        <div class="patient_list_table_wrap">
+            <table class="table table-bordered table-hover table-striped" id="code_list_table">
+                <thead>
+                    <tr>
+                        <th>{{ _('No') }}</th>
+                        <th>{{ _('Upper Code') }}</th>
+                        <th>{{ _('Upper Code Name') }}</th>
+                        <th>{{ _('Group Code') }}</th>
+                        <th>{{ _('Group Code Name') }}</th>
+                        <th>{{ _('Code') }}</th>
+                        <th>{{ _('Code Name (KOR)') }}</th>
+                        <th>{{ _('Code Name (ENG)') }}</th>
+                        <th>{{ _('Code Name (VN)') }}</th>
+                        <th>{{ _('Detail 1') }}</th>
+                        <th>{{ _('Detail 2') }}</th>
+                        <th>{{ _('Detail 3') }}</th>
+                        <th>{{ _('Detail 4') }}</th>
+                        <th>{{ _('Detail 5') }}</th>
+                        <th>{{ _('Detail 6') }}</th>
+                        <th>{{ _('Detail 7') }}</th>
+                        <th>{{ _('Detail 8') }}</th>
+                        <th>{{ _('Sequence') }}</th>
+                        <th>{{ _('Status') }}</th>
+                        <th>{{ _('Date of Entry') }}</th>
+                        <th>{{ _('Manage') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <ul class="pagination" id="table_pagnation">
+            </ul>
+            <button class="btn btn-primary" style="float:right" onclick="code_management_modal()">+ {{ _('Register') }}</button>
+        </div>
+    </div>
+</div>
+
+
+
+<!--Code Management Modal-->
+<div id="code_management_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h2>{{ _('Code') }}</h2>
+                <div id="modalBody" class="modal-body">
+
+                    <input type="hidden" id="selected_code" value="" />
+
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Upper Code') }}</span>
+                        <input type="text" id="code_upper_commcode" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Upper Code Name') }}</span>
+                        <input type="text" id="code_upper_commcode_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Group Code') }}</span>
+                        <input type="text" id="code_commcode_grp" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Group Code Name') }}</span>
+                        <input type="text" id="code_commcode_grp_name" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Code') }}</span>
+                        <input type="text" id="code_commcode" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Code Name (KOR)') }}</span>
+                        <input type="text" id="code_commcode_name_ko" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Code Name (ENG)') }}</span>
+                        <input type="text" id="code_commcode_name_en" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Code Name (VI)') }}</span>
+                        <input type="text" id="code_commcode_name_vi" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="input-group half-fl">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Detail 1') }}</span>
+                        <input type="text" id="code_se1" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="input-group half-fr">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Detail 2') }}</span>
+                        <input type="text" id="code_se2" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="input-group half-fl">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Detail 3') }}</span>
+                        <input type="text" id="code_se3" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="input-group half-fr">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Detail 4') }}</span>
+                        <input type="text" id="code_se4" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="input-group half-fl">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Detail 5') }}</span>
+                        <input type="text" id="code_se5" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="input-group half-fr">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Detail 6') }}</span>
+                        <input type="text" id="code_se6" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="input-group half-fl">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Detail 7') }}</span>
+                        <input type="text" id="code_se7" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="input-group half-fr">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Detail 8') }}</span>
+                        <input type="text" id="code_se8" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Sequence') }}</span>
+                        <input type="text" id="code_seq" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                    </div>
+
+
+
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Status') }}</span>
+                        <select id="code_use_yn" class="form-control medicine_control_input" aria-describedby="basic-addon1">
+                            <option value="Y">Use</option>
+                            <option value="N">Unused</option>
+                        </select>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" onclick="commcode_save()">{{ _('Save') }}</a>
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div id="overlay">
+    <div class="cv-spinner">
+        <span class="spinner"></span>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
+
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/code_setting.css' %}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<script src="{% static 'js/code_setting.js' %}" type="text/javascript"></script>
+{% endblock %}

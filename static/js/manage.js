@@ -155,20 +155,22 @@ function search_payment(page = null) {
                     ////진료비
                     str += '<td>';
                     for (var j = 0; j < response.datas[i]['list_exam_fee'].length; j++) {
+                        str += '<span title="' + response.datas[i]['list_exam_fee'][j].value + '">';
                         if (response.datas[i]['list_exam_fee'][j].checked == 'True') {
                             str += "<i class='fa fa-check-circle '></i> "
                         }
-                        str += response.datas[i]['list_exam_fee'][j].value + '<br/>';
+                        str += response.datas[i]['list_exam_fee'][j].code + '</span><br/>';
                     }
                     str += '</td>';
 
                     ////검사
                     str += '<td>';
                     for (var j = 0; j < response.datas[i]['list_lab'].length; j++) {
+                        str += '<span title="' + response.datas[i]['list_lab'][j].value + '">';
                         if (response.datas[i]['list_lab'][j].checked == 'True') {
                             str += "<i class='fa fa-check-circle '></i> "
                         }
-                        str += response.datas[i]['list_lab'][j].value + '<br/>';
+                        str += response.datas[i]['list_lab'][j].code + '</span><br/>';
                     }
                     str += '</td>';
 
@@ -176,10 +178,11 @@ function search_payment(page = null) {
                     ////처치
                     str += '<td>';
                     for (var j = 0; j < response.datas[i]['list_precedure'].length; j++) {
+                        str += '<span title="' + response.datas[i]['list_precedure'][j].value + '">';
                         if (response.datas[i]['list_precedure'][j].checked == 'True') {
                             str += "<i class='fa fa-check-circle '></i> "
                         }
-                        str += response.datas[i]['list_precedure'][j].value + '<br/>';
+                        str += response.datas[i]['list_precedure'][j].code + '</span><br/>';
                     }
                     str += '</td>';
 
@@ -187,10 +190,11 @@ function search_payment(page = null) {
                     ////방사선
                     str += '<td>';
                     for (var j = 0; j < response.datas[i]['list_radiation'].length; j++) {
+                        str += '<span title="' + response.datas[i]['list_radiation'][j].value + '">';
                         if (response.datas[i]['list_radiation'][j].checked == 'True') {
                             str += "<i class='fa fa-check-circle '></i> "
                         }
-                        str += response.datas[i]['list_radiation'][j].value + ' x ' + response.datas[i]['list_radiation'][j].amount + '<br/>';
+                        str += response.datas[i]['list_radiation'][j].code + ' x ' + response.datas[i]['list_radiation'][j].amount + '</span><br/>';
                     }
                     str += '</td>';
 
@@ -214,16 +218,18 @@ function search_payment(page = null) {
                         '</td><td>' + numberWithCommas(response.datas[i]['total']) +
                         '</td><td';
                     if (response.datas[i]['unpaid'] == 0) {
-                        str += "> - </td ></tr >'";
+                        str += "> - </td>";
                     } else {
-                        str += " style='color:red;'>" + numberWithCommas(response.datas[i]['unpaid']) + '</td ></tr > ';
+                        str += " style='color:red;'>" + numberWithCommas(response.datas[i]['unpaid']) + '</td>';
                     }
-
-                        
+                    //str +="<td>-</td><td>-</td><td>-</td><td></td></tr>';"
+                    str += "</tr>';"
 
 
                 } else {
+                    //str += '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
                     str += '<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>'
+
                 }
             }
             $('#payment_table_result').append(str);
@@ -599,5 +605,34 @@ function search_medicine(page = null) {
 
         },
     })
+}
+
+
+function excel_download() {
+
+    var date_start = $("#payment_search_date_start").val();
+    var date_end = $("#payment_search_date_end").val();
+
+    var url = '/manage/audit_excel?'
+    url += 'date_start=' + date_start + '&';
+    url += 'date_end=' + date_end + '&';
+
+    window.open(url);
+    ///$.ajax({
+    ///    type: 'POST',
+    ///    url: '/manage/audit_excel/',
+    ///    data: {
+    ///        'csrfmiddlewaretoken': $('#csrf').val(),
+    ///    },
+    ///    dataType: 'Json',
+    ///    success: function (response) {
+    ///        
+    ///
+    ///    },
+    ///    error: function (request, status, error) {
+    ///        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+    ///
+    ///    },
+    ///})
 }
 

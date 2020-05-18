@@ -846,7 +846,7 @@ function waiting_list(Today = false) {
                     str += "<td style='vertical-align:middle;'>";
                 }
                     str += response.datas[i]['chart'] + "</td>" +
-                    "<td style='vertical-align:middle;' >" + response.datas[i]['name_kor'] + '<br/>' + response.datas[i]['name_eng'] + "</td>" +
+                        "<td style='vertical-align:middle;' >" + response.datas[i]['name_kor'] + '<br/>' + response.datas[i]['name_eng'] + response.datas[i]['marking'] + "</td>" +
                     "<td style='vertical-align:middle;' >" + response.datas[i]['date'] + "</td>" +
                     "<td style='vertical-align:middle;' >" + response.datas[i]['Depart'] + '<br/>' + response.datas[i]['Doctor'] + "</td>" +
                     "<td style='vertical-align:middle;' >" + numberWithCommas( response.datas[i]['paid'] )+ '</td>' +
@@ -902,7 +902,7 @@ function get_today_list() {
                 } 
 
                 str += "'>" + response.datas[i]['chart'] + "</td>" +
-                    "<td style='vertical-align:middle;'>" + response.datas[i]['name_kor'] + '<br/>' + response.datas[i]['name_eng'] + "</td>" +
+                    "<td style='vertical-align:middle;'>" + response.datas[i]['name_kor'] + '<br/>' + response.datas[i]['name_eng'] + response.datas[i]['marking'] +"</td>" +
                     "<td style='vertical-align:middle;'>" + response.datas[i]['Depart'] + '<br/>' + response.datas[i]['Doctor'] + "</td>" +
                     "<td style='vertical-align:middle;'>" + response.datas[i]['DateTime'] + "</td></tr>";
 
@@ -1311,4 +1311,9 @@ function save_storage() {
 
 }
 
+function download_excel_today() {
+    var url = '/manage/rec_report_excel'
+
+    window.open(url);
+}
 //index.html end

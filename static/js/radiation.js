@@ -78,19 +78,19 @@ $(function () {
 
 //알람
 function play_alarm() {
-    var x = document.getElementById("audio").play();
-
-
-    if (x !== undefined) {
-        x.then(_ => {
-            console.log(_);
-            // Autoplay started!
-        }).catch(error => {
-            console.log(error);
-            // Autoplay was prevented.
-            // Show a "Play" button so that user can start playback.
-        });
-    }
+    //var x = document.getElementById("audio").play();
+    //
+    //
+    //if (x !== undefined) {
+    //    x.then(_ => {
+    //        console.log(_);
+    //        // Autoplay started!
+    //    }).catch(error => {
+    //        console.log(error);
+    //        // Autoplay was prevented.
+    //        // Show a "Play" button so that user can start playback.
+    //    });
+    //}
 }
 
 function show_popup() {

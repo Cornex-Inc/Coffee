@@ -1,0 +1,285 @@
+
+
+
+.background_grid {
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    display: grid;
+}
+
+.partition {
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: rgba(180, 180, 180, 0.15);
+    border: 3.7px solid white;
+    overflow: hidden;
+}
+
+
+.title_span {
+    margin-bottom: 15px;
+    font-size: 15px;
+    height: 30px;
+    padding-top: 1px;
+    background: rgb(90,64,129);
+    border-color: rgb(90,64,129);
+}
+
+    .title_span:hover {
+        background: rgb(90,64,129);
+        border-color: rgb(90,64,129);
+    }
+
+.customer_list {
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+.customer_info {
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+
+.patient_list_table_wrap {
+    height: 550px;
+}
+
+
+.depart_select {
+    width: 115px;
+    display: inline-table;
+}
+
+    .depart_select span, .depart_select select {
+        padding: 5px;
+    }
+
+
+#patient_search {
+    width: 110px;
+    display: inline;
+}
+
+.search_control_div {
+    text-align: right;
+    float: right;
+    width:800px;
+    margin-bottom:10px;
+}
+
+    .search_control_div > input{
+        display:inline;
+    }
+
+#estimate_search{
+    width:150px;
+}
+
+.date_input {
+    width: 100px;
+}
+
+#patient_list_table {
+    table-layout: fixed;
+    letter-spacing: -1px;
+}
+
+    #patient_list_table thead tr th {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    #patient_list_table tbody tr td {
+        vertical-align: middle;
+        text-align: center;
+        height: 47px;
+    }
+
+    #patient_list_table thead tr th:nth-child(1) {
+        width: 60px;
+    }
+
+    #patient_list_table thead tr th:nth-child(2) {
+        width: 100px;
+    }
+
+    #patient_list_table thead tr th:nth-child(3) {
+        width: 180px;
+    }
+
+    #patient_list_table thead tr th:nth-child(4),
+    #patient_list_table thead tr th:nth-child(5),
+    #patient_list_table thead tr th:nth-child(6) {
+        width: 120px;
+    }
+
+    #patient_list_table thead tr th:nth-child(7) {
+    }
+
+    #patient_list_table thead tr th:nth-child(8) {
+        width: 65px;
+    }
+
+    #patient_list_table thead tr th:nth-child(9) {
+        width: 120px;
+    }
+
+    #patient_list_table thead tr th:nth-child(10) {
+        width: 65px;
+    }
+
+    #patient_list_table td:nth-child(9) {
+        text-align: right;
+        padding-right: 10px;
+    }
+
+#emplyoee_table{
+    table-layout:fixed;
+    letter-spacing:-1px;
+}
+    #emplyoee_table th, #emplyoee_table td{
+        vertical-align:middle;
+        text-align:center;
+    }
+
+
+
+    .nav-tabs > li.active > a,
+    .nav-tabs > li.active > a:hover,
+    .nav-tabs > li.active > a:focus {
+        color: #fff;
+        cursor: default;
+        background-color: rgb(90,64,129);
+        border: 1px solid rgb(90,64,129);
+        border-bottom-color: transparent;
+    }
+
+.nav-tabs > li > a {
+    background-color: #eee;
+    height: 30px;
+    padding: 5px;
+}
+
+.tab-pane {
+    margin-bottom: 10px;
+    height: 600px;
+    border: 1.4px solid rgb(90,64,129);
+    padding: 10px;
+}
+.half {
+    width: 49%;
+}
+
+.half-fl {
+    width: 49%;
+    float: left;
+}
+
+.half-fr {
+    width: 49%;
+    float: right;
+}
+
+    .tab-pane .input-group {
+        margin-bottom: 10px;
+
+    }
+
+
+    .tab-pane .input-group-addon {
+        width: 135px;
+    }
+
+
+
+
+#modalBody .input-group {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+    #modalBody .input-group:last-child {
+        margin-bottom: 0;
+    }
+
+
+#modalBody .input-group-addon {
+    width: 100px;
+}
+
+#modalBody textarea {
+    resize: none;
+    height: 100px;
+}
+
+
+#visit_history {
+    height: 600px;
+    overflow-y: auto;
+}
+
+
+    #visit_history thead tr th, #visit_history tbody tr td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    #visit_history th:nth-child(4) {
+        width: 120px;
+    }
+
+    #visit_history th:nth-child(5) {
+        width: 120px;
+    }
+
+    #visit_history th:nth-child(6) {
+        width: 120px;
+    }
+
+
+
+@media ( min-width: 1900px ) {
+}
+
+
+
+
+
+#overlay {
+    position: fixed;
+    top: 0;
+    z-index: 5555;
+    width: 100%;
+    height: 100%;
+    display: none;
+    background: rgba(0,0,0,0.6);
+}
+
+.cv-spinner {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px #ddd solid;
+    border-top: 4px #2e93e6 solid;
+    border-radius: 50%;
+    animation: sp-anime 0.8s infinite linear;
+}
+
+@keyframes sp-anime {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.is-hide {
+    display: none;
+}

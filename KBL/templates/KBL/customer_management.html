@@ -1,0 +1,491 @@
+{% extends "app/layout_KBL.html" %}
+
+{% load staticfiles %}
+{% block content %}
+
+{% csrf_token %}
+    <div class="background_grid">
+        <div class="customer_list partition">
+            <div class="status_table_title">
+                <span class="btn btn-danger title_span">{{ _('Customer Management') }}</span>
+            <div class="radiation_waiting_control">
+                <div class="input-group select_div">
+                    <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Type') }}</span>
+                    <select id="search_type" class="form-control costom-select " aria-describedby="basic-addon1" >
+                        <option value="" selected="">{{ _('ALL') }}</option>
+                                               
+                    </select>
+                </div>
+                <input type="text" id="search_string" class="form-control"/>
+                <input type="button" id="search_btn" class="btn btn-default" value="{{ _('Search') }}" style="display:inline;"/>
+            </div>
+                </div>
+            <div class="patient_list_table_wrap">
+                <table class="table table-bordered table-hover table-striped" id="list_table">
+                    <thead>
+                        <tr>
+                            <th>{{ _('No') }}</th>
+                            <th>{{ _('Type') }}</th>
+                            <th>{{ _('Customer No') }}</th>
+                            <th>{{ _('Customer Name(ENG)') }}</th>
+                            <th>{{ _('Corporation No') }}</th>
+                            <th>{{ _('Phone No') }}</th>
+                            <th>{{ _('Date Registered') }}</th>
+                            <th>{{ _('Remark') }}</th>
+                            <th>{{ _('Manage') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <ul class="pagination" id="table_pagnation">
+
+                </ul>
+                <button class="btn btn-primary" style="float:right" onclick="customer_modal()">+ {{ _('Register') }}</button>
+            </div>
+        </div>
+        <input type="hidden" id="selected_id" />
+        <div class="customer_info partition">
+            <div class="status_table_title">
+                  <!-- Nav tabs -->
+                  <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#basic_info" aria-controls="basic_info" role="tab" data-toggle="tab"> {{ _('Basic Information') }} </a></li>
+                    <li role="presentation"><a href="#employee_info" aria-controls="employee_info" role="tab" data-toggle="tab"> {{ _('Employee Information') }} </a></li>
+                    <li role="presentation"><a href="#projects" aria-controls="projects" role="tab" data-toggle="tab"> {{ _('Projects') }} </a></li>
+                  </ul>
+                  <!-- Tab panes -->
+                  <div class="tab-content">
+                      <!--Basic Information-->
+                    <div role="tabpanel" class="tab-pane active" id="basic_info">
+						<div class="input-group">
+							<span class="input-group-addon" id="basic-addon1">{{ _('Customer Number') }}</span>
+							<input type="text" id="basic_info_serial" class="form-control" aria-describedby="basic-addon1" readonly>
+						</div>
+                        <div class="input-group half-fl">
+							<span class="input-group-addon" id="basic-addon1">* {{ _('Name (KOR)') }}</span>
+							<input type="text" id="basic_info_name_kor" class="form-control" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group half-fr">
+							<span class="input-group-addon" id="basic-addon1">* {{ _('Name (ENG)') }}</span>
+							<input type="text" id="basic_info_name_eng" class="form-control" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group half-fl">
+							<span class="input-group-addon" id="basic-addon1">* {{ _('CEO Name') }}</span>
+							<input type="text" id="basic_info_ceo_name" class="form-control" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group half-fr">
+							<span class="input-group-addon" id="basic-addon1">{{ _('Business Type') }}</span>
+							<input type="text" id="basic_info_business_type" class="form-control" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" id="basic-addon1">{{ _('Corporation Number') }}</span>
+							<input type="text" id="basic_info_corperation_number" class="form-control" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" id="basic-addon1">{{ _('Number of employees') }}</span>
+							<input type="text" id="basic_info_number_employees" class="form-control" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group half-fl">
+							<span class="input-group-addon" id="basic-addon1">* {{ _('Phone Number 1') }}</span>
+							<input type="text" id="basic_info_phone1" class="form-control" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group half-fr">
+							<span class="input-group-addon" id="basic-addon1">{{ _('Phone Number 2') }}</span>
+							<input type="text" id="basic_info_phone2" class="form-control" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" id="basic-addon1">{{ _('F A X') }}</span>
+							<input type="text" id="basic_info_fax" class="form-control" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" id="basic-addon1">{{ _('Address 1') }}</span>
+							<input type="text" id="basic_info_addr1" class="form-control" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" id="basic-addon1">{{ _('Address 2') }}</span>
+							<input type="text" id="basic_info_addr2" class="form-control" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" id="basic-addon1">{{ _('Date of Establishment') }}</span>
+							<input type="text" id="basic_info_date_establishment" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" id="basic-addon1">* {{ _('Condition') }}</span>
+							<select id="basic_info_condition" class="form-control" aria-describedby="basic-addon1">
+								<option value="">----------</option>
+								<option value="1">Operational</option>
+								<option value="2">Closure</option>
+							</select>
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" id="basic-addon1">{{ _('Remark') }}</span>
+							<input type="text" id="basic_info_remark" class="form-control" aria-describedby="basic-addon1">
+						</div>
+                        
+                        <input type="button" value="{{ _('Save') }}" class="btn btn-warning" style="float:right;" onclick="customer_modal_save('basic_info')" />
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="employee_info">
+						<div style="height:550px; overflow-y:auto;">
+							<table class="table table-bordered table-hover table-striped" id="emplyoee_table">
+								<thead>
+									<tr>
+										<th>{{ _('No') }}</th>
+										<th><input type="checkbox" id="check_all"/></th>
+										<th>{{ _('Position') }}</th>
+										<th>{{ _('Name (KOR)') }}</th>
+										<th>{{ _('Name (ENG)') }}</th>
+										<th>{{ _('Date of Birth') }}</th>
+										<th>{{ _('Phone') }}</th>
+										<th>{{ _('Status') }}</th>
+										<th>{{ _('Remark') }}</th>
+										<th>{{ _('Manage') }}</th>
+									</tr>
+								</thead>
+								<tbody>
+
+								</tbody>
+							</table>
+						</div>
+                        <div style="text-align:right;">
+                            <input type="button" value="{{ _('Send SMS') }}" class="btn btn-warning" onclick="send_sms()" />
+					        <input type="button" value="{{ _('WP Issued list') }}" class="btn btn-danger" onclick="wp_isuse()" />
+					        <input type="button" value="{{ _('Visa Issued list') }}" class="btn btn-success" onclick="visa_issue()" />
+					        <input type="button" value="+ {{ _('Register') }}" class="btn btn-primary" onclick="employee_modal()"/>
+                            
+                        </div>
+
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="projects">
+                        <table class="table table-bordered table-hover table-striped" id="project_table">
+                            <thead>
+                                <tr>
+                                    <th>{{ _('No') }}</th>
+                                    <th><input type="checkbox" /></th>
+                                    <th>{{ _('Type') }}</th>
+                                    <th>{{ _('Project Name') }}</th>
+								    <th>{{ _('Level') }}</th>
+								    <th>{{ _('Start Date') }}</th>
+								    <th>{{ _('Finsh Date') }}</th>
+								    <th>{{ _('Condition') }}</th>
+								    <th>{{ _('In Charge') }}</th>
+									<th>{{ _('Note') }}</th>
+								    <th>{{ _('Management') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                        <div>
+                            <input type="button" value="{{ _('Register') }}" class="btn btn-warning" onclick="project_modal()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<!--Customer Modal-->
+<div id="customer_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h2>{{ _('Customer Register') }}</h2>
+                <div id="modalBody" class="modal-body" >
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Name (KOR)') }}</span>
+						<input type="text" id="register_name_kor" class="form-control" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Name (ENG)') }}</span>
+						<input type="text" id="register_name_eng" class="form-control" aria-describedby="basic-addon1">
+					</div>
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('CEO Name') }}</span>
+						<input type="text" id="register_ceo_name" class="form-control" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Business Type') }}</span>
+						<input type="text" id="register_business_type" class="form-control" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Corporation Number') }}</span>
+						<input type="text" id="register_corperation_number" class="form-control" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Number of employees') }}</span>
+						<input type="text" id="register_number_employees" class="form-control" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Phone Number 1') }}</span>
+						<input type="text" id="register_phone1" class="form-control" aria-describedby="basic-addon1">
+					</div>
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Phone Number 2') }}</span>
+						<input type="text" id="register_phone2" class="form-control" aria-describedby="basic-addon1">
+					</div>
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('F A X') }}</span>
+						<input type="text" id="register_fax" class="form-control" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Address 1') }}</span>
+						<input type="text" id="register_addr1" class="form-control" aria-describedby="basic-addon1">
+					</div>
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Address 2') }}</span>
+						<input type="text" id="register_addr2" class="form-control" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Date of Establishment') }}</span>
+						<input type="text" id="register_date_establishment" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Condition') }}</span>
+						<select id="register_condition" class="form-control" aria-describedby="basic-addon1">
+                            <option value="">----------</option>
+							<option value="1">Operational</option>
+							<option value="2">Closure</option>
+						</select>
+					</div>
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Remark') }}</span>
+						<input type="text" id="register_remark" class="form-control" aria-describedby="basic-addon1">
+					</div>
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" onclick="customer_modal_save()">{{ _('Save') }}</a>
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--Employee Modal-->
+<div id="employee_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h2>{{ _('Employee Register / Edit') }}</h2>
+                <div id="modalBody" class="modal-body" >
+					<input type="hidden" id="selected_employee"  value=""/>
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Type') }}</span>
+						<select id="employee_type" class="form-control" aria-describedby="basic-addon1">
+						<option value="">----------</option>
+						<option value="KOREAN">Korean</option>
+						<option value="OTHERS">Foreigner</option>
+					</select>
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Position') }}</span>
+						<input type="text" id="employee_position" class="form-control" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Name (KOR)') }}</span>
+						<input type="text" id="employee_name_kor" class="form-control" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Name (ENG)') }}</span>
+						<input type="text" id="employee_name_eng" class="form-control" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Date of Birth') }}</span>
+						<input type="text" id="employee_dob" class="form-control date_input" aria-describedby="basic-addon1" placeholder="0000-00-00">
+					</div>
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Passport Number') }}</span>
+						<input type="text" id="employee_passport" class="form-control" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Phone Number') }}</span>
+						<input type="text" id="employee_phone" class="form-control" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Address') }}</span>
+						<input type="text" id="employee_address" class="form-control" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Email') }}</span>
+						<input type="text" id="employee_email" class="form-control" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Condition') }}</span>
+						<select id="employee_condition" class="form-control" aria-describedby="basic-addon1">
+							<option value="">----------</option>
+							<option value="OFFICE">Office</option>
+							<option value="LEAVE">Leave</option>
+						</select>
+					</div>
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">{{ _('Remark') }}</span>
+						<input type="text" id="employee_remark" class="form-control" aria-describedby="basic-addon1">
+					</div>
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" onclick="employee_modal_save()">{{ _('Save') }}</a>
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--Project Modal-->
+<div id="project_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h2>{{ _('Project Register / Edit') }}</h2>
+                <div id="modalBody" class="modal-body" >
+				    <div class="input-group">
+					    <span class="input-group-addon" id="basic-addon1">{{ _('Company Name') }}</span>
+					    <select id="register_register" class="form-control" aria-describedby="basic-addon1">
+						    <option value="1">CORNEX</option>
+						    <option value="2">CORNEX</option>
+					    </select>
+				    </div>
+				    <div class="input-group">
+					    <span class="input-group-addon" id="basic-addon1">{{ _('Sort') }}</span>
+					    <select id="register_register" class="form-control" aria-describedby="basic-addon1">
+						    <option value="1">Corporation</option>
+						    <option value="2">Work Permit</option>
+						    <option value="2">Visa</option>
+					    </select>
+				    </div>
+				    <div class="input-group">
+					    <span class="input-group-addon" id="basic-addon1">{{ _('Project Name') }}</span>
+					    <input type="text" id="register_DOB" class="form-control" aria-describedby="basic-addon1">
+				    </div>
+				    <div class="input-group">
+					    <span class="input-group-addon" id="basic-addon1">{{ _('Level') }}</span>
+					    <input type="text" id="register_Passport No" class="form-control me2020-05-02dicine_control_input" aria-describedby="basic-addon1">
+				    </div>
+				    <div class="input-group">
+					    <span class="input-group-addon" id="basic-addon1">{{ _('Priority') }}</span>
+					    <input type="text" id="register_Phone No" class="form-control" aria-describedby="basic-addon1">
+				    </div>
+				    <div class="input-group">
+					    <span class="input-group-addon" id="basic-addon1">{{ _('Start Date') }}</span>
+					    <input type="text" id="register_Address" class="form-control" aria-describedby="basic-addon1">
+				    </div>
+				    <div class="input-group">
+					    <span class="input-group-addon" id="basic-addon1">{{ _('Exp. end Date') }}</span>
+					    <input type="text" id="register_e-mail" class="form-control" aria-describedby="basic-addon1">
+				    </div>
+				    <div class="input-group">
+					    <span class="input-group-addon" id="basic-addon1">{{ _('End Date') }}</span>
+					    <input type="text" id="register_e-mail" class="form-control" aria-describedby="basic-addon1">
+				    </div>
+				    <div class="input-group">
+					    <span class="input-group-addon" id="basic-addon1">{{ _('Documents Receive Date') }}</span>
+					    <input type="text" id="register_e-mail" class="form-control" aria-describedby="basic-addon1">
+				    </div>
+				    <div class="input-group">
+					    <span class="input-group-addon" id="basic-addon1">{{ _('Result Date') }}</span>
+					    <input type="text" id="register_e-mail" class="form-control" aria-describedby="basic-addon1">
+				    </div>
+				    <div class="input-group">
+					    <span class="input-group-addon" id="basic-addon1">{{ _('In Charge') }}</span>
+					    <input type="text" id="register_e-mail" class="form-control" aria-describedby="basic-addon1">
+				    </div>
+				    <div class="input-group">
+					    <span class="input-group-addon" id="basic-addon1">{{ _('Condition') }}</span>
+					    <select id="register_Condition" class="form-control" aria-describedby="basic-addon1">
+						    <option value="1">General</option>
+						    <option value="2">Urgent</option>
+					    </select>
+				    </div>
+					    <div class="input-group">
+						    <span class="input-group-addon" id="basic-addon1">{{ _('Status') }}</span>
+						    <select id="register_register" class="form-control" aria-describedby="basic-addon1">
+						    <option value="1">Receive</option>
+						    <option value="2">Order</option>
+						    <option value="2">Completion</option>
+					    </select>
+				    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" onclick="">{{ _('Save') }}</a>
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- SMS - personal -->
+<div id="sms_modal" class="modal fade">
+    <div class="modal-dialog" style="width:500px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4 id="delete_database_header">{{ _('Send SMS') }}</h4>
+                <div id="modalBody" class="modal-body">
+                    <!--Patient Name-->
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Name') }}</span>
+                        <input type="text" id="sms_modal_name" class="form-control" aria-describedby="basic-addon1">
+                    </div>
+                    <!--Patient's phone-->
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Phone Number') }}</span>
+                        <input type="text" id="sms_modal_phone" class="form-control" aria-describedby="basic-addon1">
+                    </div>
+                    <!--content-->
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon1">{{ _('Content') }}</span>
+                        <textarea type="text" id="sms_modal_content" class="form-control" aria-describedby="basic-addon1"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                    <a class="btn btn-primary" onclick="send_sms()">{{ _('Send') }}</a>
+                </div>
+                 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="overlay">
+	<div class="cv-spinner">
+		<span class="spinner"></span>
+	</div>
+</div>
+
+
+
+
+{% endblock %}
+
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/customer_management.css' %}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<script src="{% static 'js/customer_management.js' %}" type="text/javascript"></script>
+{% endblock %}

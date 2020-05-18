@@ -20,12 +20,12 @@
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
-    <WebBrowserUrl>http://localhost</WebBrowserUrl>
+    <WebBrowserUrl>http://localhost:9090</WebBrowserUrl>
     <LaunchProvider>Django launcher</LaunchProvider>
     <DjangoSettingsModule>Coffee.settings</DjangoSettingsModule>
     <OutputPath>.</OutputPath>
     <SuppressCollectPythonCloudServiceFiles>true</SuppressCollectPythonCloudServiceFiles>
-    <PythonRunWebServerCommandType />
+    <PythonRunWebServerCommandType>모듈</PythonRunWebServerCommandType>
     <PythonDebugWebServerCommandType />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -70,6 +70,19 @@
     <Compile Include="Doctor\urls.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="KBL\admin.py" />
+    <Compile Include="KBL\apps.py" />
+    <Compile Include="KBL\migrations\__init__.py" />
+    <Compile Include="KBL\models.py" />
+    <Compile Include="KBL\forms.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="KBL\urls.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="KBL\tests.py" />
+    <Compile Include="KBL\views.py" />
+    <Compile Include="KBL\__init__.py" />
     <Compile Include="Laboratory\admin.py" />
     <Compile Include="Laboratory\apps.py" />
     <Compile Include="Laboratory\forms.py">
@@ -323,6 +336,15 @@
     <Folder Include="Doctor\static\css\" />
     <Folder Include="Doctor\templates\" />
     <Folder Include="Doctor\templates\Doctor\" />
+    <Folder Include="KBL\" />
+    <Folder Include="KBL\migrations\" />
+    <Folder Include="KBL\static\" />
+    <Folder Include="KBL\static\js\" />
+    <Folder Include="KBL\static\css\" />
+    <Folder Include="KBL\static\img\" />
+    <Folder Include="KBL\templates\" />
+    <Folder Include="KBL\templates\KBL\" />
+    <Folder Include="KBL\templates\Form\" />
     <Folder Include="Laboratory\" />
     <Folder Include="Laboratory\migrations\" />
     <Folder Include="Laboratory\static\" />
@@ -336,13 +358,19 @@
     <Folder Include="Manage\static\css\" />
     <Folder Include="Manage\static\css\board\" />
     <Folder Include="Manage\static\css\board_work\" />
+    <Folder Include="Manage\static\css\statistics\" />
     <Folder Include="Manage\static\js\" />
     <Folder Include="Manage\static\js\board\" />
     <Folder Include="Manage\static\js\board_work\" />
+    <Folder Include="Manage\static\draft\" />
+    <Folder Include="Manage\static\excel_form\" />
+    <Folder Include="Manage\static\js\statistics\" />
     <Folder Include="Manage\templates\" />
     <Folder Include="Manage\templates\Manage\" />
     <Folder Include="Manage\templates\board\" />
     <Folder Include="Manage\templates\board_work\" />
+    <Folder Include="Manage\templates\Draft_Form\" />
+    <Folder Include="Manage\templates\statistics\" />
     <Folder Include="Patient\" />
     <Folder Include="Patient\migrations\" />
     <Folder Include="Patient\templates\" />
@@ -408,6 +436,8 @@
     <Content Include="app\static\img\en.png" />
     <Content Include="app\static\img\index_contents.png" />
     <Content Include="app\static\img\index_main.png" />
+    <Content Include="app\static\img\KBL_logo.png" />
+    <Content Include="app\static\img\KBL_menu.png" />
     <Content Include="app\static\img\ko.png" />
     <Content Include="app\static\img\Menu_icon.png" />
     <Content Include="app\static\img\tmp_logo.png" />
@@ -1344,10 +1374,12 @@
     <Content Include="app\static\summernote-0.8.16-dist\summernote.min.js.LICENSE.txt" />
     <Content Include="app\static\summernote-0.8.16-dist\summernote.min.js.map" />
     <Content Include="app\templates\Admin\login_admin.html" />
+    <Content Include="app\templates\app\layout_KBL.html" />
     <Content Include="app\templates\app\notice.html" />
     <Content Include="app\templates\app\notice_edit.html" />
     <Content Include="app\templates\app\test.html" />
     <Content Include="Doctor\static\css\doctor.css" />
+    <Content Include="Doctor\static\css\doctor_DERM.css" />
     <Content Include="Doctor\static\css\doctor_PM.css" />
     <Content Include="Doctor\static\css\report_window.css" />
     <Content Include="Doctor\static\css\report.css" />
@@ -1356,14 +1388,19 @@
     <Content Include="Doctor\static\img\DX_AN.png" />
     <Content Include="Doctor\static\img\DX_AN_Front.png" />
     <Content Include="Doctor\static\img\DX_AN_Rear.png" />
+    <Content Include="Doctor\static\img\DX_DERM.jpg" />
+    <Content Include="Doctor\static\img\DX_PS.jpg" />
     <Content Include="Doctor\static\img\Medical_Exam_X.png" />
     <Content Include="Doctor\static\js\doctor.js" />
     <Content Include="Doctor\static\js\audit.js" />
+    <Content Include="Doctor\static\js\doctor_DERM.js" />
     <Content Include="Doctor\static\js\doctor_PM.js" />
     <Content Include="Doctor\static\js\audit_PM.js" />
     <Content Include="Doctor\static\js\report.js" />
     <Content Include="Doctor\static\js\print.js" />
     <Content Include="Doctor\static\js\report_window.js" />
+    <Content Include="Doctor\templates\Doctor\index_PS.html" />
+    <Content Include="Doctor\templates\Doctor\index_DERM.html" />
     <Content Include="Doctor\templates\Doctor\index_PM.html" />
     <Content Include="Doctor\templates\Doctor\diagnosis.html" />
     <Content Include="Doctor\templates\Doctor\report.html" />
@@ -1374,6 +1411,36 @@
     <Content Include="Doctor\templates\Doctor\reportwindow.html" />
     <Content Include="Doctor\templates\Doctor\audit.html" />
     <Content Include="Doctor\templates\Doctor\audit_PM.html" />
+    <Content Include="KBL\static\css\invoice_management.css" />
+    <Content Include="KBL\static\css\document_management.css" />
+    <Content Include="KBL\static\css\audit_management.css" />
+    <Content Include="KBL\static\css\scheduler.css" />
+    <Content Include="KBL\static\css\visa_management.css" />
+    <Content Include="KBL\static\css\work_permit.css" />
+    <Content Include="KBL\static\css\project_management.css" />
+    <Content Include="KBL\static\css\estimate_sheet.css" />
+    <Content Include="KBL\static\css\customer_management.css" />
+    <Content Include="KBL\static\js\invoice_management.js" />
+    <Content Include="KBL\static\js\document_management.js" />
+    <Content Include="KBL\static\js\audit_management.js" />
+    <Content Include="KBL\static\js\scheduler.js" />
+    <Content Include="KBL\static\js\visa_management.js" />
+    <Content Include="KBL\static\js\work_permit.js" />
+    <Content Include="KBL\static\js\project_management.js" />
+    <Content Include="KBL\static\js\estimate_sheet.js" />
+    <Content Include="KBL\static\js\customer_management.js" />
+    <Content Include="KBL\templates\Form\Estimate_Sheet_print.html" />
+    <Content Include="KBL\templates\Form\Invoice_print.html" />
+    <Content Include="KBL\templates\KBL\invoice_management.html" />
+    <Content Include="KBL\templates\KBL\document_management.html" />
+    <Content Include="KBL\templates\KBL\audit_management.html" />
+    <Content Include="KBL\templates\KBL\scheduler.html" />
+    <Content Include="KBL\templates\KBL\visa_management.html" />
+    <Content Include="KBL\templates\KBL\work_permit.html" />
+    <Content Include="KBL\templates\KBL\project_management.html" />
+    <Content Include="KBL\templates\KBL\estimate_sheet.html" />
+    <Content Include="KBL\templates\KBL\customer_management.html" />
+    <Content Include="KBL\templates\KBL\index.html" />
     <Content Include="Laboratory\static\css\checklist.css" />
     <Content Include="Laboratory\static\js\checklist.js" />
     <Content Include="Laboratory\templates\Laboratory\checklist.html" />
@@ -1381,40 +1448,69 @@
     <Content Include="Manage\static\css\board\create_edit.css" />
     <Content Include="Manage\static\css\board_work\create_edit.css" />
     <Content Include="Manage\static\css\board_work\list.css" />
+    <Content Include="Manage\static\css\code_setting.css" />
     <Content Include="Manage\static\css\CRM.css" />
     <Content Include="Manage\static\css\Draft.css" />
     <Content Include="Manage\static\css\dashboard.css" />
     <Content Include="Manage\static\css\inventory_medical_tool.css" />
     <Content Include="Manage\static\css\employee_manage.css" />
+    <Content Include="Manage\static\css\sms_history.css" />
     <Content Include="Manage\static\css\login.css" />
     <Content Include="Manage\static\css\inventory_test.css" />
     <Content Include="Manage\static\css\inventory_precedure.css" />
+    <Content Include="Manage\static\css\statistics\statistics_daily.css" />
+    <Content Include="Manage\static\css\statistics\statistics_ymw.css" />
+    <Content Include="Manage\static\css\statistics\statistics_customer_info.css" />
+    <Content Include="Manage\static\css\statistics\statistics.css" />
+    <Content Include="Manage\static\draft\FORM1" />
+    <Content Include="Manage\static\draft\DEMAND" />
+    <Content Include="Manage\static\excel_form\audit_report.xlsx" />
+    <Content Include="Manage\static\excel_form\customer_information.xlsx" />
+    <Content Include="Manage\static\excel_form\reception_report.xlsx" />
+    <Content Include="Manage\static\draft\FORM2" />
+    <Content Include="Manage\static\draft\test.txt" />
     <Content Include="Manage\static\js\board\list.js" />
     <Content Include="Manage\static\js\board\create_edit.js" />
     <Content Include="Manage\static\js\board_work\create_edit.js" />
     <Content Include="Manage\static\js\board_work\list.js" />
+    <Content Include="Manage\static\js\code_setting.js" />
     <Content Include="Manage\static\js\CRM.js" />
     <Content Include="Manage\static\js\Draft.js" />
     <Content Include="Manage\static\js\dashboard.js" />
     <Content Include="Manage\static\js\inventory_medical_tool.js" />
     <Content Include="Manage\static\js\employee_manage.js" />
+    <Content Include="Manage\static\js\sms_history.js" />
     <Content Include="Manage\static\js\inventory_precedure.js" />
     <Content Include="Manage\static\js\inventory_test.js" />
     <Content Include="Manage\static\js\login.js" />
+    <Content Include="Manage\static\js\statistics\statistics_daily.js" />
+    <Content Include="Manage\static\js\statistics\statistics_ymw.js" />
+    <Content Include="Manage\static\js\statistics\statistics_customer_info.js" />
+    <Content Include="Manage\static\js\statistics\statistics.js" />
     <Content Include="Manage\templates\board\create_edit.html" />
     <Content Include="Manage\templates\board\read.html" />
     <Content Include="Manage\templates\board\list.html" />
     <Content Include="Manage\templates\board_work\create_edit.html" />
     <Content Include="Manage\templates\board_work\list.html" />
     <Content Include="Manage\templates\board_work\read.html" />
+    <Content Include="Manage\templates\Draft_Form\basic_form.html" />
     <Content Include="Manage\templates\Manage\CRM.html" />
     <Content Include="Manage\templates\Manage\dashboard.html" />
+    <Content Include="Manage\templates\Manage\Draft_KBL.html" />
     <Content Include="Manage\templates\Manage\Draft.html" />
     <Content Include="Manage\templates\Manage\inventory_medical_tool.html" />
     <Content Include="Manage\templates\Manage\inventory_test.html" />
-    <Content Include="Manage\templates\Manage\temp_manage.html" />
+    <Content Include="Manage\templates\Manage\sms_history.html" />
     <Content Include="Manage\templates\Manage\inventory_precedure.html" />
     <Content Include="Manage\templates\Manage\employee_manage.html" />
+    <Content Include="Manage\templates\Manage\code_setting.html" />
+    <Content Include="Manage\templates\statistics\statistics_daily.html" />
+    <Content Include="Manage\templates\statistics\statistics_ymw.html" />
+    <Content Include="Manage\templates\statistics\statistics_customer_info.html" />
+    <Content Include="Manage\templates\statistics\statistics_depart.html" />
+    <Content Include="Manage\templates\statistics\statistics_medicine.html" />
+    <Content Include="Manage\templates\statistics\statistics_procedure.html" />
+    <Content Include="Manage\templates\statistics\statistics_test.html" />
     <Content Include="Pharmacy\static\css\inventory.css" />
     <Content Include="Pharmacy\static\img\database_check_no.png" />
     <Content Include="Pharmacy\static\img\database_check_ok.png" />

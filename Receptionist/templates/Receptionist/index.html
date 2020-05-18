@@ -106,7 +106,16 @@
                     <td>
                         <div class="input-group"> 
                         <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Memo') }}</span>
-                        <input type="text" name="phone" id="patient_memo" class="form-control" aria-describedby="basic-addon1" autocomplete="off" required="">
+                        <input type="text" name="phone" id="patient_memo" class="form-control" aria-describedby="basic-addon1" autocomplete="off">
+                            <div class="input-group-btn patient_mark_div">
+                                <select class="form-control" id="patient_mark">
+                                    <option value="" selected>--</option>
+                                    {% for data in patient_mark %}
+                                        <option value="{{ data.commcode }}">{{data.se1}}</option>
+                                    {% endfor%}
+                                </select>
+                            </div>
+                        
                         </div>
                     </td>
                 </tr>

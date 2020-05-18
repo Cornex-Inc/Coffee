@@ -9,6 +9,12 @@ $(function () {
 
     })
 
+    $('#pharmacy_search_input').keypress(function (key) {
+        if (key.keyCode == 13) {
+            waiting_list();
+        }
+    });
+
     $('#pharmacy_list_calendar_start').daterangepicker({
         singleDatePicker: true,
         showDropdowns: true,
@@ -160,6 +166,7 @@ function pharmacy_control_save(Done = false) {
         dataType: 'Json',
         success: function (response) {
             alert(gettext("Saved."));
+            waiting_list();
         },
         error: function (request, status, error) {
             console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -211,10 +218,13 @@ function waiting_selected(diagnosis_id) {
 function waiting_list(Today = false, alarm= false) {
     var date, start, end;
 
-    start = $('#pharmacy_list_calendar_start').val();
-    end = $('#pharmacy_list_calendar_end').val();
+    var start = $('#pharmacy_list_calendar_start').val();
+    var end = $('#pharmacy_list_calendar_end').val();
     
-  
+    var filter = $("#pharmacy_search_select").val();
+    var string = $("#pharmacy_search_input ").val();
+
+
    
     $.ajax({
         type: 'POST',
@@ -223,8 +233,8 @@ function waiting_list(Today = false, alarm= false) {
             'csrfmiddlewaretoken': $('#csrf').val(),
             'start_date': start,
             'end_date': end,
-            //'string':string,
-            //'filter':filter,
+            'string': string,
+            'filter':filter,
         },
         dataType: 'Json',
         success: function(response) {
@@ -245,7 +255,9 @@ function waiting_list(Today = false, alarm= false) {
                     "<td>" + response.datas[i]['chart'] + "</td>" +
                     "<td>" + response.datas[i]['Name'] + "</td>" +
                     "<td>" + response.datas[i]['Date_of_Birth'] + "</td>" +
-                    "<td>" + response.datas[i]['Depart'] +"</td></tr>";
+                    "<td>" + response.datas[i]['Depart'] +"</td>" +
+                    "<td>" + response.datas[i]['ordered'] +"</td>" +
+                    "<td>" + response.datas[i]['received'] +"</td></tr>";
 
                 $('#pharmacy_list_table').append(str);
             }

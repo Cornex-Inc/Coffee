@@ -107,8 +107,23 @@ $(function () {
     $('#Bill').click(function () {
         id = $("#selected_reception").val();
 
+        var for_bf = '';
+        if ($("#check_bf_af").val() == 'bf') {
+            var discount_input = $("#discount_input").val();
+            var discount_amount = $("#discount_amount").val();
+            var additional_amount = $("#additional_amount").val();
+            var total_amount = $("#total_amount").val();
+
+            for_bf += '?type=bf';
+
+            for_bf += '&discount_input=' + discount_input;
+            for_bf += '&discount_amount=' + discount_amount;
+            for_bf += '&additional_amount=' + additional_amount;
+            for_bf += '&total_amount=' + total_amount;
+        }
+
         $("#dynamic_div").html('');
-        $('#dynamic_div').load('/receptionist/document_medical_receipt_old/' + id);
+        $('#dynamic_div').load('/receptionist/document_medical_receipt_old/' + id + for_bf);
 
         $('#dynamic_div').printThis({
         });
@@ -438,6 +453,7 @@ function waiting_selected(paymentrecord_id) {
         },
         dataType: 'Json',
         success: function (response) {
+            $("#check_bf_af").val('af');
             $('#selected_reception').val(response.reception_id);
 
             $('#storage_bills tbody').empty();
@@ -806,6 +822,9 @@ function waiting_list(Today = false) {
         },
         dataType: 'Json',
         success: function (response) {
+            var total_paid = 0;
+            var total_balance = 0;
+
             $('#storage_list_table > tbody ').empty();
             for (var i = 0; i < response.datas.length; i++) {
                 var tr_class = "";
@@ -827,16 +846,22 @@ function waiting_list(Today = false) {
                     str += "<td style='vertical-align:middle;'>";
                 }
                     str += response.datas[i]['chart'] + "</td>" +
-                    "<td style='vertical-align:middle;' >" + response.datas[i]['name_kor'] + '<br/>' + response.datas[i]['name_eng'] + "</td>" +
+                        "<td style='vertical-align:middle;' >" + response.datas[i]['name_kor'] + '<br/>' + response.datas[i]['name_eng'] + response.datas[i]['marking'] + "</td>" +
                     "<td style='vertical-align:middle;' >" + response.datas[i]['date'] + "</td>" +
                     "<td style='vertical-align:middle;' >" + response.datas[i]['Depart'] + '<br/>' + response.datas[i]['Doctor'] + "</td>" +
                     "<td style='vertical-align:middle;' >" + numberWithCommas( response.datas[i]['paid'] )+ '</td>' +
-                        "<td style='vertical-align:middle;' >" + numberWithCommas(Number(response.datas[i]['unpaid_total']) )+ '</td></td>'; 
+                    "<td style='vertical-align:middle;' >" + numberWithCommas(Number(response.datas[i]['unpaid_total']) )+ '</td></td>'; 
                  
-                    
-
                 $('#storage_list_table').append(str);
+
+                total_paid += response.datas[i]['paid'];
+                total_balance = response.datas[i]['unpaid_total'];
             }
+
+            $("#storage_list_total_paid").html(numberWithCommas(total_paid));
+            $("#storage_list_total_balance").html(numberWithCommas(total_balance));
+
+
         },
         error: function (request, status, error) {
             console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -859,6 +884,7 @@ function get_today_list() {
         },
         dataType: 'Json',  
         success: function (response) {
+            $("#check_bf_af").val('bf');
             $('#storage_today_table > tbody ').empty();
             for (var i in response.datas) {
                 var tr_class = "";
@@ -876,7 +902,7 @@ function get_today_list() {
                 } 
 
                 str += "'>" + response.datas[i]['chart'] + "</td>" +
-                    "<td style='vertical-align:middle;'>" + response.datas[i]['name_kor'] + '<br/>' + response.datas[i]['name_eng'] + "</td>" +
+                    "<td style='vertical-align:middle;'>" + response.datas[i]['name_kor'] + '<br/>' + response.datas[i]['name_eng'] + response.datas[i]['marking'] +"</td>" +
                     "<td style='vertical-align:middle;'>" + response.datas[i]['Depart'] + '<br/>' + response.datas[i]['Doctor'] + "</td>" +
                     "<td style='vertical-align:middle;'>" + response.datas[i]['DateTime'] + "</td></tr>";
 
@@ -1031,7 +1057,7 @@ function get_today_selected(reception_id) {
             str += "<tr><td></td><td></td><td rowspan='2' style='vertical-align:middle; text-align:center; font-weight:bold;'>Discount</td>" +
                 '<td><input type="text" autocomplete="off" id="discount_input" class="form-control" style="display:inline; width:2.5vw;" aria-describedby="basic-addon1" value="' + response.datas['discount'] +'"/> %</td>' +
                 '<td id="discount_show" style="text-align:right; padding-right:0.6vw;"></td>';
-            str += "<tr><td></td><td></td><td></td><td style='text-align:right; padding-right:10px;'><input autocomplete='off' style='width:70px;display:inline;' text-align:right; id='discount_amount' class='form-control' value='" + response.datas['discount_amount'] + "'/>VND</td></tr>";
+            str += "<tr><td></td><td></td><td></td><td style='text-align:right; padding-right:10px;'><input autocomplete='off' style='width:70px;display:inline; text-align:right;' id='discount_amount' class='form-control' value='" + response.datas['discount_amount'] + "'/>VND</td></tr>";
 
             
             str += "<tr><td></td><td></td><td style = 'vertical-align:middle; text-align:center; font-weight:bold;' > Add </td > ";
@@ -1285,4 +1311,9 @@ function save_storage() {
 
 }
 
+function download_excel_today() {
+    var url = '/manage/rec_report_excel'
+
+    window.open(url);
+}
 //index.html end

@@ -826,6 +826,8 @@ function earse_inputs() {
     $('#doctor_select option:eq(0)').prop("selected", true);
     $('#patient_nationality option:eq(0)').prop("selected", true);
     $('#patient_gender option:eq(0)').prop("selected", true);
+    $('#patient_mark option:eq(0)').prop("selected", true);
+
     $('input:radio[name=gender]').prop('checked', false);
     
 }
@@ -910,7 +912,8 @@ function save_patient() {
     var phone = $('#patient_phone').val();
     var email = $('#patient_email').val();
     var memo = $('#patient_memo').val();
-      
+    var marking = $("#patient_mark").val();
+
     var past_history = $('#history_past').val();
     var family_history = $('#history_family').val();
 
@@ -945,6 +948,7 @@ function save_patient() {
             'family_history': family_history,
             'email': email,
             'memo': memo,
+            'marking': marking,
 
             'tax_invoice_number': tax_invoice_number,
             'tax_invoice_company_name': tax_invoice_company_name,
@@ -1037,7 +1041,7 @@ function save_recept() {
     var phone = $('#patient_phone').val();
     var email = $('#patient_email').val();
     var memo = $('#patient_memo').val();
-
+    var marking = $('#patient_mark').val();
 
     var past_history = $('#history_past').val();
     var family_history = $('#history_family').val();
@@ -1093,7 +1097,7 @@ function save_recept() {
             'nationality': nationality,
             'email': email,
             'memo':memo,
-
+            'marking': marking,
 
             'tax_invoice_number': tax_invoice_number,
             'tax_invoice_company_name': tax_invoice_company_name,
@@ -1172,6 +1176,7 @@ function set_patient_data(patient_id) {
             $('#patient_nationality').val(response.nationality);
             $('#patient_email').val(response.email);
             $('#patient_memo').val(response.memo);
+            $("#patient_mark").val(response.marking);
             
             $('#history_past').val(response.history_past);
             $('#history_family').val(response.history_family);

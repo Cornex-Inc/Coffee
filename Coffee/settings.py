@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'physical_therapist',
 
     'Manage',
+
+    'KBL',
+
     'bootstrap4',
     'django_summernote',
     # Add your apps here to enable them
@@ -196,3 +199,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'uploads')
 
 
 MEDIA_URL ='/uploads/'
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = 'hyungmo1004@gmail.com'
+EMAIL_HOST_PASSWORD = 'Gudah0827!'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

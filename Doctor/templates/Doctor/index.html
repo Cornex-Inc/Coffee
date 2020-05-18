@@ -80,6 +80,12 @@
             <div style="">
                 <label class="need_something_check" style="margin-right:10px;"><input type="checkbox" id="need_invoice" /><text>{{_('Red Invoice') }}</text></label>
                 <label class="need_something_check"><input type="checkbox" id="need_insurance" /><text>{{_('Insurance') }}</text></label>
+                <select class="form-control" id="patient_mark">
+                    <option value="" selected>--</option>
+                    {% for data in patient_mark %}
+                        <option value="{{ data.commcode }}">{{data.se1}}</option>
+                    {% endfor%}
+                </select>
             </div>
         </div>
         <!--Vital-->
@@ -182,16 +188,18 @@
                 <span class="input-group-addon diagnosis_history_taking_title" id="basic-addon1">{{ _('ICD Code') }}</span>
                 <span>
                         <ul class="icd_ul" style="">
-                            <li style="float:left; width:47%;"><input id="text_icd" class="form-control diagnosis_history_taking_contents" style="width:100%; height:40px;" aria-describedby="basic-addon1"/>
-                        </li>
-                            <li style="float:left; width:6%; height:40px; vertical-align:middle; border-bottom:1px solid #ccc;border-top:1px solid #ccc">
-                            <div style=" text-align:center; width:100%; margin-top:10px;">
-                                <i class="fa fa-lg fa-search"  ></i>
-                            </div>
+                            <li style="float:left; width:47%;">
+                                <input id="text_icd" class="form-control diagnosis_history_taking_contents" style="width:100%; height:40px;" aria-describedby="basic-addon1"/>
+                            </li>
+                                <li style="float:left; width:6%; height:40px; vertical-align:middle; border-bottom:1px solid #ccc;border-top:1px solid #ccc">
+                                    <div style=" text-align:center; width:100%; margin-top:10px;">
+                                        <i class="fa fa-lg fa-search"  ></i>
+                                    </div>
                                 </li>
                             <li style="float:left;  width:47%;">
                                 <input id="search_icd" class="form-control" style="width:100%; height:40px;" aria-describedby="basic-addon1"/>
-                        </li>
+                            </li>
+                        </ul>
                 </span>
                 <input type="hidden" id="icd_code" />
             </div>

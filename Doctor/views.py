@@ -47,6 +47,9 @@ def index(request):
     vital_form = VitalForm()
     receptionsearch_form = SearchReceptionStatusForm()
 
+    patient_mark = COMMCODE.objects.filter(upper_commcode = '000006',commcode_grp = 'PT_INFO',use_yn="Y").values('commcode','se1').order_by('seq')
+
+
     #diagnosis
     reception_form = ReceptionForm()
     diagnosis_form = DiagnosisForm()
@@ -138,6 +141,7 @@ def index(request):
         'Doctor/index_PM.html',
             {
                 'patient':patient_form,
+                'patient_mark':patient_mark,
                 'history':history_form,
                 'vital':vital_form,
                 'receptionsearch':receptionsearch_form,
@@ -207,16 +211,54 @@ def index(request):
     #        })
     
    
+    url = 'Doctor/index.html'
 
-
-    if request.user.doctor.depart.id == 5: #ENT
-        precedure_classes = PrecedureClass.objects.filter( Q(id = 2) | Q(id = 3) | Q(id = 5) | Q(id = 41) ).values()
-    elif request.user.doctor.depart.id == 2: #IM
-        precedure_classes = PrecedureClass.objects.filter( Q(id = 2) | Q(id = 4) | Q(id = 5) | Q(id = 6)|Q(id = 8) | Q(id = 41)| Q(id = 44) ).values()
+    argument_list = [] 
+    #과별 오픈 할 아이템
+    if request.user.doctor.depart.id == 5 or request.user.doctor.depart.id == 2: #ENT / IM
+        argument_list.append(Q(**{'id':2} ))
+        argument_list.append(Q(**{'id':3} ))
+        argument_list.append(Q(**{'id':4} ))
+        argument_list.append(Q(**{'id':5} ))
+        argument_list.append(Q(**{'id':41} ))
+        argument_list.append(Q(**{'id':6} ))
+        argument_list.append(Q(**{'id':8} ))
+        argument_list.append(Q(**{'id':44} ))
+        argument_list.append(Q(**{'id':45} ))
+        argument_list.append(Q(**{'id':46} ))
+           
     elif request.user.doctor.depart.id == 6: #DERM
-        precedure_classes = PrecedureClass.objects.filter(Q(id = 11) | Q(id = 21) | Q(id = 30) | Q(id = 28)|Q(id = 27) |  Q(id = 23) | Q(id = 43) |Q(id = 14)).values().order_by('name')
-    elif request.user.doctor.depart.id == 4: #PS
-        precedure_classes = PrecedureClass.objects.filter( (Q(id__gte = 31) & Q(id__lte = 40)) | Q(id = 42)).values()
+        argument_list.append(Q(**{'id':2} ))
+        argument_list.append(Q(**{'id':3} ))
+        argument_list.append(Q(**{'id':4} ))
+        argument_list.append(Q(**{'id':5} ))
+        argument_list.append(Q(**{'id':41} ))
+        argument_list.append(Q(**{'id':6} ))
+        argument_list.append(Q(**{'id':8} ))
+        argument_list.append(Q(**{'id':44} ))
+        argument_list.append(Q(**{'id':11} ))
+        argument_list.append(Q(**{'id':21} ))
+        argument_list.append(Q(**{'id':30} ))
+        argument_list.append(Q(**{'id':28} ))
+        argument_list.append(Q(**{'id':27} ))
+        argument_list.append(Q(**{'id':23} ))
+        argument_list.append(Q(**{'id':43} ))
+        argument_list.append(Q(**{'id':14} ))
+        argument_list.append(Q(**{'id':46} ))
+
+        url = 'Doctor/index_DERM.html'
+
+    elif request.user.doctor.depart.id == 4: #PS 
+        argument_list.append(Q(**{'id__gte':31} ))
+        argument_list.append(Q(**{'id__lte':40} ))
+        argument_list.append(Q(**{'id':42} ))
+
+        url = 'Doctor/index_DERM.html'
+
+
+
+    if len(argument_list) != 0:
+        precedure_classes = PrecedureClass.objects.filter( functools.reduce(operator.or_, argument_list) ).values()
     else:
         precedure_classes=PrecedureClass.objects.all().exclude(id=10).values()
     
@@ -435,12 +477,11 @@ def index(request):
         bundle_set.update({ upper['upper'] : temp})
     
 
-        
-
     return render(request,
-        'Doctor/index.html',
+        url,#'Doctor/index.html',
             {
                 'patient':patient_form,
+                'patient_mark':patient_mark,
                 'history':history_form,
                 'vital':vital_form,
                 'receptionsearch':receptionsearch_form,
@@ -621,7 +662,7 @@ def reception_select(request):
 
     reception = Reception.objects.get(pk = reception_id)
     patient = Patient.objects.get(pk=reception.patient_id)
-    history = History.objects.get(patient = patient)
+
 
 
     context = {
@@ -635,12 +676,24 @@ def reception_select(request):
         'phone':patient.phone,
         'address':patient.address,
         'chief_complaint':reception.chief_complaint,
-        'history_past':history.past_history,
-        'history_family':history.family_history,
+        'marking':patient.marking,
+
         'need_medical_report':reception.need_medical_report,
         'need_invoice':reception.need_invoice,
         'need_insurance':reception.need_insurance,
         }
+
+    try: 
+        history = History.objects.get(patient = patient)
+        context.update({
+            'history_past':history.past_history,
+            'history_family':history.family_history,
+            })
+
+    except History.DoesNotExist:
+        history = None;
+
+
 
     try:
         diagnosis = Diagnosis.objects.get(reception = reception)
@@ -772,6 +825,8 @@ def diagnosis_save(request):
     diagnosis_result.ICD_code = request.POST.get('icd_code')
     diagnosis_result.recommendation = request.POST.get('recommendation')
     
+    diagnosis_result.posi_text =request.POST.get('img_check_list','')
+
     diagnosis_result.save()
     #payment begin check
     try:
@@ -1130,8 +1185,10 @@ def get_diagnosis(request):
             'precedures':precedures,
             'medicines':medicines,
             'chief_complaint':'' if reception.chief_complaint is None else reception.chief_complaint,
-        }
 
+            'img_check_list':diagnosis.posi_text,
+        }
+        print(diagnosis.posi_text)
     
     except Diagnosis.DoesNotExist:
         pass

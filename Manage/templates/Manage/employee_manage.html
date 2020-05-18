@@ -226,6 +226,7 @@
     </div>
 </div>
 
+
 <!-- Resignation -->
 <div id="edit_database_resignation" class="modal fade">
     <div class="modal-dialog" style="width:500px;">
@@ -258,7 +259,7 @@
                 </div>
                 <div class="modal-footer">
                     <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
-                    <a class="btn btn-primary" id="delete_database_ok">{{ _('Save') }}</a>
+                    <a class="btn btn-primary" id="delete_database_ok" onclick="delete_user()">{{ _('Save') }}</a>
                 </div>
 
             </div>
@@ -300,7 +301,7 @@
                 </div>
                 <div class="modal-footer">
                     <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
-                    <a class="btn btn-primary" id="password_database_ok">{{ _('Save') }}</a>
+                    <a class="btn btn-primary" id="password_database_ok" onclick="change_password()">{{ _('Save') }}</a>
                 </div>
 
             </div>

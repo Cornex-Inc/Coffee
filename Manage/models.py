@@ -8,6 +8,13 @@ import os
 # Create your models here.
 
 class Board_Contents(models.Model):
+    #KBL??
+    is_KBL = models.CharField(
+        max_length = 2,
+        default ='N',
+        )
+
+
     #보드 종류
     board_type = models.CharField(
         max_length = 8,
@@ -160,6 +167,12 @@ class Board_Comment(models.Model):
 
 
 class Board_File(models.Model):
+    #KBL??
+    is_KBL = models.CharField(
+        max_length = 2,
+        default ='N',
+        )
+
     #보드 아이디 논리 연결
     board_id = models.CharField(
         max_length = 8,
@@ -192,6 +205,37 @@ class Board_File(models.Model):
         default = None,
         )
 
+
+    #게시판 구분
+    board_type = models.CharField(
+        max_length = 64,
+        default = ''
+        )
+
+    #게시판 구분
+    board_type = models.CharField(
+        max_length = 64,
+        default = ''
+        )
+
+    #등록자
+    user = models.CharField(
+        max_length = 64,
+        default = ''
+        )
+
+    #등록 메모
+    title = models.CharField(
+        max_length = 128,
+        default = ''
+        )
+
+    #등록 메모
+    memo = models.CharField(
+        max_length = 128,
+        default = ''
+        )
+
 class Board_View_Log(models.Model):
     
     #보드 아이디 논리 연결
@@ -216,6 +260,13 @@ class Board_View_Log(models.Model):
 
 class Draft(models.Model):
 
+
+    #KBL??
+    is_KBL = models.CharField(
+        max_length = 2,
+        default ='N',
+        )
+
     #상태
     status = models.CharField(
         max_length = 8,
@@ -231,7 +282,13 @@ class Draft(models.Model):
         max_length = 8,
         default ='',
         )
-    #작성자 - FK 논리
+    #작성자
+    request_user = models.CharField(
+        max_length = 64,
+        default ='',
+        )
+
+    #실제 작성자 - FK 논리
     creator = models.CharField(
         max_length = 8,
         default ='',
@@ -250,15 +307,20 @@ class Draft(models.Model):
     contents = models.TextField(
         default ='',
         )
+    #협의 부서
+    consultation = models.CharField(
+        max_length = 256,
+        default ='',
+        )
     #추가의견
     additional = models.CharField(
         max_length = 256,
-        null=True
+        default ='',
         )
     #마지막 수정자  - FK 논리
     modifier = models.CharField(
         max_length = 8,
-        null=True
+        default ='',
         )
 
     #마지막 수정 일 / 신청일
@@ -272,21 +334,196 @@ class Draft(models.Model):
         max_length = 20,
         default='0000-00-00 00:00:00'
         )
+    #결재 / 담당 / 사용자 아이디 논리 FK
+    user_id_in_charge  = models.CharField(
+        max_length = 32,
+        default='',
+        )
+    #결재 / 담당 / 사용자 이름 영어
+    name_en_in_charge  = models.CharField(
+        max_length = 32,
+        default='',
+        )
+    #결재 / 담당 / 사용자 이름 한글
+    name_ko_in_charge  = models.CharField(
+        max_length = 32,
+        default='',
+        )
+    #결재 / 담당 / 사용자 이름 베트남
+    name_vi_in_charge  = models.CharField(
+        max_length = 32,
+        default='',
+        )
+
+
     #결재 / 팀장
     date_leader = models.CharField(
         max_length = 20,
         default='0000-00-00 00:00:00'
         )
+
+    #결재 / 팀장 / 사용자 아이디 논리 FK
+    user_id_leader  = models.CharField(
+        max_length = 32,
+        default='',
+        )
+    #결재 / 팀장 / 사용자 이름 영어
+    name_en_leader  = models.CharField(
+        max_length = 32,
+        default='',
+        )
+    #결재 / 팀장 / 사용자 이름 한글
+    name_ko_leader  = models.CharField(
+        max_length = 32,
+        default='',
+        )
+    #결재 / 팀장 / 사용자 이름 베트남
+    name_vi_leader  = models.CharField(
+        max_length = 32,
+        default='',
+        )
+
+
     #결재 / 회계
     date_accounting = models.CharField(
         max_length = 20,
         default='0000-00-00 00:00:00'
         )
+
+    #결재 / 회계 / 사용자 아이디 논리 FK
+    user_id_accounting  = models.CharField(
+        max_length = 32,
+        default='',
+        )
+    #결재 / 회계 / 사용자 이름 영어
+    name_en_accounting  = models.CharField(
+        max_length = 32,
+        default='',
+        )
+    #결재 / 회계 / 사용자 이름 한글
+    name_ko_accounting  = models.CharField(
+        max_length = 32,
+        default='',
+        )
+    #결재 / 회계 / 사용자 이름 베트남
+    name_vi_accounting  = models.CharField(
+        max_length = 32,
+        default='',
+        )
+
+
     #결재 / 대표
     date_ceo = models.CharField(
         max_length = 20,
         default='0000-00-00 00:00:00'
         )
+    #결재 / 대표 / 사용자 아이디 논리 FK
+    user_id_ceo  = models.CharField(
+        max_length = 32,
+        default='',
+        )
+    #결재 / 대표 / 사용자 이름 영어
+    name_en_ceo  = models.CharField(
+        max_length = 32,
+        default='',
+        )
+    #결재 / 대표 / 사용자 이름 한글
+    name_ko_ceo  = models.CharField(
+        max_length = 32,
+        default='',
+        )
+    #결재 / 대표 / 사용자 이름 베트남
+    name_vi_ceo  = models.CharField(
+        max_length = 32,
+        default='',
+        )
+
+
+
+
+    #삭제 유무
+    use_yn = models.CharField(
+        max_length = 2,
+        default = 'Y',
+        )
+
+
+
+
+
+class sms_history(models.Model):
+
+    #KBL??
+    is_KBL = models.CharField(
+        max_length = 2,
+        default ='N',
+        )
+
+
+
+
+    #구분 - 자동 / 수동
+    type = models.CharField(
+        max_length =12,
+        default='',
+        )
+
+
+    #회사명
+    company_name = models.CharField(
+        max_length =32,
+        default='',
+        )
+
+    #발송자
+    sender = models.CharField(
+        max_length =32,
+        default='',
+        )
+
+    #받는 사람
+    receiver = models.CharField(
+        max_length =32,
+        default='',
+        )
+
+    #보낸 번호
+    phone = models.CharField(
+        max_length =16,
+        default='',
+        )
+
+    #내용
+    contents = models.CharField(
+        max_length =80,
+        default='',
+        )
+
+
+    status = models.CharField(
+        max_length =8,
+        default = '2',
+        )
+
+    #응답 코드
+    res_code = models.CharField(
+        max_length =16,
+        default='',
+        )
+
+    #최초 작성 일자
+    date_of_registered = models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+
+    #서버 응답 시간
+    date_of_recieved =  models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+
+
 
 
 

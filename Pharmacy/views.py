@@ -71,12 +71,36 @@ def waiting_list(request):
     date_start = request.POST.get('start_date')
     date_end = request.POST.get('end_date')
 
+    
+    filter = request.POST.get('filter','')
+    string = request.POST.get('string','')
+
+
+
+    argument_list = [] 
+
     kwargs={}
+    if filter == '':
+        argument_list.append(Q(**{'diagnosis__reception__patient__name_kor__icontains':string} ))
+        argument_list.append(Q(**{'diagnosis__reception__patient__name_eng__icontains':string} ))
+        argument_list.append(Q(**{'diagnosis__reception__patient__id__icontains':string} ))
+    elif filter =='name':
+        argument_list.append(Q(**{'diagnosis__reception__patient__name_kor__icontains':string} ))
+        argument_list.append(Q(**{'diagnosis__reception__patient__name_eng__icontains':string} ))
+    elif filter =='chart':
+        argument_list.append(Q(**{'diagnosis__reception__patient__id__icontains':string} ))
+
 
     date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
     date_max = datetime.datetime.combine(datetime.datetime.strptime(date_end, "%Y-%m-%d").date(), datetime.time.max)
 
-    medicine_manages = MedicineManage.objects.filter(date_ordered__range = (date_min, date_max),**kwargs).order_by('date_ordered')
+
+    medicine_manages = MedicineManage.objects.select_related('diagnosis__reception__patient').filter(
+        functools.reduce(operator.or_, argument_list),
+        **kwargs,
+        date_ordered__range = (date_min, date_max),
+        
+        ).order_by('date_ordered')
  
     datas=[]
     today = datetime.date.today()
@@ -94,6 +118,8 @@ def waiting_list(request):
             'Depart':medicine_manage.diagnosis.reception.depart.name + '( ' + medicine_manage.diagnosis.reception.doctor.name_kor +')',
             #'DateTime':medicine_manage.date_ordered.strftime('%Y-%m-%d %H:%M:%S'),
             'status':medicine_manage.progress,
+            'ordered':'' if medicine_manage.date_ordered is None else medicine_manage.date_ordered.strftime("%Y-%m-%d %H:%M"),
+            'received':'' if medicine_manage.date_received is None else medicine_manage.date_received.strftime("%Y-%m-%d %H:%M"),
             })
         datas.append(data)
 
@@ -104,11 +130,13 @@ def waiting_list(request):
 
 def save(request):
     diagnosis_id = request.POST.get('diagnosis_id')
-    status = request.POST.get('status')
+    status = request.POST.get('status',None)
 
     medicinmanage = MedicineManage.objects.get(diagnosis_id = diagnosis_id)
     if status == 'done':
         medicine_set = MedicineManager.objects.filter(diagnosis_id = diagnosis_id)
+
+        medicinmanage.date_received = datetime.datetime.now()
 
         for data in medicine_set:
             log = MedicineLog(

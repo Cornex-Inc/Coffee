@@ -39,3 +39,9 @@
 .btn_reservation_delete{
     float:left;
 }
+
+.fc-title {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}

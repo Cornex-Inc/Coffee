@@ -6,12 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
-
-
     <title>I-MEDICARE </title>
-
-
 
     <script src="{% static 'js/jquery.min.js'%}"></script>
     <script src="{% static 'js/jquery-ui.min.js' %}"></script>
@@ -95,7 +90,8 @@
                         <li {% if url_name == 'reception_index' %}class="active"{% endif %}><a href="{% url 'Receptionist:reception_index' %}" >{{ _('Registration') }}</a></li>
                         <li {% if url_name == 'storage_page' %}class="active"{% endif %}><a href="{% url 'Receptionist:storage_page'%}">{{ _('Payment') }}</a></li>
                         <li {% if url_name == 'reservation' %}class="active"{% endif %}><a href="{% url 'Receptionist:reservation'%}">{{ _('Reservation') }}</a></li>
-                        <li {% if url_name == 'reservation' %}class="active"{% endif %}><a href="{% url 'Receptionist:Documents'%}">{{ _('Documents') }}</a></li>
+                        <li {% if url_name == 'Documents' %}class="active"{% endif %}><a href="{% url 'Receptionist:Documents'%}">{{ _('Documents') }}</a></li>
+                    <li {% if url_name == 'pharmacy_index' %}class="active"{% endif %}><a href="{% url 'Pharmacy:pharmacy_index'%}">{{ _('Pharmacy') }}</a></li>
                     {% elif user.is_doctor %}
                         <li {% if url_name == 'index' %}class="active"{% endif %}><a href="{% url 'Doctor:index'%}">
                             <span style="margin-right:5px;color:blue;">{{ user.doctor.depart.name }} </span> Dr.{{user.doctor.name_short }}</a>
@@ -107,6 +103,8 @@
                         {% if user.doctor.depart.id == 7%}
                             <li {% if url_name == 'audit' %}class="active"{% endif %}><a href="{% url 'Doctor:audit'%}">{{ _('Audit') }}</a></li>
                         {% endif %}
+                    <li {% if url_name == 'reservation' %}class="active"{% endif %}><a href="{% url 'Receptionist:Documents'%}">{{ _('Documents') }}</a></li>
+                    <li {% if url_name == 'pharmacy_index' %}class="active"{% endif %}><a href="{% url 'Pharmacy:pharmacy_index'%}">{{ _('Pharmacy') }}</a></li>
                     {% elif user.is_pharmacy %}
                         <li {% if url_name == 'pharmacy_index' %}class="active"{% endif %}><a href="{% url 'Pharmacy:pharmacy_index'%}">{{ _('Pharmacy') }}</a></li>
                         <li {% if url_name == 'inventory' %}class="active"{% endif %}><a href="{% url 'Pharmacy:inventory'%}">{{ _('Inventory') }}</a></li>
@@ -118,31 +116,65 @@
                     {% elif user.is_nurse %}
                         <li {% if url_name == 'inventory_medical_tool' %}class="active"{% endif %}><a href="{% url 'Manage:inventory_medical_tool'%}">{{ _('Consumable Management') }}</a></li>
                     {% elif user.is_admin %}
-                    <li {% if url_name == 'manage' %}class="active"{% endif %}><a href="{% url 'Manage:manage'%}">{{ _('REVENUE TOTAL') }}</a></li>
-                    <li {% if url_name == 'inventory_test' %}class="active"{% endif %}><a href="{% url 'Manage:inventory_test'%}">{{ _('Tests') }}</a></li>
-                    <li {% if url_name == 'inventory_precedure' %}class="active"{% endif %}><a href="{% url 'Manage:inventory_precedure'%}">{{ _('Procedures') }}</a></li>
-                    <li {% if url_name == 'inventory' %}class="active"{% endif %}><a href="{% url 'Pharmacy:inventory'%}">{{ _('Medicines') }}</a></li>
+                    <li><a href="" data-toggle="dropdown" >{{ _('Statistics') }}<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="{% url 'Manage:manage'%}">{{ _('Revenue Status') }}</a></li>
+                          <li><a href="{% url 'Manage:statistics_test'%}">{{ _('Tests Statistics') }}</a></li>
+                          <li><a href="{% url 'Manage:statistics_procedure'%}">{{ _('Procedures Statistics') }}</a></li>
+                          <li><a href="{% url 'Manage:statistics_medicine'%}">{{ _('Medicines Statistics') }}</a></li>
+                          <li><a href="{% url 'Manage:statistics_depart'%}">{{ _('Depart Statistics') }}</a></li>
+                          <li><a href="{% url 'Manage:statistics_customer_info'%}">{{ _('Customer Info Statistics') }}</a></li>
+                          <li><a href="{% url 'Manage:statistics_daily'%}">{{ _('Daily Statistics') }}</a></li>
+                          <li><a href="{% url 'Manage:statistics_ymw'%}">{{ _('Yearly, Monthly, Weekly Statistics') }}</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="" data-toggle="dropdown" >{{ _('Service & Inventory') }}<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="{% url 'Manage:inventory_test'%}" >{{ _('Tests') }}</a>
+                          <li><a href="{% url 'Manage:inventory_precedure'%}">{{ _('Procedures') }}</a></li>
+                          <li><a href="{% url 'Pharmacy:inventory'%}">{{ _('Medicines') }}</a></li>
+                          <li><a href="{% url 'Manage:inventory_medical_tool'%}">{{ _('Expendables') }}</a></li>
+                        </ul>
+                    </li>
+
+
                     <li {% if url_name == 'Documents' %}class="active"{% endif %}><a href="{% url 'Receptionist:Documents'%}">{{ _('Documents') }}</a></li>
-                    <li {% if url_name == 'inventory_medical_tool' %}class="active"{% endif %}><a href="{% url 'Manage:inventory_medical_tool'%}">{{ _('Inventory') }}</a></li>
+
+                    
+                    
                     <li {% if url_name == 'manage_employee' %}class="active"{% endif %}><a href="{% url 'Manage:manage_employee'%}">{{ _('Employee Mgt') }}</a></li>
-                    <li {% if url_name == 'board_list' %}class="active"{% endif %}><a href="{% url 'Manage:board_list'%}">{{ _('Board') }}</a></li>
-                    <li {% if url_name == 'board_work_list' %}class="active"{% endif %}><a href="{% url 'Manage:board_work_list'%}">{{ _('Co-Work Board') }}</a></li>
+
                     <li {% if url_name == 'customer_manage' %}class="active"{% endif %}><a href="{% url 'Manage:customer_manage'%}">{{ _('Customer Mgt') }}</a></li>
+
+                    <li {% if url_name == 'sms_history_index' %}class="active"{% endif %}><a href="{% url 'Manage:sms_history_index'%}">{{ _('SMS History') }}</a></li>
+
                         <!--<li><a href="#DOCTOR_PROFIT">DOCTORS PROFIT</a></li>
                         <li><a href="#MEDICINE_TOTAL">MEDICINE</a></li>-->
                     {% elif user.is_physical_therapist %}
 
                         <li {% if url_name == 'physical_therapist_index' %}class="active"{% endif %}><a href="{% url 'physical_therapist:index'%}">{{ _('Physical Therapist') }}</a></li>
                     
+                    {% endif %}
+                    
+                    <!--게시판-->
+                    {% if user.is_authenticated %}
+                    <li {% if url_name == 'draft' %}class="active"{% endif %}><a href="{% url 'Manage:draft'%}">{{ _('Drafts') }}</a></li>
+                    <li><a href="" data-toggle="dropdown" >{{ _('Board') }}<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="{% url 'Manage:board_list'%}">{{ _('Notice Board') }}</a></li>
+                          <li><a href="{% url 'Manage:board_work_list'%}">{{ _('Co-Work Board') }}</a></li>
+                        </ul>
+                    </li>
+                            
                     
                     {% endif %}
-
+                    
 
                     {% endwith %}
                 </ul>
                 
                 {% include 'app/loginpartial.html' %}
-                <ul class="language_ul nav navbar-nav navbar-right" style="margin-right:30px;">
+                <ul class="nav navbar-nav navbar-right" id="language_ul">
                     <li><a href="" onclick="set_lang('vie')"><image src="{% static 'img/vie.png' %}" style='height:30px;' /></a></li>
                     <li><a href="" onclick="set_lang('ko')"><image src="{% static 'img/ko.png' %} " style='height:26px;'/></a></li>
                     <li><a href="" onclick="set_lang('en')"><image src="{% static 'img/en.png' %} " style='height:26px;'/></a></li>

@@ -413,6 +413,14 @@
 }
 
 
+#patient_mark {
+    padding: 3px;
+    float: right;
+    width: 50px;
+    margin-right: 5px;
+}
+
+
 
     @media ( min-width: 1900px ) {
         .diagnosis_select_contents {

@@ -18,8 +18,10 @@ urlpatterns = [
     path('search_patient/',views.search_patient,name='search_patient'),
     path('search_medicine/',views.search_medicine,name='search_medicine'),
 
+    #엑셀 다운로드
     path('audit_excel/',views.audit_excel),
-    #path('Rec_excel/',views.audit_excel),
+    path('rec_report_excel/',views.rec_report_excel),
+    path('cumstomer_management_excel/',views.cumstomer_management_excel),
 
 
     #검사 아이템
@@ -52,6 +54,24 @@ urlpatterns = [
 
     #기안서
     path('draft/',views.draft,name='draft'),
+    path('draft/search/',views.draft_search),
+    path('draft/get_data/',views.draft_get_data),
+    path('draft/get_form/',views.draft_get_form),
+
+    path('draft/save/',views.draft_save),
+    path('draft/delete/',views.draft_delete),
+   
+    path('draft/list_file/',views.draft_list_file),
+    path('draft/get_file/',views.draft_get_file),
+    path('draft/save_file/',views.draft_save_file),
+    path('draft/delete_file/',views.draft_delete_file),
+
+    path('draft/check_appraove/',views.check_appraove),
+
+
+
+    #기안서 출력
+    path('draft/print/<int:id>/',views.draft_print),
 
 
     #고객 관리
@@ -59,6 +79,7 @@ urlpatterns = [
     path('customer_manage_get_patient_list/',views.customer_manage_get_patient_list),
     path('customer_manage_get_patient_info/',views.customer_manage_get_patient_info),
     path('customer_manage_get_patient_visit/',views.customer_manage_get_patient_visit),
+    path('customer_manage_get_patient_visit_history/',views.customer_manage_get_patient_visit_history ),
     path('customer_manage_get_patient_sms_info/',views.customer_manage_get_patient_sms_info),
 
 
@@ -93,5 +114,50 @@ urlpatterns = [
     path('board_work/edit/<int:id>/',views.board_work_create_edit,name='board_work_create_edit'),
 
     path('board_work/comment/add',views.board_work_comment_add,name='board_comment_new'),
+
+
+
+
+    #SMS 
+    path('sms/send_sms/',views.sms_send_sms), #내용 전달
+    path('sms/recv_result/',views.sms_recv_result), # 응답
+     
+    #SMS History
+    path('sms/history/',views.sms_history_index,name='sms_history_index'), 
+    path('sms/history/search/',views.sms_history_search), 
+    path('sms/history/get/',views.sms_history_get), 
+    
+
+    #통계
+    ##검사
+    path('statistics/test/',views.statistics_test,name='statistics_test'),
+    path('statistics/procedure/',views.statistics_procedure,name='statistics_procedure'), 
+    path('statistics/medicine/',views.statistics_medicine,name='statistics_medicine'), 
+    path('statistics/search/',views.statistics_search),
+
+   
+    path('statistics/depart/',views.statistics_depart,name='statistics_depart'), 
+
+    path('statistics/customer_info/',views.statistics_customer_info,name='statistics_customer_info'), 
+    path('statistics/search_customer_info/',views.search_customer_info),
+
+    path('statistics/ymw/',views.statistics_ymw,name='statistics_ymw'),  #ymw > year Month Week
+    path('statistics/search_ymw/',views.search_ymw),
+
+    path('statistics/daily/',views.statistics_daily,name="statistics_daily"),
+    path('statistics/search_daily/',views.search_daily),
+
+
+
+    #코드관리
+    path('code_setting/',views.code_setting,name="code_setting"),
+    path('code_search/',views.code_search),
+
+    path('code_save/',views.code_save),
+    path('code_get/',views.code_get),
+    path('code_delete/',views.code_delete),
+
+    #path('test/',views.test), 
+    #path('test/get_res_table/',views.get_res_table),
 
 ]

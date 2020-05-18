@@ -474,6 +474,17 @@
 }
 
 
+.patient_mark_div {
+    width: 50px;
+}
+
+#patient_mark {
+    padding: 3px;
+    border-radius:0px 4px 4px 0px;
+    border-left:none;
+
+}
+
 
 
 @media ( min-width: 1900px ) {

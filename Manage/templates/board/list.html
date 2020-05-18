@@ -86,7 +86,7 @@
             {% for file in content.list_file %}
             <li>
                 <i class="fa fa-file"></i>
-                <a href="{{ file.file_name}}" download> {{ file.origin_name }}</a>
+                <a href="{{ file.file_name}}" download="{{ file.origin_name }}"> {{ file.origin_name }}</a>
             </li>
 
             {% endfor %}

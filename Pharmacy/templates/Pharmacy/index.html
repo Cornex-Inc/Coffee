@@ -11,23 +11,24 @@
         <div class="pharmacy_list partition">
             <div class="medicine_table_title">
                 <span class="btn btn-danger medicine_table_title_span" >{{ _('Patient List') }}</span>
-            </div>
-            <div class="pharmacy_list_control">
-                {{ _('Date') }} : 
-                <input id="pharmacy_list_calendar_start" class="form-control pharmacy_list_calendar" />
-                ~
-                <input id="pharmacy_list_calendar_end" class="form-control pharmacy_list_calendar" />
-                <select name="filter" id="pharmacy_search_select" class="form-control costom-select pharmacy_search_select" aria-describedby="basic-addon1">
-                    <option value="name">{{ _('Name') }}</option>
-                    <option value="Chart">{{ _('Chart') }}</option>
-                    <option value="Doctor">{{ _('Doctor') }}</option>
-                </select>
-                {{waiting_search.search_input}}
-                <input type="button" id="pharmacy_list_search" class="btn btn-default" value="{{ _('Search') }}" onclick="waiting_list()"/>
-                <br />
+            
+                <div class="pharmacy_list_control" style="display:inline; float:right;">
+                    {{ _('Date') }} : 
+                    <input id="pharmacy_list_calendar_start" class="form-control pharmacy_list_calendar" />
+                    ~
+                    <input id="pharmacy_list_calendar_end" class="form-control pharmacy_list_calendar" />
+                    <select name="filter" id="pharmacy_search_select" class="form-control costom-select pharmacy_search_select" aria-describedby="basic-addon1">
+                        <option value="">{{ _('All') }}</option>
+                        <option value="name">{{ _('Name') }}</option>
+                        <option value="chart">{{ _('Chart') }}</option>
+                    </select>
+                    {{waiting_search.search_input}}
+                    <input type="button" id="pharmacy_list_search" class="btn btn-default" value="{{ _('Search') }}" onclick="waiting_list()"/>
+                    <br />
 
+                </div>
             </div>
-            <div class="pharmacy_list_table_wrap">
+            <div class="pharmacy_list_table_wrap" style="margin-top:15px;">
                 <table class="table table-hover pharmacy_list_table table-striped table-bordered" id="pharmacy_list_table">
                     <thead>
                         <tr>
@@ -36,6 +37,8 @@
                             <th>{{ _('Name') }}</th>
                             <th>{{ _('Date of Birth') }}</th>
                             <th>{{ _('Depart') }}</th>
+                            <th>{{ _('Order Date') }}</th>
+                            <th>{{ _('Completed Date') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,13 +55,15 @@
                 <span class="show_patient_selected" id="show_patient_selected"></span>
 
                 <div style="display:inline;">
+                    &emsp;&emsp;
                     <label class="need_something_check" style="margin-right:10px;"><input type="checkbox" id="need_invoice" /><text>{{_('Red Invoice') }}</text></label>
                     <label class="need_something_check"><input type="checkbox" id="need_insurance" /><text>{{_('Insurance') }}</text></label>
                 </div>
 
                 <div style="float:right; display:inline;">
-                    <input type="button" class="btn btn-dark" id="pharmacy_control_cancel" value="{{ _('Cancel') }}"/>
-                    <input type ="button" class="btn btn-danger" value="{{ _('Done') }}" onclick="pharmacy_control_save(true)"/>
+                    <input type="button" class="btn btn-default" id="pharmacy_control_cancel" value="{{ _('Cancel') }}"/>
+                    <input type="button" class="btn btn-warning" id="pharmacy_control_cancel" value="{{ _('Pending') }}" onclick="pharmacy_control_save(false)"/>
+                    <input type="button" class="btn btn-danger" value="{{ _('Done') }}" onclick="pharmacy_control_save(true)"/>
                 </div>
             </div>
             <input type="hidden" id="selected_diagnosis"/>

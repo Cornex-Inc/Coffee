@@ -1,0 +1,222 @@
+
+
+
+.background_grid {
+    margin: 0 auto;
+    height: 650px;
+    width: 100%;
+    display: grid;
+}
+
+.partition {
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: rgba(180, 180, 180, 0.15);
+    border: 3.7px solid white;
+    overflow: hidden;
+}
+
+
+.title_span {
+    margin-bottom: 15px;
+    font-size: 15px;
+    height: 30px;
+    padding-top: 1px;
+    background: rgb(90,64,129);
+    border-color: rgb(90,64,129);
+}
+
+    .title_span:hover {
+        background: rgb(90,64,129);
+        border-color: rgb(90,64,129);
+    }
+
+.customer_list {
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+.customer_info {
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+
+.patient_list_table_wrap {
+    height: 550px;
+}
+
+
+.depart_select {
+    width: 115px;
+    display: inline-table;
+}
+
+    .depart_select span, .depart_select select {
+        padding: 5px;
+    }
+
+
+#document_search {
+    width: 110px;
+    display: inline;
+}
+
+.search_control_div {
+    text-align: right;
+    float: right;
+    width:800px;
+    margin-bottom:10px;
+}
+
+    .search_control_div > input{
+        display:inline;
+    }
+
+#estimate_search{
+    width:150px;
+}
+
+.date_input {
+    width: 100px;
+}
+#file_list_table{
+    table-layout:fixed;
+}
+    #file_list_table th, #file_list_table td{
+        vertical-align:middle;
+        text-align:center;
+    }
+    #file_list_table td {
+        height:44px;
+    }
+    #file_list_table th:nth-child(1) {width: 60px;}
+    #file_list_table th:nth-child(2){width:130px;}
+    #file_list_table th:nth-child(3){}
+    #file_list_table th:nth-child(4){width:120px;}
+    #file_list_table th:nth-child(5){width:90px;}
+    #file_list_table th:nth-child(6){width:50px;}
+    #file_list_table th:nth-child(7){width:85px;}
+
+
+    .nav-tabs > li.active > a,
+    .nav-tabs > li.active > a:hover,
+    .nav-tabs > li.active > a:focus {
+        color: #fff;
+        cursor: default;
+        background-color: rgb(90,64,129);
+        border: 1px solid rgb(90,64,129);
+        border-bottom-color: transparent;
+    }
+
+.nav-tabs > li > a {
+    background-color: #eee;
+    height: 30px;
+    padding: 5px;
+}
+
+.tab-pane {
+    margin-bottom: 10px;
+    height: 600px;
+    border: 1.4px solid rgb(90,64,129);
+    padding: 10px;
+}
+.half {
+    width: 49%;
+}
+
+.half-fl {
+    width: 49%;
+    float: left;
+}
+
+.half-fr {
+    width: 49%;
+    float: right;
+}
+
+    .tab-pane .input-group {
+        margin-bottom: 10px;
+
+    }
+
+
+    .tab-pane .input-group-addon {
+        width: 135px;
+    }
+
+
+
+
+#modalBody .input-group {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+    #modalBody .input-group:last-child {
+        margin-bottom: 0;
+    }
+
+
+#modalBody .input-group-addon {
+    width: 100px;
+}
+
+#modalBody textarea {
+    resize: none;
+    height: 100px;
+}
+
+#id_file {
+    display: none;
+}
+
+#btn_file {
+    height: 30px;
+    border-radius: 0px 4px 4px 0px;
+    border-left: none;
+}
+
+@media ( min-width: 1900px ) {
+}
+
+
+
+
+
+#overlay {
+    position: fixed;
+    top: 0;
+    z-index: 5555;
+    width: 100%;
+    height: 100%;
+    display: none;
+    background: rgba(0,0,0,0.6);
+}
+
+.cv-spinner {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px #ddd solid;
+    border-top: 4px #2e93e6 solid;
+    border-radius: 50%;
+    animation: sp-anime 0.8s infinite linear;
+}
+
+@keyframes sp-anime {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.is-hide {
+    display: none;
+}

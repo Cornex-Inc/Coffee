@@ -1,0 +1,138 @@
+{% extends "app/layout_KBL.html" %}
+
+{% load staticfiles %}
+{% block content %}
+
+{% csrf_token %}
+    <div class="background_grid">
+        <div class="customer_list partition">
+            <div style="width:1200px; margin:0 auto">
+                <div class="status_table_title">
+                    <span class="btn btn-danger title_span">{{ _('Document Management') }}</span>
+            
+                    <div class="search_control_div">
+                        <div class="input-group depart_select">
+                            <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Type') }}</span>
+                            <select id="document_type" class="form-control costom-select " aria-describedby="basic-addon1" >
+                                <option value="" selected="">{{ _('ALL') }}</option>          
+                            </select>
+                        </div>
+                        <div class="input-group depart_select">
+                            <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Status') }}</span>
+                            <select id="document_in_charge" class="form-control costom-select " aria-describedby="basic-addon1" >
+                                <option value="" selected="">{{ _('ALL') }}</option>          
+                            </select>
+                        </div>
+                        <input type="text" id="document_search" class="form-control"/>
+                        <input type="button" id="document_search_btn" class="btn btn-default" value="{{ _('Search') }}" style="display:inline;"/>
+                    </div>
+                </div>
+               
+                <div class="patient_list_table_wrap">
+                    <table class="table table-bordered table-hover table-striped" id="file_list_table">
+                        <thead>
+                            <tr>
+                                <th>{{ _('No') }}</th>
+                                <th>{{ _('Type') }}</th>
+                                <th>{{ _('Document Name') }}</th>
+                                <!--<th>{{ _('Depart') }}</th>-->
+                                <th>{{ _('Written By') }}</th>
+                                <th>{{ _('Date') }}</th>
+                                <th>{{ _('File') }}</th>
+                                <th>{{ _('Manage') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                    <ul class="pagination" id="table_pagnation">
+
+                    </ul>
+                    <button class="btn btn-primary" style="float:right" onclick="file_add_modal()">+ {{ _('Register') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<!-- File -->
+<form enctype="multipart/form-data" id="id_ajax_upload_form" method="POST" novalidate="">
+
+    <!-- File Add Edit-->
+    <div id="new_edit_file" class="modal fade">
+        <div class="modal-dialog" style="width:600px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                    <h4 id="password_database_header">{{ _('New File') }}</h4>
+                    <div id="modalBody" class="modal-body">
+                    
+                            <input type="hidden" name="selected_file_id" id="selected_file_id" value="" />
+                            <input type="hidden" value="" id="board_type" name="board_type"/>
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1">{{ _('Document Name') }}</span>
+                                <input id="new_edit_file_name" name="new_edit_file_name" class="form-control"/>
+                            </div>
+
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1">{{ _('Remark') }}</span>
+                                <input id="new_edit_file_remark" name="new_edit_file_remark" class="form-control"/>
+                            </div>
+
+                    
+                        
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1">{{ _('File') }}</span>
+                                <input type="text" id="new_edit_file_filename" class="form-control" readonly/>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" id="btn_file">{{ _('Find File') }}</button>
+                                </span>
+                                {{ file_form.file }}
+                            </div>
+                    
+                            <div style="margin-left:120px;" id="new_edit_file_old_file_div">
+                                <i class="fa fa-file-o"></i> <span id="new_edit_file_old_file"></span>
+                            </div>
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <a class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                        <a class="btn btn-primary" onclick="save_file()">{{ _('Save') }}</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+
+<div id="overlay">
+	<div class="cv-spinner">
+		<span class="spinner"></span>
+	</div>
+</div>
+
+
+
+
+{% endblock %}
+
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/document_management.css' %}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<script src="{% static 'js/document_management.js' %}" type="text/javascript"></script>
+{% endblock %}

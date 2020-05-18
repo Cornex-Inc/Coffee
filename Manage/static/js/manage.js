@@ -610,9 +610,12 @@ function search_medicine(page = null) {
 
 function excel_download() {
 
+    var date_start = $("#payment_search_date_start").val();
+    var date_end = $("#payment_search_date_end").val();
+
     var url = '/manage/audit_excel?'
-    url += 'date_start=' + '2020-04-21' + '&';
-    url += 'date_end=' + '2020-04-27' + '&';
+    url += 'date_start=' + date_start + '&';
+    url += 'date_end=' + date_end + '&';
 
     window.open(url);
     ///$.ajax({
