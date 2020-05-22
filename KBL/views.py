@@ -31,15 +31,76 @@ from django.core.mail import send_mail
 from django.template import loader
 
 @login_required
-def index(request):
+def dash_board(request):
+
+    dashboard_board = Board_Contents.objects.filter(use_yn='Y',board_type='BASIC',is_KBL='Y').order_by('-created_date')[:7]
+    
+    list_board = []
+    for data in dashboard_board:
+        user = User.objects.get(id = data.creator)
+
+        list_board.append({
+            'is_new':True if ( (datetime.datetime.now() - data.created_date).days < 7 ) else False,
+            'id':data.id, 
+            'title':data.title, 
+            'creator':user.user_id,
+            'date':data.created_date.strftime('%Y-%m-%d'), 
+            })
+    
+    dashboard_co_board = Board_Contents.objects.filter(use_yn='Y',board_type='COWORK',is_KBL='Y').order_by('-created_date')[:7]
+    list_co_board = []
+    for data in dashboard_co_board:
+        user = User.objects.get(id = data.creator)
+
+        list_co_board.append({
+            'is_new':True if ( (datetime.datetime.now() - data.created_date).days < 7 ) else False,
+            'id':data.id, 
+            'title':data.title, 
+            'creator':user.user_id,
+            'date':data.created_date.strftime('%Y-%m-%d'), 
+            })
+        
+    
+        
+        
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
 
 
+
+    query = Project_Manage.objects.filter(use_yn='Y').exclude(progress='CANCEL').exclude(progress='DONE')
+    #프로젝트 구분
+    project_type_list= []
+    query_type= COMMCODE.objects.filter( commcode_grp='PROJECT_TYPE',upper_commcode='000010').annotate(code = F('commcode'),name = f_name).values('code','name')
+    for data in query_type:
+        project_type_list.append({
+           'code':data['code'],
+           'name':data['name'],
+           'new':query.filter(type=data['code'],progress='SUBMIT').count(),
+           'in_progress':query.filter(type=data['code'],progress='INPROGRESS').count(),
+           'pending':query.filter(type=data['code'],progress='PENDING').count(),
+           })
+
+    
+
+
+    print(dashboard_board)
     return render(request,
-    'KBL/index.html',
+        'KBL/dashboard.html',
             {
-                '':None,
-            },
+                'list_board':list_board,
+                'list_co_board':list_co_board,
+
+                'project_type_list':project_type_list,
+            }
         )
+
+
 
 
 @login_required
@@ -57,11 +118,11 @@ def customer_management(request):
 @login_required
 def customer_management_search(request):
 
+    start=request.POST.get("start") + ' 00:00:00'
+    end=request.POST.get("end") + ' 23:59:59'
+
     type=request.POST.get("type")
     string=request.POST.get("string")
-
-
-
 
     kwargs = {}
     argument_list = [] 
@@ -69,14 +130,30 @@ def customer_management_search(request):
   
     #if string != '':
     #argument_list.append( Q(**{'name_kor__icontains':string} ) )
+    argument_list.append( Q(**{'name_kor__icontains':string} ) )
     argument_list.append( Q(**{'name_eng__icontains':string} ) )
 
 
     datas = []
+
+    #개인은 항상 위
+    private = query = Customer_Company.objects.get(id=0)
+    datas.append({
+        'id':private.id,
+        'type':private.type,
+        'customer_no':private.serial,
+        'name_eng':private.name_eng,
+        'name_phone1':private.phone1,
+        'corporation_no':private.corporation_no,
+        'date_registered':private.date_register[0:10],
+        'remark':private.memo,
+        })
+
     query = Customer_Company.objects.filter(
         functools.reduce(operator.or_, argument_list),
         **kwargs,
-        use_yn = 'Y')
+        date_register__range = (start,end),
+        use_yn = 'Y').exclude(id=0)
 
     for data in query:
         datas.append({
@@ -362,6 +439,76 @@ def customer_management_delete_employee(request):
 
 
 @login_required
+def customer_management_set_project_list(request):
+    
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+        user_name = F('name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+        user_name = F('name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+        user_name = F('name_en')
+
+
+    #분류
+    project_type_dict = {}
+    query_class= COMMCODE.objects.filter( commcode_grp='PROJECT_TYPE',upper_commcode='000010').annotate(code = F('commcode'),name = f_name ).values('code','name')
+    for data in query_class:
+        project_type_dict[ data['code'] ] = {
+            'name':data['name']
+            }
+
+    #상태
+    project_status_dict = {}
+    query_status= COMMCODE.objects.filter( commcode_grp='PROJECT_STATUS',upper_commcode='000010').annotate(code = F('commcode'),name = f_name ).values('code','name','se1')
+    for data in query_status:
+        project_status_dict[ data['code'] ] = {
+            'class':data['se1'],
+            'name':data['name']
+            }
+
+    
+
+
+    id=request.POST.get("id")
+
+
+    datas = []
+    query = Project_Manage.objects.filter(customer_id = id, use_yn = 'Y')
+
+    for data in query:
+        #담당자
+        in_charge = User.objects.filter(id = data.in_charge).annotate(name = user_name ).values('id','name').first()
+
+        
+        datas.append({
+            'id':data.id,
+            'type':data.type,
+            'name':data.project_name,
+            'level':data.level,
+            'date_start':data.start_date[0:10],
+            'date_end':data.end_date[0:10],
+            'status':data.progress,
+            'in_charge':in_charge['name'],
+            'in_charge_id':in_charge['id'],
+            'note':data.note,
+            })
+
+
+    return JsonResponse({
+        'result':True,
+        'datas':datas,
+
+        'project_type_dict':project_type_dict,
+        'project_status_dict':project_status_dict,
+        })
+
+
+
+@login_required
 def estimate_sheet(request):
 
     f_name = F('commcode_name_en')
@@ -423,7 +570,7 @@ def estimate_sheet_search(request):
     elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
         f_name = F('commcode_name_en')
 
-    type=request.POST.get("type")
+    status=request.POST.get("status")
     in_charge=request.POST.get("in_charge")
     start=request.POST.get("start")
     end=request.POST.get("end")
@@ -435,9 +582,12 @@ def estimate_sheet_search(request):
 
     start += ' 00:00:00'
     end += ' 23:59:59'
+    print(status)
+    
+    if status != '':
+        kwargs['status'] = status
 
-    #if string != '':
-    #argument_list.append( Q(**{'name_kor__icontains':string} ) )
+    argument_list.append( Q(**{'recipient__icontains':string} ) )
     argument_list.append( Q(**{'title__icontains':string} ) )
 
 
@@ -446,7 +596,7 @@ def estimate_sheet_search(request):
         functools.reduce(operator.or_, argument_list),
         **kwargs,
         date_register__range = (start, end), 
-        use_yn = 'Y')
+        use_yn = 'Y').order_by('-date_register')
 
 
     #분류
@@ -827,33 +977,100 @@ def send_email_estimate(request):
     #file = open(path,'rt',encoding='UTF-8')
     #data = file.read()
     id = request.POST.get("id")
+    f_name = F('commcode_name_ko')
+    #프로젝트 구분
+    list_type = []
+    query_type= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='PROJECT_TYPE',upper_commcode='000010').annotate(code = F('commcode'),name = f_name ).values('code','name','se1')
+    for data in query_type:
+        list_type.append({
+            'id':data['code'],
+            'name':data['name']
+            })
 
     estimate = Estimate_Sheet.objects.get(id = id)
 
-    print(id)
+    date = estimate.date.split('-')
+
+    total_amount = 0
+    str_table_content =''
+    for data in list_type:
+        query_detail = Estimate_Sheet_Detail.objects.filter(estimate_id = estimate.id, type = data['id'])
+        if query_detail.count() != 0:
+            str_table_content += '<tr><td rowspan="' + str( query_detail.count() ) +'" class="border_thin b" style="border:1px solid black">' + data['name'] + '</td>'
+            
+            sum_unit_price = 0
+            sum_cost = 0
+
+            
+            for detail in query_detail:
+                str_table_content += '<td class="border_thin" style="border:1px solid black">' + detail.content + '</td>'
+                str_table_content += '<td class="border_thin" style="border:1px solid black">' + "{:,}".format(int(detail.unit_price)) +'</td>'
+                str_table_content += '<td class="border_thin" style="border:1px solid black">' + detail.quantity + '</td>'
+                str_table_content += '<td class="border_thin" style="border:1px solid black">' + "{:,}".format(int(detail.cost)) + '</td>'
+                str_table_content += '<td class="border_thin" style="border:1px solid black">' + detail.note + '</td>'
+                str_table_content += '</tr><tr>'
+
+                sum_unit_price += int(detail.unit_price)
+                sum_cost += int(detail.cost)
+                total_amount += int(detail.cost)
+
+            str_table_content += '<td colspan="2" class="bg_gray border_thin b" style="border:1px solid black; font-weight:700;background-color:rgb(242,242,242);">소계</td>'
+            str_table_content += '<td class="bg_gray border_thin b" style="border:1px solid black; background-color:rgb(242,242,242);">' + "{:,}".format(sum_unit_price) + '</td>'
+            str_table_content += '<td class="bg_gray border_thin b" style="border:1px solid black; background-color:rgb(242,242,242);"></td>'
+            str_table_content += '<td class="bg_gray border_thin b" style="border:1px solid black; background-color:rgb(242,242,242);">' + "{:,}".format(sum_cost) +'</td>'
+            str_table_content += '<td class="bg_gray border_thin b" style="border:1px solid black; background-color:rgb(242,242,242);"></td>'
+            str_table_content += '</tr>'
+
+    paid_by = estimate.paid_by
+    if paid_by == 'VND':
+        paid_by = '&#8363;'
+    elif paid_by == 'USD':
+        paid_by = '&#36;'
+    elif paid_by == 'KWN':
+        paid_by = '&#8361;'
+
+    str_table_content += '<tr>'
+    str_table_content += '<td colspan="2" class="bg_gray border_thin b" style="border:1px solid black; background-color:rgb(242,242,242);">총금액</td>'
+    str_table_content += '<td class="bg_gray border_thin b" style="border:1px solid black; background-color:rgb(242,242,242);"></td>'
+    str_table_content += '<td class="bg_gray border_thin b" style="border:1px solid black; background-color:rgb(242,242,242);"></td>'
+    str_table_content += '<td class="bg_gray border_thin b" style="border:1px solid black; background-color:rgb(242,242,242);">' + paid_by +" {:,}".format(total_amount) + '</td>'
+    str_table_content += '<td class="bg_gray border_thin b" style="border:1px solid black; background-color:rgb(242,242,242);"></td>'
+    str_table_content += '</tr>'
+           
 
     context= {
             'title':estimate.title,
             'recipient':estimate.recipient,
-            'recipient':estimate.recipient, 
+            'date':date[0] + ' 년 ' + date[1] + ' 월 ' + date[2] + ' 일',
+            'paid_by':estimate.paid_by,
+            'str_table_content':str_table_content,
+            'remark':estimate.remark,
+
+            'is_email':True,
         }
 
     html_message = loader.render_to_string(
-            'Estimate_Sheet/Estimate_Sheet.html',
+            'Form/Estimate_Sheet_print.html',
             context,
-            context_instance=RequestContext(request)
+            #context_instance=RequestContext(request)
         )
     
 
-    erer = send_mail(
-    'Subject here',
-    'Here is 333the message.<br/>',
+    result = send_mail(
+    '견적서',
+    '',
     'from@example.com',
-    ['khm4321@naver.com'],
+    [estimate.email],
     html_message = html_message,
     )
     
-    print(erer)
+
+    if estimate.is_sent == 'N':
+        estimate.is_sent = 'Y'
+        estimate.date_sent = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        estimate.save()
+
+    #print(html_message)
 
 
 
@@ -871,10 +1088,13 @@ def project_management(request):
     f_name = F('commcode_name_en')
     if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
         f_name = F('commcode_name_ko')
+        user_name = F('name_ko')
     elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
         f_name = F('commcode_name_vi')
+        user_name = F('name_vi')
     elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
         f_name = F('commcode_name_en')
+        user_name = F('name_en')
 
 
     #구분
@@ -913,7 +1133,14 @@ def project_management(request):
             'id':data['code'],
             'name':data['name']
             })
+        
+    #담당자
+    list_depart = []
+    query_kbl_depart = COMMCODE.objects.filter( use_yn = 'Y', commcode_grp='DEPART_KBL',upper_commcode='000002').annotate(code = F('commcode'),name = f_name ).values('code','name')
+    for data in query_kbl_depart:
+        list_depart.append( Q(**{'depart':data['code']} ) )
 
+    list_in_charge = User.objects.filter(functools.reduce(operator.or_, list_depart),).annotate(name = user_name ).values('id','name')
 
 
     return render(request,
@@ -925,6 +1152,8 @@ def project_management(request):
 
                 'list_visa_type':list_visa_type,
                 'file_form':board_file_form(),
+
+                'list_in_charge':list_in_charge,
             },
         )
 
@@ -936,10 +1165,13 @@ def project_search(request):
     f_name = F('commcode_name_en')
     if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
         f_name = F('commcode_name_ko')
+        user_name = F('name_ko')
     elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
         f_name = F('commcode_name_vi')
+        user_name = F('name_vi')
     elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
         f_name = F('commcode_name_en')
+        user_name = F('name_en')
 
     
     project_type=request.POST.get("project_type")
@@ -952,26 +1184,28 @@ def project_search(request):
     string=request.POST.get("string")
 
 
- 
-
     start += ' 00:00:00'
     end += ' 23:59:59'
 
     kwargs = {}
     argument_list = [] 
     #if string != '':
-    #argument_list.append( Q(**{'name_kor__icontains':string} ) )
+    argument_list.append( Q(**{'customer_name__icontains':string} ) )
     argument_list.append( Q(**{'project_name__icontains':string} ) )
 
     if project_type != '':
         kwargs['type'] = project_type
+    if project_status !='':
+        kwargs['progress'] = project_status
+    if project_in_charge !='':
+        kwargs['in_charge'] = project_status
 
     datas = []
     query = Project_Manage.objects.filter(
         functools.reduce(operator.or_, argument_list),
         **kwargs,
-        date_register__range = (start, end), 
-        use_yn = 'Y')
+        start_date__range = (start, end), 
+        use_yn = 'Y').order_by('-start_date')
 
 
 
@@ -1005,6 +1239,8 @@ def project_search(request):
 
 
     for data in query:
+        #담당자
+        in_charge = User.objects.filter(id = data.in_charge).annotate(name = user_name ).values('id','name').first()
 
         datas.append({
             'id':data.id,
@@ -1018,7 +1254,8 @@ def project_search(request):
             'end_date':data.end_date[0:10],
             'expected_date':data.expected_date[0:10],
             'progress':data.progress,
-            'in_charge':data.in_charge,
+            'in_charge':in_charge['name'],
+            'in_charge_id':in_charge['id'],
             'approval':data.approval,
             'note':data.note,
             })
@@ -1182,6 +1419,8 @@ def detail_search(request):
 
 
     for data in query:
+        is_file = Board_File.objects.filter(board_type='PROJECT_DTL',board_id = data.id ,is_KBL = 'Y',use_yn='Y').count()
+
         datas.append({
             'id':data.id,
             
@@ -1191,6 +1430,8 @@ def detail_search(request):
             "project_details":data.project_details,
             "note":data.note,
             'date':data.date,
+
+            'is_file':is_file,
             })
 
  
@@ -1309,12 +1550,143 @@ def detail_check(request):
 @login_required
 def work_permit(request):
 
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+
+    #상태
+    list_project_status= []
+    query_status= COMMCODE.objects.filter( commcode_grp='PROJECT_STATUS',upper_commcode='000010').annotate(code = F('commcode'),name = f_name ).values('code','name')
+    for data in query_status:
+        list_project_status.append({
+            'code':data['code'],
+            'name':data['name']
+            })
+
+
     return render(request,
     'KBL/work_permit.html',
             {
-                '':None,
+                'list_project_status':list_project_status,
             },
         )
+
+
+
+@login_required
+def work_permit_list_search(request):
+
+    
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+
+
+    #상태
+    project_status_dict = {}
+    query_status= COMMCODE.objects.filter( commcode_grp='PROJECT_STATUS',upper_commcode='000010').annotate(code = F('commcode'),name = f_name ).values('code','name','se1')
+    for data in query_status:
+        project_status_dict[ data['code'] ] = {
+            'class':data['se1'],
+            'name':data['name']
+            }
+
+
+
+    start=request.POST.get("start")
+    end=request.POST.get("end")
+
+    wp_status=request.POST.get("wp_status")
+    wp_date_type=request.POST.get("wp_date_type")
+    string=request.POST.get("string")
+
+    if wp_date_type == 'date_register':
+        start += ' 00:00:00'
+        end += ' 23:59:59'
+
+    kwargs = {}
+    kwargs[wp_date_type + '__gte'] = start
+    kwargs[wp_date_type + '__lte'] = end
+    
+    if wp_status != '':
+        kwargs['status']=wp_status
+
+    argument_list = []
+    argument_list.append( Q(**{'company_name__icontains':string} ) )
+    argument_list.append( Q(**{'employee_name__icontains':string} ) )
+
+    datas = []
+    query = Work_Permit_Manage.objects.filter(
+        functools.reduce(operator.or_, argument_list),
+        **kwargs,
+        use_yn = 'Y'
+        ).order_by('-date_register')
+
+
+    for data in query:
+
+        employee = Customer_Employee.objects.get(id = data.employee_id)
+
+        is_file = Board_File.objects.filter(board_type='WORK_PERMIT',board_id = data.id ,is_KBL = 'Y',use_yn='Y').count()
+        
+        datas.append({
+            'id':data.id,
+            
+            "status":data.status,
+            "company_id":data.company_id,
+            "company_name":data.company_name,
+            "employee_id":data.employee_id,
+            "employee":data.employee_name,
+            'position':employee.position,
+            'requiredment':data.requiredment,
+            "EA_application_date":data.EA_application_date,
+            "EA_exp_date":data.EA_exp_date,
+            "WP_application_date":data.WP_application_date,
+            "WP_exp_date":data.WP_exp_date,
+            "expected_date":data.expected_date,
+            "note":data.note,
+
+            'is_file':is_file,
+            })
+
+
+ 
+    page_context = request.POST.get('page_context',10) # 페이지 컨텐츠 
+    page = request.POST.get('page',1)
+
+    paginator = Paginator(datas, page_context)
+    try:
+        paging_data = paginator.page(page)
+    except PageNotAnInteger:
+        paging_data = paginator.page(1)
+    except EmptyPage:
+        paging_data = paginator.page(paginator.num_pages)
+
+
+    context = {
+            'datas':list(paging_data),
+            'page_range_start':paging_data.paginator.page_range.start,
+            'page_range_stop':paging_data.paginator.page_range.stop,
+            'page_number':paging_data.number,
+            'has_previous':paging_data.has_previous(),
+            'has_next':paging_data.has_next(),
+
+            'project_status_dict':project_status_dict,
+
+            }
+
+
+
+    return JsonResponse(context)
+
 
 
 @login_required
@@ -1356,6 +1728,8 @@ def work_permit_search(request):
 
         employee = Customer_Employee.objects.get(id = data.employee_id)
 
+        is_file = Board_File.objects.filter(board_type='WORK_PERMIT',board_id = data.id ,is_KBL = 'Y',use_yn='Y').count()
+
         datas.append({
             'id':data.id,
             
@@ -1371,6 +1745,7 @@ def work_permit_search(request):
             "expected_date":data.expected_date,
             "note":data.note,
 
+            'is_file':is_file,
             })
 
 
@@ -1499,13 +1874,142 @@ def work_permit_delete(request):
 
 @login_required
 def visa_management(request):
+    
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+
+    #상태
+    list_project_status= []
+    query_status= COMMCODE.objects.filter( commcode_grp='PROJECT_STATUS',upper_commcode='000010').annotate(code = F('commcode'),name = f_name ).values('code','name')
+    for data in query_status:
+        list_project_status.append({
+            'code':data['code'],
+            'name':data['name']
+            })
+
+
+
 
     return render(request,
     'KBL/visa_management.html',
             {
-                '':None,
+                'list_project_status':list_project_status,
             },
         )
+
+def visa_list_search(request):
+    
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+
+
+    #상태
+    project_status_dict = {}
+    query_status= COMMCODE.objects.filter( commcode_grp='PROJECT_STATUS',upper_commcode='000010').annotate(code = F('commcode'),name = f_name ).values('code','name','se1')
+    for data in query_status:
+        project_status_dict[ data['code'] ] = {
+            'class':data['se1'],
+            'name':data['name']
+            }
+
+
+    start=request.POST.get("start")
+    end=request.POST.get("end")
+
+    visa_type=request.POST.get("visa_type")
+    visa_status=request.POST.get("visa_status")
+    string=request.POST.get("string")
+
+    kwargs = {}
+    if visa_type != '':
+        kwargs['type'] = visa_type
+    if visa_status != '':
+        kwargs['status'] = visa_status
+
+
+    argument_list = []
+    argument_list.append( Q(**{'company_name__icontains':string} ) )
+    argument_list.append( Q(**{'employee_name__icontains':string} ) )
+
+    start += ' 00:00:00'
+    end += ' 23:59:59'
+    
+
+    datas = []
+
+    ##일반
+    query = Visa_Manage.objects.filter(
+        functools.reduce(operator.or_, argument_list),
+        **kwargs,
+        date_register__range = (start,end),
+        use_yn = 'Y',
+        ).order_by('-emergency','-date_register')
+
+
+    for data in query:
+
+        is_file = Board_File.objects.filter(board_type='WORK_PERMIT',board_id = data.id ,is_KBL = 'Y',use_yn='Y').count()
+
+        datas.append({
+            'id':data.id,
+            
+            "status":data.status,
+            "company":data.company_name,
+            "employee_id":data.employee_id,
+            "employee":data.employee_name,
+            "granted_company":data.granted_company,
+            "date_receipt_application":data.date_receipt_application,
+            "type":data.type,
+            "date_entry":data.date_entry,
+            "date_receipt_doc":data.date_receipt_doc,
+            "date_subbmit_doc":data.date_subbmit_doc,
+            "date_expected":data.date_expected,
+
+            "emergency":data.emergency,
+
+            'is_file':is_file,
+            })
+
+
+ 
+        
+    page_context = request.POST.get('page_context',10) # 페이지 컨텐츠 
+    page = request.POST.get('page',1)
+
+    paginator = Paginator(datas, page_context)
+    try:
+        paging_data = paginator.page(page)
+    except PageNotAnInteger:
+        paging_data = paginator.page(1)
+    except EmptyPage:
+        paging_data = paginator.page(paginator.num_pages)
+
+
+    context = {
+            'datas':list(paging_data),
+            'page_range_start':paging_data.paginator.page_range.start,
+            'page_range_stop':paging_data.paginator.page_range.stop,
+            'page_number':paging_data.number,
+            'has_previous':paging_data.has_previous(),
+            'has_next':paging_data.has_next(),
+
+            'project_status_dict':project_status_dict,
+
+            }
+
+
+
+    return JsonResponse(context)
 
 
 @login_required
@@ -1545,6 +2049,8 @@ def visa_search(request):
 
     for data in query:
 
+        is_file = Board_File.objects.filter(board_type='VISA',board_id = data.id ,is_KBL = 'Y',use_yn='Y').count()
+
         datas.append({
             'id':data.id,
             
@@ -1562,10 +2068,10 @@ def visa_search(request):
 
             "emergency":data.emergency,
 
+            'is_file':is_file,
+
             })
-
-
- 
+         
     context = {
             'datas':datas,
 
@@ -2036,7 +2542,7 @@ def document_search(request):
         datas.append({
             'id':data.id,
             
-            'document_name':data.origin_name,
+            'document_name':data.title,
             'board_type':data.board_type,
             'user':data.user,
 
@@ -2184,7 +2690,7 @@ def audit_search(request):
         functools.reduce(operator.or_, argument_list),
         **kwargs,
         date_register__range = (start, end) 
-        ,use_yn = 'Y')
+        ,use_yn = 'Y').order_by('-date_register')
     
 
     for data in query:
@@ -2219,6 +2725,7 @@ def audit_search(request):
             "type":data.type,
             "title":data.title,
             "service_fee":data.service_fee,
+            "quantity":data.quantity,
             "service_fee_vat":data.service_fee_vat,
             "service_fee_total":data.service_fee_total,
             "paid":data.paid,
@@ -2278,6 +2785,7 @@ def audit_save(request):
     audit_type=request.POST.get("audit_type")
     audit_title=request.POST.get("audit_title")
     audit_service_fee=request.POST.get("audit_service_fee")
+    audit_quantity=request.POST.get("audit_quantity")
     audit_service_fee_vat=request.POST.get("audit_service_fee_vat")
     audit_paid=request.POST.get("audit_paid")
     audit_date_paid=request.POST.get("audit_date_paid")
@@ -2300,6 +2808,7 @@ def audit_save(request):
     audit.type = audit_type
     audit.title = audit_title
     audit.service_fee = audit_service_fee
+    audit.quantity = audit_quantity
     audit.service_fee_vat = audit_service_fee_vat
     audit.service_fee_total = int(audit_service_fee) + int(audit_service_fee_vat)
     audit.paid = audit_paid
@@ -2446,10 +2955,53 @@ def audit_check_appraove(request):
 @login_required
 def invoice_management(request):
 
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+        user_name = F('name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+        user_name = F('name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+        user_name = F('name_en')
+
+    #상태
+    list_invoice_status = []
+    query_status= COMMCODE.objects.filter( commcode_grp='INVOICE_STATUS',upper_commcode='000011').annotate(code = F('commcode'),name = f_name ).values('code','name')
+    for data in query_status:
+        list_invoice_status.append({
+            'code':data['code'],
+            'name':data['name'],
+            })
+
+    #프로젝트 구분
+    list_type = []
+    query_type= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='PROJECT_TYPE',upper_commcode='000010').annotate(code = F('commcode'),name = f_name ).values('code','name','se1')
+    for data in query_type:
+        list_type.append({
+            'id':data['code'],
+            'name':data['name']
+            })
+
+
+          
+    #담당자
+    list_depart = []
+    query_kbl_depart = COMMCODE.objects.filter( use_yn = 'Y', commcode_grp='DEPART_KBL',upper_commcode='000002').annotate(code = F('commcode'),name = f_name ).values('code','name')
+    for data in query_kbl_depart:
+        list_depart.append( Q(**{'depart':data['code']} ) )
+
+    list_in_charge = User.objects.filter(functools.reduce(operator.or_, list_depart),).annotate(name = user_name ).values('id','name')
+
+
+
     return render(request,
     'KBL/invoice_management.html',
             {
-                '':None,
+                'list_invoice_status':list_invoice_status,
+                'list_type':list_type,
+                'list_in_charge':list_in_charge,
             },
         )
 
@@ -2457,14 +3009,16 @@ def invoice_management(request):
 @login_required
 def invoice_search(request):
     
-
     f_name = F('commcode_name_en')
     if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
         f_name = F('commcode_name_ko')
+        user_name = F('name_ko')
     elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
         f_name = F('commcode_name_vi')
+        user_name = F('name_vi')
     elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
         f_name = F('commcode_name_en')
+        user_name = F('name_en')
 
 
     #상태
@@ -2476,13 +3030,52 @@ def invoice_search(request):
             'name':data['name']
             }
 
+    #분류
+    project_type_dict = {}
+    query_class= COMMCODE.objects.filter( commcode_grp='PROJECT_TYPE',upper_commcode='000010').annotate(code = F('commcode'),name = f_name ).values('code','name')
+    for data in query_class:
+        project_type_dict[ data['code'] ] = {
+            'name':data['name']
+            }
+
+
+
+
+
+    start = request.POST.get('start') + " 00:00:00"
+    end = request.POST.get('end') + "23:59:59"
+
+    type = request.POST.get('type')
+    in_charge = request.POST.get('in_charge')
+    status = request.POST.get('status')
+
+    string = request.POST.get('string')
+
     kwargs = {}
+    argument_list = []
+    if type != '':
+        kwargs['type']=type
+    if in_charge != '':
+        kwargs['in_charge']=in_charge
+    if status != '':
+        kwargs['status']=status
+
+    argument_list.append( Q(**{'company_name__icontains':string} ) )
+    argument_list.append( Q(**{'title__icontains':string} ) )
 
     datas = []
-    query = Invoice_Manage.objects.filter(**kwargs)#.order_by('-date_register')#use_yn = 'Y')
+    query = Invoice_Manage.objects.filter(
+        functools.reduce(operator.or_, argument_list),
+        **kwargs,
+        date_register__range = (start,end)
+        ).order_by('-date_register')#use_yn = 'Y')
 
 
     for data in query:
+        #담당자
+        in_charge = User.objects.filter(id = data.in_charge).annotate(name = user_name ).values('id','name').first()
+
+
         datas.append({
             'id':data.id,
             
@@ -2491,7 +3084,7 @@ def invoice_search(request):
             "company_name":data.company_name,
             "type":data.type,
             "title":data.title,
-            "in_charge":data.in_charge,
+            "in_charge":in_charge['name'],
             "date_register":data.date_register[0:10],
             "date_sent":'' if data.date_sent == '0000-00-00 00:00:00' else data.date_sent[0:10],
             "status":data.status,
@@ -2522,6 +3115,7 @@ def invoice_search(request):
             'has_next':paging_data.has_next(),
 
             'invoice_status_dict':invoice_status_dict,
+            'project_type_dict':project_type_dict,
             }
 
 
@@ -2733,12 +3327,214 @@ def print_invoice(request,id):
 
 @login_required
 def send_email_invoice(request):
+    
+    id=request.POST.get("id")
+
+
+    invoice = Invoice_Manage.objects.get(id = id)
+
+    str_table_list = ''
+    query_audit = Audit_Manage.objects.filter(invoice = invoice.id)
+    no =1
+
+    sum_vat = 0
+    sum_total = 0
+
+    for audit in query_audit:
+        str_table_list += '<tr>'
+        str_table_list += '<td class="border_thin b" style="font-weight:700;border-width:1px;border-style:solid;border-color:black;height:16px;font-size:12px;text-align:center;vertical-align:middle;">' + str(no) + '</td>'
+        str_table_list += '<td class="border_thin" style="border-width:1px;border-style:solid;border-color:black;height:16px;font-size:12px;text-align:center;vertical-align:middle;">' + audit.title + ' Fee</td>'
+        str_table_list += '<td class="border_thin" style="border-width:1px;border-style:solid;border-color:black;height:16px;font-size:12px;text-align:center;vertical-align:middle;">1</td>'
+        str_table_list += '<td class="border_thin" style="border-width:1px;border-style:solid;border-color:black;height:16px;font-size:12px;text-align:center;vertical-align:middle;">' + "{:,}".format(int(audit.service_fee)) + '</td>'
+        str_table_list += '<td class="border_thin" style="border-width:1px;border-style:solid;border-color:black;height:16px;font-size:12px;text-align:center;vertical-align:middle;">' + "{:,}".format(int(audit.service_fee)) + '</td>'
+        str_table_list += '<td class="border_thin" style="border-width:1px;border-style:solid;border-color:black;height:16px;font-size:12px;text-align:center;vertical-align:middle;">' + audit.note + '</td>'
+        str_table_list += '</tr>'
+
+        no += 1
+        sum_vat += int(audit.service_fee_vat)
+        sum_total += int(audit.service_fee)
+
+    str_table_list += '<tr>'
+    str_table_list += '<td rowspan="2" colspan="4" class="bg_gray border_thin b" style="font-weight:700;background-color:rgb(242,242,242) !important;background-image:none !important;background-repeat:repeat !important;background-position:top left !important;background-attachment:scroll !important;border-width:1px;border-style:solid;border-color:black;height:16px;font-size:12px;">Total fee(Excluded 10% VAT)</td>'
+    str_table_list += '<td class="bg_gray border_thin b text-right" style="text-align: right;background-color:rgb(242,242,242) !important;background-image:none !important;background-repeat:repeat !important;background-position:top left !important;background-attachment:scroll !important;border-width:1px;border-style:solid;border-color:black;height:16px;font-size:12px;vertical-align:middle;">$ -&nbsp;</td>'
+    str_table_list += '<td class="bg_gray border_thin b" style="background-color:rgb(242,242,242) !important;background-image:none !important;background-repeat:repeat !important;background-position:top left !important;background-attachment:scroll !important;border-width:1px;border-style:solid;border-color:black;height:16px;font-size:12px;"></td>'
+    str_table_list += '</tr>'
+    str_table_list += '<tr>'
+    str_table_list += '<td class="bg_gray border_thin b text-right"  style="text-align: right;background-color:rgb(242,242,242) !important;background-image:none !important;background-repeat:repeat !important;background-position:top left !important;background-attachment:scroll !important;border-width:1px;border-style:solid;border-color:black;height:16px;font-size:12px;;vertical-align:middle;">VND ' + "{:,}".format(sum_total) + '&nbsp;</td>'
+    str_table_list += '<td class="bg_gray border_thin b" style="background-color:rgb(242,242,242) !important;background-image:none !important;background-repeat:repeat !important;background-position:top left !important;background-attachment:scroll !important;border-width:1px;border-style:solid;border-color:black;height:16px;font-size:12px;;"></td>'
+    str_table_list += '</tr>'
+    str_table_list += '<tr>'
+    str_table_list += '<td rowspan="2" colspan="4" class="bg_gray border_thin b"  style="background-color:rgb(242,242,242) !important;background-image:none !important;background-repeat:repeat !important;background-position:top left !important;background-attachment:scroll !important;border-width:1px;border-style:solid;border-color:black;height:16px;font-size:12px;vertical-align:middle;">Total fee(Included 10% VAT)</td>'
+    str_table_list += '<td class="bg_gray border_thin b text-right"  style="text-align: right;background-color:rgb(242,242,242) !important;background-image:none !important;background-repeat:repeat !important;background-position:top left !important;background-attachment:scroll !important;border-width:1px;border-style:solid;border-color:black;height:16px;font-size:12px;vertical-align:middle;">$ -&nbsp;</td>'
+    str_table_list += '<td class="bg_gray border_thin b" style="background-color:rgb(242,242,242) !important;background-image:none !important;background-repeat:repeat !important;background-position:top left !important;background-attachment:scroll !important;border-width:1px;border-style:solid;border-color:black;height:16px;font-size:12px;"></td>'
+    str_table_list += '</tr>'
+    str_table_list += '<tr>'
+    str_table_list += '<td class="bg_gray border_thin b text-right"  style="text-align: right;background-color:rgb(242,242,242) !important;background-image:none !important;background-repeat:repeat !important;background-position:top left !important;background-attachment:scroll !important;border-width:1px;border-style:solid;border-color:black;height:16px;font-size:12px;vertical-align:middle;">VND ' + "{:,}".format(sum_total + sum_vat) + '&nbsp;</td>'
+    str_table_list += '<td class="bg_gray border_thin b" style="background-color:rgb(242,242,242) !important;background-image:none !important;background-repeat:repeat !important;background-position:top left !important;background-attachment:scroll !important;border-width:1px;border-style:solid;border-color:black;height:16px;font-size:12px;"></td>'
+    str_table_list += '</tr>'
+
+    
+    context= {
+                'recipient':invoice.recipient,
+                'title':invoice.title,
+                'date':datetime.datetime.strptime(invoice.date_register[0:10],'%Y-%m-%d').strftime("%B %d, %Y"),
+                'company_name':invoice.company_name,
+
+                'str_table_list':str_table_list,
+
+            'is_email':True,
+        }
+
+    html_message = loader.render_to_string(
+            'Form/Invoice_print.html',
+            context,
+            #context_instance=RequestContext(request)
+        )
+    
+
+    erer = send_mail(
+    '인보이스',
+    '',
+    'from@example.com',
+    ['khm4321@naver.com'],
+    html_message = html_message,
+    )
+
+    
+    if invoice.is_sent == 'N':
+        invoice.is_sent = 'Y'
+        invoice.date_sent = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        invoice.save()
+    
+    #print(html_message)
+
+
+
+
     return JsonResponse({
         'result':True,        
         })
 
 
+    return JsonResponse({
+        'result':True,        
+        })
 
+
+#정산
+@login_required
+def statistics(request):
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+
+
+    #프로젝트 구분
+    list_project_type = []
+    query_type= COMMCODE.objects.filter( commcode_grp='PROJECT_TYPE',upper_commcode='000010').annotate(code = F('commcode'),name = f_name).values('code','name')
+    for data in query_type:
+        list_project_type.append({
+           'code':data['code'],
+           'name':data['name'],
+           })
+
+    return render(request,
+    'KBL/statistics.html',
+            {
+                'list_project_type':list_project_type,
+            },
+        )
+
+
+@login_required
+def statistics_search(request):
+
+
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+
+
+    #프로젝트 구분
+    list_project_type = []
+    query_type= COMMCODE.objects.filter( commcode_grp='PROJECT_TYPE',upper_commcode='000010').annotate(code = F('commcode'),name = f_name).values('code','name')
+    for data in query_type:
+        list_project_type.append({
+           'code':data['code'],
+           'name':data['name'],
+           })
+
+
+    start=request.POST.get("start")
+    end=request.POST.get("end")
+    type=request.POST.get("type")
+
+    kwargs = {}
+    if type != '':
+        kwargs['type']= type
+
+    start += ' 00:00:00'
+    end += ' 23:59:59'
+
+    list_data = []
+
+
+    for type in query_type:
+        print(type)
+        price_sum = 0
+
+        total_query = Audit_Manage.objects.filter(
+            date_register__range = (start,end),
+            use_yn = 'Y',
+            type = type['code'],
+            ).aggregate(
+                total_quantity=Sum('quantity'),
+                total_service_fee=Sum('service_fee'),
+                total_service_fee_vat=Sum('service_fee_vat'),
+                total_service_fee_total=Sum('service_fee_total'),
+                )
+
+
+
+        list_data.append({
+            'name':type['name'],
+            'quantity':0 if total_query['total_quantity'] is None else total_query['total_quantity'],
+            'service_fee':0 if total_query['total_service_fee'] is None else total_query['total_service_fee'],
+            'service_fee_vat':0 if total_query['total_service_fee_vat'] is None else total_query['total_service_fee_vat'],
+            'service_fee_total':0 if total_query['total_service_fee_total'] is None else total_query['total_service_fee_total'],
+            })
+
+    total_list = Audit_Manage.objects.filter(
+        date_register__range = (start,end),
+        use_yn = 'Y',
+        ).aggregate(
+            total_service_fee=Sum('service_fee'),
+            total_service_fee_vat=Sum('service_fee_vat'),
+            total_service_fee_total=Sum('service_fee_total'),
+            )
+
+
+
+    return JsonResponse({
+        'datas':list_data,
+
+        'total_service_fee':0 if total_list['total_service_fee'] is None else total_list['total_service_fee'],
+        'total_service_fee_vat':0 if total_list['total_service_fee_vat'] is None else total_list['total_service_fee_vat'],
+        'total_service_fee_total':0 if total_list['total_service_fee_total'] is None else total_list['total_service_fee_total'],
+
+        })
+
+
+
+#오토컴플릿 회사 검색
 @login_required
 def selectbox_search_company(request):
 

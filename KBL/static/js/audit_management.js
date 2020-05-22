@@ -131,6 +131,7 @@ function audit_management_modal(id = null) {
     $("#audit_type").val('');
     $("#audit_title").val('');
     $("#audit_service_fee").val('');
+    $("#audit_quantity").val('');
     $("#audit_service_fee_vat").val('');
     $("#audit_paid").val('');
     $("#audit_date_paid").val('');
@@ -243,6 +244,7 @@ function search_audit(page = null) {
                         "<td>" + response.datas[i]['title'] + "</td>" +
                         "<td>" + response.project_type_dict[response.datas[i]['type']]['name'] + "</td>" +
                         "<td>" + numberWithCommas(response.datas[i]['service_fee']) + "</td>" +
+                        "<td>" + numberWithCommas(response.datas[i]['quantity']) + "</td>" +
                         "<td>" + numberWithCommas(response.datas[i]['service_fee_vat']) + "</td>" +
                         "<td>" + numberWithCommas(response.datas[i]['service_fee_total']) + "</td>" +
                         "<td>" + numberWithCommas(response.datas[i]['paid']) + "</td>" +
@@ -283,7 +285,7 @@ function search_audit(page = null) {
 
 
                 } else {
-                    var str = "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
+                    var str = "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
                 }
                 $('#audit_list_table').append(str);
             }
@@ -351,6 +353,7 @@ function audit_save() {
     var audit_company = $("#audit_company").val();
     var audit_type = $("#audit_type").val();
     var audit_title = $("#audit_title").val();
+    var audit_quantity = $("#audit_quantity").val();
     var audit_service_fee = $("#audit_service_fee").val();
     var audit_service_fee_vat = $("#audit_service_fee_vat").val();
     var audit_paid = $("#audit_paid").val();
@@ -375,9 +378,18 @@ function audit_save() {
     if (audit_title == '') {
         alert(gettext('Title is empty.'));
         return;
-    }
+    } 
     if (audit_service_fee == '') {
         alert(gettext('Service Fee is empty.'));
+        return;
+    }
+    if (audit_quantity == '') {
+        alert(gettext('Quantity is empty.'));
+        return;
+    }
+    if (isNaN(audit_quantity)) {
+        alert(gettext('Quantity should be in numbers.'));
+        $("#audit_quantity").focus();
         return;
     }
     if (isNaN(audit_service_fee)) {
@@ -422,6 +434,7 @@ function audit_save() {
             'audit_type': audit_type,
             'audit_title': audit_title,
             'audit_service_fee': audit_service_fee,
+            'audit_quantity': audit_quantity,
             'audit_service_fee_vat': audit_service_fee_vat,
             'audit_paid': audit_paid,
             'audit_date_paid': audit_date_paid,
@@ -535,7 +548,7 @@ function check(obj = null) {
 
 function create_invoice() {
 
-    var list_checkbox = $(".check_detail:checked");
+    var list_checkbox = $(".check_detail:checked").not(':disabled');
 
     if (list_checkbox.length == 0) {
         alert(gettext('Select Audit items first.'));
@@ -552,27 +565,32 @@ function create_invoice() {
     //
     //    }
     //}
-    $.ajax({
-        type: 'POST',
-        url: '/KBL/invoice_add/',
-        data: {
-            'csrfmiddlewaretoken': $('#csrf').val(),
 
-            'data': JSON.stringify(checked_list),
+    if(confirm(gettext('Do you want to Create Invoice?'))) {
+        $.ajax({
+            type: 'POST',
+            url: '/KBL/invoice_add/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
 
-        },
-        dataType: 'Json',
-        success: function (response) {
-            if (response.result) {
-                search_audit();
-            }
+                'data': JSON.stringify(checked_list),
 
-        },
-        error: function (request, status, error) {
-            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            },
+            dataType: 'Json',
+            success: function (response) {
+                if (response.result) {
+                    search_audit();
+                    alert(gettext('Created.'));
+                }
 
-        },
-    })
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+            },
+        })
+    }
+    
 
 
 }

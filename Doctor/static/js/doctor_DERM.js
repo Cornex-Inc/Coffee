@@ -75,6 +75,9 @@ $(function () {
         else if (id == 'diagnosis_select_bundle_title') {
             $('#diagnosis_select_bundle_contents').show();
         }
+        else if (id == 'diagnosis_select_package_title') {
+            $('#diagnosis_select_package_contents').show();
+        }
     });
 
 
@@ -503,6 +506,10 @@ $(function () {
 
         
     })
+
+    
+    //패키지
+    $("#diagnosis_select_package_title").hide(); 
 });
 
 
@@ -600,7 +607,6 @@ function get_all_diagnosis() {
 
 
 
-
 }
 
 function show_total_price() {
@@ -649,6 +655,19 @@ function set_all_empty() {
     
 
     show_total_price();
+
+    //패키지
+    $("#selected_package_id").val('')
+
+    $("#diagnosis_select_package_title").hide(); 
+    //초기 시 진료 아이템 보이기
+    $('#diagnosis_select_test_contents').hide();
+    $('#diagnosis_select_precedure_contents').hide();
+    $('#diagnosis_select_medicine_contents').hide();
+    $('#diagnosis_select_bundle_contents').hide();
+    $('#diagnosis_select_package_contents').hide();
+
+    $('#diagnosis_select_exam_contents').show();
 }
 
 
@@ -708,6 +727,39 @@ function reception_select(reception_id) {
             get_vital();
             get_all_diagnosis();
 
+
+            //패키지
+            $("#diagnosis_select_package > tbody").empty();
+            if (response.package) {
+                console.log(response.package)
+                $("#selected_package_id").val(response.package.id);
+
+                var str = '<tr>';
+                str += '<td>' + response.package.name + '</td>';
+                str += '<td>' + response.package.round + '</td>';
+                str += "<td><a class='btn btn-default btn-xs' style='margin-right:5px;' href='javascript: void (0);' onclick='patient_package_history_modal(" + response.package.id + ")' ><i class='fa fa-lg fa-search'></i></a></td>" +
+                     "</tr > ";
+
+
+
+                $("#diagnosis_select_package > tbody").append(str);
+
+                $("#diagnosis_select_package_title").show();
+            } else {
+                $("#selected_package_id").val('');
+                $("#diagnosis_select_package_title").hide();
+            }
+
+            //불러올 때 진료 아이템 우선 보이기
+            $('#diagnosis_select_test_contents').hide();
+            $('#diagnosis_select_precedure_contents').hide();
+            $('#diagnosis_select_medicine_contents').hide();
+            $('#diagnosis_select_bundle_contents').hide();
+            $('#diagnosis_select_package_contents').hide();
+
+            $('#diagnosis_select_exam_contents').show();
+
+            
 
         },
         error: function (request, status, error) {
@@ -800,7 +852,7 @@ function get_diagnosis(reception_no) {
         },
         dataType: 'Json',
         success: function (response) {
-
+            
             $('#diagnosis').val(response.datas['diagnosis']);
             $('#diagnosis_selected tbody').empty();
 
@@ -860,6 +912,7 @@ function get_diagnosis(reception_no) {
             
             var list_check_img = eval(response.datas['img_check_list'])
             image_tmp_count = 0;
+            $("#dx_img_show,#dx_img_div").html('');
             for (var i = 0; i < list_check_img.length; i++) {
                 var tmp = list_check_img[i]
                 $("#dx_img_show").append("<div class='check_img' style='background-image: url(&#39;/static/img/Medical_Exam_X.png&#39;);left:" + tmp['left'] + "px;top:" + tmp['top'] + "px;' " +
@@ -939,7 +992,12 @@ function reception_waiting(Today = false, alarm = false) {
                         ");" +
                         "get_diagnosis(" + response.datas[i]['reception_no'] +
                         ");'><td>" + (parseInt(i) + 1) + "</td>" +
-                        "<td>" + response.datas[i]['chart'] + "</td>" +
+                        "<td>";
+                    if (response.datas[i]['package']) { // 패키지 접수
+                        str += '<i class="fa fa-product-hunt"></i> ';
+                    }
+
+                        str += response.datas[i]['chart'] + "</td>" +
                         "<td>" + response.datas[i]['name_kor'] + "<br/>" + response.datas[i]['name_eng'] + "</td>" +
                         "<td>" + response.datas[i]['date_of_birth'] + '<br/>' + ' (' + response.datas[i]['age'] + '/' + response.datas[i]['gender'] + ")</td>";
                     if (string == '') {
@@ -1134,8 +1192,10 @@ function diagnosis_save(set) {
         });
     }
 
-    console.log(img_check_list)
 
+
+    //패키지
+    var package_id = $("#selected_package_id").val();
 
     $.ajax({
         type: 'POST',
@@ -1158,7 +1218,9 @@ function diagnosis_save(set) {
             'past_history': $("#history_past").val(),
             
 
-            'img_check_list': JSON.stringify(img_check_list)
+            'img_check_list': JSON.stringify(img_check_list),
+
+            'package_id': package_id,
         },
         dataType: 'Json',
         success: function (response) {
@@ -1272,3 +1334,44 @@ $('#print_test').on('click', function () {
 
 
 
+//패키지
+function patient_package_history_modal(id = null) {
+    if (id == null) { return; }
+
+    console.log(id)
+
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/patient_package_history_modal/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'id': id,
+        },
+        dataType: 'Json',
+        success: function (response) {
+            $('#patient_package_history_list > tbody ').empty();
+            for (var i = 0; i < response.datas.length; i++) {
+                var str = "<tr>"
+
+                str += " <td>" + (i + 1) + "</td>" +
+                    "<td>" + response.datas[i]['patient_name'] + "</td>" +
+                    "<td>" + response.datas[i]['precedure_name'] + "</td>" +
+                    "<td>" + response.datas[i]['round'] + "</td>" +
+                    "<td>" + response.datas[i]['date_bought'] + "</td>" +
+                    "<td>" + response.datas[i]['date_used'] + "</td>" +
+                    "</tr>";
+
+                $('#patient_package_history_list > tbody').append(str);
+
+            }
+            $('#patient_package_history_modal').modal({ backdrop: 'static', keyboard: false });
+            $('#patient_package_history_modal').modal('show');
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+
+
+}

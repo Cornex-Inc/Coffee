@@ -5,203 +5,46 @@
 
 
 <script src="{% static 'js/jquery.ajax-cross-origin.min.js'%}"></script>
-<script>
+<script src="{% static 'signature_pad-master/docs/js/app.js'%}"></script>
+<script src="{% static 'signature_pad-master/docs/js/signature_pad.umd.js'%}"></script>
 
-    function refresh_table() {
+<link rel="stylesheet" href="{% static 'signature_pad-master/docs/css/signature-pad.css'%}">
 
-
-
-
-       //var json_response = JSON.parse('{"status":"success","code":"00","data":{"tranId":4789208981,"name":"API","totalSMS":1,"totalPrice":400,"invalidPhone":[]},"msg_id":"50"}');
-       //$.ajax({
-       //    type: 'POST',
-       //    url: '/test/recv/',
-       //    data: {
-       //        'csrfmiddlewaretoken': $('#csrf').val(),
-       //        'msg_id': json_response.msg_id,
-       //        'status': json_response.status,
-       //        'code': json_response.code,
-       //        'tranId' : json_response.tranId,
-       //    },
-       //    dataType: 'Json',
-       //    success: function (response) {
-       //                    
-       //                    
-       //                            
-       //                    
-       //    },
-       //    error: function (request, status, error) {
-       //        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-       //    },
-       //})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        $("#recv_table").empty();
-
-        $.ajax({
-            type: 'POST',
-            url: '/test/get_res_table/',
-            data: {
-                'csrfmiddlewaretoken': $('#csrf').val(),
-            },
-            dataType: 'Json',
-            success: function (response) {
-                
-                if (response.res == true) {
-                    var str = ''
-                    for (var i = 0; i < response.list_res.length; i++) {
-                        str += '<tr><td>' + response.list_res[i].id +
-                            '</td><td>' + response.list_res[i].phone +
-                            '</td><td>' + response.list_res[i].contents +
-                            '</td><td>' + response.list_res[i].status + 
-                            '</td><td>' + response.list_res[i].date_of_registered +
-                            '</td><td>' + response.list_res[i].code +
-                            '</td><td>' + response.list_res[i].date_of_recieved + '</td></tr>';
-                    }
-                    $("#recv_table").html(str);
-
-                }
-
-            },
-            error: function (request, status, error) {
-                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-            },
-        })
-
-
-
-
-
-    }
-
-
-    function test() {
-        var phone = $("#phone_number").val()
-        var contents = $("#contents").val()
-
-        $.ajax({
-            type: 'POST',
-            //url: '/manage/employee_check_id/',
-            url: '/test/send/',
-            data: {
-                'csrfmiddlewaretoken': $('#csrf').val(),
-                'phone': phone,
-                'contents':contents,
-            },
-            dataType: 'Json',
-            success: function (response) {
-                console.log(response);
-                if (response.res == true) {
-                    var url = 'http://kbl.cornex.co.kr/sms/sms_send.php?msg_id=' + response.id + '&phone=' + phone + '&contents=' + contents;
-                    console.log('url : ' + url);
-
-                    $.ajax({
-                        crossOrigin: true,
-                        type: 'GET',
-                        //url: '/manage/employee_check_id/',
-                        url: url,
-                        data: {
-                            //'csrfmiddlewaretoken': $('#csrf').val(),
-                            //'msg_id': response.id,
-                            //'phone': $("#phone_number").val(),
-                            //'contents': $("#contents").val(),
-                        },
-                        dataType: 'Json',
-                        //jsonp: "callback", 
-                        success: function (response) {
-                            json_response = JSON.parse(response);
-
-                            console.log(json_response);
-
-                            $.ajax({
-                                type: 'POST',
-                                url: '/test/recv/',
-                                data: {
-                                    'csrfmiddlewaretoken': $('#csrf').val(),
-                                    'msg_id': json_response.msg_id,
-                                    'status': json_response.status,
-                                    'code': json_response.code,
-                                    'tranId' : json_response.tranId,
-                                },
-                                dataType: 'Json',
-                                success: function (response) {
-                                    
-                            
-                                    
-                            
-                                },
-                                error: function (request, status, error) {
-                                    console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-                                },
-                            })
-
-                        },
-                        error: function (request, status, error) {
-                            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-                        },
-                    })
-
-                }
-
-
-            },
-            error: function (request, status, error) {
-                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-            },
-        })
-
-        //$.ajax({
-        //    type: 'POST',
-        //    //url: '/manage/employee_check_id/',
-        //    url: 'http://kbl.cornex.co.kr/sms/sms_send.php',
-        //    data: {
-        //        'csrfmiddlewaretoken': $('#csrf').val(),
-        //        'phone': $("#phone_number").val(),
-        //        'contents': $("#contents").val(),
-        //    },
-        //    dataType: 'Json',
-        //    success: function (response) {
-        //        console.log(response);
-        //        //if (response.result == true) {
-        //        //    database_search();
-        //        //
-        //        //    $("#edit_database_password").modal('hide');
-        //        //} else {
-        //        //    alert(gettext('Please Refresh this page.'));
-        //        //}
-        //    },
-        //    error: function (request, status, error) {
-        //        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-        //    },
-        //})
-
-
-    }
-</script>
 
 
 <div class="index_wrap">
+    
 
 
+
+    <div id="signature-pad" class="signature-pad">
+    <div class="signature-pad--body">
+      <canvas width="664" height="373" style="touch-action: none;" id="sign"></canvas>
+    </div>
+
+
+    <input type="button" onclick="test123()" value="test"/>
+
+
+
+    <div class="signature-pad--footer">
+      <div class="description">Sign above</div>
+
+      <div class="signature-pad--actions">
+        <div>
+          <button type="button" class="button clear" data-action="clear">Clear</button>
+          <button type="button" class="button" data-action="change-color">Change color</button>
+          <button type="button" class="button" data-action="undo">Undo</button>
+
+        </div>
+        <div>
+          <button type="button" class="button save" data-action="save-png">Save as PNG</button>
+          <button type="button" class="button save" data-action="save-jpg">Save as JPG</button>
+          <button type="button" class="button save" data-action="save-svg">Save as SVG</button>
+        </div>
+      </div>
+    </div>
+  </div>
     <audio autoplay controls>
         <source src="{% static 'sound/ring.mp3' %}" type="audio/mp3" />
     </audio>
@@ -235,5 +78,62 @@
 
 </div>
 
+
+<script>
+
+    var canvas = document.getElementById("sign");
+
+    var signaturePad = new SignaturePad(canvas);
+    signaturePad.backgroundColor = "(rgb(0,0,0,0)"
+
+    function test123() {
+        var tmp = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAApgAAAF1CAYAAABMA5oIAAAgAElEQVR4Xu3dXch2WVkH8MuOLfPAk8rGOajIIhWLyqxJUowopok0MmiSAqMOnAn6gIhxOkoIRsEiLFBPKpQYB4q+hHHswwplVDJKghlTKCjK0Q6iE+Oa2Su39/s873N/XPvea+37t2GYj3ffa6/9u9Y77/9Z915rPyscBAgQIECAAAECBAoFnlXYlqYIECBAgAABAgQIhIBpEBAgQIAAAQIECJQKCJilnBojQIAAAQIECBAQMI0BAgQIECBAgACBUgEBs5RTYwQIECBAgAABAgKmMUCAAAECBAgQIFAqIGCWcmqMAAECBAgQIEBAwDQGCBAgQIAAAQIESgUEzFJOjREgQIAAAQIECAiYxgABAgQIECBAgECpgIBZyqkxAgQIECBAgAABAdMYIECAAAECBAgQKBUQMEs5NUaAAAECBAgQICBgGgMECBAgQIAAAQKlAgJmKafGCBAgQIAAAQIEBExjgAABAgQIECBAoFRAwCzl1BgBAgQIECBAgICAaQwQIECAAAECBAiUCgiYpZwaI0CAAAECBAgQEDCNAQIECBAgQIAAgVIBAbOUU2MECBAgQIAAAQICpjFAgAABAgQIECBQKiBglnJqjAABAgQIECBAQMA0BggQIECAAAECBEoFBMxSTo0RIECAAAECBAgImMYAAQIECBAgQIBAqYCAWcqpMQIECBAgQIAAAQHTGCBAgAABAgQIECgVEDBLOTVGgAABAgQIECAgYBoDBAgQIECAAAECpQICZimnxggQIECAAAECBARMY4AAAQIECBAgQKBUQMAs5dQYAQIECBAgQICAgGkMECBAgAABAgQIlAoImKWcGiNAgAABAgQIEBAwjQECBAgQIECAAIFSAQGzlFNjBAgQIECAAAECAqYxQIAAAQIECBAgUCogYJZyaowAAQIECBAgQEDANAYIECBAgAABAgRKBQTMUk6NESBAgAABAgQICJjGAAECBAgQIECAQKmAgFnKqTECBAgQIECAAAEB0xggQIAAAQIECBAoFRAwSzk1RoAAAQIECBAgIGAaAwQIECBAgAABAqUCAmYpp8YIECBAgAABAgQETGOAAAECBAgQIECgVEDALOXUGAECBAgQIECAgIBpDBAgQIAAAQIECJQKCJilnBojQIAAAQIECBAQMI0BAgQIECBAgACBUgEBs5RTYwQIECBAgAABAgKmMUCAAAECBAgQIFAqIGCWcmqMAAECBAgQIEBAwDQGCBAgQIAAAQIESgUEzFJOjREgQIAAAQIECAiYxgABAgQIECBAgECpgIBZyqkxAgQIECBAgAABAdMYIECAAAECBAgQKBUQMEs5NUaAAAECBAgQICBgGgMECBAgQIAAAQKlAgJmKafGCBAgQIAAAQIEBExjgAABAgQIECBAoFRAwCzl1BgBAgQIECBAgICAaQwQIECAAAECBAiUCgiYpZwaI0CAAAECBAgQEDCNAQIECBAgQIAAgVIBAbOUU2MECBAgQIAAAQICpjFAgAABAgQIECBQKiBglnJqjAABAgQIECBAQMA0BggQIECAAAECBEoFBMxSTo0RIECAAAECBAgImMYAAQIECBAgQIBAqYCAWcqpMQIECBAgQIAAAQHTGCBAgAABAgQIECgVEDBLOTVGgAABAgQIECAgYBoDBAgQIECAAAECpQICZimnxggQIECAAAECBARMY4AAAQIECBAgQKBUQMAs5dQYAQIECBAgQICAgGkMECBAgAABAgQIlAoImKWcGiNAgAABAgQIEBAwjQECBAgQIECAAIFSAQGzlFNjBAgQIECAAAECAqYxQIAAAQIECBAgUCogYJZyaowAAQIECBAgQEDANAYIECBAgAABAgRKBQTMUk6NESBAgAABAgQICJjGAAECBAgQIECAQKmAgFnKqTECBAgQIECAAAEB0xggQIAAAQIECBAoFRAwSzk1RoAAAQIECBAgIGAaAwQIECBAgAABAqUCAmYpp8YIECBAgAABAgQETGOAAAECBAgQIECgVEDALOXUGAECBAgQIECAgIBpDBAgQIAAAQIECJQKCJilnBojQIAAAQIECBAQMI0BAgQIECBAgACBUgEBs5RTYwQIECBAgAABAgKmMUCAAAECBAgQIFAqIGCWcmqMAAECBAgQIEBAwDQGCBAgQIAAAQIESgUEzFJOjREgQIAAAQIECAiYxgABAgQIECBAgECpgIBZyqkxAgQIECBAgAABAdMYIECAAAECBAgQKBUQMEs5NUaAAAECBAgQICBgGgMECBAgQIAAAQKlAgJmKafGCBAgQIAAAQIEBExjgAABAgQIECBAoFRAwCzl1BgBAgQIECBAgICAaQwQIECAAAEC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";
+        //var dataURL = signaturePad.fromDataURL(tmp);
+        download(tmp, "signature.png");
+    }
+
+
+
+    function download(dataURL, filename) {
+  if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") === -1) {
+    window.open(dataURL);
+  } else {
+    var blob = dataURLToBlob(dataURL);
+    var url = window.URL.createObjectURL(blob);
+
+    var a = document.createElement("a");
+    a.style = "display: none";
+    a.href = url;
+    a.download = filename;
+
+    document.body.appendChild(a);
+    a.click();
+
+    window.URL.revokeObjectURL(url);
+  }
+    }
+
+
+    function dataURLToBlob(dataURL) {
+  // Code taken from https://github.com/ebidel/filer.js
+  var parts = dataURL.split(';base64,');
+  var contentType = parts[0].split(":")[1];
+  var raw = window.atob(parts[1]);
+  var rawLength = raw.length;
+  var uInt8Array = new Uint8Array(rawLength);
+
+  for (var i = 0; i < rawLength; ++i) {
+    uInt8Array[i] = raw.charCodeAt(i);
+  }
+
+  return new Blob([uInt8Array], { type: contentType });
+}
+
+    function refresh_table() {
+
+
+
+    }
+</script>
 
 {% endblock %}

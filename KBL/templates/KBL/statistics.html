@@ -1,0 +1,82 @@
+{% extends "app/layout_KBL.html" %}
+
+{% load staticfiles %}
+{% block content %}
+{% csrf_token %}
+<div class="inventory_precedure_grid">
+    <div class="statistics_grid partition">
+        <div class="statistics_table_wrap">
+            <div style="float:right;">
+                <input type="hidden" value="PROCEDURE" id="revenue_search_type" />
+                <!--Date-->
+                <div class="date_input_div">
+                    {{ _('Date')}}:
+                    <input type="text" class="form-control date_input" id="date_start" /> ~
+                    <input type="text" class="form-control date_input" id="date_end" />
+                </div>
+
+                <!--Depart-->
+                <!--
+                    <div class="input-group contents_filter_div" id="contents_filter_div_depart">
+                    <span class="input-group-addon">{{ _('Type') }}</span>
+                    <select id="contents_filter_type" class="form-control" aria-describedby="basic-addon1">
+                        <option value="">{{ _('All') }}</option>
+                        {% for data in list_project_type %}
+                        <option value="{{ data.code }}">{{ data.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                -->
+            </div>
+            <br />
+            <div class="precedure_database_list">
+                <div class="precedure_database_table">
+                    <table class="table table-hover table-striped" id="statistics_table">
+                        <thead>
+                            <tr>
+                                <th>{{ _('Service Type') }}</th>
+                                <th>{{ _('Quantity') }}</th>
+                                <th>{{ _('Service Fee') }}</th>
+                                <th>{{ _('Service Fee (Vat)') }}</th>
+                                <th>{{ _('Service Fee Total') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statistics_table_body">
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="2">{{ _('Total') }}</th>
+                                <th id="total_service_fee">0</th>
+                                <th id="total_service_fee_vat">0</th>
+                                <th id="total_service_fee_total">0</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <br />
+
+                    <br />
+                    <br />
+                </div>
+
+             </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/statistics.css' %}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
+<script src="{% static 'js/statistics.js' %}" type="text/javascript"></script>
+{% endblock %}

@@ -126,11 +126,11 @@
         <div class="doctor_waiting partition">
              <div class="status_table_title">
                  <span class="btn btn-success">{{ _('Reception Status') }}</span>
-                 <div style="display: inline; float: right;">
+                 <div style="text-align:right;">
                       {{ _('Date') }}:
                      {{ receptionsearch.date }}
                      {{ receptionsearch.progress }}
-                     <input type="text" class="form-control" id="search_patient" style="display:none;"/>
+                     <input type="text" class="form-control" id="search_patient"/>
                      <input type="button" class="btn btn-default" value="{{ _('Search') }}" onclick="reception_waiting()"/>
                     </div>
                 </div>

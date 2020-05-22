@@ -51,6 +51,7 @@
                             <th>{{ _('Service Title') }}</th>
                             <th>{{ _('Type / Service') }}</th>
                             <th>{{ _('Service Fee') }}</th>
+                            <th>{{ _('Quantity') }}</th>
                             <th>{{ _('Service Fee(VAT)') }}</th>
                             <th>{{ _('Service Fee(Total)') }}</th>
                             <th>{{ _('Paid(Total)') }}</th>
@@ -121,6 +122,11 @@
 					<div class="input-group">
 						<span class="input-group-addon" id="basic-addon1">* {{ _('Service Fee') }}</span>
 						<input type="text" id="audit_service_fee" class="form-control" aria-describedby="basic-addon1" placeholder="{{ _('Numbers Only') }}">
+					</div>
+
+                    <div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">* {{ _('Quantity') }}</span>
+						<input type="text" id="audit_quantity" class="form-control" aria-describedby="basic-addon1">
 					</div>
 
                     <div class="input-group">

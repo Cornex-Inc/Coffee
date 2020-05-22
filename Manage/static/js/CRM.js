@@ -21,6 +21,9 @@ $(function () {
         search_patient();
     });
 
+    $("#control_depart").change(function () {
+        search_patient();
+    })
 
     //문자 글자 고정
     $("#sms_modal_content").keydown(function () {
@@ -34,6 +37,7 @@ $(function () {
 function search_patient(page = null) {
     var context_in_page = 10;
 
+    var depart = $("#control_depart").val();
 
     var category = $('#patient_type option:selected').val();
     var string = $('#patient_search').val();
@@ -44,6 +48,8 @@ function search_patient(page = null) {
         url: '/manage/customer_manage_get_patient_list/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
+
+            'depart': depart,
             'category': category,
             'string': string,
 
@@ -55,7 +61,7 @@ function search_patient(page = null) {
             $('#patient_list_table > tbody ').empty();
             for (var i = 0; i < context_in_page; i++) {
                 if (response.datas[i]) {
-                    var str = "<tr style='cursor:pointer;' onclick='set_patient_data(" +
+                    var str = "<tr style='cursor:pointer;' onclick='set_patient_data(this," +
                         parseInt(response.datas[i]['id']) +
                         ")'><td>" + response.datas[i]['id'] + "</td>";
 
@@ -123,7 +129,12 @@ function search_patient(page = null) {
 }
 
 
-function set_patient_data(patient_id) {
+function set_patient_data(obj,patient_id) {
+
+    $("#patient_list_table tr").removeClass('danger');
+    $(obj).addClass('danger');
+
+    var depart = $("#control_depart").val();
 
     //환자 기본 정보
     $.ajax({
@@ -132,6 +143,7 @@ function set_patient_data(patient_id) {
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
             'patient_id': patient_id,
+
         },
         dataType: 'Json',
         success: function (response) {
@@ -162,6 +174,7 @@ function set_patient_data(patient_id) {
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
             'patient_id': patient_id,
+            'depart': depart,
         },
         dataType: 'Json',
         success: function (response) {
@@ -222,7 +235,7 @@ function sms_modal(patient_id) {
 
 
 
-function send_sms(){
+function send_sms() {
 
     var receiver = $("#sms_modal_name").val()
     var phone = $("#sms_modal_phone").val()
@@ -242,6 +255,13 @@ function send_sms(){
         return;
     }
 
+    //문자 전송 번호 
+    list_number = phone.split(',');
+    list_number = list_number.filter(function (item) {
+        return item !== null && item !== undefined && item !== '';
+    });
+    str_list_number = list_number.join(',')
+
     $.ajax({
         type: 'POST',
         //url: '/manage/employee_check_id/',
@@ -249,11 +269,12 @@ function send_sms(){
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
 
-            'type':'MANUAL',
+            'type': 'MANUAL',
             'receiver': receiver,
 
-            'phone': phone,
+            'phone': list_number.toString(),
             'contents': contents,
+
         },
         beforeSend: function () {
             $("#overlay").fadeIn(300);
@@ -262,28 +283,39 @@ function send_sms(){
         success: function (response) {
             console.log(response);
             if (response.res == true) {
-                var url = 'http://kbl.cornex.co.kr/sms/sms_send.php?msg_id=' + response.id + '&phone=' + phone + '&contents=' + contents;
+
+                context = {
+                    //'csrfmiddlewaretoken': $('#csrf').val(),
+                    'msg_id': response.id,
+                    'phone': str_list_number,
+                    'contents': $("#contents").val(),
+                }
+
+
+                //var url = 'http://kbl.cornex.co.kr/sms/sms_send.php?data=' + JSON.stringify(context)
+                var url = 'http://kbl.cornex.co.kr/sms/sms_send.php?msg_id=' + response.id + '&phone=' + str_list_number + '&contents=' + contents;
                 console.log('url : ' + url);
-                
+
                 $.ajax({
                     crossOrigin: true,
-                    type: 'GET',
+                    type: 'POST',
                     //url: '/manage/employee_check_id/',
                     url: url,
-                    data: {
-                        //'csrfmiddlewaretoken': $('#csrf').val(),
-                        //'msg_id': response.id,
-                        //'phone': $("#phone_number").val(),
-                        //'contents': $("#contents").val(),
-                    },
+                    //data: {
+                    //    'csrfmiddlewaretoken': $('#csrf').val(),
+                    //    'msg_id': response.id,
+                    //    'phone': str_list_number,
+                    //    'contents': $("#contents").val(),
+                    //},
                     dataType: 'Json',
                     //jsonp: "callback", 
                     success: function (response) {
                         //전송 완료 시 창 닫기. 결과는 이력에서 확인
+                        $('#sms_modal').modal('hide');
                         json_response = JSON.parse(response);
-                
+
                         console.log(json_response);
-                
+
                         $.ajax({
                             type: 'POST',
                             url: '/manage/sms/recv_result/',
@@ -296,7 +328,7 @@ function send_sms(){
                             },
                             dataType: 'Json',
                             success: function (response) {
-                                
+
                             },
                             error: function (request, status, error) {
                                 console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -319,7 +351,6 @@ function send_sms(){
     })
 
 }
-
 
 
 

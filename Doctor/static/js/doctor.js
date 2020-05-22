@@ -42,6 +42,17 @@ $(function () {
     }
 
     // init start
+
+
+    $('#search_patient').keydown(function (key) {
+        if (key.keyCode == 13) {
+            reception_waiting();
+            worker_on(false);
+        }
+    })
+
+
+
     reception_waiting(true);
 
     $('.diagnosis_select_contents').hide();
@@ -200,6 +211,9 @@ $(function () {
         drops: "up",
         locale: {
             format: "YYYY-MM-DD",
+        },
+        ranges: {
+            'Today': [moment(), moment()],
         },
     });
     
@@ -853,7 +867,7 @@ function reception_waiting(Today = false, alarm = false) {
     var date;
 
     progress = $('#reception_progress').val();
-    string = '';//$("#search_patient").val();
+    string = $("#search_patient").val();
     date = $('#reception_waiting_date').val();
     //언어에 따라 날짜가 다르기 때문에 서버 형식에 맞게 재설정 후 전송
     if ($("#language").val() == 'vi') {
@@ -898,10 +912,20 @@ function reception_waiting(Today = false, alarm = false) {
                         ");" +
                         "get_diagnosis(" + response.datas[i]['reception_no'] +
                         ");'><td>" + (parseInt(i) + 1) + "</td>" +
-                        "<td>" + response.datas[i]['chart'] + "</td>" +
-                        "<td>" + response.datas[i]['name_kor'] + "/" + response.datas[i]['name_eng'] + "</td>" +
-                        "<td>" + response.datas[i]['date_of_birth'] + '<br/>'+ ' (' + response.datas[i]['age'] + '/' +response.datas[i]['gender'] + ")</td>" +
-                        "<td>" + response.datas[i]['reception_time'] + "</td></tr>";
+                        "<td>";
+                    if (response.datas[i]['package']) { // 패키지 접수
+                        str += '<i class="fa fa-product-hunt"></i> ';
+                    }
+
+                    str += response.datas[i]['chart'] + "</td>" +
+                        "<td>" + response.datas[i]['name_kor'] + "<br/>" + response.datas[i]['name_eng'] + "</td>" +
+                        "<td>" + response.datas[i]['date_of_birth'] + '<br/>' + ' (' + response.datas[i]['age'] + '/' + response.datas[i]['gender'] + ")</td>";
+                    if (string == '') {
+                        str += "<td>" + response.datas[i]['reception_time'] + "</td></tr>";
+                    }
+                    else {
+                        str += "<td>" + response.datas[i]['reception_datetime'] + "</td></tr>";
+                    }
 
                     $('#Rectption_Status').append(str);
                 }

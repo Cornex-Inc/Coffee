@@ -106,32 +106,37 @@
 
     #audit_list_table th:nth-child(1){width:40px;}
     #audit_list_table th:nth-child(2){width:35px;}
-    #audit_list_table th:nth-child(3){width:120px;}
-    #audit_list_table th:nth-child(4){width:165px;}
-    #audit_list_table th:nth-child(5){width:165px;}
+    #audit_list_table th:nth-child(3){width:100px;}
+    #audit_list_table th:nth-child(4){width:145px;}
+    #audit_list_table th:nth-child(5){width:145px;}
+
+        #audit_list_table th:nth-child(7) {
+            width: 60px;
+        }
         #audit_list_table th:nth-child(6),
-        #audit_list_table th:nth-child(7),
         #audit_list_table th:nth-child(8),
         #audit_list_table th:nth-child(9),
+        #audit_list_table th:nth-child(10),
         #audit_list_table th:nth-child(11),
         #audit_list_table th:nth-child(12),
-        #audit_list_table th:nth-child(13) {
+        #audit_list_table th:nth-child(13),
+        #audit_list_table th:nth-child(14) {
             width: 85px;
         }
-        #audit_list_table th:nth-child(10) {
+        #audit_list_table th:nth-child(11) {
             width: 70px;
         }
-    #audit_list_table th:nth-child(14){width:70px;}
-    #audit_list_table th:nth-child(15){width:95px;}
+    #audit_list_table th:nth-child(15){width:70px;}
     #audit_list_table th:nth-child(16){width:95px;}
     #audit_list_table th:nth-child(17){width:95px;}
     #audit_list_table th:nth-child(18){width:95px;}
-    #audit_list_table th:nth-child(19){width:80px;}
-    #audit_list_table th:nth-child(20){width:55px;}
-    #audit_list_table th:nth-child(21){width:85px;}
-    #audit_list_table th:nth-child(22){width:0px;}
+    #audit_list_table th:nth-child(19){width:95px;}
+    #audit_list_table th:nth-child(20){width:80px;}
+    #audit_list_table th:nth-child(21){width:55px;}
+    #audit_list_table th:nth-child(22){width:85px;}
+    #audit_list_table th:nth-child(23){width:0px;}
 
-    #audit_list_table td:nth-child(22){overflow:hidden;}
+    #audit_list_table td:nth-child(23){overflow:hidden;}
 
     #audit_list_table td {
         height: 52px;
@@ -365,6 +370,10 @@
     border: solid white;
     border-width: 0 3px 3px 0;
     transform: rotate(35deg);
+}
+
+.container input:disabled ~ .checkmark {
+    background-color: rgb(58,70,109);
 }
 
 

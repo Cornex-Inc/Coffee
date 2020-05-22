@@ -1,0 +1,70 @@
+body
+{
+    
+}
+
+
+.background_grid {
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 55%;
+}
+
+.partition {
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: rgba(180, 180, 180, 0.15);
+    border: 3.7px solid white;
+    overflow: hidden;
+}
+
+
+.title_span {
+    margin-bottom: 15px;
+    font-size: 15px;
+    height: 30px;
+    padding-top: 1px;
+    background: rgb(90,64,129);
+    border-color: rgb(90,64,129);
+}
+
+    .title_span:hover {
+        background: rgb(90,64,129);
+        border-color: rgb(90,64,129);
+    }
+
+
+.search_control_div{
+    float:right;
+}
+#string_search {
+    display: inline-block;
+    width: 300px;
+    margin-bottom:5px;
+}
+
+
+
+.control_warp {
+    width: 600px;
+    height: 200px;
+    background: #ffffff;
+    top: 0;
+}
+
+.sign_waiting_list_wrap{
+    height:300px;
+    margin-bottom:10px;
+    overflow-y:auto;
+}
+
+.signature_wrap {
+    width: 100%;
+}
+
+#sign {
+    border: 1px solid black;
+}

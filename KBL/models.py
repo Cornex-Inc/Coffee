@@ -130,8 +130,6 @@ class Customer_Company(models.Model):
         )
 
 
-
-
 class Customer_Employee(models.Model):
     #등록 회사 - 논리 FK
     company_id = models.CharField(
@@ -255,6 +253,7 @@ class Estimate_Sheet(models.Model):
         default='',
         )
 
+
     #제목
     title = models.CharField(
         max_length = 32,
@@ -288,6 +287,12 @@ class Estimate_Sheet(models.Model):
     date_sent = models.CharField(
         max_length = 20,
         default='0000-00-00 00:00:00'
+        )
+
+    #발송 여부
+    is_sent = models.CharField(
+        max_length = 2,
+        default='N',
         )
 
     #사용 유무
@@ -691,7 +696,6 @@ class Work_Permit_Manage(models.Model):
         )
 
 
-
 class Visa_Manage(models.Model):
 
     #프로젝트 정보 - FK 물리
@@ -829,7 +833,6 @@ class Visa_Manage(models.Model):
         )
 
 
-
 class Audit_Manage(models.Model):
 
 
@@ -855,6 +858,12 @@ class Audit_Manage(models.Model):
     #서비스 제목
     title = models.CharField(
         max_length = 64,
+        default='',
+        )
+
+    #갯수
+    quantity = models.CharField(
+        max_length = 4,
         default='',
         )
 
@@ -1042,6 +1051,12 @@ class Invoice_Manage(models.Model):
     date_sent= models.CharField(
         max_length = 20,
         default='0000-00-00 00:00:00'
+        )
+
+    #발송 여부
+    is_sent = models.CharField(
+        max_length = 2,
+        default='N',
         )
 
     #상태

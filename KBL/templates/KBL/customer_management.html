@@ -9,6 +9,7 @@
             <div class="status_table_title">
                 <span class="btn btn-danger title_span">{{ _('Customer Management') }}</span>
             <div class="radiation_waiting_control">
+				<!--
                 <div class="input-group select_div">
                     <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Type') }}</span>
                     <select id="search_type" class="form-control costom-select " aria-describedby="basic-addon1" >
@@ -16,6 +17,9 @@
                                                
                     </select>
                 </div>
+					-->
+				<input type="text" id="date_start" class="form-control date_input">
+                <input type="text" id="date_end" class="form-control date_input">
                 <input type="text" id="search_string" class="form-control"/>
                 <input type="button" id="search_btn" class="btn btn-default" value="{{ _('Search') }}" style="display:inline;"/>
             </div>
@@ -148,9 +152,9 @@
 							</table>
 						</div>
                         <div style="text-align:right;">
-                            <input type="button" value="{{ _('Send SMS') }}" class="btn btn-warning" onclick="send_sms()" />
-					        <input type="button" value="{{ _('WP Issued list') }}" class="btn btn-danger" onclick="wp_isuse()" />
-					        <input type="button" value="{{ _('Visa Issued list') }}" class="btn btn-success" onclick="visa_issue()" />
+                            <input type="button" value="{{ _('Send SMS') }}" class="btn btn-warning" onclick="sms_modal()" />
+					        <!--<input type="button" value="{{ _('WP Issued list') }}" class="btn btn-danger" onclick="wp_isuse()" />
+					        <input type="button" value="{{ _('Visa Issued list') }}" class="btn btn-success" onclick="visa_issue()" />-->
 					        <input type="button" value="+ {{ _('Register') }}" class="btn btn-primary" onclick="employee_modal()"/>
                             
                         </div>
@@ -167,7 +171,7 @@
 								    <th>{{ _('Level') }}</th>
 								    <th>{{ _('Start Date') }}</th>
 								    <th>{{ _('Finsh Date') }}</th>
-								    <th>{{ _('Condition') }}</th>
+								    <th>{{ _('Status') }}</th>
 								    <th>{{ _('In Charge') }}</th>
 									<th>{{ _('Note') }}</th>
 								    <th>{{ _('Management') }}</th>
@@ -178,7 +182,7 @@
                             </tbody>
                         </table>
                         <div>
-                            <input type="button" value="{{ _('Register') }}" class="btn btn-warning" onclick="project_modal()">
+                            <!--<input type="button" value="{{ _('Register') }}" class="btn btn-warning" onclick="project_modal()">-->
                         </div>
                     </div>
                 </div>
@@ -465,6 +469,10 @@
         </div>
     </div>
 </div>
+
+
+
+
 
 <div id="overlay">
 	<div class="cv-spinner">

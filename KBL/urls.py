@@ -4,7 +4,8 @@ from . import forms, views
 app_name = 'KBL' 
 
 urlpatterns = [
-    path('',views.index,name='index'),
+    #초기화면 대쉬보드
+    path('',views.dash_board,name='dash_board'),
 
     #고객 정보
     path('customer_management',views.customer_management,name='customer_management'),
@@ -17,6 +18,8 @@ urlpatterns = [
     path('customer_management_set_employee_list/',views.customer_management_set_employee_list,),
     path('customer_management_set_employee_info/',views.customer_management_set_employee_info,),
     path('customer_management_delete_employee/',views.customer_management_delete_employee,),
+
+    path('customer_management_set_project_list/',views.customer_management_set_project_list,),
 
 
 
@@ -52,6 +55,7 @@ urlpatterns = [
 
     #노동허가서 관리
     path('work_permit',views.work_permit,name='work_permit'),
+    path('work_permit_list_search/',views.work_permit_list_search),
 
     path('work_permit_search/',views.work_permit_search,),
     path('work_permit_save/',views.work_permit_save,),
@@ -60,6 +64,7 @@ urlpatterns = [
 
     #비자 관리
     path('visa_management',views.visa_management,name='visa_management'),
+    path('visa_list_search/',views.visa_list_search),
 
     path('visa_search/',views.visa_search,),
     path('visa_save/',views.visa_save,),
@@ -99,6 +104,10 @@ urlpatterns = [
 
     path('print_invoice/<int:id>',views.print_invoice),
     path('send_email_invoice/',views.send_email_invoice),
+
+    #통계
+    path('statistics',views.statistics,name='statistics'),
+    path('statistics_search/',views.statistics_search),
 
     #유틸
     ##오토컴플릿

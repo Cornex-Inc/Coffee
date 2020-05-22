@@ -310,10 +310,29 @@
     }
 
 
-
-.input-group-long {
-    width: 681px;
+#Rectption_Status{
+    /*table-layout:fixed;*/
 }
+    #Rectption_Status th, #Rectption_Status td{
+        vertical-align:middle;
+        text-align:center;
+    }
+
+    #Rectption_Status th:nth-child(1){width:50px;}
+    #Rectption_Status th:nth-child(2){width:90px;}
+    #Rectption_Status th:nth-child(3){width:150px;}
+    #Rectption_Status th:nth-child(4){width:130px;}
+    #Rectption_Status th:nth-child(5){width:80px;}
+    #Rectption_Status th:nth-child(6){width:80px;}
+    #Rectption_Status th:nth-child(7){width:80px;}
+    #Rectption_Status th:nth-child(8){width:120px;}
+    #Rectption_Status th:nth-child(9){}
+    #Rectption_Status th:nth-child(10){}
+
+
+    .input-group-long {
+        width: 681px;
+    }
 
 .need_medical_report {
     font-weight:300;
@@ -485,10 +504,75 @@
 
 }
 
+#patient_package_list_table{
+    margin-top:10px;
+    table-layout:fixed;
+}
+
+    #patient_package_list_table th, #patient_package_list_table td{
+        vertical-align:middle;
+        text-align:center;
+    }
+
+    #patient_package_list_table th:nth-child(1){width:60px;}
+    #patient_package_list_table th:nth-child(2){width:60px;}
+    #patient_package_list_table th:nth-child(3){}
+    #patient_package_list_table th:nth-child(4){width:70px;}
+    #patient_package_list_table th:nth-child(5){width:60px;}
+    #patient_package_list_table th:nth-child(6){width:110px;}
+
+#search_doctor_filter_package_div, #search_depart_filter_package_div, #depart_filter_reg_div, #doctor_filter_reg_div {
+    display: inline-table;
+    width: 49%;
+}
+
+#search_string_package {
+    display: inline;
+    width: 250px;
+}
 
 
-@media ( min-width: 1900px ) {
-    .reception_grid {
+
+#package_list_table{
+    table-layout:fixed;
+
+}
+
+    #package_list_table th, #package_list_table td{
+        vertical-align:middle;
+        text-align:center;
+    }
+
+    #package_list_table td{
+        height:30px;
+    }
+
+    #package_list_table th:nth-child(1) {
+        width: 80px;
+    }
+    #package_list_table th:nth-child(2){}
+    #package_list_table th:nth-child(3) {
+        width: 150px;
+    }
+    #package_list_table th:nth-child(4){width:80px;}
+
+
+#patient_package_history_list{
+    table-layout:fixed;
+}
+    #patient_package_history_list td, #patient_package_history_list th{
+        vertical-align:middle;
+        text-align:center;
+    }
+    #patient_package_history_list th:nth-child(1){width:50px;}
+    #patient_package_history_list th:nth-child(2){width:120px;}
+    #patient_package_history_list th:nth-child(3){}
+    #patient_package_history_list th:nth-child(4){width:60px;}
+    #patient_package_history_list th:nth-child(5){width:100px;}
+    #patient_package_history_list th:nth-child(6){width:100px;}
+
+    @media ( min-width: 1900px ) {
+        .reception_grid {
         grid-template-columns: 50%;
         grid-template-rows: 380px;
     }

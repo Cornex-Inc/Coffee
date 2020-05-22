@@ -49,11 +49,16 @@
 }
 
 
-
-
+.date_input {
+    width: 75px;
+    padding: 5px;
+}
+#date_start, #date_end {
+    display: inline;
+}
 
 #search_string {
-    width: 110px;
+    width: 150px;
     display: inline;
 }
 
@@ -61,6 +66,7 @@
     text-align: right;
     float: right;
 }
+
 
 #list_table {
     table-layout: fixed;
@@ -148,6 +154,31 @@
     #emplyoee_table .btn:first-child {
         margin-right: 10px;
     }
+
+
+
+#project_table{
+    table-layout:fixed;
+}
+    #project_table th, #project_table td{
+        text-align:center;
+        vertical-align:middle;
+    }
+
+    #project_table th:nth-child(1){width:50px}
+    #project_table th:nth-child(2){width:0px;overflow:hidden;}
+    #project_table th:nth-child(3){width:120px;}
+    #project_table th:nth-child(4){}
+    #project_table th:nth-child(5){width:45px}
+    #project_table th:nth-child(6){width:80px}
+    #project_table th:nth-child(7){width:80px}
+    #project_table th:nth-child(8){width:80px}
+    #project_table th:nth-child(9){width:80px}
+    #project_table th:nth-child(10){}
+    #project_table th:nth-child(11){width:0px;overflow:hidden;}
+
+    #project_table td:nth-child(2){overflow:hidden;}
+    #project_table td:nth-child(11){overflow:hidden;}
 
     .input-group {
         width: 100%;
@@ -268,6 +299,26 @@
 
 
 
+#modalBody .input-group {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+    #modalBody .input-group:last-child {
+        margin-bottom: 0;
+    }
+
+
+#modalBody .input-group-addon {
+    width: 100px;
+}
+
+#modalBody textarea {
+    resize: none;
+    height: 100px;
+}
+
+
 #overlay {
     position: fixed;
     top: 0;
@@ -310,5 +361,15 @@
 
 .btn_dnager_tmp {
     background-color: #d9534f !important ;
+}
+
+.label-purple {
+    background: rgb(168,166,202)
+}
+
+#project_table .label {
+    display: block;
+    width: 65px;
+    margin: 0 auto;
 }
 

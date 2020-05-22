@@ -26,6 +26,11 @@ $(function () {
         }
     })
 
+    $("#estimate_date_start,#estimate_date_end,#estimate_status,#estimate_in_charge").change(function () {
+        search_estimate();
+    });
+
+
 
 
 
@@ -151,7 +156,7 @@ function search_estimate(page = null) {
     var context_in_page = 10;
 
 
-    var type = $('#estimate_type').val();
+    var estimate_status = $('#estimate_status').val();
     var in_charge = $('#estimate_in_charge').val();
     var start = $('#estimate_date_start').val();
     var end = $('#estimate_date_end').val();
@@ -164,7 +169,7 @@ function search_estimate(page = null) {
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
 
-            'type': type,
+            'status': estimate_status,
             'in_charge': in_charge,
             'start': start,
             'end': end,
@@ -178,7 +183,7 @@ function search_estimate(page = null) {
             $('#estimate_list_table > tbody ').empty();
             for (var i = 0; i < context_in_page; i++) {
                 if (response.datas[i]) {
-                    var str = "<tr style='cursor:pointer' onclick='select_estimate(" + response.datas[i]['id'] + ")'>";
+                    var str = "<tr style='cursor:pointer' onclick='select_estimate(this," + response.datas[i]['id'] + ")'>";
                     str += "<td>" + response.datas[i]['id'] + "</td>" +
                         "<td><span class='" + response.estimate_class_dict[response.datas[i]['estimate_classification']]['class'] + "'>" + response.estimate_class_dict[response.datas[i]['estimate_classification']]['name'] + "</span></td>" +
                         "<td>" + response.datas[i]['estimate_recipient'] + "</td>" +
@@ -242,7 +247,10 @@ function search_estimate(page = null) {
 
 }
 
-function select_estimate(id = '') {
+function select_estimate(obj,id = '') {
+
+    $("#estimate_list_table tr").removeClass('danger');
+    $(obj).addClass('danger');
 
     $("#selected_estimate").val(id);
 
@@ -337,6 +345,7 @@ function estimate_save(id = '') {
         return;
     }
 
+ 
 
     $.ajax({
         type: 'POST',
@@ -454,6 +463,7 @@ function save_detail_modal() {
         return;
     }
 
+    $("#overlay").fadeOut(300);
     $.ajax({
         type: 'POST',
         url: '/KBL/estimate_sheet_detail_save/',
@@ -477,6 +487,7 @@ function save_detail_modal() {
             if (response.result) {
                 alert(gettext("Saved."));
                 select_estimate(selected_estimate);
+
                 $('#detailed_info_modal').modal('hide');
             }
 
@@ -514,7 +525,6 @@ function delete_detailed_info(id = '') {
 
                 if (response.result) {
                     alert(gettext("Deleted."));
-                    select_estimate(selected_estimate);
                 }
 
             },
@@ -541,8 +551,10 @@ function print_estimate(id) {
 
 function send_email_estimate(id = null) {
 
+
     if (confirm(gettext('Do you want to send E-Mail?'))) {
 
+        $("#overlay").fadeOut(300);
         $.ajax({
             type: 'POST',
             url: '/KBL/send_email_estimate/',
@@ -556,14 +568,21 @@ function send_email_estimate(id = null) {
 
                 if (response.result) {
                     alert(gettext("Email has been sent."));
-                    select_estimate(selected_estimate);
+                    search_estimate();
+                    $("#overlay").fadeOut(300);
                 }
-
+               
+            },
+            beforeSend: function () {
+                $("#overlay").fadeIn(300);
             },
             error: function (request, status, error) {
                 console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
             },
+            complete: function () {
+                $("#overlay").fadeOut(300);
+            }
         });
 
     }

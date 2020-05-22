@@ -581,6 +581,12 @@ def reception_search(request):
             else:
                 data.update({'is_new':'R'})
 
+        #패키지 유무
+        try:
+            package = Package_Manage.objects.get(reception_id = reception.id).id
+        except Package_Manage.DoesNotExist:
+            package = None
+
         data.update({
             'id':reception.id,
             'chart':reception.patient.get_chart_no(),
@@ -594,6 +600,9 @@ def reception_search(request):
             'doctor':reception.doctor.name_kor,
             'has_unpaid':reception.patient.has_unpaid(),
             'time':reception.recorded_date.strftime('%H:%M'),
+
+            'package':package,
+
             })
 
         
@@ -1789,7 +1798,7 @@ def reservation_save(request):
     context = {'result':True}
     return JsonResponse(context)
 
-
+@login_required
 def reservation_info(request):
     
     reservation_id = request.POST.get('reservation_id')
@@ -1831,6 +1840,7 @@ def reservation_del(request):
 
 
 
+@login_required
 def report_list(request):
     
     reception_id = request.POST.get('reception_id')
@@ -1877,6 +1887,7 @@ def report_list(request):
     return JsonResponse(context)
 
 
+@login_required
 def payment_record_list(request):
     reception_id = request.POST.get('reception_id')
     reception = Reception.objects.get(pk = reception_id)
@@ -1919,6 +1930,7 @@ def payment_record_list(request):
     return JsonResponse(context)
 
 
+@login_required
 def delete_payment(request):
     record_id = request.POST.get('record_id')
 
@@ -1935,6 +1947,7 @@ def delete_payment(request):
     return JsonResponse({'result':'done'})
 
 
+@login_required
 def get_patient_past(request):
     reception_id = request.POST.get('reception_id')
     reception = Reception.objects.get(pk = reception_id)
@@ -1992,7 +2005,7 @@ def get_patient_past(request):
 
 
 
-
+@login_required
 def Edit_Reception_get(request):
 
     reception_id = request.POST.get('reception_id')
@@ -2020,6 +2033,7 @@ def Edit_Reception_get(request):
     return JsonResponse(context)
 
 
+@login_required
 def Edit_Reception_save(request):
     reception_id = request.POST.get('reception_id')
     depart = request.POST.get('depart')
@@ -2039,6 +2053,8 @@ def Edit_Reception_save(request):
     return JsonResponse({'result':True})
 
 
+
+@login_required
 def Edit_Reception_delete(request):
     reception_id = request.POST.get('reception_id')
     rec = Reception.objects.get(id = reception_id)
@@ -2048,6 +2064,8 @@ def Edit_Reception_delete(request):
     return JsonResponse({'result':True})
 
 
+
+@login_required
 def Tax_Invoice_get(request):
     patient_id = request.POST.get('patient_id')
 
@@ -2084,6 +2102,7 @@ def Tax_Invoice_get(request):
     return JsonResponse(context)
 
 
+@login_required
 def Tax_Invoice_save(request):
     patient_id = request.POST.get('patient_id')
     number = request.POST.get('number')
@@ -2105,7 +2124,7 @@ def Tax_Invoice_save(request):
     return JsonResponse({'result':True})
 
 
-
+@login_required
 def Documents(request):
 
     departs = Depart.objects.all()
@@ -2118,6 +2137,7 @@ def Documents(request):
         )
 
 
+@login_required
 def document_search(request):
     start = request.POST.get('document_control_start')
     end = request.POST.get('document_control_end')
@@ -2230,7 +2250,7 @@ def document_search(request):
 
 
 
-
+@login_required
 def document_lab(request,reception_id):
     reception = Reception.objects.get(id = reception_id)
 
@@ -2294,6 +2314,7 @@ def document_lab(request,reception_id):
         )
 
 
+@login_required
 def document_prescription(request,reception_id):
     reception = Reception.objects.get(id = reception_id)
 
@@ -2343,6 +2364,7 @@ def document_prescription(request,reception_id):
         )
 
 
+@login_required
 def document_medical_receipt(request,reception_id):
 
     reception = Reception.objects.get(id = reception_id)
@@ -2479,8 +2501,8 @@ def document_medical_receipt(request,reception_id):
             },
         )
 
-
-def document_medical_receipt_old(request,reception_id):
+@login_required
+def document_medical_receipt_old(request,reception_id,):
     reception = Reception.objects.get(id = reception_id)
 
     exam_set = ExamManager.objects.filter(diagnosis_id = reception.diagnosis.id)
@@ -2524,7 +2546,8 @@ def document_medical_receipt_old(request,reception_id):
         no += 1
         precedures.append(precedure)
 
-
+    medicine_show_no = no
+    total_medicine_fee = 0
     medicines= []
     for data in medicine_set:
         medicine = {}
@@ -2537,6 +2560,7 @@ def document_medical_receipt_old(request,reception_id):
             })
         no += 1
         medicines.append(medicine)
+        total_medicine_fee += data.amount * data.days * data.medicine.get_price(reception.recorded_date)
 
     type= request.GET.get('type')
     if type == 'bf':
@@ -2572,6 +2596,10 @@ def document_medical_receipt_old(request,reception_id):
         sub_total = reception.payment.sub_total + additional
         total = reception.payment.sub_total - discount + additional
     
+    is_medicine_show = request.GET.get('is_medicine_show')
+    print(is_medicine_show)
+    if is_medicine_show== 'false':
+        no = medicine_show_no +1
 
     return render(request,
     'Receptionist/form_medical_receipt_old.html',
@@ -2602,11 +2630,15 @@ def document_medical_receipt_old(request,reception_id):
                 'tests':tests,
                 'precedures':precedures,
                 'medicines':medicines,
+
+                'is_medicine_show':is_medicine_show,
+                'medicine_show_no':medicine_show_no,
+                'total_medicine_fee':f"{total_medicine_fee:,}",
                 }
     )
 
 
-
+@login_required
 def document_medicine_receipt(request,reception_id):
     reception = Reception.objects.get(id = reception_id)
 
@@ -2671,6 +2703,7 @@ def document_medicine_receipt(request,reception_id):
         )
 
 
+@login_required
 def document_subclinical(request,reception_id):
     reception = Reception.objects.get(id = reception_id)
 
@@ -2755,6 +2788,7 @@ def document_subclinical(request,reception_id):
         )
 
 
+@login_required
 def document_medical_report(request,reception_id):
     reception = Reception.objects.get(id = reception_id)
     report = Report.objects.get(reception_id = reception_id)
@@ -2810,3 +2844,248 @@ def document_medical_report(request,reception_id):
                 'next_visit':next_visit,
             },
         )
+
+
+@login_required
+def package_list(request):
+
+    filter = request.POST.get('filter')
+    string = request.POST.get('string')
+
+    
+    query = Precedure.objects.filter(type='PKG',use_yn='Y')
+
+    datas = []
+
+    for data in query:
+        datas.append({
+            'id':data.id,
+            'code':data.code,
+            'name':data.id,
+            'price':data.get_price(),
+            'count':data.count,
+            })
+
+    print(datas)
+
+
+        
+    page = request.POST.get('page',1)
+    context = request.POST.get('context_in_page')
+
+    paginator = Paginator(datas, context)
+    try:
+        paging_data = paginator.page(page)
+    except PageNotAnInteger:
+        paging_data = paginator.page(1)
+    except EmptyPage:
+        paging_data = paginator.page(paginator.num_pages)
+
+
+    context = {
+        'datas':datas,
+        'page_range_start':paging_data.paginator.page_range.start,
+        'page_range_stop':paging_data.paginator.page_range.stop,
+        'page_number':paging_data.number,
+        'has_previous':paging_data.has_previous(),
+        'has_next':paging_data.has_next(),
+
+        }
+    return JsonResponse(context)
+
+
+@login_required
+def patient_package_list(request):
+
+    patient_id = request.POST.get('patient_id')
+
+    datas = []
+    patient = Patient.objects.get(id = patient_id)
+    query = Package_Manage.objects.filter( patient_id = patient_id).values('grouping').annotate(Sum('grouping')).order_by('-grouping')
+
+
+    for data in query:
+        patient_package = Package_Manage.objects.filter( 
+            patient_id = patient_id, 
+            grouping = data['grouping'],
+            )
+
+        count_max = Package_Manage.objects.filter( 
+            patient_id = patient_id, 
+            grouping = data['grouping'],
+            ).last()
+
+        depart = Depart.objects.get(id = patient_package[0].depart)
+
+        datas.append({
+            'id':patient_package[0].id,
+            'name':patient_package[0].precedure_name,
+            'depart':depart.name,
+            'depart_id':depart.id,
+            'doctor':patient_package[0].doctor,
+            'count_now':patient_package.exclude(date_used = '0000-00-00 00:00:00').count(),
+            'count_max':patient_package.last().itme_round,
+            })
+
+
+    return JsonResponse({
+        'result':True,
+        'datas':datas,
+
+        'chart':patient.get_chart_no(),
+        'name_kor':patient.name_kor,
+        'name_eng':patient.name_eng,
+        'age':patient.get_age(),
+        'gender':patient.get_gender_simple(),
+        'date_of_birth':patient.date_of_birth.strftime('%Y-%m-%d'),
+        })
+
+
+
+
+
+
+
+@login_required
+def set_package_to_patient(request):
+
+
+    id = request.POST.get('id')
+    patient_id = request.POST.get('patient_id')
+    depart_id = request.POST.get('depart_id')
+    doctor_id = request.POST.get('doctor_id')
+
+    package = Precedure.objects.get(id = id)
+
+    
+
+    tmp_query = Package_Manage.objects.filter(patient_id = patient_id).order_by('grouping').last()
+    if tmp_query is None:
+        tmp_group_id = 1
+    else:
+        tmp_group_id = int(tmp_query.grouping) + 1
+
+
+    now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    for i in range(1, int(package.count) + 1):
+        pack_mng = Package_Manage()
+
+        pack_mng.patient_id = patient_id
+        pack_mng.depart = depart_id
+        pack_mng.doctor = doctor_id
+        #pack_mng.reception_id = 1
+        pack_mng.precedure = package
+        pack_mng.precedure_name = package.name
+        pack_mng.itme_round = i
+        #pack_mng.memo 
+        pack_mng.date_bought = now
+        #pack_mng.date_used
+        #pack_mng.date_refund
+        pack_mng.grouping = tmp_group_id
+        pack_mng.registrant = request.user.id
+        pack_mng.date_register = now
+        pack_mng.modifier = request.user.id
+        pack_mng.date_modify = now
+
+
+        pack_mng.save()
+
+    reception = Reception()
+    reception.depart_id = depart_id
+    reception.doctor_id = doctor_id
+    reception.patient_id = patient_id
+    reception.progress = 'done'
+    reception.chief_complaint = ''
+    reception.save()
+    diagnosis = Diagnosis()
+    diagnosis.assessment =''
+    diagnosis.objective_data =''
+    diagnosis.diagnosis =''
+    diagnosis.plan =''
+    diagnosis.reception = reception
+    diagnosis.save()
+    precedure_mng = PrecedureManager()
+    precedure_mng.diagnosis = diagnosis
+    precedure_mng.precedure = package
+    precedure_mng.amount = 1
+    precedure_mng.save()
+    payment = Payment()
+    payment.sub_total = package.get_price()
+    payment.total = package.get_price()
+    payment.reception = reception
+    payment.progress = 'unpaid'
+    payment.save()
+
+
+
+
+
+
+
+    return JsonResponse({
+        'result':True,
+        })
+
+
+def patient_package_reception(request):
+
+    id = request.POST.get('id')
+    patient_id = request.POST.get('patient_id')
+    depart_id = request.POST.get('depart_id')
+    doctor_id = request.POST.get('doctor_id')
+
+
+    reception = Reception(patient_id = patient_id)
+    reception.depart_id = depart_id
+    reception.doctor_id = doctor_id
+    reception.chief_complaint = ''
+
+    reception.save()
+
+    package = Package_Manage.objects.get(id = id)
+
+    package_now = Package_Manage.objects.filter(
+        patient_id = patient_id,
+        precedure = package.precedure,
+        grouping = package.grouping,
+        date_used = '0000-00-00 00:00:00',
+        ).order_by('itme_round').first()
+
+    package_now.reception_id = reception.id
+    package_now.save()
+
+    return JsonResponse({
+        'result':True,
+        })
+
+
+
+def patient_package_history_modal(request):
+
+    id = request.POST.get('id')
+    
+
+    package = Package_Manage.objects.get(id = id)
+
+    datas = []
+    query_package = Package_Manage.objects.filter(
+        patient = package.patient, 
+        precedure = package.precedure, 
+        grouping = package.grouping
+        ).order_by('itme_round')
+
+    for data in query_package:
+        datas.append({
+            'id':data.id,
+            'patient_name':data.patient.name_kor + '<br/>' + data.patient.name_eng,
+            'precedure_name':data.precedure_name,
+            'round':data.itme_round,
+            'date_bought':data.date_bought[0:16],
+            'date_used':'' if data.date_used == '0000-00-00 00:00:00' else data.date_used[0:16],
+            })
+
+    return JsonResponse({
+        'result':True,
+        'datas':datas,
+        })

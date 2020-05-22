@@ -7,30 +7,33 @@
     <div class="background_grid">
         <div class="customer_list partition">
             <div class="status_table_title">
-                <span class="btn btn-danger title_span">{{ _('Visa Management') }}</span>
+                <span class="btn btn-danger title_span">{{ _('Visa List') }}</span>
             
                 <div class="search_control_div">
-                    <div class="input-group depart_select">
+                    <div class="input-group depart_select" id="visa_type_div">
                         <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Visa Type') }}</span>
-                        <select id="estimate_type" class="form-control costom-select " aria-describedby="basic-addon1" >
+                        <select id="visa_type" class="form-control costom-select " aria-describedby="basic-addon1" >
                             <option value="" selected="">{{ _('ALL') }}</option>          
                         </select>
                     </div>
-                    <div class="input-group depart_select">
+                    <div class="input-group depart_select" id="visa_status_div">
                         <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Status') }}</span>
-                        <select id="estimate_in_charge" class="form-control costom-select " aria-describedby="basic-addon1" >
-                            <option value="" selected="">{{ _('ALL') }}</option>          
+                        <select id="visa_status" class="form-control costom-select " aria-describedby="basic-addon1" >
+                            <option value="" selected="">{{ _('ALL') }}</option>
+                            {% for data in list_project_status %}
+                            <option value="{{ data.code }}">{{ data.name }}</option>
+                            {% endfor %}
                         </select>
                     </div>
-                    <input type="text" id="estimate_date_start" class="form-control date_input">
-                    <input type="text" id="estimate_date_end" class="form-control date_input">
-                    <input type="text" id="estimate_search" class="form-control"/>
-                    <input type="button" id="patient_search_btn" class="btn btn-default" value="{{ _('Search') }}" style="display:inline;"/>
+                    <input type="text" id="visa_date_start" class="form-control date_input">
+                    <input type="text" id="visa_date_end" class="form-control date_input">
+                    <input type="text" id="visa_search" class="form-control"/>
+                    <input type="button" id="visa_search_btn" class="btn btn-default" value="{{ _('Search') }}" style="display:inline;"/>
                 </div>
             </div>
                
             <div class="patient_list_table_wrap">
-                <table class="table table-bordered table-hover table-striped" id="patient_list_table">
+                <table class="table table-bordered table-hover table-striped" id="visa_list_table">
                     <thead>
                         <tr>
                             <th>{{ _('No') }}</th>
@@ -45,7 +48,6 @@
                             <th>{{ _('Submit Document') }}</th>
                             <th>{{ _('Exp. Result Date') }}</th>
                             <th>{{ _('File') }}</th>
-                            <th>{{ _('Manage') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,7 +57,7 @@
                 <ul class="pagination" id="table_pagnation">
 
                 </ul>
-                <button class="btn btn-primary" style="float:right" onclick="visa_management_modal()">+ {{ _('Register') }}</button>
+                <!--<button class="btn btn-primary" style="float:right" onclick="visa_management_modal()">+ {{ _('Register') }}</button>-->
             </div>
         </div>
     </div>
@@ -163,6 +165,40 @@
 
 
 
+<!-- File -->
+<form enctype="multipart/form-data" id="id_ajax_upload_form" method="POST" novalidate="">
+<div id="new_edit_file_list" class="modal fade">
+    <div class="modal-dialog" style="width:1100px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4 id="password_database_header">{{ _('File List') }}</h4>
+                <div id="modalBody" class="modal-body">
+                    <input type="hidden" value="" id="selected_file_list" name="selected_file_list"/>
+                    <input type="hidden" value="" id="board_type" name="board_type"/>
+                    <table class="table table-hover table-striped" id="file_table">
+                        <thead>
+                            <tr>
+                                <th>{{ _('No') }}</th>
+                                <th>{{ _('Document Name') }}</th>
+                                <th>{{ _('Registered Date') }}</th>
+                                <th>{{ _('User ID') }}</th>
+                                <th>{{ _('Remark') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <!--<a class="btn btn-primary" onclick="file_add_modal()">+ {{ _('New') }}</a>-->
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 <div id="overlay">
 	<div class="cv-spinner">

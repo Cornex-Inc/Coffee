@@ -1,9 +1,11 @@
-{% extends "app/layout.html" %}
-
+{% extends request.session.is_KBL|yesno:"app/layout_KBL.html,app/layout.html" %}
 {% load staticfiles %}
+
 {% block content %}
 {% csrf_token %}
+
 <div class="inventory_precedure_grid">
+
     <div class="inventory_database partition">
         <div class="medicine_table_title">
             <span class="btn btn-danger title_span">{{ _('SMS History') }}</span>

@@ -223,15 +223,25 @@
                     <td>{{ data.sub_total }}</td>
                 </tr>
                 {% endfor %}
-                {% for data in medicines %}
-                <tr>
-                    <td>{{ data.no }}</td>
-                    <td>{{ data.name }}</td>
-                    <td>{{ data.price }}</td>
-                    <td>{{ data.amount }}</td>
-                    <td>{{ data.sub_total }}</td>
-                </tr>
-                {% endfor %}
+                {% if is_medicine_show == 'true' %}
+                    {% for data in medicines %}
+                    <tr>
+                        <td>{{ data.no }}</td>
+                        <td>{{ data.name }}</td>
+                        <td>{{ data.price }}</td>
+                        <td>{{ data.amount }}</td>
+                        <td>{{ data.sub_total }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td>{{ medicine_show_no }}</td>
+                        <td><b>Phí Thuốc</b> / <i>Medicines</i></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{ total_medicine_fee }}</td>
+                    </tr>
+                {% endif %}
                <tr>
                     <td>{{ additional_no }}</td>
                     <td><b>Dịch vụ bổ sung</b> / <i>Adding service</i></td>

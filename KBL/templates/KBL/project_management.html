@@ -20,7 +20,7 @@
                         </select>
                     </div>
                     <div class="input-group depart_select">
-                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Status') }}</span>
+                        <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Progress') }}</span>
                         <select id="project_status" class="form-control costom-select " aria-describedby="basic-addon1" >
                             <option value="" selected="">{{ _('ALL') }}</option>
                             {% for data in list_status %}
@@ -31,7 +31,8 @@
                     <div class="input-group depart_select">
                         <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('In Charge') }}</span>
                         <select id="project_in_charge" class="form-control costom-select " aria-describedby="basic-addon1" >
-                            <option value="" selected="">{{ _('ALL') }}</option>          
+                            <option value="" selected="">{{ _('ALL') }}</option>   
+							<option value="1">ADMIN</option>       
                         </select>
                     </div>
                     <input type="text" id="project_date_start" class="form-control date_input">
@@ -85,7 +86,7 @@
                   <!-- Tab panes -->
                   <div class="tab-content">
                      <!--Detil Info-->
-                    <div role="tabpanel" class="tab-pane active" id="detailed_info">
+                    <div role="tabpanel" class="tab-pane" id="detailed_info">
                         <div style="height:240px; margin-bottom:5px; overflow-y:auto;">
                             <table class="table table-bordered table-hover table-striped" id="detail_list">
                                 <thead>
@@ -242,10 +243,16 @@
                             {% endfor %}
 						</select>
 					</div>
-
+                    
                     <div class="input-group">
 						<span class="input-group-addon" id="basic-addon1">{{ _('In Charge') }}</span>
-						<input type="text" id="project_manage_in_charge" class="form-control" aria-describedby="basic-addon1">
+                        <select id="project_manage_in_charge" class="form-control" aria-describedby="basic-addon1">
+							<option value="">----------</option>
+							<option value="1">ADMIN</option>
+							{% for data in list_in_charge %}
+                            <option value="{{ data.id }}">{{ data.name }}</option>
+                            {% endfor %}
+						</select>
 					</div>
 
                     <div class="input-group">
@@ -402,7 +409,8 @@
                     <div class="input-group">
 						<span class="input-group-addon" id="basic-addon1">* {{ _('is Emergency') }}</span>
 						<select id="visa_emergency" class="form-control" aria-describedby="basic-addon1">
-							<option value="0">General</option>
+							<option value="">----------</option>
+                            <option value="0">General</option>
 							<option value="1">Emergency</option>
 						</select>
 					</div>

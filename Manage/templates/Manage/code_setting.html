@@ -8,12 +8,14 @@
     <div class="customer_list partition">
         <div class="status_table_title">
             <span class="btn btn-danger title_span">{{ _('Visa Management') }}</span>
-
             <div class="search_control_div">
                 <div class="input-group depart_select">
                     <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Type') }}</span>
                     <select id="code_type" class="form-control costom-select " aria-describedby="basic-addon1">
                         <option value="" selected="">{{ _('ALL') }}</option>
+                        {% for data in list_upper %}
+                        <option id="{{data.name}}">{{data.name}}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <input type="text" id="code_search" class="form-control" />

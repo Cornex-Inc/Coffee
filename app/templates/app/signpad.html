@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+{% load staticfiles %}
+{% load i18n %}
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    
+
+<script src="{% static 'js/jquery.min.js'%}"></script>
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/moment.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/daterangepicker.min.js'%} "></script>
+    
+    
+    <script src="{% static 'app/scripts/bootstrap.js' %}"></script>
+    <script src="{% static 'app/scripts/respond.js' %}"></script>
+    <script src="{% static 'js/jquery.ajax-cross-origin.min.js'%}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.min.css' %}" />
+    <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
+    <link rel="stylesheet" href="{% static 'jquery-ui-1.8.18/themes/base/jquery-ui.css' %}" type="text/css" /> 
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <link rel="Shortcut Icon" href="{% static 'favicon.ico'%}" type="image/x-icon" />
+    <link rel="icon" href="{% static 'favicon.ico'%}" type="image/x-icon" />
+
+
+
+
+    <script src="{% static 'signature_pad-master/docs/js/signature_pad.umd.js'%}"></script>
+
+
+    <script src="{% static 'js/signpad.js'%}"></script>
+    <link rel="stylesheet" href="{% static 'css/signpad.css'%}">
+
+</head>
+<body>
+    <input id="csrf" type="hidden" value="{{ csrf_token }}" />
+    <div class="customer_list partition">
+        <div style="width:800px;margin:0 auto;">
+            <div class="status_table_title">
+                <span class="btn btn-danger title_span">{{ _('Sign List') }}</span>
+            
+                <div class="search_control_div">
+                    <!--<input type="text" id="string_search" class="form-control"/>-->
+                    <a class='btn btn-default' href='javascript: void (0);' onclick='search_waiting_sign()' ><i class='fa fa-lg fa-refresh'></i> {{ _('Refresh List') }}</a>
+                </div>
+            </div>
+        
+            <div class="sign_waiting_list_wrap">
+                <table class="table table-bordered table-hover table-striped" id="sign_waiting_list_table">
+                    <thead>
+                        <tr>
+                            <th>{{ _('No') }}</th>
+                            <th>{{ _('Chart') }}</th>
+                            <th>{{ _('Name') }}</th>
+                            <th>{{ _('Date of Birth') }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <input type="hidden" id="selected_id" value="" />
+    <div id="signature-pad" class="signature_wrap partition">
+        <div style="width:800px;margin:0 auto;">
+            <div class="status_table_title">
+                <span class="btn btn-danger title_span">{{ _('SignPad') }}</span>
+            </div>
+
+            <div class="signature-pad--body">
+              <canvas style="touch-action: none;" id="sign"></canvas>
+            </div>
+
+
+
+            <div class="signature-pad--footer">
+                <div style="float:left;">
+                  <button type="button" class="btn btn-warning" id="clear">{{ _('Clear') }}</button>
+                  <!--<button type="button" class="btn btn-default" id="undo">{{ _('Undo') }}</button>-->
+                </div>
+                <div style="float:right;">
+                   <button type="button" class="btn btn-primary" onclick="save()">{{ _('Save') }}</button>
+                    <!--
+                  <button type="button" class="button save" data-action="save-png">Save as PNG</button>
+                  <button type="button" class="button save" data-action="save-jpg">Save as JPG</button>
+                  <button type="button" class="button save" data-action="save-svg">Save as SVG</button>
+                    -->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

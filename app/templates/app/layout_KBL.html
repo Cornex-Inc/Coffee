@@ -102,8 +102,8 @@
                        <ul class="dropdown-menu">
                           <li><a href="{% url 'KBL:project_management'%}">{{ _('Project Management') }}</a></li>
                           <li><a href="{% url 'KBL:scheduler'%}">{{ _('Work Scheduler') }}</a></li>
-                          <li><a href="{% url 'KBL:work_permit'%}">{{ _('Work Permit') }}</a></li>
-                          <li><a href="{% url 'KBL:visa_management'%}">{{ _('VISA Management') }}</a></li>
+                          <li><a href="{% url 'KBL:work_permit'%}">{{ _('Work Permit List') }}</a></li>
+                          <li><a href="{% url 'KBL:visa_management'%}">{{ _('VISA List') }}</a></li>
                        </ul>
                     </li>
                     <li><a href="{% url 'Manage:draft'%}">{{ _('Drafts') }}</a></li>
@@ -116,7 +116,7 @@
                     </li>
                     <li><a href="" data-toggle="dropdown" >{{ _('Statistics') }}<span class="caret"></span></a>
                        <ul class="dropdown-menu">
-                          <li><a href="#">{{ _('Project') }}</a></li>
+                          <li><a href="{% url 'KBL:statistics'%}">{{ _('Statistics') }}</a></li>
                           <li><a href="#">{{ _('...') }}</a></li>
                        </ul>
                     </li>

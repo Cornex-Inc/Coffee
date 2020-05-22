@@ -80,7 +80,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 
-                <a href="{% url 'index' %}" class="navbar-brand" style="padding-top:7.5px; padding-left:15px; padding-right:15px; color:rgba(0,0,0, 1); font-size:20px; ">
+                <a href="{% url 'index' %}" class="navbar-brand" style="padding-top:7.5px; padding-left:10px; padding-right:0px; color:rgba(0,0,0, 1); font-size:20px; ">
                 <img src="{% static 'img/Menu_icon.png' %}" style="height:47px;"/>&nbsp;&nbsp;&nbsp;I - MEDICARE</a>
             </div>
             <div class="navbar-collapse collapse top_menu" >
@@ -103,6 +103,7 @@
                         {% if user.doctor.depart.id == 7%}
                             <li {% if url_name == 'audit' %}class="active"{% endif %}><a href="{% url 'Doctor:audit'%}">{{ _('Audit') }}</a></li>
                         {% endif %}
+                    <li {% if url_name == 'customer_manage' %}class="active"{% endif %}><a href="{% url 'Manage:customer_manage'%}">{{ _('CRM') }}</a></li>
                     <li {% if url_name == 'reservation' %}class="active"{% endif %}><a href="{% url 'Receptionist:Documents'%}">{{ _('Documents') }}</a></li>
                     <li {% if url_name == 'pharmacy_index' %}class="active"{% endif %}><a href="{% url 'Pharmacy:pharmacy_index'%}">{{ _('Pharmacy') }}</a></li>
                     {% elif user.is_pharmacy %}

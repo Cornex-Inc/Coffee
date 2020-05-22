@@ -1,5 +1,4 @@
-
-{% extends "app/layout.html" %}
+{% extends request.session.is_KBL|yesno:"app/layout_KBL.html,app/layout.html" %}
 
 {% load staticfiles %}
 {% block content %}

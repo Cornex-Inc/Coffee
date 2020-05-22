@@ -5,23 +5,25 @@ app_name = 'Receptionist'
 
 urlpatterns = [
     path('',views.index,name='reception_index'),
+    #환자 등록 수정
     path('set_new_patient/',views.set_new_patient,name='set_new_patient'),
     path('save_patient/',views.save_patient,name='save_patient'),
     path('save_reception/',views.save_reception,name='save_reception'),
-
+    #질의
     path('Question/<int:patient_id>',views.Question,name='Question'),
     path('Question/save/',views.Question_save,name='Question_save'),
     path('Question/get/',views.Question_get,name='Question_get'),
-
+    #접수 수정
     path('Edit_Reception/get/',views.Edit_Reception_get,name='Edit_Reception_get'),
     path('Edit_Reception/save/',views.Edit_Reception_save,name='Edit_Reception_save'),
     path('Edit_Reception/delete/',views.Edit_Reception_delete,name='Edit_Reception_delete'),
-
+    #보험
     path('Tax_Invoice/get/',views.Tax_Invoice_get,name='Tax_Invoice_get'),
     path('Tax_Invoice/save/',views.Tax_Invoice_save,name='Tax_Invoice_save'),
-
+    #환자 검색
     path('set_patient_data/',views.set_patient_data,name='set_patient_data'),
     path('patient_search/',views.patient_search,name='patient_search'),
+
     path('reception_search/',views.reception_search,name='reception_search'),
     path('payment_search/',views.payment_search,name='payment_search'),
     path('reservation_search/',views.reservation_search,name='reservation_search'),
@@ -54,8 +56,6 @@ urlpatterns = [
     #lab
 
     #radiation
-    
-
     path('search',views.search,name='search'),
     path('reception/',views.reception, name ='reception'),
     path('reception/<int:patient_num>',views.reception, name ='reception'),
@@ -70,8 +70,6 @@ urlpatterns = [
     path('Documents/',views.Documents,name='Documents'),
     path('document_search/',views.document_search,name='document_search'),
 
-    
-
     path('document_lab/<int:reception_id>',views.document_lab,name='document_lab'),
     path('document_prescription/<int:reception_id>',views.document_prescription,name='document_prescription'),
     path('document_medical_receipt/<int:reception_id>',views.document_medical_receipt,name='document_medical_receipt'),
@@ -79,5 +77,16 @@ urlpatterns = [
     path('document_medicine_receipt/<int:reception_id>',views.document_medicine_receipt,name='document_medicine_receipt'),
     path('document_subclinical/<int:reception_id>',views.document_subclinical,name='document_subclinical'),
     path('document_medical_report/<int:reception_id>',views.document_medical_report,name='document_medical_report'),
+
+
+
+    #패키지
+    path('package_list/',views.package_list),
+    path('patient_package_list/',views.patient_package_list),
+    path('set_package_to_patient/',views.set_package_to_patient),
+
+    path('patient_package_reception/',views.patient_package_reception),
+
+    path('patient_package_history_modal/',views.patient_package_history_modal),
 
 ]

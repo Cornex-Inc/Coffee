@@ -57,8 +57,17 @@
         padding: 5px;
     }
 
+#invoice_type{
+    width:120px
+}
+#invoice_in_charge{
+    width:100px;
+}
+#invoice_status{
+    width:100px;
+}
 
-#patient_search {
+#invoice_search {
     width: 110px;
     display: inline;
 }
@@ -66,7 +75,6 @@
 .search_control_div {
     text-align: right;
     float: right;
-    width:800px;
     margin-bottom:10px;
 }
 

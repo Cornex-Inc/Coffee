@@ -164,6 +164,7 @@
                         <div style="float:right;">
                             <input class="btn btn-default save_cancel_btn"  value="{{ _('Cancel') }}" onclick="set_cancel()" />
                             <input class="btn btn-info save_cancel_btn" value="{{ _('Save') }}" onclick="save_patient()"/>
+                            <input type="button" value="{{_('Package') }}" class="btn btn-danger save_cancel_btn" style="width:80px;" onclick="patient_package_list_modal()"/>
                             <input type="button" value="{{_('Registration') }}" class="btn btn-primary save_cancel_btn" style="width:100px;" onclick="save_recept()"/>
                         </div>
                     </td>
@@ -232,15 +233,16 @@
             <table class="table reception_search_table" id="Rectption_Status">
                 <thead>
                     <tr>
-                        <th style="width:50px;">{{_('No.') }}</th>
-                        <th style="width:90px;">{{_('Chart No.') }}</th>
-                        <th style="width:160px;">{{_('Name') }}</th>
-                        <th style="width:135px;"> {{_('Date of Birth') }}</th>
-                        <th style="width:80px">{{_('Depart') }}</th>
-                        <th style="width:80px">{{_('Doctor') }}</th>
-                        <th style="width:115px">{{_('Date Time') }}</th>
-                        <th style='width:113px; text-align:center'>{{_('New / Repeat') }}</th>
-                        <th style="width:50px;"></th>
+                        <th>{{_('No.') }}</th>
+                        <th>{{_('Chart No.') }}</th>
+                        <th>{{_('Name') }}</th>
+                        <th> {{_('Date of Birth') }}</th>
+                        <th>{{_('Depart') }}</th>
+                        <th>{{_('Doctor') }}</th>
+                        <th>{{_('Date Time') }}</th>
+                        <th>{{_('New / Repeat') }}</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody></tbody>            
@@ -319,16 +321,9 @@
     </script>
 
 
-<div id="">
 
 
-
-
-</div>
-
-
-
-
+<!--통증과 문진표-->
 <div id="medical_exam_EventModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -606,6 +601,7 @@
     </div>
 </div>
 
+<!--보험 정보-->
 <div id="tax_exam_EventModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -681,6 +677,7 @@
     </div>
 </div>
 
+<!--접수 정보 수정-->
 <div id="Edit_Reception_EventModal" class="modal fade">
     <div class="modal-dialog Edit_Reception_modal-dialog">
         <div class="modal-content">
@@ -787,6 +784,221 @@
             </div>
         </div>
 </div>
+
+
+<!--패키지 목록-->
+<div id="patient_package_list_modal" class="modal fade">
+    <div class="modal-dialog Edit_Reception_modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4>{{ _('Package Manage') }}</h4>
+                    <div id="modalBody" class="modal-body" >
+                        <h5>{{ _('Patient Information') }}</h5>
+                        <table class="table table-bordered edit_reception_table"> 
+                            <tr>
+                                <td >
+                                    <div class="input-group edit_reception_title">
+                                        <span class="input-group-addon Edit_Reception_input-group-addon" id="basic-addon1">{{ _('Chart No.') }}</span>
+                                        <input type="text" class="form-control" id="patient_package_chart" readonly/>
+                                    </div>
+                                </td>
+                                <td ></td>
+                            </tr>
+                            <tr>
+                                <td >
+                                    <div class="input-group edit_reception_title">
+                                        <span class="input-group-addon Edit_Reception_input-group-addon" id="basic-addon1">{{ _('Name') }}</span>
+                                        <input type="text" class="form-control" id="patient_package_name" readonly/>
+                                    </div>
+                                </td>
+                                <td >
+                                    <div class="input-group edit_reception_title">
+                                        <span class="input-group-addon Edit_Reception_input-group-addon" id="basic-addon1">{{ _('Date of Birth') }}</span>
+                                        <input type="text" class="form-control" id="patient_package_date_of_birth" readonly/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div >
+                         <h5 style="">{{ _('Package List') }}</h5>
+                            <div style="text-align:right;">
+                                <input type="button" class="btn btn-primary" id="show_package_list" value="+ {{ _('Add') }}" onclick="package_add_modal()" />
+                            </div>
+                            <div style="height:400px; overflow:auto">
+                                <table class="table table-bordered table-hover table-striped" id="patient_package_list_table">
+                                    <thead>
+                                        <tr>
+                                            <th>{{ _('No') }}</th>
+                                            <th>{{ _('Depart') }}</th>
+                                            <th>{{ _('Package Name') }}</th>
+                                            <th>{{ _('Count') }}</th>
+                                            <th>{{ _('History') }}</th>
+                                            <th>{{ _('Registration') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                            
+                        </div>
+                        <div style="margin-top:10px;">
+                            <div style="text-align:right;">
+                                <input type="button" value="{{ _('Close') }}" class="btn btn-default" data-dismiss="modal"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+</div>
+
+<!--패키지 추가-->
+<div id="package_add_modal" class="modal fade">
+    <div class="modal-dialog Edit_Reception_modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4>{{ _('Package Register') }}</h4>
+                    <div id="modalBody" class="modal-body" >
+                         <span>{{ _('*Select Depart and Doctor first. then Package Item') }}</span>
+                        <div>
+                            <div class="input-group" id="search_depart_filter_package_div">
+                                <span class="input-group-addon" id="basic-addon1">{{ _('Depart') }}</span>
+                                <select id="search_depart_filter_package" class="form-control" >
+                                    <option value="">----------</option>
+                                    {% for data in list_depart %}
+                                    <option value="{{ data.id }}">{{ data.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="input-group" id="search_doctor_filter_package_div">
+                                <span class="input-group-addon" id="basic-addon1">{{ _('Doctor') }}</span>
+                                <select id="search_doctor_filter_package" class="form-control" >
+                                    <option value="">----------</option>
+                                </select>
+                            </div>
+
+                        </div>
+                        <div style="text-align:right; margin-top:20px;">
+                            <input type="text" class="form-control" id="search_string_package" />
+                            <input type="button" class="btn btn-default" id="search_btn_package" value="{{ _('Search') }}"/>
+                        </div>
+
+                        <div style="height:400px; margin-top:10px;">
+                            <table class="table table-bordered table-hover table-striped" id="package_list_table">
+                                <thead>
+                                    <tr>
+                                        <th>{{ _('Code') }}</th>
+                                        <th>{{ _('Name') }}</th>
+                                        <th>{{ _('Price') }}</th>
+                                        <th>{{ _('Count') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                            <ul class="pagination" id="medicine_pagnation">
+
+                            </ul>
+                        </div>
+                            
+                        </div>
+                        <div style="margin-top:10px;">
+                            <div style="text-align:right;">
+                                <input type="button" value="{{ _('Close') }}" class="btn btn-default" data-dismiss="modal"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+<!--패키지 접수-->
+<div id="patient_package_reception_modal" class="modal fade">
+    <div class="modal-dialog" style="width:600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4>{{ _('Package Reception') }}</h4>
+               
+                <div id="modalBody" class="modal-body" >
+                    <input type="hidden" id="patient_package_registration_id" value=""/>
+                    <div>
+                        <div class="input-group" id="depart_filter_reg_div">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('Depart') }}</span>
+                            <select id="depart_filter_reg" class="form-control" >
+                                <option value="">----------</option>
+                                {% for data in list_depart %}
+                                <option value="{{ data.id }}">{{ data.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="input-group" id="doctor_filter_reg_div">
+                            <span class="input-group-addon" id="basic-addon1">{{ _('Doctor') }}</span>
+                            <select id="doctor_filter_reg" class="form-control" >
+                                <option value="">----------</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div style="margin-top:10px;">
+                    <div style="text-align:right;">
+                        <input type="button" value="{{ _('Save') }}" class="btn btn-primary" onclick="patient_package_reception()"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!--패키지 이력-->
+<div id="patient_package_history_modal" class="modal fade">
+    <div class="modal-dialog Edit_Reception_modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4>{{ _('Package History') }}</h4>
+                    <div id="modalBody" class="modal-body" >
+                        <table class="table table-bordered table-hover table-striped" id="patient_package_history_list">
+                            <thead>
+                                <tr>
+                                    <th>{{ _('No') }}</th>
+                                    <th>{{ _('Patient Name') }}</th>
+                                    <th>{{ _('Precedure Name') }}</th>
+                                    <th>{{ _('Round') }}</th>
+                                    <th>{{ _('Date Bought') }}</th>
+                                    <th>{{ _('Date Used') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div style="margin-top:10px;">
+                        <div style="text-align:right;">
+                            <input type="button" value="{{ _('Close') }}" class="btn btn-default" data-dismiss="modal"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</div>
+
+
 {% endblock %}
 
 

@@ -291,6 +291,7 @@
                 <input type="button" class="btn btn-info" id="diagnosis_select_test_title" value="{{ _('Lab') }}">
                 <input type="button" class="btn btn-success" id="diagnosis_select_precedure_title" value="{{ _('Procedure') }}">
                 <input type="button" class="btn btn-primary" id="diagnosis_select_medicine_title" value="{{ _('Medicine') }}">
+                <input type="button" class="btn btn-primary btn-hotpink" id="diagnosis_select_package_title" value="{{ _('Package') }}">
                 <!--<input type="button" class="btn btn-warning" id="diagnosis_select_bundle_title" value="{{ _('Bundle Px') }}" />-->
             </div>
             <!--diagnosis_select_title-->
@@ -455,6 +456,23 @@
                     {% endautoescape %}
                 </table>
             </div>
+            <!-- Package -->
+            <div class="diagnosis_select_contents" id="diagnosis_select_package_contents">
+                <table class="table diagnosis_select_contents_talbe" id="diagnosis_select_package">
+                    <thead>
+                        <tr>
+                            <th>{{ _('Name') }}</th>
+                            <th>{{ _('Count') }}</th>
+                            <th>{{ _('History') }}
+                                <input type="hidden" value="" id="selected_package_id" />
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+            </div>
             <!--
             <div id="diagnosis_select_bundle_contents" class="diagnosis_select_contents">
                 <table class="table order_list_table" >
@@ -499,7 +517,41 @@
 
 </div>
 
+<!--패키지 이력-->
+<div id="patient_package_history_modal" class="modal fade">
+    <div class="modal-dialog Edit_Reception_modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4>{{ _('Package History') }}</h4>
+                    <div id="modalBody" class="modal-body" >
+                        <table class="table table-bordered table-hover table-striped" id="patient_package_history_list">
+                            <thead>
+                                <tr>
+                                    <th>{{ _('No') }}</th>
+                                    <th>{{ _('Patient Name') }}</th>
+                                    <th>{{ _('Precedure Name') }}</th>
+                                    <th>{{ _('Round') }}</th>
+                                    <th>{{ _('Date Bought') }}</th>
+                                    <th>{{ _('Date Used') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div style="margin-top:10px;">
+                        <div style="text-align:right;">
+                            <input type="button" value="{{ _('Close') }}" class="btn btn-default" data-dismiss="modal"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</div>
 
 
 

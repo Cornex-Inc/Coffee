@@ -11,14 +11,16 @@ $(function () {
     $('.date_input').daterangepicker({
         singleDatePicker: true,
         showDropdowns: true,
-        drops: "up",
+        drops: "down",
         locale: {
             format: 'YYYY-MM-DD',
         },
     });
     $('.date_input').val('');
+    $('#date_start').val(moment().subtract(14, 'd').format('YYYY-MM-DD'));
+    $('#date_end').val(moment().format("YYYY-MM-DD"));
 
-    //»Ø¿⁄ ∞Àªˆ
+    //ÌôòÏûê Í≤ÄÏÉâ
     $('#search_string').keydown(function (key) {
         if (key.keyCode == 13) {
             search_company();
@@ -30,11 +32,19 @@ $(function () {
     });
 
 
-    //πÆ¿⁄ ±€¿⁄ ∞Ì¡§
+    //Î¨∏Ïûê Í∏ÄÏûê Í≥†Ï†ï
     $("#sms_modal_content").keydown(function () {
         if ($(this).val().length > 67) {
             $(this).val($(this).val().substring(0, 67));
         }
+    })
+
+
+    //ÏßÅÏõê Ï≤¥ÌÅ¨Î∞ïÏä§
+    $("#check_all").change(function () {
+       
+        $(".employee_checkbox").prop("checked", $(this).prop("checked"));
+
     })
 
     search_company();
@@ -75,7 +85,6 @@ function employee_modal(id = '') {
 
 
     var company_id = $("#selected_id").val();
-    console.log(company_id)
     if (company_id == '') {
         alert(gettext('Select Company first.'));
         return;
@@ -110,7 +119,6 @@ function employee_modal(id = '') {
             },
             dataType: 'Json',
             success: function (response) {
-                console.log(response)
 
                 $("#employee_type").val(response.employee_type);
                 $("#employee_position").val(response.employee_position);
@@ -151,7 +159,8 @@ function project_modal(id = null) {
 function search_company(page = null) {
     var context_in_page = 10;
 
-
+    var start = $('#date_start').val();
+    var end = $('#date_end').val();
 
     var type = $('#patient_type option:selected').val();
     var string = $('#search_string').val();
@@ -162,6 +171,9 @@ function search_company(page = null) {
         url: '/KBL/customer_management_search/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
+
+            'start': start,
+            'end': end,
 
             'type': type,
             'string': string,
@@ -174,7 +186,7 @@ function search_company(page = null) {
             $('#list_table > tbody ').empty();
             for (var i = 0; i < context_in_page; i++) {
                 if (response.datas[i]) {
-                    var str = "<tr style='cursor:pointer' onclick='select_customer(" + response.datas[i]['id'] +")'>";
+                    var str = "<tr style='cursor:pointer' onclick='select_customer(this," + response.datas[i]['id'] +")'>";
                     str += "<td>" + response.datas[i]['id'] + "</td>" +
                         "<td>" + response.datas[i]['type'] + "</td>" +
                         "<td>" + response.datas[i]['customer_no'] + "</td>" +
@@ -193,7 +205,7 @@ function search_company(page = null) {
             }
 
 
-            //∆‰¿Ã¬°
+            //ÌéòÏù¥Ïßï
             $('#table_pagnation').html('');
             str = '';
             if (response.has_previous == true) {
@@ -231,15 +243,16 @@ function search_company(page = null) {
 
 }
 
-function select_customer(id = null) {
+function select_customer(obj,id = null) {
     if (id == null) {return;}
 
-
+    $("#list_table tr").removeClass('danger')
+    $(obj).addClass('danger')
     $("#selected_id").val(id);
 
     set_basic_info(id);
     set_employee_list(id);
-    //set_project_table(id);
+    set_project_table(id);
 
 }
 
@@ -344,7 +357,6 @@ function set_employee_list(company_id = null) {
     if (company_id == null) { return; }
 
     
-    console.log(company_id)
     $.ajax({
         type: 'POST',
         url: '/KBL/customer_management_set_employee_list/',
@@ -364,10 +376,10 @@ function set_employee_list(company_id = null) {
                     str += "<td>" + (i + 1) + "</td>" +
                         "<td><input type='checkbox' class='employee_checkbox' id='" + response.datas[i]['id'] + "' /></td>" +
                         "<td>" + response.datas[i]['position'] + "</td>" +
-                        "<td>" + response.datas[i]['name_kor'] + "</td>" +
-                        "<td>" + response.datas[i]['name_eng'] + "</td>" +
+                        "<td id='namekor_" + response.datas[i]['id'] + "'>" + response.datas[i]['name_kor'] + "</td>" +
+                        "<td id='nameeng_" + response.datas[i]['id'] + "'>" + response.datas[i]['name_eng'] + "</td>" +
                         "<td>" + response.datas[i]['date_of_birth'] + "</td>" +
-                        "<td>" + response.datas[i]['phone'] + "</td>" +
+                        "<td id='phonenumber_" + response.datas[i]['id'] + "'>" + response.datas[i]['phone'] + "</td>" +
                         "<td>" + response.datas[i]['status'] + "</td>" +
                         "<td>" + response.datas[i]['remark'] + "</td>" +
                         "<td>" +
@@ -396,7 +408,7 @@ function set_project_table(id = null) {
 
     $.ajax({
         type: 'POST',
-        url: '/KBL/customer_management_select/',
+        url: '/KBL/customer_management_set_project_list/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
 
@@ -405,10 +417,26 @@ function set_project_table(id = null) {
         },
         dataType: 'Json',
         success: function (response) {
-            if (response.result) {
+            console.log(response)
+            if (response) {
+                $('#project_table > tbody ').empty();
+                for (var i = 0; i < response.datas.length; i++) {
 
+                    var str = "<tr>";
+                    str += "<td>" + (i + 1) + "</td>" +
+                        "<td><input type='checkbox' class='employee_checkbox' id='" + response.datas[i]['id'] + "' /></td>" +
+                        "<td>" + response.project_type_dict[response.datas[i]['type']]['name'] + "</span></td>" +
+                        "<td>" + response.datas[i]['name'] + "</td>" +
+                        "<td>" + response.datas[i]['level'] + "</td>" +
+                        "<td>" + response.datas[i]['date_start'] + "</td>" +
+                        "<td>" + response.datas[i]['date_end'] + "</td>" +
+                        "<td><span class='" + response.project_status_dict[response.datas[i]['status']]['class'] + "'>" + response.project_status_dict[response.datas[i]['status']]['name'] + "</span></td>" +
+                        "<td>" + response.datas[i]['in_charge'] + "</td>" +
+                        "<td>" + response.datas[i]['note'] + "</td>" +
+                        "</tr>";
 
-
+                    $('#project_table > tbody').append(str);
+                }
             }
         },
         error: function (request, status, error) {
@@ -421,11 +449,6 @@ function set_project_table(id = null) {
 
 
 }
-
-
-
-
-
 
 function customer_modal_save(type = '') {
 
@@ -621,7 +644,6 @@ function employee_modal_save(id = '') {
     })
 }
 
-
 function delete_employee(id = null) {
     if (id == null) { return; }
 
@@ -660,32 +682,39 @@ function delete_employee(id = null) {
 
 }
 
+var number_list = [];
 function sms_modal(patient_id) {
     $("#sms_modal_name").val('');
     $("#sms_modal_phone").val('');
     $("#sms_modal_content").val('');
 
-    $.ajax({
-        type: 'POST',
-        url: '/manage/customer_manage_get_patient_sms_info/',
-        data: {
-            'csrfmiddlewaretoken': $('#csrf').val(),
-            'patient_id': patient_id,
-        },
-        dataType: 'Json',
-        success: function (response) {
-            $('#sms_modal_name').val(response.name_kor + ' / ' + response.name_eng);
-            $('#sms_modal_phone').val(response.phone);
+    number_list = [];
+    var phone = '';
+    var checked = $(".employee_checkbox:checked");
+    if (checked.length == 0) {
+        alert(gettext('Select customer(s) to be sent'))
+        return;
+    } else if (checked.length == 1) {
+
+        var name = $("#namekor_" + $(checked[0]).attr('id')).html() + ' / ' + $("#nameeng_" + $(checked[0]).attr('id')).html()  ;
+        var phone = $("#phonenumber_" + $(checked[0]).attr('id')).html();
+        number_list.push($("#phonenumber_" + $(checked[0]).attr('id')).html());
+    } else {
+        var name = $("#namekor_" + $(checked[0]).attr('id')).html() + gettext(' Îãò Ïô∏ ') + (checked.length - 1) + 'Î™Ö';
+        for (var i = 0; i < checked.length; i ++) {
 
 
-            $('#sms_modal').modal({ backdrop: 'static', keyboard: false });
-            $('#sms_modal').modal('show');
-        },
-        error: function (request, status, error) {
-            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            phone += $("#phonenumber_" + $(checked).eq(i).attr('id')).html() + ','
+            number_list.push($("#phonenumber_" + $(checked).eq(i).attr('id')).html());
+        }
+    }
 
-        },
-    })
+
+    $('#sms_modal_name').val(name);
+    $('#sms_modal_phone').val(phone);
+
+    $('#sms_modal').modal({ backdrop: 'static', keyboard: false });
+    $('#sms_modal').modal('show');
 
 }
 
@@ -710,6 +739,13 @@ function send_sms() {
         return;
     }
 
+    //Î¨∏Ïûê Ï†ÑÏÜ° Î≤àÌò∏ 
+    list_number = phone.split(',');
+    list_number = list_number.filter(function (item) {
+        return item !== null && item !== undefined && item !== '';
+    });
+    str_list_number = list_number.join(',')
+
     $.ajax({
         type: 'POST',
         //url: '/manage/employee_check_id/',
@@ -720,38 +756,46 @@ function send_sms() {
             'type': 'MANUAL',
             'receiver': receiver,
 
-            'phone': phone,
+            'phone': list_number.toString(),
             'contents': contents,
+
+            'is_KBL': true,
         },
         beforeSend: function () {
             $("#overlay").fadeIn(300);
         },
         dataType: 'Json',
         success: function (response) {
-            console.log(response);
             if (response.res == true) {
-                var url = 'http://kbl.cornex.co.kr/sms/sms_send.php?msg_id=' + response.id + '&phone=' + phone + '&contents=' + contents;
-                console.log('url : ' + url);
+
+                context = {
+                    //'csrfmiddlewaretoken': $('#csrf').val(),
+                    'msg_id': response.id,
+                    'phone': str_list_number,
+                    'contents': $("#contents").val(),
+                }
+
+
+                //var url = 'http://kbl.cornex.co.kr/sms/sms_send.php?data=' + JSON.stringify(context)
+                var url = 'http://kbl.cornex.co.kr/sms/sms_send.php?msg_id=' + response.id + '&phone=' + str_list_number + '&contents=' + contents;
 
                 $.ajax({
                     crossOrigin: true,
-                    type: 'GET',
+                    type: 'POST',
                     //url: '/manage/employee_check_id/',
                     url: url,
-                    data: {
-                        //'csrfmiddlewaretoken': $('#csrf').val(),
-                        //'msg_id': response.id,
-                        //'phone': $("#phone_number").val(),
-                        //'contents': $("#contents").val(),
-                    },
+                    //data: {
+                    //    'csrfmiddlewaretoken': $('#csrf').val(),
+                    //    'msg_id': response.id,
+                    //    'phone': str_list_number,
+                    //    'contents': $("#contents").val(),
+                    //},
                     dataType: 'Json',
                     //jsonp: "callback", 
                     success: function (response) {
-                        //¿¸º€ øœ∑· Ω√ √¢ ¥›±‚. ∞·∞˙¥¬ ¿Ã∑¬ø°º≠ »Æ¿Œ
-                        $('#sms_modal').modal('show');
+                        //Ï†ÑÏÜ° ÏôÑÎ£å Ïãú Ï∞Ω Îã´Í∏∞. Í≤∞Í≥ºÎäî Ïù¥Î†•ÏóêÏÑú ÌôïÏù∏
+                        $('#sms_modal').modal('hide');
                         json_response = JSON.parse(response);
-
-                        console.log(json_response);
 
                         $.ajax({
                             type: 'POST',

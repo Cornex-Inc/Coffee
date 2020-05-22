@@ -269,7 +269,7 @@ function get_test_list(diagnosis_id) {
                     if (response.datas[i]['list_interval'][j]['name'] != '') {
                         str += response.datas[i]['list_interval'][j]['name'] + ' : ';
                     }
-                    str += response.datas[i]['list_interval'][j]['minimum'] + ' ~ ';
+                    str += response.datas[i]['list_interval'][j]['minimum'] + ' < ';
                     str += response.datas[i]['list_interval'][j]['maximum'] + ' ' ;
                     str += '( ' + response.datas[i]['list_interval'][j]['unit'] + ' )';
 

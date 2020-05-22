@@ -114,12 +114,16 @@ $(function () {
             var additional_amount = $("#additional_amount").val();
             var total_amount = $("#total_amount").val();
 
+            var show_medication_contents = $("#show_medication_contents").is(':checked');
+
             for_bf += '?type=bf';
 
+            for_bf += '&is_medicine_show=' + show_medication_contents;
             for_bf += '&discount_input=' + discount_input;
             for_bf += '&discount_amount=' + discount_amount;
             for_bf += '&additional_amount=' + additional_amount;
             for_bf += '&total_amount=' + total_amount;
+
         }
 
         $("#dynamic_div").html('');

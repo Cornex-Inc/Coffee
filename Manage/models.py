@@ -482,8 +482,7 @@ class sms_history(models.Model):
         )
 
     #받는 사람
-    receiver = models.CharField(
-        max_length =32,
+    receiver = models.TextField(
         default='',
         )
 

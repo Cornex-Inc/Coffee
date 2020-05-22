@@ -170,7 +170,10 @@
         width: 25px;
     }
 
-
+#search_patient{
+    width:120px;
+    display:inline;
+}
 .diagnosis_select_method {
     grid-row-start: 1;
     grid-row-end: 6;
@@ -429,7 +432,7 @@
         }
 
         .Rectption_Status_wrap {
-            height: 220px;
+            height: 200px;
         }
 
         .Vitial_table_warp {

@@ -1,0 +1,142 @@
+.board_grid {
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    display: grid;
+}
+
+
+.partition {
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: rgba(180, 180, 180, 0.15);
+    border: 3.7px solid white;
+    overflow: hidden;
+}
+
+.inventory_database {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    overflow-y: hidden;
+}
+
+
+.title_span {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 15px;
+    padding-top: 1px;
+    background: rgb(233, 69, 139);
+    border-color: rgb(233, 69, 139);
+}
+
+    .title_span:hover {
+        background: rgb(233, 69, 139);
+        border-color: rgb(233, 69, 139);
+    }
+
+.contents_warp{
+    width:1300px;
+    margin:0 auto;
+}
+
+.dashboard_board_part {
+    width: 600px;
+    height: 300px;
+    display:inline-block;
+}
+
+    .dashboard_board_part:nth-child(2){
+        float:left;
+    }
+    .dashboard_board_part:nth-child(3) {
+        float: right;
+    }
+
+.dashboard_board_title {
+    margin: 10px 15px;
+}
+
+.dashboard_board_see_more {
+    float: right;
+    height:100%;
+    vertical-align:middle;
+    font-size:16px;
+}
+
+.database_status_part {
+    margin-top: 340px;
+    margin-bottom: 40px;
+    width: 100%;
+    height: 165px;
+    border: 1px solid black;
+    text-align:center;
+
+}
+
+.dashboard_board_contents {
+    border: 1px solid black;
+    height:260px;
+}
+
+.board_table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+
+    .board_table td, .board_table th {
+        vertical-align: middle;
+        text-align: center;
+        font-size: 12px;
+    }
+    .board_table tr{
+        height:33px;
+    }
+    .board_table td:nth-child(1){width:30px;}
+    .board_table td:nth-child(2) {
+        text-align: left;
+        word-break: break-all;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .board_table td:nth-child(3){width:130px;}
+    .board_table td:nth-child(4){
+        width:110px;
+        padding-right:20px;
+    }
+
+.database_status_part .dashboard_board_title{
+    text-align:left;
+}
+
+.status_warp {
+    width: 100%;
+    height: 100%;
+}
+
+.status_div {
+    display: inline-block;
+    height: 100px;
+    width: 180px;
+    vertical-align: middle;
+    text-align: center;
+    letter-spacing:-1px;
+}
+
+
+.status_div > table {
+    height: 100%;
+}
+
+.status_div > table td {
+    vertical-align: middle !important;
+    text-align: center !important;
+}
+
+    .status_div > table tr:first-child{
+        font-size:15px !important;
+    }

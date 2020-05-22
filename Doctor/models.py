@@ -363,6 +363,14 @@ class Precedure(models.Model):
     type = models.CharField(
         max_length = 4,
         default='NM',
+        #기본 처치는 NM
+        #패키지는 PKG
+    )
+
+    count = models.CharField(
+        max_length = 4,
+        default = '',
+        #패키지에만 해당
     )
 
     #expiry_date = models.CharField(

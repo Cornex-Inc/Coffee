@@ -58,15 +58,14 @@
     }
 
 
-#patient_search {
-    width: 110px;
+#visa_search {
+    width: 200px;
     display: inline;
 }
 
 .search_control_div {
     text-align: right;
     float: right;
-    width:800px;
     margin-bottom:10px;
 }
 
@@ -74,7 +73,11 @@
         display:inline;
     }
 
-#estimate_search{
+#visa_type_div {
+    width:150px;
+}
+
+#visa_status_div{
     width:150px;
 }
 
@@ -82,69 +85,70 @@
     width: 100px;
 }
 
-#patient_list_table {
-    table-layout: fixed;
-    letter-spacing: -1px;
-}
-
-    #patient_list_table thead tr th {
-        vertical-align: middle;
-        text-align: center;
-    }
-
-    #patient_list_table tbody tr td {
-        vertical-align: middle;
-        text-align: center;
-        height: 47px;
-    }
-
-    #patient_list_table thead tr th:nth-child(1) {
-        width: 60px;
-    }
-
-    #patient_list_table thead tr th:nth-child(2) {
-        width: 100px;
-    }
-
-    #patient_list_table thead tr th:nth-child(3) {
-        width: 180px;
-    }
-
-    #patient_list_table thead tr th:nth-child(4),
-    #patient_list_table thead tr th:nth-child(5),
-    #patient_list_table thead tr th:nth-child(6) {
-        width: 120px;
-    }
-
-    #patient_list_table thead tr th:nth-child(7) {
-    }
-
-    #patient_list_table thead tr th:nth-child(8) {
-        width: 65px;
-    }
-
-    #patient_list_table thead tr th:nth-child(9) {
-        width: 120px;
-    }
-
-    #patient_list_table thead tr th:nth-child(10) {
-        width: 65px;
-    }
-
-    #patient_list_table td:nth-child(9) {
-        text-align: right;
-        padding-right: 10px;
-    }
-
-#emplyoee_table{
+#visa_list_table{
     table-layout:fixed;
-    letter-spacing:-1px;
 }
-    #emplyoee_table th, #emplyoee_table td{
+    #visa_list_table th, #visa_list_table td{
         vertical-align:middle;
         text-align:center;
+        height:40px;
     }
 
+        #visa_list_table th:nth-child(1) {
+            width: 50px;
+        }
+    #visa_list_table th:nth-child(2){width:100px;}
+    #visa_list_table th:nth-child(3){width:260px;}
+    #visa_list_table th:nth-child(4){width:260px;}
+    #visa_list_table th:nth-child(5){width:220px;}
+    #visa_list_table th:nth-child(6){width:150px;}
+    #visa_list_table th:nth-child(7){width:150px;}
+    #visa_list_table th:nth-child(8){width:150px;}
+    #visa_list_table th:nth-child(9){width:150px;}
+    #visa_list_table th:nth-child(10){width:150px;}
+    #visa_list_table th:nth-child(11){width:150px;}
+    #visa_list_table th:nth-child(12){width:50px;}
+        #visa_list_table th:nth-child(13) {
+            width: 90px;
+        }
+
+
+        
+#file_table {
+    table-layout: fixed;
+}
+
+    #file_table thead tr th, #file_table tbody tr td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+        #file_table thead tr th:nth-child(1){width: 50px;}
+
+        #file_table thead tr th:nth-child(2),
+        #file_table thead tr th:nth-child(5) {
+            width: 150px;
+        }
+
+        #file_table thead tr th:nth-child(3) {
+            width: 80px;
+        }
+
+        #file_table thead tr th:nth-child(4) {
+            width: 100px;
+        }
+
+        #file_table tbody tr td:nth-child(2),
+        #file_table tbody tr td:nth-child(5) {
+            text-align: left;
+        }
+
+#filter_status {
+    width: 150px;
+}
+#filter_date {
+    width:200px
+}
 
 
     .nav-tabs > li.active > a,

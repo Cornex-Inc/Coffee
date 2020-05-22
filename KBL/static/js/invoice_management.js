@@ -7,20 +7,33 @@ function numberWithCommas(x) {
 
 $(function () {
 
-
+    $('.date_input').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        drops: "down",
+        locale: {
+            format: 'YYYY-MM-DD',
+        },
+    });
+    $('.date_input').val('');
+    $('#invoice_date_start').val(moment().subtract(7, 'd').format('YYYY-MM-DD'));
+    $('#invoice_date_end').val(moment().format("YYYY-MM-DD"));
    
 
     //검색
-    $('#patient_search').keydown(function (key) {
+    $('#invoice_search').keydown(function (key) {
         if (key.keyCode == 13) {
             invoice_search();
         }
     })
 
-    $("#patient_search_btn").click(function () {
+    $("#invoice_search_btn").click(function () {
         invoice_search();
     });
 
+    $("#invoice_date_end,#invoice_date_start,#invoice_in_charge,#invoice_status,#invoice_type").change(function () {
+        invoice_search();
+    });
 
     //문자 글자 고정
     $("#sms_modal_content").keydown(function () {
@@ -46,8 +59,13 @@ function invoice_search(page = null) {
     var context_in_page = 10;
 
 
-    var category = $('#patient_type option:selected').val();
-    var string = $('#patient_search').val();
+    var start = $('#invoice_date_start').val();
+    var end = $('#invoice_date_end').val();
+
+    var invoice_type = $('#invoice_type').val();
+    var invoice_in_charge = $('#invoice_in_charge').val();
+    var invoice_status = $('#invoice_status').val();
+    var string = $('#invoice_search').val();
 
 
     $.ajax({
@@ -55,7 +73,12 @@ function invoice_search(page = null) {
         url: '/KBL/invoice_search/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
-            'category': category,
+            'start': start,
+            'end': end,
+
+            'type': invoice_type,
+            'in_charge': invoice_in_charge,
+            'status': invoice_status,
             'string': string,
 
             'page': page,
@@ -69,7 +92,7 @@ function invoice_search(page = null) {
                     var str = "<tr>" +
                         "<td>" + response.datas[i]['serial'] + "</td>" +
                         "<td>" + response.datas[i]['company_name'] + "</td>" +
-                        "<td>" + response.datas[i]['type'] + "</td>" +
+                        "<td>" + response.project_type_dict[response.datas[i]['type']]['name'] + "</td>" +
                         "<td>" + response.datas[i]['title'] + "</td>" +
                         "<td>" + response.datas[i]['in_charge'] + "</td>" +
                         "<td>" + response.datas[i]['date_register'] + "</td>" +
@@ -81,7 +104,7 @@ function invoice_search(page = null) {
                         
                         } else {
                             str += "<a class='btn btn-success btn-xs' href='javascript: void (0);' onclick='print_invoice(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-print'></i></a >" +
-                                "<a class='btn btn-danger btn-xs btn-purple' href='javascript: void (0);' onclick='audit_delete(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-envelope-o'></i></a >" +
+                                "<a class='btn btn-danger btn-xs btn-purple' href='javascript: void (0);' onclick='send_email_invoice(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-envelope-o'></i></a >" +
                                 "</td >" +
                                 "<td>" +
                                 "<a class='btn btn-default btn-xs' href='javascript: void (0);' onclick='invoice_get(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-pencil'></i></a >" +
@@ -469,4 +492,49 @@ function print_invoice(id) {
 
     $('#dynamic_div').printThis({
     });
+}
+
+
+function send_email_invoice(id = null) {
+    if (id == null) { return;}
+
+    
+
+
+    if (confirm(gettext('Do you want to send E-Mail?'))) {
+
+        $.ajax({
+            type: 'POST',
+            url: '/KBL/send_email_invoice/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+
+                'id': id,
+            },
+            dataType: 'Json',
+            success: function (response) {
+
+                if (response.result) {
+                    alert(gettext("Email has been sent."));
+                    $("#overlay").fadeOut(300);
+                    select_estimate(selected_estimate);
+
+                }
+
+            },
+            beforeSend: function () {
+                $("#overlay").fadeIn(300);
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+            },
+            complete: function () {
+                $("#overlay").fadeOut(300);
+            }
+        });
+
+    }
+
+
 }

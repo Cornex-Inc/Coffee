@@ -2,7 +2,7 @@
 Definition of views.
 """
 from app.forms import *
-from datetime import datetime
+import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse
 from django.http import JsonResponse
@@ -10,15 +10,17 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
 from django.utils.translation import gettext as _
 from django.utils import translation
 from django.utils import timezone
 
-from django.contrib.auth.views import LoginView
+
 
 from django.db.models import Q, Count, F, Min,Sum
 from Account.models import *
 from Account.forms import *
+from Receptionist.models import *
 from .models import *
 
 #@login_required
@@ -34,29 +36,35 @@ def home(request):
     #    if request.user.is_anonymous:
     #        return redirect('login')
     #else:
-    print(request.user)
+    
+
+
     if request.user.is_anonymous:
         return redirect('login')
 
-    if request.user.is_doctor():
-        return redirect('/doctor')
-    if request.user.is_nurse():
-        return redirect('/manage/inventory_medical_tool')
-    elif request.user.is_receptionist():
-        return redirect('/receptionist')
-    elif request.user.is_pharmacy():
-        return redirect('/pharmacy')
-    elif request.user.is_laboratory():
-        return redirect('/laboratory')
-    elif request.user.is_radiation():
-        return redirect('/radiation')
-    elif request.user.is_physical_therapist():
-        return redirect('/physical_therapist')
-    elif request.user.is_admin:
-        if request.META['SERVER_PORT'] == '9090' or request.META['SERVER_PORT'] == '11111':#테스트서버
+    request.session['is_KBL'] = False
+
+    if request.META['SERVER_PORT'] == '9090' or request.META['SERVER_PORT'] == '11111':#테스트서버
+        if request.user.is_doctor():
+            return redirect('/doctor')
+        if request.user.is_nurse():
+            return redirect('/manage/inventory_medical_tool')
+        elif request.user.is_receptionist():
+            return redirect('/receptionist')
+        elif request.user.is_pharmacy():
+            return redirect('/pharmacy')
+        elif request.user.is_laboratory():
+            return redirect('/laboratory')
+        elif request.user.is_radiation():
+            return redirect('/radiation')
+        elif request.user.is_physical_therapist():
+            return redirect('/physical_therapist')
+        elif request.user.is_admin:
             return redirect('/manage')
-        elif request.META['SERVER_PORT'] == '8888':#경천애인 관리자
-            return redirect('/manage')
+    elif request.META['SERVER_PORT'] == '8888':#경천애인 관리자
+        request.session['is_KBL'] = True
+        if request.user.is_admin:
+            return redirect('/KBL')
 
 
 def login(request):
@@ -96,12 +104,18 @@ def login(request):
     else:
         err_msg = _('Please enter a correct user name and password.')
 
+    if request.META['SERVER_PORT'] == '9090' or request.META['SERVER_PORT'] == '11111':
+        url = 'app/login.html'
+    elif request.META['SERVER_PORT'] == '8888':
+        url = 'app/login_KBL.html'
+
+
     return render(request,
-        'app/login.html',
+        url,
             {
                 'title':_('Log in'),
                 'form':authentication_form,
-                'year':datetime.now().year,
+                'year':datetime.datetime.now().year,
                 'register_user':UserRegisterForm(),
                 'register_role':UserRuleChoiceForm(),
                 'register_doctor':DoctorDepartChoiceForm(),
@@ -113,9 +127,15 @@ def login(request):
 
 
 def logout(request):
-    res_str = '/'
-    if request.user.is_superuser is True:
-        res_str = '/admin'
+
+
+
+    if request.META['SERVER_PORT'] == '9090' or request.META['SERVER_PORT'] == '11111':
+        res_str = '/'
+        if request.user.is_superuser is True:
+            res_str = '/admin'
+    elif request.META['SERVER_PORT'] == '8888':
+        res_str = '/'
 
     auth.logout(request)
 
@@ -243,7 +263,7 @@ def admin(request):
             {
                 'title':_('Log in'),
                 'form':authentication_form,
-                'year':datetime.now().year,
+                'year':datetime.datetime.now().year,
                 'register_user':UserRegisterForm(),
                 'register_role':UserRuleChoiceForm(),
                 'register_doctor':DoctorDepartChoiceForm(),
@@ -350,7 +370,7 @@ def test_recv(request):
             temp_test.status = 0
 
         temp_test.res_code = code
-        temp_test.date_of_recieved = datetime.now()
+        temp_test.date_of_recieved = datetime.datetime.now()
         temp_test.save()
 
 
@@ -383,4 +403,63 @@ def get_res_table(request):
     return JsonResponse({
         'res':True,
         'list_res':list_res,
+        })
+
+
+
+def signpad(request):
+
+
+        
+    return render(request,
+        'app/signpad.html',
+            {
+            }
+        )
+
+
+def search_waiting_sign(request):
+
+
+    datas = []
+    query = Sign_Manage.objects.filter(is_sign='N', use_yn = 'Y')
+
+    for data in query:
+        datas.append({
+            'id':data.id,
+            'chart':data.reception.patient.get_chart_no(),
+            'name_kor':data.reception.patient.name_kor,
+            'name_eng':data.reception.patient.name_eng,
+            'age':data.reception.patient.get_age(),
+            'gender':data.reception.patient.get_gender_simple(),
+            'date_of_birth':data.reception.patient.date_of_birth.strftime('%Y-%m-%d'),
+            })
+
+
+
+
+    return JsonResponse({
+        'result':True,
+        'datas':datas,
+        })
+
+
+def save_sign(request):
+
+
+    id = request.POST.get('id')
+    sign_data = request.POST.get('sign_data')
+
+    print(id)
+
+    data = Sign_Manage.objects.get(id = id)
+    data.is_sign = 'Y'
+    data.sign_data = sign_data
+    data.date_modify = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    data.save()
+
+
+
+    return JsonResponse({
+        'result':True,
         })

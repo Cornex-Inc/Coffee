@@ -560,3 +560,183 @@ class FIRST_VISIT_SURVEY(models.Model):
         null=True
         )
     
+
+
+class Package_Manage(models.Model):
+
+    #환자 ID - 물리 FK
+    patient = models.ForeignKey(
+        to=Patient,
+        on_delete=models.DO_NOTHING,
+        )
+
+    #과 ID - 논리 FK
+    depart = models.CharField(
+        max_length = 4,
+        default=''
+        )
+
+    #의사 ID - 논리 FK
+    doctor= models.CharField(
+        max_length = 4,
+        default=''
+        ) 
+
+    #접수 아이디 - 물리 FK
+    reception = models.ForeignKey(
+        to=Reception,
+        on_delete=models.DO_NOTHING,
+        null= True,
+        )
+
+    #처치 ID = 물리 FK
+    precedure = models.ForeignKey(
+        to=Precedure,
+        on_delete=models.DO_NOTHING,
+        null= True,
+        )
+
+    #처치 이름 - 아이템 변경 방지
+    precedure_name = models.CharField(
+        max_length = 64,
+        default='',
+        )
+
+    #패키지 그루핑
+    grouping = models.CharField(
+        max_length = 4,
+        default='1',
+        )
+
+
+
+    #횟차 - 아이템 갯수 만큼 생성 ex. 4개면 개의 아이템 별로 1~4 생성
+    itme_round = models.CharField(
+        max_length = 4,
+        default='0'
+        )
+
+    #메모
+    memo = models.CharField(
+        max_length = 256,
+        default='0'
+        )
+
+    #구매날
+    date_bought = models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+
+    #사용날
+    date_used = models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+
+    #환불날.. ? - 일단 필드만.. 
+    date_refund = models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+
+    #환불.. ? - 일단 필드만.. 
+    use_yn = models.CharField(
+        max_length = 2,
+        default='N',
+        )
+
+    #유효기간.. ? - 일단 필드만..
+    date_expired = models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+    
+    #삭제 유무
+    use_yn = models.CharField(
+        max_length = 2,
+        default='Y',
+        )
+
+    #등록자 - 논리 FK
+    registrant = models.CharField(
+        max_length = 4,
+        default='',
+        )
+
+    #등록 날짜 시간
+    date_register= models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+
+    #마지막 수정자 - 논리 FK
+    modifier = models.CharField(
+        max_length = 4,
+        default='',
+        )
+
+    #마지막 수정 날짜 시간
+    date_modify= models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+
+
+
+
+
+
+class Sign_Manage(models.Model):
+
+    #환자 
+    reception = models.ForeignKey(
+        to = Reception,
+        on_delete = models.DO_NOTHING,
+        null=True,
+        )
+
+
+
+
+    #사인 데이타 - base64
+    sign_data = models.TextField(
+        default='',
+        )
+
+    #사인 확인
+    is_sign = models.CharField(
+        max_length = 2,
+        default='N',
+        )
+
+    
+    #사용 유무
+    use_yn = models.CharField(
+        max_length = 2,
+        default='Y',
+        )
+
+    #등록자 - 논리 FK
+    registrant = models.CharField(
+        max_length = 4,
+        default='',
+        )
+
+    #등록 날짜 시간
+    date_register= models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+
+    #마지막 수정자 - 논리 FK
+    modifier = models.CharField(
+        max_length = 4,
+        default='',
+        )
+
+    #마지막 수정 날짜 시간
+    date_modify= models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )

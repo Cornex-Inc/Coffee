@@ -9,6 +9,15 @@
             <div class="status_table_title">
                 <span class="btn btn-danger title_span">{{ _('Customer Management') }}</span>
             <div class="radiation_waiting_control">
+                <div class="input-group" id="document_control_depart_div" style="{% if user.doctor %} display:none; {%endif%}">
+                    <span class="input-group-addon reception_table_title" id="basic-addon1">{{ _('Depart') }}</span>
+                    <select id="control_depart" class="form-control">
+                        <option value="">{{ _('All') }}</option>
+                        {% for depart in departs %}
+                        <option value="{{depart.id}}" {% if user.doctor.depart.id is depart.id %} selected {%endif%}>{{ depart.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 <div class="input-group depart_select">
                     <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Type') }}</span>
                     <select name="depart" id="patient_type" class="form-control costom-select " aria-describedby="basic-addon1" >

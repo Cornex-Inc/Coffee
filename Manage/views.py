@@ -31,18 +31,6 @@ from django.views import View
 
 
 # Create your views here.
-def dash_board(request):
-
-    dashboard_board = Board_Contents.objects.filter(use_yn='Y',board_type='BASIC',)[5:]
-
-
-    return render(request,
-        'Manage/dashboard.html',
-            {
-                'dashboard_board':dashboard_board,
-            }
-        )
-
 
 
 
@@ -801,11 +789,14 @@ def doctor_profit(request):
                 discount = reception.payment.discounted / 100 * reception.payment.sub_total
             amount_discount += 0 if discount is None else discount
 
+
+
             data.update({
                 'exams':exams,
                 'precedures':precedures,
                 'radiographys':radiographys,
                 
+                'subtotal':reception.payment.sub_total if filter_search == '' else sub_total,
                 'subtotal':reception.payment.sub_total if filter_search == '' else sub_total,
                 'discount':discount if filter_search == '' else 0,
                 'total':reception.payment.total if filter_search == '' else sub_total,
@@ -824,6 +815,17 @@ def doctor_profit(request):
                 })
 
             
+            pay_records = PaymentRecord.objects.filter(payment = reception.payment)
+            for pay_record in pay_records:
+                if pay_record.method == 'card':
+                    data.update({'paid_by_card':'card'})
+                elif pay_record.method == 'cash':
+                    data.update({'paid_by_cash':'cash'})
+                elif pay_record.method == 'remit':
+                    data.update({'paid_by_remit':'remit'})
+
+
+
             datas.append(data)
 
         context.update({
@@ -1899,6 +1901,8 @@ def precedure_add_edit_set(request):
 
         last_code = Precedure.objects.filter(precedure_class_id=precedure_class).order_by('code').last()
         precedure_class = int(precedure_class)
+        print(precedure_class)
+        print(last_code)
 
         if precedure_class ==1: #D
             CODE = 'D'
@@ -1919,7 +1923,7 @@ def precedure_add_edit_set(request):
         elif precedure_class == 10: #PM
             CODE = 'PM'
         elif ( precedure_class >= 11 and precedure_class <= 30 ) or precedure_class == 9: #: #DERM
-            CODE = 'DM'
+            CODE = 'DM' 
         elif ( precedure_class >= 31 and precedure_class <=40 ) or precedure_class == 42: #PS
             CODE = 'PS'
         elif precedure_class == 41: #MRI
@@ -1931,11 +1935,21 @@ def precedure_add_edit_set(request):
         elif precedure_class == 46: #Vaccin
             CODE = 'EC'
 
-        if last_code == None:
-           data.code = CODE + str('0001')
-        else:
+
+        if CODE == 'DM' or CODE == 'PS':
+            last_code = Precedure.objects.filter(code__istartswith = CODE ).order_by('code').last()
             temp_code = last_code.code.split(CODE)
             data.code = CODE + str('%04d' % (int(temp_code[1]) + 1))
+        
+        else:
+            if last_code == None:
+               data.code = CODE + str('0001')
+            else:
+                temp_code = last_code.code.split(CODE)
+                data.code = CODE + str('%04d' % (int(temp_code[1]) + 1))
+
+            
+        print(data.code)
         
 
     else:
@@ -3021,21 +3035,23 @@ def draft_print(request,id=None):
 #고객 관리
 def customer_manage(request):
     
+    departs = Depart.objects.all()
 
     return render(request,
         'Manage/CRM.html',
             {
-
+                'departs':departs,
             }
         )
 
 
 def customer_manage_get_patient_list(request):
 
+    depart = request.POST.get('depart')
     category = request.POST.get('category')
     string = request.POST.get('string')
 
-
+    kwargs={}
     argument_list = [] 
     if category=='':
         argument_list.append( Q(**{'name_kor__icontains':string} ) )
@@ -3053,14 +3069,35 @@ def customer_manage_get_patient_list(request):
     elif category=='phone':
         argument_list.append( Q(**{'phone__icontains':string} ) ) 
 
-
+    if depart != '':
+        kwargs['depart_id']=depart
 
     patients = Patient.objects.filter( functools.reduce(operator.or_, argument_list) )
-
+   #visits_query = Reception.objects.filter(
+   #    functools.reduce(operator.or_, argument_list),
+   #    **kwargs,
+   #    patient_id = patient.id,
+   #    ).exclude(
+   #        progress='deleted'
+   #        ).select_related(
+   #            'patient'
+   #            ).aggregate(visits=Count('patient_id')).values(
+   #                'patient_id',
+   #                'patient__chart',
+   #                'patient__name_kor',
+   #                'patient__name_eng',
+   #                'patient__chart',
+   #                'patient__chart',
+   #                )
     datas=[]
     for patient in patients:
 
-        visits = Reception.objects.filter(patient_id = patient.id).count()
+        visits = Reception.objects.filter(
+            **kwargs,
+            patient_id = patient.id
+            ).exclude(progress='deleted').count()
+        if depart != '' and visits == 0: # 과를 선택했을때, 방문수도 0이면 안보여줌
+            continue
 
         total_amount = Reception.objects.filter(patient_id = patient.id).prefetch_related('payment__paymentrecord_set').aggregate(total_price=Sum('payment__paymentrecord__paid'))
 
@@ -3138,10 +3175,15 @@ def customer_manage_get_patient_info(request):
 
 def customer_manage_get_patient_visit(request):
 
+    depart = request.POST.get('depart')
     patient_id = request.POST.get('patient_id')
 
+    kwargs={}
+    if depart != '':
+        kwargs['depart_id']=depart
+
     context={}
-    receptions = Reception.objects.filter(patient_id=int(patient_id)).exclude(progress='deleted').order_by('recorded_date')
+    receptions = Reception.objects.filter(**kwargs,patient_id=int(patient_id)).exclude(progress='deleted').order_by('recorded_date')
 
 
 
@@ -3286,39 +3328,39 @@ def manage_employee(request):
             'id':data['code'],
             'name':data['name']
             })
+    list_depart = []
+    if request.session['is_KBL']:
+        #부서 - KBL
+        
+        if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+            query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL').annotate(code = F('commcode'),name = F('commcode_name_ko')).values('code','name')
+        elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+            query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL').annotate(code = F('commcode'),name = F('commcode_name_en')).values('code','name')
+        elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+            query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL').annotate(code = F('commcode'),name = F('commcode_name_vi')).values('code','name')
 
-    #부서 - KBL
-    list_depart_kbl = []
-    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
-        query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL').annotate(code = F('commcode'),name = F('commcode_name_ko')).values('code','name')
-    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
-        query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL').annotate(code = F('commcode'),name = F('commcode_name_en')).values('code','name')
-    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
-        query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL').annotate(code = F('commcode'),name = F('commcode_name_vi')).values('code','name')
+        for data in query_depart:
+            list_depart.append({
+                'id':data['code'],
+                'name':data['name']
+                })
+    else:
+        #부서 - 병원
+        if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+            query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC').annotate(code = F('commcode'),name = F('commcode_name_ko')).values('code','name','id')
+        elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+            query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC').annotate(code = F('commcode'),name = F('commcode_name_en')).values('code','name','id')
+        elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+            query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC').annotate(code = F('commcode'),name = F('commcode_name_vi')).values('code','name','id')
 
-    for data in query_depart:
-        list_depart_kbl.append({
-            'id':data['code'],
-            'name':data['name']
-            })
-
-    #부서 - 병원
-    list_depart_clinic = []
-    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
-        query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC').annotate(code = F('commcode'),name = F('commcode_name_ko')).values('code','name','id')
-    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
-        query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC').annotate(code = F('commcode'),name = F('commcode_name_en')).values('code','name','id')
-    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
-        query_depart= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC').annotate(code = F('commcode'),name = F('commcode_name_vi')).values('code','name','id')
-
-    for data in query_depart:
-        if data['code'] == 'DOCTOR':
-            temp_commcode = COMMCODE.objects.get(id = data['id'])
-            data['code'] += '_' + temp_commcode.se1
-        list_depart_clinic.append({
-            'id':data['code'],
-            'name':data['name']
-            })
+        for data in query_depart:
+            if data['code'] == 'DOCTOR':
+                temp_commcode = COMMCODE.objects.get(id = data['id'])
+                data['code'] += '_' + temp_commcode.se1
+            list_depart.append({
+                'id':data['code'],
+                'name':data['name']
+                })
 
 
 
@@ -3354,8 +3396,7 @@ def manage_employee(request):
         'Manage/employee_manage.html',
             {
                 'list_rank':list_rank,
-                'list_depart_clinic':list_depart_clinic,
-                'list_depart_kbl':list_depart_kbl,
+                'list_depart':list_depart,
                 'list_division':list_division,
                 'list_status':list_status,
             }
@@ -3381,9 +3422,32 @@ def employee_search(request):
         else:
             kwargs['depart'] = depart_filter
 
+    argument_list = []
+    argument_list.append( Q(**{'user_id__icontains':string} ) )
+    argument_list.append( Q(**{'name_en__icontains':string} ) )
+    argument_list.append( Q(**{'name_ko__icontains':string} ) )
+    argument_list.append( Q(**{'name_vi__icontains':string} ) )
 
+    ex_list= []
+    ex_list.append( Q(**{'depart':''} ) ) 
+    if depart_filter == '':
+        if not request.session['is_KBL']:
+            depart_query= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL').values('commcode')
+        else:
+            depart_query= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC').values('commcode')
 
-    query_user = User.objects.filter(**kwargs)
+        for data in depart_query:
+            ex_list.append( Q(**{'depart':data['commcode']} ) )
+    
+
+    print(ex_list)
+
+    query_user = User.objects.filter(
+        functools.reduce(operator.or_, argument_list),
+        **kwargs
+        ).exclude(
+            functools.reduce(operator.or_, ex_list),
+            )
 
 
     list_user = []
@@ -4582,6 +4646,8 @@ def sms_send_sms(request):
     phone = request.POST.get('phone','')
     contents = request.POST.get('contents','')
 
+    is_KBL = request.POST.get('is_KBL',None)
+
     sms_send = sms_history()
 
     sms_send.type = type
@@ -4592,6 +4658,8 @@ def sms_send_sms(request):
     sms_send.phone = phone
     sms_send.contents = contents
     sms_send.date_of_registered = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    if is_KBL:
+        sms_send.is_KBL = 'Y'
     sms_send.save()
 
     return JsonResponse({
@@ -5635,10 +5703,30 @@ def search_daily(request):
 @login_required
 def code_setting(request):
 
+    
+    
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
+        f_name = F('commcode_name_en')
+
+    
+    list_upper=[]
+    upper_query = COMMCODE.objects.values('upper_commcode_name').annotate(Count('upper_commcode_name'))
+    for data in upper_query:
+        list_upper.append({
+            'name':data['upper_commcode_name']
+            })
+
+
     return render(request,
     'Manage/code_setting.html',
             {
-                '':None,
+                
+            'list_upper':list_upper,
             },
         )
 
@@ -5655,10 +5743,14 @@ def code_search(request):
     elif request.session[translation.LANGUAGE_SESSION_KEY] == 'en':
         f_name = F('commcode_name_en')
 
-    
+ 
+
+    category=request.POST.get("category")
     string=request.POST.get("string")
 
     kwargs = {}
+    if category != '':
+        kwargs['upper_commcode_name']=category
     argument_list = [] 
     #if string != '':
     #argument_list.append( Q(**{'name_kor__icontains':string} ) )
@@ -5669,6 +5761,8 @@ def code_search(request):
     #if project_type != '':
     #    kwargs['type'] = project_type
 
+
+
     datas = []
     query = COMMCODE.objects.filter(
         functools.reduce(operator.or_, argument_list),
@@ -5677,7 +5771,7 @@ def code_search(request):
 
 
 
-
+     
 
 
 
@@ -5727,7 +5821,6 @@ def code_search(request):
             'page_number':paging_data.number,
             'has_previous':paging_data.has_previous(),
             'has_next':paging_data.has_next(),
-
 
 
             }

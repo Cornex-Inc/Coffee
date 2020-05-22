@@ -29,7 +29,15 @@
     grid-row-end: 4;
 }
 
+.btn-hotpink {
+    background: #ff69b4;
+    border-color: #ff69b4;
+}
 
+    .btn-hotpink:hover, .btn-hotpink:focus, .btn-hotpink:active, .btn-hotpink.active {
+        background: rgb(255,64,159);
+        border-color: rgb(255,64,159);
+    }
 
 
 .doctor_patient_info input {
@@ -309,6 +317,48 @@ doctor_patient_info table ul label {
     overflow: auto;
     height: 140px;
 }
+
+#diagnosis_select_package th, #diagnosis_select_package td{
+    vertical-align:middle;
+    text-align:center;
+}
+#diagnosis_select_package th:nth-child(1) {
+}
+#diagnosis_select_package th:nth-child(2){width:100px;}
+#diagnosis_select_package th:nth-child(3){width:100px}
+
+
+#patient_package_history_list {
+    table-layout: fixed;
+}
+
+    #patient_package_history_list td, #patient_package_history_list th {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+        #patient_package_history_list th:nth-child(1) {
+            width: 50px;
+        }
+
+        #patient_package_history_list th:nth-child(2) {
+            width: 120px;
+        }
+
+        #patient_package_history_list th:nth-child(3) {
+        }
+
+        #patient_package_history_list th:nth-child(4) {
+            width: 60px;
+        }
+
+        #patient_package_history_list th:nth-child(5) {
+            width: 100px;
+        }
+
+        #patient_package_history_list th:nth-child(6) {
+            width: 100px;
+        }
 
 @-webkit-keyframes blink {
     0% {

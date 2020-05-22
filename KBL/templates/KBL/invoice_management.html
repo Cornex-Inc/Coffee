@@ -12,26 +12,36 @@
                 <div class="search_control_div">
                     <div class="input-group depart_select">
                         <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Type') }}</span>
-                        <select id="estimate_type" class="form-control costom-select " aria-describedby="basic-addon1" >
-                            <option value="" selected="">{{ _('ALL') }}</option>          
+                        <select id="invoice_type" class="form-control costom-select " aria-describedby="basic-addon1" >
+                            <option value="" selected="">{{ _('ALL') }}</option>    
+                            {% for data in list_type %}
+                            <option value="{{ data.code }}">{{ data.name }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="input-group depart_select">
                         <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('In Charge') }}</span>
-                        <select id="estimate_in_charge" class="form-control costom-select " aria-describedby="basic-addon1" >
-                            <option value="" selected="">{{ _('ALL') }}</option>          
+                        <select id="invoice_in_charge" class="form-control costom-select " aria-describedby="basic-addon1" >
+                            <option value="" selected>{{ _('ALL') }}</option>       
+                            <option value="1" >ADMIN</option>
+                            {% for data in list_in_charge %}
+                            <option value="{{ data.code }}">{{ data.name }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="input-group depart_select">
                         <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Status') }}</span>
-                        <select id="estimate_in_charge" class="form-control costom-select " aria-describedby="basic-addon1" >
-                            <option value="" selected="">{{ _('ALL') }}</option>          
+                        <select id="invoice_status" class="form-control costom-select " aria-describedby="basic-addon1" >
+                            <option value="" selected="">{{ _('ALL') }}</option>
+                            {% for data in list_invoice_status %}
+                            <option value="{{ data.code }}">{{ data.name }}</option>
+                            {% endfor %}
                         </select>
                     </div>
-                    <input type="text" id="estimate_date_start" class="form-control date_input">
-                    <input type="text" id="estimate_date_end" class="form-control date_input">
-                    <input type="text" id="estimate_search" class="form-control"/>
-                    <input type="button" id="patient_search_btn" class="btn btn-default" value="{{ _('Search') }}" style="display:inline;"/>
+                    <input type="text" id="invoice_date_start" class="form-control date_input">
+                    <input type="text" id="invoice_date_end" class="form-control date_input">
+                    <input type="text" id="invoice_search" class="form-control"/>
+                    <input type="button" id="invoice_search_btn" class="btn btn-default" value="{{ _('Search') }}" style="display:inline;"/>
                 </div>
             </div>
                

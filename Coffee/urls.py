@@ -80,7 +80,13 @@ urlpatterns = [
     path('test/send/',views.test_send),
     path('test/recv/',views.test_recv),
     path('test/get_res_table/',views.get_res_table),
-]
+
+    path('signpad/',views.signpad,name='signpad'),
+    path('search_waiting_sign/',views.search_waiting_sign,),
+    path('save_sign/',views.save_sign,),
+
+
+    ]
 
 
 if settings.DEBUG:

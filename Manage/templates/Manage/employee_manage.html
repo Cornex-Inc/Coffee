@@ -1,4 +1,4 @@
-{% extends "app/layout.html" %}
+{% extends request.session.is_KBL|yesno:"app/layout_KBL.html,app/layout.html" %}
 
 {% load staticfiles %}
 {% block content %}
@@ -21,17 +21,9 @@
                     <span class="input-group-addon" id="basic-addon1">{{ _('Depart') }}</span>
                     <select id="search_depart" class="form-control">
                         <option value="">{{ _('ALL') }}</option>
-                        <option value="ADMIN">{{ _('Administrator') }}</option>
-                        <optgroup label="{{ _('I-MEDICARE') }}">
-                            {% for data in list_depart_clinic %}
-                            <option value="{{ data.id }}">{{ data.name }}</option>
-                            {% endfor %}
-                        </optgroup>
-                        <optgroup label="{{ _('KBL') }}">
-                            {% for data in list_depart_kbl %}
-                            <option value="{{ data.id }}">{{ data.name }}</option>
-                            {% endfor %}
-                            </optgroup>
+                        {% for data in list_depart %}
+                        <option value="{{ data.id }}">{{ data.name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <input type="text" id="search_input" class="form-control search_select">
@@ -168,16 +160,9 @@
                                     <span class="input-group-addon" id="basic-addon1">{{ _('Depart') }}</span>
                                     <select id="add_edit_database_depart" class="form-control" aria-describedby="basic-addon1">
                                         <option value="">----------</option>
-                                        <optgroup label="{{ _('I-MEDICARE') }}">
-                                            {% for data in list_depart_clinic %}
+                                            {% for data in list_depart %}
                                             <option value="{{ data.id }}">{{ data.name }}</option>
                                             {% endfor %}
-                                        </optgroup>
-                                        <optgroup label="{{ _('KBL') }}">
-                                            {% for data in list_depart_kbl %}
-                                            <option value="{{ data.id }}">{{ data.name }}</option>
-                                            {% endfor %}
-                                         </optgroup>
                                     </select>
                                 </div>
                                 <div class="input-group input-group_half_left">
