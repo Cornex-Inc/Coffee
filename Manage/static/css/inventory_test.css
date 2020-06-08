@@ -318,8 +318,37 @@
     background:none;
 }
 
-@media ( min-height: 1900px ) {
 
+
+
+    #test_interval_table {
+        table-layout: fixed;
+        letter-spacing: -1px;
+    }
+    #test_interval_table th, #test_interval_table td {
+        vertical-align: middle;
+        text-align: center;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    #test_interval_table th:nth-child(1){}
+    #test_interval_table th:nth-child(2){width:100px;}
+    #test_interval_table th:nth-child(3){width:60px;}
+    #test_interval_table th:nth-child(4){width:100px;}
+    #test_interval_table th:nth-child(5){width:90px;}
+    #test_interval_table th:nth-child(6){width:100px;}
+
+    #test_interval_table a:last-child{
+        margin-right:0px;
+    }
+
+#add_edit_interval .input-group-addon {
+    width: 135px;
+}
+
+@media ( min-height: 1900px ) {
     .inventory_precedure_grid {
         width: 1920px;
         height: 800px;

@@ -7,20 +7,33 @@ function numberWithCommas(x) {
 
 $(function () {
 
-
-    search_patient();
+    $('.date_input').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        drops: "down",
+        locale: {
+            format: 'YYYY-MM-DD',
+        },
+    });
+    $('.date_input').val('');
+    $('#invoice_date_start').val(moment().subtract(7, 'd').format('YYYY-MM-DD'));
+    $('#invoice_date_end').val(moment().format("YYYY-MM-DD"));
+   
 
     //검색
-    $('#patient_search').keydown(function (key) {
+    $('#invoice_search').keydown(function (key) {
         if (key.keyCode == 13) {
-            search_patient();
+            invoice_search();
         }
     })
 
-    $("#patient_search_btn").click(function () {
-        search_patient();
+    $("#invoice_search_btn").click(function () {
+        invoice_search();
     });
 
+    $("#invoice_date_end,#invoice_date_start,#invoice_in_charge,#invoice_status,#invoice_type").change(function () {
+        invoice_search();
+    });
 
     //문자 글자 고정
     $("#sms_modal_content").keydown(function () {
@@ -28,6 +41,8 @@ $(function () {
             $(this).val($(this).val().substring(0, 67));
         }
     })
+
+    invoice_search();
 
 });
 
@@ -40,20 +55,30 @@ function invoice_management_modal(id = null) {
 
 }
 
-function search_patient(page = null) {
+function invoice_search(page = null) {
     var context_in_page = 10;
 
 
-    var category = $('#patient_type option:selected').val();
-    var string = $('#patient_search').val();
+    var start = $('#invoice_date_start').val();
+    var end = $('#invoice_date_end').val();
+
+    var invoice_type = $('#invoice_type').val();
+    var invoice_in_charge = $('#invoice_in_charge').val();
+    var invoice_status = $('#invoice_status').val();
+    var string = $('#invoice_search').val();
 
 
     $.ajax({
         type: 'POST',
-        url: '/manage/customer_manage_get_patient_list/',
+        url: '/KBL/invoice_search/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
-            'category': category,
+            'start': start,
+            'end': end,
+
+            'type': invoice_type,
+            'in_charge': invoice_in_charge,
+            'status': invoice_status,
             'string': string,
 
             'page': page,
@@ -61,35 +86,38 @@ function search_patient(page = null) {
         },
         dataType: 'Json',
         success: function (response) {
-            $('#patient_list_table > tbody ').empty();
+            $('#invoice_list_tale > tbody ').empty();
             for (var i = 0; i < context_in_page; i++) {
                 if (response.datas[i]) {
-                    var str = "<tr style='cursor:pointer;' onclick='set_patient_data(" +
-                        parseInt(response.datas[i]['id']) +
-                        ")'><td>" + response.datas[i]['id'] + "</td>";
-
-                    if (response.datas[i]['has_unpaid']) {
-                        str += "<td style=color:rgb(228,97,131);>";
-                    } else {
-                        str += "<td>";
-                    }
-
-                    str += response.datas[i]['chart'] + "</td>" +
-                        "<td>" + response.datas[i]['name_kor'] + '<br />' + response.datas[i]['name_eng'] + "</td>" +
-                        "<td>" + response.datas[i]['date_of_birth'] + ' (' + response.datas[i]['gender'] + '/' + response.datas[i]['age'] + ")</td>" +
-                        "<td>" + response.datas[i]['phonenumber'] + "</td>" +
-                        "<td>" + response.datas[i]['date_registered'] + "</td>" +
-                        "<td>" + response.datas[i]['memo'] + "</td>" +
-                        "<td>" + response.datas[i]['visits'] + "</td>" +
-                        "<td>" + numberWithCommas(response.datas[i]['paid_total']) + "</td>" +
-                        "<td><a class='btn btn-default' onclick=sms_modal('" + response.datas[i]['id'] + "')>&nbsp;<i class='fa fa-2x fa-mobile'></i>&nbsp;</a></td></tr>";
+                    var str = "<tr>" +
+                        "<td>" + response.datas[i]['serial'] + "</td>" +
+                        "<td>" + response.datas[i]['company_name'] + "</td>" +
+                        "<td>" + response.project_type_dict[response.datas[i]['type']]['name'] + "</td>" +
+                        "<td>" + response.datas[i]['title'] + "</td>" +
+                        "<td>" + response.datas[i]['in_charge'] + "</td>" +
+                        "<td>" + response.datas[i]['date_register'] + "</td>" +
+                        "<td>" + response.datas[i]['date_sent'] + "</td>" +
+                        "<td><span class='" + response.invoice_status_dict[response.datas[i]['status']]['class'] + "'>" + response.invoice_status_dict[response.datas[i]['status']]['name'] + "</span></td>" +
+                        "<td>";
+                        if (response.datas[i]['status'] == "CANCEL") {
+                            str += "</td><td></td></tr>";
+                        
+                        } else {
+                            str += "<a class='btn btn-success btn-xs' href='javascript: void (0);' onclick='print_invoice(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-print'></i></a >" +
+                                "<a class='btn btn-danger btn-xs btn-purple' href='javascript: void (0);' onclick='send_email_invoice(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-envelope-o'></i></a >" +
+                                "</td >" +
+                                "<td>" +
+                                "<a class='btn btn-default btn-xs' href='javascript: void (0);' onclick='invoice_get(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-pencil'></i></a >" +
+                                "<a class='btn btn-danger btn-xs' href='javascript: void (0);' onclick='invoice_delete(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-trash'></i></a >" +
+                                "</td></tr>";
+                        }
                     //"<td><a class='btn btn-default btn-xs' href='javascript: void (0);' onclick='delete_database_precedure(" + response.datas[i]['id'] + ")' ><i class='fa fa-lg fa-history'></i></a></td></tr>";
 
 
                 } else {
                     var str = "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
                 }
-                $('#patient_list_table').append(str);
+                $('#invoice_list_tale').append(str);
             }
 
 
@@ -97,7 +125,7 @@ function search_patient(page = null) {
             $('#table_pagnation').html('');
             str = '';
             if (response.has_previous == true) {
-                str += '<li> <a onclick="search_patient(' + (response.page_number - 1) + ')">&laquo;</a></li>';
+                str += '<li> <a onclick="invoice_search(' + (response.page_number - 1) + ')">&laquo;</a></li>';
             } else {
                 str += '<li class="disabled"><span>&laquo;</span></li>';
             }
@@ -107,14 +135,14 @@ function search_patient(page = null) {
                     str += '<li class="active"><span>' + i + ' <span class="sr-only">(current)</span></span></li>';
                 }
                 else if (response.page_number + 5 > i && response.page_number - 5 < i) {
-                    str += '<li><a onclick="search_patient(' + i + ')">' + i + '</a></li>';
+                    str += '<li><a onclick="invoice_search(' + i + ')">' + i + '</a></li>';
                 }
                 else {
                 }
 
             }
             if (response.has_next == true) {
-                str += '<li><a onclick="search_patient(' + (response.page_number + 1) + ')">&raquo;</a></li>';
+                str += '<li><a onclick="invoice_search(' + (response.page_number + 1) + ')">&raquo;</a></li>';
             } else {
                 str += '<li class="disabled"><span>&raquo;</span></li>';
             }
@@ -132,8 +160,121 @@ function search_patient(page = null) {
 }
 
 
+function invoice_get(id = null) {
+    if (id == null) { return; }
 
 
+
+    $.ajax({
+        type: 'POST',
+        url: '/KBL/invoice_get/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+
+            'id': id,
+        },
+        dataType: 'Json',
+        success: function (response) {
+
+
+            $("#invoice_serial").val(response.invoice_serial);
+            $("#invoice_recipient").val(response.invoice_recipient);
+            $("#invoice_title").val(response.invoice_title);
+
+            $("#selected_invoice").val(id);
+
+            $('#invoice_management_modal').modal({ backdrop: 'static', keyboard: false });
+            $('#invoice_management_modal').modal('show');
+
+
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    });
+    
+}
+
+
+function invoice_edit() {
+
+    var id = $("#selected_invoice").val();
+
+    var invoice_serial = $("#invoice_serial").val();
+    var invoice_recipient = $("#invoice_recipient").val();
+    var invoice_title = $("#invoice_title").val();
+
+
+    if (invoice_title == '') {
+        alert(gettext('Title is empty.'));
+        return;
+    }
+    if (invoice_recipient == '') {
+        alert(gettext('Recipient is empty.'));
+        return;
+    }
+
+
+    $.ajax({
+        type: 'POST',
+        url: '/KBL/invoice_edit/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+
+            'id': id,
+
+            'invoice_serial': invoice_serial,
+            'invoice_recipient': invoice_recipient,
+            'invoice_title': invoice_title,
+
+        },
+        dataType: 'Json',
+        success: function (response) {
+            alert(gettext('Saved.'));
+            $('#invoice_management_modal').modal('hide');
+            invoice_search();
+
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    });
+
+
+}
+
+
+
+function invoice_delete(id = null) {
+    if (id == null) { return; }
+
+
+    if (confirm(gettext('Do you want to delete?'))) {
+
+        $.ajax({
+            type: 'POST',
+            url: '/KBL/invoice_delete/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+
+                'id': id,
+            },
+            dataType: 'Json',
+            success: function (response) {
+                alert(gettext('Deleted.'));
+                invoice_search();
+
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+            },
+        });
+    }
+
+}
 
 function sms_modal(patient_id) {
     $("#sms_modal_name").val('');
@@ -344,10 +485,56 @@ function show_past_history(reception_id = null) {
 }
 
 
-function download_excel() {
+function print_invoice(id) {
 
-    var url = '/manage/cumstomer_management_excel'
+    $("#dynamic_div").html('');
+    $('#dynamic_div').load('/KBL/print_invoice/' + id);
 
-    window.open(url);
+    $('#dynamic_div').printThis({
+    });
+}
+
+
+function send_email_invoice(id = null) {
+    if (id == null) { return;}
+
+    
+
+
+    if (confirm(gettext('Do you want to send E-Mail?'))) {
+
+        $.ajax({
+            type: 'POST',
+            url: '/KBL/send_email_invoice/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+
+                'id': id,
+            },
+            dataType: 'Json',
+            success: function (response) {
+
+                if (response.result) {
+                    alert(gettext("Email has been sent."));
+                    $("#overlay").fadeOut(300);
+                    select_estimate(selected_estimate);
+
+                }
+
+            },
+            beforeSend: function () {
+                $("#overlay").fadeIn(300);
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+            },
+            complete: function () {
+                $("#overlay").fadeOut(300);
+            }
+        });
+
+    }
+
 
 }

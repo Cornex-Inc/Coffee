@@ -3,7 +3,8 @@ jQuery.browser = {};
 var timer_count = 0;
 var image_tmp_count = 0;
 
-
+var canvas = null
+var signaturePad = null;
 
 
 function numberWithCommas(x) {
@@ -510,6 +511,19 @@ $(function () {
     
     //패키지
     $("#diagnosis_select_package_title").hide(); 
+
+
+    //싸인패드
+    canvas = document.getElementById("sign");
+    signaturePad = new SignaturePad(canvas);
+    signaturePad.backgroundColor = "rgb(0,0,0,0)";
+
+
+    $("#sign_pad_clear").click(function () {
+        signaturePad.clear();
+        signaturePad.backgroundColor = "rgb(0,0,0,0)";
+    });
+
 });
 
 
@@ -1372,6 +1386,159 @@ function patient_package_history_modal(id = null) {
 
         },
     })
+
+
+}
+
+
+//동의서 모달
+function list_aggreement() {
+
+    var reception_id = $('#selected_reception').val();
+    if (reception_id == '') {
+        alert(gettext('Select patient first.'));
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/list_agreement/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'reception_id': reception_id,
+
+        },
+        dataType: 'Json',
+        success: function (response) {
+            $('#aggreement_list > tbody ').empty();
+            for (var i = 0; i < response.datas.length; i++) {
+                var str = "<tr>"
+
+                str += " <td>" + (i + 1) + "</td>" +
+                    "<td>" + response.datas[i]['depart'] + "</td>" +
+                    "<td>" + response.datas[i]['name'] + "</td>" +
+                    "<td>" + response.datas[i]['date'] + "</td>" +
+                    "<td>";
+                if (response.datas[i]['is_sign'] =='N') {
+                    str += "<a class='btn btn-primary btn-xs' href='javascript: void (0);' onclick='sign_pad_modal(null,&#39;" + response.datas[i]['type'] + "&#39;)'> <i class='fa fa-lg fa-pencil-square-o'></i></a>";
+                } else {
+                    str += "<a class='btn btn-default btn-xs' href='javascript: void (0);' onclick='sign_pad_modal(" + response.datas[i]['id'] + ",&#39;" + response.datas[i]['type'] + "&#39;)' > <i class='fa fa-lg fa-pencil'></i></a>" +
+                        "<a class='btn btn-danger btn-xs' href='javascript: void (0);' onclick='sign_pad_delete(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-trash'></i></a>";
+                }
+                str += "</td></tr>";
+
+                $('#aggreement_list > tbody').append(str);
+
+            }
+
+            $('#agreement_list_modal').modal({ backdrop: 'static', keyboard: false });
+            $('#agreement_list_modal').modal('show');
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+
+}
+
+
+function sign_pad_modal(id, type) {
+
+    $("#selected_sign_pad_id").val(id);
+    $("#selected_sign_pad_type").val(type);
+
+    signaturePad.clear();
+    signaturePad.backgroundColor = "rgb(0,0,0,0)";
+
+    console.log($("#selected_sign_pad_type").val())
+
+    if (id != null) {
+        $.ajax({
+            type: 'POST',
+            url: '/receptionist/get_agreement/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+                'id': id,
+
+            },
+            dataType: 'Json',
+            success: function (response) {
+                signaturePad.fromDataURL(response.sign_pad_data);
+                console.log($("#selected_sign_pad_type").val())
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+            },
+        })
+
+    }
+
+    $('#sign_pad_modal').modal({ backdrop: 'static', keyboard: false });
+    $('#sign_pad_modal').modal('show');
+}
+
+function sign_pad_save() {
+    var reception_id = $('#selected_reception').val();
+    var sign_pad_id = $('#selected_sign_pad_id').val();
+    var sign_pad_type = $('#selected_sign_pad_type').val();
+
+    var sign_pad_data = signaturePad.toDataURL();
+    console.log($("#selected_sign_pad_type").val())
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/save_agreement/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'reception_id': reception_id,
+            'sign_pad_id': sign_pad_id,
+            'sign_pad_type': sign_pad_type,
+            'sign_pad_data': sign_pad_data,
+        },
+        dataType: 'Json',
+        success: function (response) {
+            if (response.result) {
+                alert(gettext('Saved.'));
+                list_aggreement();
+                $('#sign_pad_modal').modal('hide');
+            }
+
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+}
+
+function sign_pad_delete(id=null) {
+    if (id == null) { return;}
+
+    if (confirm(gettext('Do you want to delete?'))) {
+        $.ajax({
+            type: 'POST',
+            url: '/receptionist/delete_agreement/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+                'id': id,
+            },
+            dataType: 'Json',
+            success: function (response) {
+                if (response.result) {
+                    alert(gettext('Deleted.'));
+                    list_aggreement();
+                }
+
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+            },
+        })
+
+
+    }
 
 
 }

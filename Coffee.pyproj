@@ -1501,6 +1501,7 @@
     <Content Include="Manage\static\css\login.css" />
     <Content Include="Manage\static\css\inventory_test.css" />
     <Content Include="Manage\static\css\inventory_precedure.css" />
+    <Content Include="Manage\static\css\statistics\statistics_medicine.css" />
     <Content Include="Manage\static\css\statistics\statistics_daily.css" />
     <Content Include="Manage\static\css\statistics\statistics_ymw.css" />
     <Content Include="Manage\static\css\statistics\statistics_customer_info.css" />

@@ -8,6 +8,7 @@ body {
     width: 100%;
     display: grid;
     grid-template-columns: 45% ;
+    grid-template-rows: 30% ;
 }
 
 
@@ -23,6 +24,8 @@ body {
 .pharmacy_list {
     grid-column-start: 1;
     grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 3;
     overflow-y:auto;
 }
 
@@ -35,7 +38,7 @@ body {
 }
 
     .pharmacy_list_table_wrap {
-    height:590px;
+    height:770px;
     overflow:auto;
 }
 
@@ -61,11 +64,13 @@ body {
 .pharmacy_contents {
     grid-column-start: 2;
     grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 3;
 
 }
 .pharmacy_contents_overflow {
-    margin-top:15px;
-    height: 600px;
+    margin-top: 15px;
+    height: 520px;
     overflow: auto;
 }
 
@@ -170,6 +175,16 @@ body {
         #pharmacy_contents_table td:nth-child(2), #pharmacy_contents_table td:nth-child(9) {
             text-align: left;
         }
+
+.pharmacy_patient_info {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
+
+
+
 
 @media ( min-height: 965px ) {
     .pharmacy_list_calendar {

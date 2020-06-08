@@ -3,7 +3,7 @@
 
 .background_grid {
     margin: 0 auto;
-    height: 100%;
+    height: 650px;
     width: 100%;
     display: grid;
 }
@@ -58,7 +58,7 @@
     }
 
 
-#patient_search {
+#document_search {
     width: 110px;
     display: inline;
 }
@@ -81,70 +81,23 @@
 .date_input {
     width: 100px;
 }
-
-#patient_list_table {
-    table-layout: fixed;
-    letter-spacing: -1px;
-}
-
-    #patient_list_table thead tr th {
-        vertical-align: middle;
-        text-align: center;
-    }
-
-    #patient_list_table tbody tr td {
-        vertical-align: middle;
-        text-align: center;
-        height: 47px;
-    }
-
-    #patient_list_table thead tr th:nth-child(1) {
-        width: 60px;
-    }
-
-    #patient_list_table thead tr th:nth-child(2) {
-        width: 100px;
-    }
-
-    #patient_list_table thead tr th:nth-child(3) {
-        width: 180px;
-    }
-
-    #patient_list_table thead tr th:nth-child(4),
-    #patient_list_table thead tr th:nth-child(5),
-    #patient_list_table thead tr th:nth-child(6) {
-        width: 120px;
-    }
-
-    #patient_list_table thead tr th:nth-child(7) {
-    }
-
-    #patient_list_table thead tr th:nth-child(8) {
-        width: 65px;
-    }
-
-    #patient_list_table thead tr th:nth-child(9) {
-        width: 120px;
-    }
-
-    #patient_list_table thead tr th:nth-child(10) {
-        width: 65px;
-    }
-
-    #patient_list_table td:nth-child(9) {
-        text-align: right;
-        padding-right: 10px;
-    }
-
-#emplyoee_table{
+#file_list_table{
     table-layout:fixed;
-    letter-spacing:-1px;
 }
-    #emplyoee_table th, #emplyoee_table td{
+    #file_list_table th, #file_list_table td{
         vertical-align:middle;
         text-align:center;
     }
-
+    #file_list_table td {
+        height:44px;
+    }
+    #file_list_table th:nth-child(1) {width: 60px;}
+    #file_list_table th:nth-child(2){width:130px;}
+    #file_list_table th:nth-child(3){}
+    #file_list_table th:nth-child(4){width:120px;}
+    #file_list_table th:nth-child(5){width:90px;}
+    #file_list_table th:nth-child(6){width:50px;}
+    #file_list_table th:nth-child(7){width:85px;}
 
 
     .nav-tabs > li.active > a,
@@ -215,31 +168,15 @@
     height: 100px;
 }
 
-
-#visit_history {
-    height: 600px;
-    overflow-y: auto;
+#id_file {
+    display: none;
 }
 
-
-    #visit_history thead tr th, #visit_history tbody tr td {
-        vertical-align: middle;
-        text-align: center;
-    }
-
-    #visit_history th:nth-child(4) {
-        width: 120px;
-    }
-
-    #visit_history th:nth-child(5) {
-        width: 120px;
-    }
-
-    #visit_history th:nth-child(6) {
-        width: 120px;
-    }
-
-
+#btn_file {
+    height: 30px;
+    border-radius: 0px 4px 4px 0px;
+    border-left: none;
+}
 
 @media ( min-width: 1900px ) {
 }

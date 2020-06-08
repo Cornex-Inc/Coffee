@@ -45,3 +45,7 @@
     overflow: hidden;
     white-space: nowrap;
 }
+
+.fc-content{
+    cursor:pointer;
+}

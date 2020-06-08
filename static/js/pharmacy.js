@@ -208,11 +208,14 @@ function waiting_selected(diagnosis_id) {
             $('#need_insurance').prop('checked', response.need_invoice);
 
             $('#show_patient_selected').html(response.patient_name);
+
+            waiting_list();
         },
         error: function (request, status, error) {
             console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
         },
     })
+    
 }
 
 function waiting_list(Today = false, alarm= false) {
@@ -241,19 +244,22 @@ function waiting_list(Today = false, alarm= false) {
             $('#pharmacy_list_table > tbody ').empty();
             for (var i = 0; i < response.datas.length; i++) {
                 var tr_class = "";
-                if (response.datas[i]['status'] == 'new') {
+                if (response.datas[i]['status'] == 'hold')
+                    tr_class = "class ='warning'";
+                else if (response.datas[i]['status'] == 'done')
+                    tr_class = "class ='danger'";
+                else {// if (response.datas[i]['status'] == 'new') {
                     tr_class = "class ='success'";
                     var is_new = true;
                 }
-                else if (response.datas[i]['status'] == 'hold')
-                    tr_class = "class ='warning'"
-                else if (response.datas[i]['status'] == 'done')
-                    tr_class = "class ='danger'"
 
-                var str = "<tr " + tr_class + " onclick='waiting_selected(" + response.datas[i]['diagnosis_id'] + ")'>" + 
+                var str = "<tr " + tr_class + " onclick='waiting_selected(" + response.datas[i]['diagnosis_id'] + ")'>" +
                     "<td>" + Number(i + 1) + "</td>" +
                     "<td>" + response.datas[i]['chart'] + "</td>" +
-                    "<td>" + response.datas[i]['Name'] + "</td>" +
+                    "<td>" + response.datas[i]['Name'];
+                if (response.datas[i]['status'] == 'changed')
+                    str += ' <i class="fa fa-lg fa-undo"></i> ';
+                str += "</td>" +
                     "<td>" + response.datas[i]['Date_of_Birth'] + "</td>" +
                     "<td>" + response.datas[i]['Depart'] +"</td>" +
                     "<td>" + response.datas[i]['ordered'] +"</td>" +

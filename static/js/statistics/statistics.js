@@ -14,6 +14,7 @@ $(function () {
         }
     });
     $("#date_start").val(moment().subtract(7, 'd').format('YYYY-MM-DD'));
+
     $('.date_input, #contents_filter_depart').change(function () {
         database_search();
     })
@@ -53,49 +54,77 @@ function database_search(page = null) {
         dataType: 'Json',
         success: function (response) {
             console.log(response)
-            for (var i = 0; i < response.datas.length; i++) {
-                var str = "";
-                
-                if (response.datas[i]) {
+            if (type == 'MEDICINE') {
+                var total_lastest_amount = 0;
+                var total_input_amount = 0;
+                var total_consuming_fee = 0;
+                var total_revenue = 0;
+                var total_profit = 0;
 
-                    str = "<tr><td>" + response.datas[i]['name'] + "</td>" +
-                        "<td>" + response.datas[i]['count'] + "</td>" +
-                        "<td>" + numberWithCommas(response.datas[i]['price_sum']) + "</td></tr>"
+                for (var i = 0; i < response.datas.length; i++) {
+                    var str = "";
+
+                    if (response.datas[i]) {
+
+                        str = "<tr><td>" + (i+1) + "</td>" +
+                            "<td>" + response.datas[i]['name'] + "</td>" +
+                            "<td>" + response.datas[i]['unit'] + "</td>" +
+                            "<td>" + response.datas[i]['beginning_count'] + "</td>" +
+                            "<td>" + numberWithCommas(response.datas[i]['beginning_unit_price']) + "</td>" +
+                            "<td>" + numberWithCommas(response.datas[i]['beginning_count'] * response.datas[i]['beginning_unit_price']) + "</td>" +
+                            "<td>" + response.datas[i]['input'] + "</td>" +
+                            "<td>" + numberWithCommas(response.datas[i]['input_average']) + "</td>" +
+                            "<td>" + numberWithCommas(response.datas[i]['input_price']) + "</td>" +
+                            "<td>" + numberWithCommas(response.datas[i]['count']) + "</td>" +
+                            "<td>" + numberWithCommas(response.datas[i]['count'] * response.datas[i]['input_average'] )+ "</td>" +
+                            "<td>" + numberWithCommas(response.datas[i]['price_average'] ) + "</td>" +
+                            "<td>" + numberWithCommas(response.datas[i]['price_sum'] )+ "</td>" +
+                            "<td>" + numberWithCommas(response.datas[i]['price_sum'] - response.datas[i]['count'] * response.datas[i]['input_average']) + "</td></tr>"
+
+
+                        total_lastest_amount += response.datas[i]['beginning_count'] * response.datas[i]['beginning_unit_price'];
+                        total_input_amount += response.datas[i]['input_price'];
+                        total_consuming_fee += response.datas[i]['count'] * response.datas[i]['input_average'];
+                        total_revenue += response.datas[i]['price_sum'];
+                        total_profit += response.datas[i]['price_sum'] - response.datas[i]['count'] * response.datas[i]['input_average'];
+
+                    }
+                    $('#statistics_table_body').append(str);
+
 
                 }
-                $('#statistics_table_body').append(str);
-            }
+
+                $("#total_lastest_amount").html(numberWithCommas(total_lastest_amount));
+                $("#total_input_amount").html(numberWithCommas(total_input_amount));
+                $("#total_consuming_fee").html(numberWithCommas(total_consuming_fee));
+                $("#total_revenue").html(numberWithCommas(total_revenue));
+                $("#total_profit").html(numberWithCommas(total_profit));
 
 
-            //∆‰¿Ã¬°
-            $('#medicine_pagnation').html('');
-            str = '';
-            if (response.has_previous == true) {
-                str += '<li> <a onclick="test_database_search(' + (response.page_number - 1) + ')">&laquo;</a></li>';
+
+                //$(".total_div span:nth-child(2)").html(numberWithCommas(response.total_purchace))
+
+                //$(".total_div span:nth-child(4)").html(numberWithCommas(response.total_revenue))
+
             } else {
-                str += '<li class="disabled"><span>&laquo;</span></li>';
+                for (var i = 0; i < response.datas.length; i++) {
+                    var str = "";
+
+                    if (response.datas[i]) {
+
+                        str = "<tr><td>" + response.datas[i]['name'] + "</td>" +
+                            "<td>" + response.datas[i]['count'] + "</td>" +
+                            "<td>" + numberWithCommas(response.datas[i]['price_sum']) + "</td></tr>"
+
+                    }
+                    $('#statistics_table_body').append(str);
+                }
+
+
+                $(".total_div span:nth-child(2)").html(numberWithCommas(response.total_revenue))
             }
 
-            for (var i = response.page_range_start; i < response.page_range_stop; i++) {
-                if (response.page_number == i) {
-                    str += '<li class="active"><span>' + i + ' <span class="sr-only">(current)</span></span></li>';
-                }
-                else if (response.page_number + 5 > i && response.page_number - 5 < i) {
-                    str += '<li> <a onclick="test_database_search(' + i + ')">' + i + '</a></li>';
-                }
-                else {
-                }
-
-            }
-            if (response.has_next == true) {
-                str += '<li><a onclick="test_database_search(' + (response.page_number + 1) + ')">&raquo;</a></li>';
-            } else {
-                str += '<li class="disabled"><span>&raquo;</span></li>';
-            }
-            $('#medicine_pagnation').html(str);
-
-
-            $(".total_div span:nth-child(2)").html(numberWithCommas(response.total_revenue) )
+            
 
         },
         error: function (request, status, error) {
@@ -107,4 +136,36 @@ function database_search(page = null) {
 
 
 
+function database_search_medicine(page = null) {
 
+   
+
+    var start = $("#date_start").val();
+    var end = $("#date_end").val();
+    var depart = $("#contents_filter_depart").val();
+
+    $('#statistics_table_body').empty();
+    $.ajax({
+        type: 'POST',
+        url: '/manage/statistics/search/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+
+            'type': 'MEDICINE',
+
+            'start': start,
+            'end': end,
+            'depart': depart,
+        },
+        dataType: 'Json',
+        success: function (response) {
+            console.log(response)
+            
+
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+}

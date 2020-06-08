@@ -8,32 +8,93 @@ function numberWithCommas(x) {
 $(function () {
 
 
-    search_patient();
+    
 
     //검색
-    $('#patient_search').keydown(function (key) {
+    $('#code_search').keydown(function (key) {
         if (key.keyCode == 13) {
-            search_patient();
+            search_code();
         }
     })
 
-    $("#patient_search_btn").click(function () {
-        search_patient();
+    $("#code_search_btn").click(function () {
+        search_code();
     });
 
-
-    //문자 글자 고정
-    $("#sms_modal_content").keydown(function () {
-        if ($(this).val().length > 67) {
-            $(this).val($(this).val().substring(0, 67));
-        }
-    })
-
+    search_code();
 });
 
 
 
-function code_management_modal(id = null) {
+function code_management_modal(id = '') {
+
+    $("#selected_code").val('');
+
+    $("#code_upper_commcode").val('');
+    $("#code_upper_commcode_name").val('');
+    $("#code_commcode_grp").val('');
+    $("#code_commcode_grp_name").val('');
+    $("#code_commcode").val('');
+    $("#code_commcode_name_ko").val('');
+    $("#code_commcode_name_en").val('');
+    $("#code_commcode_name_vi").val('');
+    $("#code_se1").val('');
+    $("#code_se2").val('');
+    $("#code_se3").val('');
+    $("#code_se4").val('');
+    $("#code_se5").val('');
+    $("#code_se6").val('');
+    $("#code_se7").val('');
+    $("#code_se8").val('');
+    $("#code_seq").val('');
+    $("#code_use_yn").val('');
+
+
+    if (id != '') {
+
+        $("#selected_code").val(id);
+
+        $.ajax({
+            type: 'POST',
+            url: '/manage/code_get/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+
+                'id': id,
+
+
+            },
+            dataType: 'Json',
+            success: function (response) {
+
+                $("#code_upper_commcode").val(response.code_upper_commcode);
+                $("#code_upper_commcode_name").val(response.code_upper_commcode_name);
+                $("#code_commcode_grp").val(response.code_commcode_grp);
+                $("#code_commcode_grp_name").val(response.code_commcode_grp_name);
+                $("#code_commcode").val(response.code_commcode);
+                $("#code_commcode_name_ko").val(response.code_commcode_name_ko);
+                $("#code_commcode_name_en").val(response.code_commcode_name_en);
+                $("#code_commcode_name_vi").val(response.code_commcode_name_vi);
+                $("#code_se1").val(response.code_se1);
+                $("#code_se2").val(response.code_se2);
+                $("#code_se3").val(response.code_se3);
+                $("#code_se4").val(response.code_se4);
+                $("#code_se5").val(response.code_se5);
+                $("#code_se6").val(response.code_se6);
+                $("#code_se7").val(response.code_se7);
+                $("#code_se8").val(response.code_se8);
+                $("#code_seq").val(response.code_seq);
+                $("#code_use_yn").val(response.code_use_yn);
+
+
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+            },
+        })
+    }
+
 
     $('#code_management_modal').modal({ backdrop: 'static', keyboard: false });
     $('#code_management_modal').modal('show');
@@ -41,17 +102,17 @@ function code_management_modal(id = null) {
 }
 
 
-function search_patient(page = null) {
-    var context_in_page = 10;
+function search_code(page = null) {
+    var context_in_page = 9;
 
 
-    var category = $('#patient_type option:selected').val();
-    var string = $('#patient_search').val();
+    var category = $('#code_type option:selected').val();
+    var string = $('#code_search').val();
 
 
     $.ajax({
         type: 'POST',
-        url: '/manage/customer_manage_get_patient_list/',
+        url: '/manage/code_search/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
             'category': category,
@@ -62,35 +123,41 @@ function search_patient(page = null) {
         },
         dataType: 'Json',
         success: function (response) {
-            $('#patient_list_table > tbody ').empty();
+            $('#code_list_table > tbody ').empty();
             for (var i = 0; i < context_in_page; i++) {
                 if (response.datas[i]) {
-                    var str = "<tr style='cursor:pointer;' onclick='set_patient_data(" +
-                        parseInt(response.datas[i]['id']) +
-                        ")'><td>" + response.datas[i]['id'] + "</td>";
+                    var str = "<tr>";
 
-                    if (response.datas[i]['has_unpaid']) {
-                        str += "<td style=color:rgb(228,97,131);>";
-                    } else {
-                        str += "<td>";
-                    }
-
-                    str += response.datas[i]['chart'] + "</td>" +
-                        "<td>" + response.datas[i]['name_kor'] + '<br />' + response.datas[i]['name_eng'] + "</td>" +
-                        "<td>" + response.datas[i]['date_of_birth'] + ' (' + response.datas[i]['gender'] + '/' + response.datas[i]['age'] + ")</td>" +
-                        "<td>" + response.datas[i]['phonenumber'] + "</td>" +
-                        "<td>" + response.datas[i]['date_registered'] + "</td>" +
-                        "<td>" + response.datas[i]['memo'] + "</td>" +
-                        "<td>" + response.datas[i]['visits'] + "</td>" +
-                        "<td>" + numberWithCommas(response.datas[i]['paid_total']) + "</td>" +
-                        "<td><a class='btn btn-default' onclick=sms_modal('" + response.datas[i]['id'] + "')>&nbsp;<i class='fa fa-2x fa-mobile'></i>&nbsp;</a></td></tr>";
-                    //"<td><a class='btn btn-default btn-xs' href='javascript: void (0);' onclick='delete_database_precedure(" + response.datas[i]['id'] + ")' ><i class='fa fa-lg fa-history'></i></a></td></tr>";
-
+                    str += "<td>" + response.datas[i]['id'] + "</td>" +
+                        "<td>" + response.datas[i]['upper_commcode'] + "</td>" +
+                        "<td>" + response.datas[i]['upper_commcode_name'] + "</td>" +
+                        "<td>" + response.datas[i]['commcode_grp'] + "</td>" +
+                        "<td>" + response.datas[i]['commcode_grp_name'] + "</td>" +
+                        "<td>" + response.datas[i]['commcode'] + "</td>" +
+                        "<td>" + response.datas[i]['commcode_name_ko'] + "</td>" +
+                        "<td>" + response.datas[i]['commcode_name_en'] + "</td>" +
+                        "<td>" + response.datas[i]['commcode_name_vi'] + "</td>" +
+                        "<td>" + response.datas[i]['se1'] + "</td>" +
+                        "<td>" + response.datas[i]['se2'] + "</td>" +
+                        "<td>" + response.datas[i]['se3'] + "</td>" +
+                        "<td>" + response.datas[i]['se4'] + "</td>" +
+                        "<td>" + response.datas[i]['se5'] + "</td>" +
+                        "<td>" + response.datas[i]['se6'] + "</td>" +
+                        "<td>" + response.datas[i]['se7'] + "</td>" +
+                        "<td>" + response.datas[i]['se8'] + "</td>" +
+                        "<td>" + response.datas[i]['seq'] + "</td>" +
+                        "<td>" + response.datas[i]['registrerer'] + "</td>" +
+                        "<td>" + response.datas[i]['date_of_registered'] + "</td>" +
+                        "<td>" +
+                        "<a class='btn btn-default btn-xs' href='javascript: void (0);' onclick='code_management_modal(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-pencil'></i></a >" +
+                        "<a class='btn btn-danger btn-xs' href='javascript: void (0);' onclick='code_delete(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-trash'></i></a >" +
+                        "</td >" +
+                        "</tr>";
 
                 } else {
-                    var str = "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
+                    var str = "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
                 }
-                $('#patient_list_table').append(str);
+                $('#code_list_table > tbody').append(str);
             }
 
 
@@ -98,7 +165,7 @@ function search_patient(page = null) {
             $('#table_pagnation').html('');
             str = '';
             if (response.has_previous == true) {
-                str += '<li> <a onclick="search_patient(' + (response.page_number - 1) + ')">&laquo;</a></li>';
+                str += '<li> <a onclick="search_code(' + (response.page_number - 1) + ')">&laquo;</a></li>';
             } else {
                 str += '<li class="disabled"><span>&laquo;</span></li>';
             }
@@ -108,14 +175,14 @@ function search_patient(page = null) {
                     str += '<li class="active"><span>' + i + ' <span class="sr-only">(current)</span></span></li>';
                 }
                 else if (response.page_number + 5 > i && response.page_number - 5 < i) {
-                    str += '<li><a onclick="search_patient(' + i + ')">' + i + '</a></li>';
+                    str += '<li><a onclick="search_code(' + i + ')">' + i + '</a></li>';
                 }
                 else {
                 }
 
             }
             if (response.has_next == true) {
-                str += '<li><a onclick="search_patient(' + (response.page_number + 1) + ')">&raquo;</a></li>';
+                str += '<li><a onclick="search_code(' + (response.page_number + 1) + ')">&raquo;</a></li>';
             } else {
                 str += '<li class="disabled"><span>&raquo;</span></li>';
             }
@@ -135,27 +202,96 @@ function search_patient(page = null) {
 
 
 
+function commcode_save() {
 
-function sms_modal(patient_id) {
-    $("#sms_modal_name").val('');
-    $("#sms_modal_phone").val('');
-    $("#sms_modal_content").val('');
+
+    var id = $("#selected_code").val();
+
+
+    var code_upper_commcode = $("#code_upper_commcode").val();
+    var code_upper_commcode_name = $("#code_upper_commcode_name").val();
+    var code_commcode_grp = $("#code_commcode_grp").val();
+    var code_commcode_grp_name = $("#code_commcode_grp_name").val();
+    var code_commcode = $("#code_commcode").val();
+    var code_commcode_name_ko = $("#code_commcode_name_ko").val();
+    var code_commcode_name_en = $("#code_commcode_name_en").val();
+    var code_commcode_name_vi = $("#code_commcode_name_vi").val();
+    var code_se1 = $("#code_se1").val();
+    var code_se2 = $("#code_se2").val();
+    var code_se3 = $("#code_se3").val();
+    var code_se4 = $("#code_se4").val();
+    var code_se5 = $("#code_se5").val();
+    var code_se6 = $("#code_se6").val();
+    var code_se7 = $("#code_se7").val();
+    var code_se8 = $("#code_se8").val();
+    var code_seq = $("#code_seq").val();
+    var code_use_yn = $("#code_use_yn").val();
+
+
+
+    //if (project_manage_company == '') {
+    //    alert(gettext('Company field is empty.'));
+    //    return;
+    //}
+    //if (project_manage_company_id == '') {
+    //    alert(gettext('Please search and select Company.'));
+    //    return;
+    //}
+    //if (project_manage_type == '') {
+    //    alert(gettext('Type field is empty.'));
+    //    return;
+    //}
+    //if (project_manage_project_name == '') {
+    //    alert(gettext('Project Name field is empty.'));
+    //    return;
+    //}
+    //if (project_manage_level == '') {
+    //    alert(gettext('Level field is empty.'));
+    //    return;
+    //}
+    //if (project_manage_progress == '') {
+    //    alert(gettext('Progress field is empty.'));
+    //    return;
+    //}
+    //if (project_manage_approval == '') {
+    //    alert(gettext('Approval field is empty.'));
+    //    return;
+    //}
 
     $.ajax({
         type: 'POST',
-        url: '/manage/customer_manage_get_patient_sms_info/',
+        url: '/manage/code_save/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
-            'patient_id': patient_id,
+
+            'id': id,
+
+            'code_upper_commcode': code_upper_commcode,
+            'code_upper_commcode_name': code_upper_commcode_name,
+            'code_commcode_grp': code_commcode_grp,
+            'code_commcode_grp_name': code_commcode_grp_name,
+            'code_commcode': code_commcode,
+            'code_commcode_name_ko': code_commcode_name_ko,
+            'code_commcode_name_en': code_commcode_name_en,
+            'code_commcode_name_vi': code_commcode_name_vi,
+            'code_se1': code_se1,
+            'code_se2': code_se2,
+            'code_se3': code_se3,
+            'code_se4': code_se4,
+            'code_se5': code_se5,
+            'code_se6': code_se6,
+            'code_se7': code_se7,
+            'code_se8': code_se8,
+            'code_seq': code_seq,
+            'code_use_yn': code_use_yn,
+
         },
         dataType: 'Json',
         success: function (response) {
-            $('#sms_modal_name').val(response.name_kor + ' / ' + response.name_eng);
-            $('#sms_modal_phone').val(response.phone);
+            alert(gettext('Saved.'));
+            $('#code_management_modal').modal('hide');
+            search_code();
 
-
-            $('#sms_modal').modal({ backdrop: 'static', keyboard: false });
-            $('#sms_modal').modal('show');
         },
         error: function (request, status, error) {
             console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -165,190 +301,33 @@ function sms_modal(patient_id) {
 
 }
 
+function code_delete(id = null) {
+    if (id == null) { return; }
 
+    if (confirm(gettext('Do you want to delete?'))) {
 
-function send_sms() {
+        $.ajax({
+            type: 'POST',
+            url: '/manage/code_delete/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
 
-    var receiver = $("#sms_modal_name").val()
-    var phone = $("#sms_modal_phone").val()
-    var contents = $("#sms_modal_content").val();
-    $("#overlay").fadeOut(300);
+                'id': id,
+            },
+            dataType: 'Json',
+            success: function (response) {
+                alert(gettext('Deleted.'));
+                search_code();
 
-    if (receiver == '') {
-        alert(gettext('Name is Empty.'));
-        return;
-    }
-    if (phone == '') {
-        alert(gettext('Phone Number is Empty.'));
-        return;
-    }
-    if (contents == '') {
-        alert(gettext('Content is Empty.'));
-        return;
-    }
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
-    $.ajax({
-        type: 'POST',
-        //url: '/manage/employee_check_id/',
-        url: '/manage/sms/send_sms/',
-        data: {
-            'csrfmiddlewaretoken': $('#csrf').val(),
-
-            'type': 'MANUAL',
-            'receiver': receiver,
-
-            'phone': phone,
-            'contents': contents,
-        },
-        beforeSend: function () {
-            $("#overlay").fadeIn(300);
-        },
-        dataType: 'Json',
-        success: function (response) {
-            console.log(response);
-            if (response.res == true) {
-                var url = 'http://kbl.cornex.co.kr/sms/sms_send.php?msg_id=' + response.id + '&phone=' + phone + '&contents=' + contents;
-                console.log('url : ' + url);
-
-                $.ajax({
-                    crossOrigin: true,
-                    type: 'GET',
-                    //url: '/manage/employee_check_id/',
-                    url: url,
-                    data: {
-                        //'csrfmiddlewaretoken': $('#csrf').val(),
-                        //'msg_id': response.id,
-                        //'phone': $("#phone_number").val(),
-                        //'contents': $("#contents").val(),
-                    },
-                    dataType: 'Json',
-                    //jsonp: "callback", 
-                    success: function (response) {
-                        //전송 완료 시 창 닫기. 결과는 이력에서 확인
-                        $('#sms_modal').modal('show');
-                        json_response = JSON.parse(response);
-
-                        console.log(json_response);
-
-                        $.ajax({
-                            type: 'POST',
-                            url: '/manage/sms/recv_result/',
-                            data: {
-                                'csrfmiddlewaretoken': $('#csrf').val(),
-                                'msg_id': json_response.msg_id,
-                                'status': json_response.status,
-                                'code': json_response.code,
-                                'tranId': json_response.tranId,
-                            },
-                            dataType: 'Json',
-                            success: function (response) {
-
-                            },
-                            error: function (request, status, error) {
-                                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-                            },
-                        })
-                    },
-                    error: function (request, status, error) {
-                        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-                    },
-                })
-            }
-        },
-        error: function (request, status, error) {
-            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-        },
-        complete: function () {
-            $("#overlay").fadeOut(300);
-            $('#sms_modal').modal('hide');
-        }
-    })
-
-}
-
-
-
-
-function show_past_history(reception_id = null) {
-    if (reception_id == null) {
-        return;
+            },
+        });
     }
 
-    $('#past_diagnosis_showlarge_table tbody').empty();
-    $.ajax({
-        type: 'POST',
-        url: '/manage/customer_manage_get_patient_visit_history/',
-        data: {
-            'csrfmiddlewaretoken': $('#csrf').val(),
-            'reception_id': reception_id,
-        },
-        dataType: 'Json',
-        success: function (response) {
-            if (response.result) {
-                var str = "<tr style='background:#94ee90'><td colspan='5'>" + response['date'] + "(" + response.data['day'] + ")[" + response.data['doctor'] + "]</td>" +
-                    "</td></tr>" + /*"<tr><td colspan='5'>History: D-" + response.data['diagnosis']  + */
-
-                    "<tr><td colspan='5'><font style='font-weight:700;'>History:</font><br/><font style='font-weight:700; color:#d2322d'>S - </font>" + response.data['subjective'] + "<br/><font style='font-weight:700; color:#d2322d'>O - </font>" +
-                    response.data['objective'] + "<br/><font style='font-weight:700; color:#d2322d'>A - </font>" +
-                    response.data['assessment'] + "<br/><font style='font-weight:700; color:#d2322d'>P - </font>" +
-                    response.data['plan'] + "<br/><font style='font-weight:700; color:#d2322d'>D - </font>" +
-                    response.data['diagnosis'] +
-                    "</td></tr>";
 
 
-                for (var j in response.data['exams']) {
-                    str += "<tr><td>" + response.data['exams'][j]['name'] + "</td><td>" +
-                        "</td><td>" +
-                        "</td><td>" +
-                        "</td><td>" +
-                        "</td></tr>";
-                }
-
-                for (var j in response.data['tests']) {
-                    str += "<tr><td>" + response.data['tests'][j]['name'] + "</td><td>" +
-                        "</td><td>" +
-                        "</td><td>" +
-                        "</td><td>" +
-                        "</td></tr>";
-                }
-                for (var j in response.data['precedures']) {
-                    str += "<tr><td>" + response.data['precedures'][j]['name'] + "</td><td>" +
-                        "</td><td>" +
-                        "</td><td>" +
-                        "</td><td>" +
-                        "</td></tr >";
-                }
-                for (var j in response.data['medicines']) {
-                    str += "<tr><td>" + response.data['medicines'][j]['name'] + "</td><td>" +
-                        response.data['medicines'][j]['unit'] + "</td><td>" +
-                        response.data['medicines'][j]['amount'] + "</td><td>" +
-                        response.data['medicines'][j]['days'] + "</td><td>" +
-                        response.data['medicines'][j]['memo'] + "</td></tr >";
-                }
-            } else {
-                str = 'Noresult';
-            }
-
-            $('#past_diagnosis_showlarge_table tbody').append(str);
-
-        },
-        error: function (request, status, error) {
-            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-        },
-    })
-
-
-
-    $('#past_diagnosis_showlarge_modal').modal({ backdrop: 'static', keyboard: false });
-    $('#past_diagnosis_showlarge_modal').modal('show');
-
-}
-
-
-function download_excel() {
-
-    var url = '/manage/cumstomer_management_excel'
-
-    window.open(url);
 
 }

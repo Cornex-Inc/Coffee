@@ -12,7 +12,8 @@
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: 33% 46% 21%
+    grid-template-columns: 33% 46% 21%;
+    grid-template-rows: 200px;
 }
 
 .partition {
@@ -27,14 +28,21 @@
 .laboratory_patient_list {
     grid-column-start:1;
     grid-column-end: 2;
+    grid-row-start:1;
+    grid-row-end:3;
 }
 .laboratory_list {
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+.patient_info_list {
     grid-column-start: 2;
     grid-column-end: 3;
 }
 
 #laboratory_test_list_div {
     margin-top: 0px;
+    height: 440px;
 }
 
 #laboratory_list_table thead tr th{
@@ -97,11 +105,39 @@
 }
 
 .laboratory_control {
+    grid-row-start: 1;
+    grid-row-end: 3;
     grid-column-start: 3;
     grid-column-end: 4;
 }
 
+#patient_gender {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+    #patient_gender input[type=radio] {
+        width: auto;
+    }
 
+    #patient_gender li {
+        margin-left: 4.5px;
+        margin-right: 0;
+        display: inline;
+    }
+
+        #patient_gender li:first-child{
+            margin-right:20px;
+        }
+
+        #patient_gender {
+            margin-top: 4px;
+        }
+
+    #patient_gender input {
+        vertical-align: middle;
+        margin-top: -1px;
+    }
 
 .lab_manage_title {
     font-weight: bold;
@@ -146,12 +182,20 @@
 
     @media ( min-width: 1900px ) {
         .laboratory_list_table_wrap {
-        height: 760px;
-    }
+        height: 740px;
+        }
+
+        #laboratory_test_list_div {
+            height: 520px;
+            overflow-y:auto;
+        }
 
         .laboratory_search_input {
-            width:140px;
-
+            width: 140px;
         }
 
+        #patient_gender li:first-child {
+            margin-right: 50px;
         }
+
+    }

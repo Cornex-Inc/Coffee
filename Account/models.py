@@ -213,7 +213,10 @@ class User(AbstractBaseUser,PermissionsMixin):
         return str(self.depart) == 'RADIATION'
     def is_physical_therapist(self):
         return str(self.depart) == 'PT'
-    
+    def is_marketing(self):
+        return str(self.depart) == 'MARKETING'
+    def is_account(self):
+        return str(self.depart) == 'ACCOUNT'
     @property
     def is_admin(self):
         return self.is_superuser

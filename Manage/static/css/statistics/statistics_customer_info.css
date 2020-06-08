@@ -38,11 +38,11 @@
 
 .statistics_table_grid {
     margin: 0 auto;
-    height: 100%;
+    height: 600px;
     width: 100%;
     display: grid;
     grid-template-columns: 50%;
-    grid-template-rows: 33% 33% 33%
+    grid-template-rows: 350px ;
 }
 .sub_label{
     margin-bottom:10px;
@@ -53,26 +53,26 @@
 }
 
     #statistics_div_gender {
-        grid-column-start: 1;
-        grid-column-end: 2;
-        grid-row-start: 1;
-        grid-row-end: 2;
+        grid-column-start: 2;
+        grid-column-end: 3;
+        grid-row-start: 2;
+        grid-row-end: 3;
         overflow-y: hidden;
     }
 
 #statistics_div_nation{
     grid-column-start: 1;
     grid-column-end: 2;
-    grid-row-start: 2;
-    grid-row-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 2;
     overflow-y: hidden;
 }
 
 #statistics_div_payment_method{
     grid-column-start: 1;
     grid-column-end: 2;
-    grid-row-start: 3;
-    grid-row-end: 4;
+    grid-row-start: 2;
+    grid-row-end: 3;
     overflow-y: hidden;
 }
 
@@ -136,9 +136,24 @@
         display: inline-table;
     }
 
-#contents_filter_div_depart {
-    width: 150px;
+#statistics_table_top20{
+    table-layout:fixed;
 }
+    #statistics_table_top20 tr, #statistics_table_top20 td{
+        vertical-align:middle;
+        text-align:center;
+    }
+    #statistics_table_top20 th:nth-child(1){width:50px;}
+    #statistics_table_top20 th:nth-child(2){width:220px;}
+    #statistics_table_top20 th:nth-child(3){width:120px;}
+    #statistics_table_top20 th:nth-child(4){width:50px;}
+    #statistics_table_top20 th:nth-child(5){width:120px;}
+    #statistics_table_top20 th:nth-child(6){width:100px;}
+    #statistics_table_top20 th:nth-child(7){width:120px;}
+
+    #contents_filter_div_depart {
+        width: 150px;
+    }
     @media ( min-height: 1900px ) {
         .statistics_grid {
         width: 1920px;

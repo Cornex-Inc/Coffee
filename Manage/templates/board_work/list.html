@@ -213,7 +213,18 @@
                             <td>{{content.depart_from}}</td>
                             <td>{{ content.creator}}</td>
                             <td>{{ content.date }}</td>
-                            <td>{{content.depart_to}}</td>
+                            <td>
+                                {{content.depart_to1}}
+                                {% if content.depart_to2 != ''%}
+                                <br />{{content.depart_to2}}
+                                {% endif %}
+                                {% if content.depart_to3 != ''%}
+                                <br />{{content.depart_to3}}
+                                {% endif %}
+                                {% if content.depart_to4 != ''%}
+                                <br />{{content.depart_to4}}
+                                {% endif %}
+                            </td>
                             <td></td>
                             <td></td>
                             <td>{% if content.is_file %}<i class="fa fa-info-circle"></i>{% endif %}</td>

@@ -10,14 +10,22 @@ $(function () {
             format: 'YYYY-MM-DD',
         },
     })
-
-
     $("#document_control_end").daterangepicker({
         singleDatePicker: true,
         showDropdowns: true,
         locale: {
             format: 'YYYY-MM-DD',
         },
+    });
+    if ($("#language").val() == 'vi') {
+        var today = moment().format('DD/MM/YYYY');
+        $('#document_control_start,#document_control_end').val(today);
+    }
+    $('#document_control_start,#document_control_end').on('apply.daterangepicker', function (ev, picker) {
+        var today = moment().format('YYYY[-]MM[-]DD');
+        if ($("#language").val() == 'vi') {
+            $(this).val(picker.startDate.format('DD/MM/YYYY'));
+        }
     });
 
     $('#document_control_input').keydown(function (key) {
@@ -46,6 +54,12 @@ function document_search() {
     var document_control_depart = $('#document_control_depart').val();
     var document_control_input = $('#document_control_input').val();
 
+    if ($("#language").val() == 'vi') {
+        document_control_start = moment(document_control_start, 'DD/MM/YYYY').format('YYYY-MM-DD');
+        document_control_end = moment(document_control_end, 'DD/MM/YYYY').format('YYYY-MM-DD');
+    }
+
+
 
     $.ajax({
         type: 'POST',
@@ -66,11 +80,23 @@ function document_search() {
                     var str = '<tr><td>' + (i + 1) + '</td>' +
                         '<td>' + response.datas[i].chart + '</td>' +
                         '<td>' + response.datas[i].name + '</td>' +
-                        '<td>' + response.datas[i].date_of_birth + '</td>' +
+                        '<td>';
+                    if ($("#language").val() == 'vi') {
+                        str += moment(response.datas[i].date_of_birth, 'YYYY-MM-DD').format('DD/MM/YYYY');
+                    } else {
+                        str += response.datas[i].date_of_birth;
+                    }
+                    str += '</td>' +
                         '<td>' + response.datas[i].depart + '</td>' +
                         '<td>' + response.datas[i].address + '</td>' +
                         '<td>' + response.datas[i].phone + '</td>' +
-                        '<td>' + response.datas[i].date_time + '</td>';
+                        '<td>';
+                    if ($("#language").val() == 'vi') {
+                        str += moment(response.datas[i].date_time, 'YYYY-MM-DD HH:mm').format('HH:mm DD/MM/YYYY');
+                    } else {
+                        str += response.datas[i].date_time;
+                    }
+                    str += '</td>';
 
                     if (response.datas[i].medical_receipt== true) {
                         str += '<td>' + "<a class='btn btn-default btn-xs' href='javascript: void (0);' onclick='print_medical_receipt(" + response.datas[i].id + ")' ><i class='fa fa-lg fa-print'></i></a>" + '</td>';

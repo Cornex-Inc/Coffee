@@ -26,6 +26,11 @@ $(function () {
         }
     })
 
+    $("#estimate_date_start,#estimate_date_end,#estimate_filter_status,#estimate_filter_in_charge").change(function () {
+        search_estimate();
+    });
+
+
 
 
 
@@ -41,6 +46,7 @@ function estimate_sheet_modal(id = null) {
 
     $("#estimate_recipient").val('');
     $("#estimate_email").val('');
+    $("#estimate_date").val('');
     $("#estimate_tile").val('');
     $("#estimate_remark").val('');
     $("#estimate_payment_unit").val('');
@@ -67,6 +73,8 @@ function estimate_sheet_modal(id = null) {
 
                 $("#estimate_recipient").val(response.estimate_recipient);
                 $("#estimate_tile").val(response.estimate_tile);
+                $("#estimate_date").val(response.estimate_date);
+                $("#estimate_email").val(response.estimate_email);
                 $("#estimate_remark").val(response.estimate_remark);
                 $("#estimate_payment_unit").val(response.estimate_payment_unit);
                 $("#estimate_status").val(response.estimate_status);
@@ -148,8 +156,8 @@ function search_estimate(page = null) {
     var context_in_page = 10;
 
 
-    var type = $('#estimate_type').val();
-    var in_charge = $('#estimate_in_charge').val();
+    var estimate_status = $('#estimate_filter_status').val();
+    var in_charge = $('#estimate_filter_in_charge').val();
     var start = $('#estimate_date_start').val();
     var end = $('#estimate_date_end').val();
     var string = $('#estimate_search').val();
@@ -161,7 +169,7 @@ function search_estimate(page = null) {
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
 
-            'type': type,
+            'status': estimate_status,
             'in_charge': in_charge,
             'start': start,
             'end': end,
@@ -175,13 +183,13 @@ function search_estimate(page = null) {
             $('#estimate_list_table > tbody ').empty();
             for (var i = 0; i < context_in_page; i++) {
                 if (response.datas[i]) {
-                    var str = "<tr style='cursor:pointer' onclick='select_estimate(" + response.datas[i]['id'] + ")'>";
+                    var str = "<tr style='cursor:pointer' onclick='select_estimate(this," + response.datas[i]['id'] + ")'>";
                     str += "<td>" + response.datas[i]['id'] + "</td>" +
                         "<td><span class='" + response.estimate_class_dict[response.datas[i]['estimate_classification']]['class'] + "'>" + response.estimate_class_dict[response.datas[i]['estimate_classification']]['name'] + "</span></td>" +
                         "<td>" + response.datas[i]['estimate_recipient'] + "</td>" +
                         "<td>" + response.datas[i]['estimate_tile'] + "</td>" +
                         "<td>" + response.datas[i]['estimate_in_charge'] + "</td>" +
-                        "<td>" + response.datas[i]['estimate_date_register'] + "</td>" +
+                        "<td>" + response.datas[i]['estimate_date'] + "</td>" +
                         "<td>" + response.datas[i]['estimate_sent'] + "</td>" +
                         "<td>" + response.datas[i]['estimate_payment_unit'] + "</td>" +
                         "<td><span class='" + response.estimate_status_dict[response.datas[i]['estimate_status']]['class'] + "'>" + response.estimate_status_dict[response.datas[i]['estimate_status']]['name'] + "</span></td>" +
@@ -204,7 +212,7 @@ function search_estimate(page = null) {
             $('#table_pagnation').html('');
             str = '';
             if (response.has_previous == true) {
-                str += '<li> <a onclick="search_patient(' + (response.page_number - 1) + ')">&laquo;</a></li>';
+                str += '<li> <a onclick="search_estimate(' + (response.page_number - 1) + ')">&laquo;</a></li>';
             } else {
                 str += '<li class="disabled"><span>&laquo;</span></li>';
             }
@@ -214,14 +222,14 @@ function search_estimate(page = null) {
                     str += '<li class="active"><span>' + i + ' <span class="sr-only">(current)</span></span></li>';
                 }
                 else if (response.page_number + 5 > i && response.page_number - 5 < i) {
-                    str += '<li><a onclick="search_patient(' + i + ')">' + i + '</a></li>';
+                    str += '<li><a onclick="search_estimate(' + i + ')">' + i + '</a></li>';
                 }
                 else {
                 }
 
             }
             if (response.has_next == true) {
-                str += '<li><a onclick="search_patient(' + (response.page_number + 1) + ')">&raquo;</a></li>';
+                str += '<li><a onclick="search_estimate(' + (response.page_number + 1) + ')">&raquo;</a></li>';
             } else {
                 str += '<li class="disabled"><span>&raquo;</span></li>';
             }
@@ -239,7 +247,10 @@ function search_estimate(page = null) {
 
 }
 
-function select_estimate(id = '') {
+function select_estimate(obj,id = '') {
+
+    $("#estimate_list_table tr").removeClass('danger');
+    $(obj).addClass('danger');
 
     $("#selected_estimate").val(id);
 
@@ -299,6 +310,7 @@ function estimate_save(id = '') {
 
     var estimate_recipient = $("#estimate_recipient").val();
     var estimate_email = $("#estimate_email").val();
+    var estimate_date = $("#estimate_date").val();
     var estimate_tile = $("#estimate_tile").val();
     var estimate_remark = $("#estimate_remark").val();
     var estimate_payment_unit = $("#estimate_payment_unit").val();
@@ -328,7 +340,12 @@ function estimate_save(id = '') {
         alert(gettext('Status is empty.'));
         return;
     }
+    if (estimate_date == '') {
+        alert(gettext('Date is empty.'));
+        return;
+    }
 
+ 
 
     $.ajax({
         type: 'POST',
@@ -340,6 +357,7 @@ function estimate_save(id = '') {
 
             'estimate_recipient': estimate_recipient,
             'estimate_email': estimate_email,
+            'estimate_date': estimate_date,
             'estimate_tile': estimate_tile,
             'estimate_remark': estimate_remark,
             'estimate_payment_unit': estimate_payment_unit,
@@ -421,15 +439,31 @@ function save_detail_modal() {
         alert(gettext('Unit Price is empty.'));
         return;
     }
+    if (isNaN(detail_unit_price)) {
+        alert(gettext('Unit Price should be in numbers.'));
+        $("#detail_unit_price").focus();
+        return;
+    }
     if (detail_quantity == '') {
         alert(gettext('Quantity is empty.'));
+        return;
+    }
+    if (isNaN(detail_quantity)) {
+        alert(gettext('Quantity should be in numbers.'));
+        $("#detail_quantity").focus();
         return;
     }
     if (detail_cost == '') {
         alert(gettext('Cost is empty.'));
         return;
     }
+    if (isNaN(detail_cost)) {
+        alert(gettext('Cost should be in numbers.'));
+        $("#detail_cost").focus();
+        return;
+    }
 
+    $("#overlay").fadeOut(300);
     $.ajax({
         type: 'POST',
         url: '/KBL/estimate_sheet_detail_save/',
@@ -453,6 +487,7 @@ function save_detail_modal() {
             if (response.result) {
                 alert(gettext("Saved."));
                 select_estimate(selected_estimate);
+
                 $('#detailed_info_modal').modal('hide');
             }
 
@@ -490,7 +525,6 @@ function delete_detailed_info(id = '') {
 
                 if (response.result) {
                     alert(gettext("Deleted."));
-                    select_estimate(selected_estimate);
                 }
 
             },
@@ -517,8 +551,10 @@ function print_estimate(id) {
 
 function send_email_estimate(id = null) {
 
+
     if (confirm(gettext('Do you want to send E-Mail?'))) {
 
+        $("#overlay").fadeOut(300);
         $.ajax({
             type: 'POST',
             url: '/KBL/send_email_estimate/',
@@ -531,15 +567,22 @@ function send_email_estimate(id = null) {
             success: function (response) {
 
                 if (response.result) {
-                    alert(gettext("Deleted."));
-                    select_estimate(selected_estimate);
+                    alert(gettext("Email has been sent."));
+                    search_estimate();
+                    $("#overlay").fadeOut(300);
                 }
-
+               
+            },
+            beforeSend: function () {
+                $("#overlay").fadeIn(300);
             },
             error: function (request, status, error) {
                 console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
             },
+            complete: function () {
+                $("#overlay").fadeOut(300);
+            }
         });
 
     }

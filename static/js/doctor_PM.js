@@ -182,6 +182,7 @@ $(function () {
         today = moment().format('YYYY[-]MM[-]DD');
         date = $('#reception_waiting_date').val();
         if (date == today) {
+
             worker_on(true);
         } else {
             worker_on(false);
@@ -1242,7 +1243,12 @@ function reception_waiting(Today = false, alarm = false) {
                         ");" +
                         "get_diagnosis(" + response.datas[i]['reception_no'] +
                         ");'><td>" + (parseInt(i) + 1) + "</td>" +
-                        "<td>" + response.datas[i]['chart'] + "</td>" +
+                        "<td>";
+                    if (response.datas[i]['package']) { // 패키지 접수
+                        str += '<i class="fa fa-product-hunt"></i> ';
+                    }
+
+                    str += response.datas[i]['chart'] + "</td>" +
                         "<td>" + response.datas[i]['name_kor'] + "<br/>" + response.datas[i]['name_eng'] + "</td>" +
                         "<td>" + response.datas[i]['date_of_birth'] + '<br/>' + ' (' + response.datas[i]['age'] + '/' + response.datas[i]['gender'] + ")</td>";
                     if (string == '') {
@@ -1251,7 +1257,6 @@ function reception_waiting(Today = false, alarm = false) {
                     else {
                         str += "<td>" + response.datas[i]['reception_datetime'] + "</td></tr>";
                     }
-                        
                         
 
                     $('#Rectption_Status').append(str);

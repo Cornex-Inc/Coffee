@@ -104,6 +104,9 @@ function get_doctor(part, depart = null) {
 
 function search_payment(page = null) {
     var page_context = $("#contents_filter_context_count").val();
+    if (page == null) {
+        page = 1;
+    }
 
     $.ajax({
         type: 'POST',
@@ -333,10 +336,10 @@ function search_payment(page = null) {
 
             for (var i = response.page_range_start; i < response.page_range_stop; i++) {
                 if (response.page_number == i) {
-                    str += '<li class="active"><span>' + i + ' <span class="sr-only">(current)</span></span></li>';
+                    str += '<li class="active"><span>' + i + ' <span class="sr-only" >(current)</span></span></li>';
                 }
                 else if (response.page_number + 5 > i && response.page_number - 5 < i) {
-                    str += '<li> <a onclick="search_payment(' + i + ')">' + i + '</a></li>';
+                    str += '<li> <a style="cursor:pointer" onclick="search_payment(' + i + ')" >' + i + '</a></li>';
                 }
                 else {
                 }

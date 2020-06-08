@@ -61,7 +61,8 @@ $(function () {
 
 function search_doctor_profit(page = null) {
     var page_context = 10;
-
+    if (page == null)
+        page = 1;
 
     $.ajax({
         type: 'POST',
@@ -80,11 +81,12 @@ function search_doctor_profit(page = null) {
         },
         dataType: 'Json',
         success: function (response) {
+            console.log(response);
             $('#doctors_table_result').empty();
             total_subtotal = 0;
             total_discounted = 0;
             total_total = 0;
-            console.log(response);
+            
             for (var i = 0; i < page_context; i++) {//response.datas) {
                 
                 var str = '<tr>';
@@ -100,7 +102,6 @@ function search_doctor_profit(page = null) {
                     
                     // exam fee
                     str += '<td style="vertical-align: middle;">';
-                    console.log(response.datas[i]['exams'])
                     if (response.datas[i]['exams'].length == 0) {
                         str += ' - ';
                     } else {
@@ -137,6 +138,20 @@ function search_doctor_profit(page = null) {
                             }
                         }
                     }
+
+                  
+                    var method = '<td style="vertical-align: middle;">';
+                  if (response.datas[i]['paid_by_card'] )
+                      method += 'card<br/>';
+                  if (response.datas[i]['paid_by_cash'] )
+                      method += 'cash<br/>';
+                  if (response.datas[i]['paid_by_remit'] )
+                      method += 'remit<br/>';
+                  if (response.datas[i]['paid_by_card'] == '' && response.datas[i]['paid_by_cash'] == '' && response.datas[i]['paid_by_remit'] == '')
+                      method += '-<br/>';
+                  str += method.substring(0,method.length-5);
+                  str += '</td>'
+
                     str += '<td style="vertical-align: middle;">' + numberWithCommas(response.datas[i]['subtotal']) + '</td>'
 
                     str += '<td style="vertical-align: middle;">' + numberWithCommas(response.datas[i]['additional']) + '</td>'
@@ -161,7 +176,7 @@ function search_doctor_profit(page = null) {
                     total_total += response.datas[i]['total'];
                 }
                 else {
-                    str += "<td colspan='12'></td></tr>"
+                    str += "<td colspan='13'></td></tr>"
                 }
 
                 $('#doctors_table_result').append(str);
@@ -216,4 +231,34 @@ function search_doctor_profit(page = null) {
 
         },
     })
+}
+
+
+function excel_download() {
+
+    var date_start = $("#doctor_search_date_start").val();
+    var date_end = $("#doctor_search_date_end").val();
+
+    var url = '/manage/audit_excel?'
+    url += 'date_start=' + date_start + '&';
+    url += 'date_end=' + date_end + '&';
+    url += 'depart=' + "7" + '&';
+
+    window.open(url);
+    ///$.ajax({
+    ///    type: 'POST',
+    ///    url: '/manage/audit_excel/',
+    ///    data: {
+    ///        'csrfmiddlewaretoken': $('#csrf').val(),
+    ///    },
+    ///    dataType: 'Json',
+    ///    success: function (response) {
+    ///        
+    ///
+    ///    },
+    ///    error: function (request, status, error) {
+    ///        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+    ///
+    ///    },
+    ///})
 }

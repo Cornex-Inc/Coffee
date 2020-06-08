@@ -133,7 +133,30 @@
                         </table>
                     </div>
                         -->
+                    <div id="interval_div">
+                        <br />
+                        <div style="margin-bottom:35px;">
+                            <span style="font-size:16px; float:left;">{{ _('Normal Range List') }}</span>
+                            <a class="btn btn-primary" style="float:right;" onclick="interval_modal()">+ {{ _('Add Normal Range') }}</a>
+                        </div>
+                        <table class="table table-bordered table-hover table-striped" id="test_interval_table">
+                            <thead>
+                                <tr>
+                                    <th>{{ _('Remark') }}</th>
+                                    <th>{{ _('Minimum') }}</th>
+                                    <th>{{ _('Sign') }}</th>
+                                    <th>{{ _('Maximum') }}</th>
+                                    <th>{{ _('Unit') }}</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+
                 <div class="modal-footer">
 
                     <a class="btn btn-xs btn-primary" onclick="save_database_test()">{{ _('Save') }}</a>
@@ -146,7 +169,80 @@
     </div>
 </div>
 
+<div id="add_edit_interval" class="modal fade">
+    <div class="modal-dialog add_edit_modal" style="width:730px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span> <span class="sr-only">close</span></button>
+                <h4>{{ _('Normal Range Information') }}</h4>
+                <input type="hidden" id="interval_selected" value=""/>
+                <div id="modalBody" class="modal-body">
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Remark') }}</span>
+                                    <input type="text" id="interval_remark" class="form-control medicine_control_input" aria-describedby="basic-addon1" min="0">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Remark in Vietnamese') }}</span>
+                                    <input type="text" id="interval_remark_vi" class="form-control medicine_control_input" aria-describedby="basic-addon1" min="0">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Unit') }}</span>
+                                    <input type="text" id="interval_unit" class="form-control medicine_control_input" aria-describedby="basic-addon1" min="0">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Unit in Vietnamese') }}</span>
+                                    <input type="text" id="interval_unit_vi" class="form-control medicine_control_input" aria-describedby="basic-addon1" min="0">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Minimum') }}</span>
+                                    <input type="text" id="interval_minimum" class="form-control medicine_control_input" aria-describedby="basic-addon1" min="0">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Maximum') }}</span>
+                                    <input type="text" id="interval_maximum" class="form-control medicine_control_input" aria-describedby="basic-addon1" min="0">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1">{{ _('Sign') }}</span>
+                                    <input type="text" id="interval_sign" class="form-control medicine_control_input" aria-describedby="basic-addon1" min="0">
+                                </div>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                    </table>
 
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-xs btn-primary" onclick="save_interval()">{{ _('Save') }}</a>
+                    <a class="btn btn-xs btn-default" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
 
 
 {% endblock %}

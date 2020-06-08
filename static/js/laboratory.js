@@ -80,7 +80,7 @@ function play_alarm() {
 
     if (x !== undefined) {
         x.then(_ => {
-            console.log(_);
+            //console.log(_);
             // Autoplay started!
         }).catch(error => {
             console.log(error);
@@ -162,6 +162,9 @@ function get_test_manage(test_manage_id) {
 }
 
 function waiting_selected(manage_id) {
+
+
+
     $.ajax({
         type: 'POST',
         url: '/laboratory/waiting_selected/',
@@ -171,7 +174,6 @@ function waiting_selected(manage_id) {
         },
         dataType: 'Json',
         success: function (response) {
-            console.log(response);
             $('#laboratory_control input ').empty();
 
             $('#lab_control_chart').val(response.chart);
@@ -224,7 +226,7 @@ function waiting_list(Today = false, alarm = false) {
 
                 //is_new << 완료 처리 해야함
 
-                var str = "<tr  onclick='get_test_list(" + response.datas[i]['id'] + ")'>" +
+                var str = "<tr  onclick='get_test_list(this," + response.datas[i]['id'] + ")'>" +
                     "<td>" + (parseInt(i) + 1) + "</td>" +
                     "<td>" + response.datas[i]['chart'] + "</td>" +
                     "<td>" + response.datas[i]['Name'] + "</td>" +
@@ -246,7 +248,10 @@ function waiting_list(Today = false, alarm = false) {
     })
 }
 
-function get_test_list(diagnosis_id) {
+function get_test_list(obj,diagnosis_id) {
+
+    //$("#estimate_list_table tr").removeClass('danger');
+    //$(obj).addClass('danger');
 
     $.ajax({
         type: 'POST',
@@ -269,11 +274,10 @@ function get_test_list(diagnosis_id) {
                     if (response.datas[i]['list_interval'][j]['name'] != '') {
                         str += response.datas[i]['list_interval'][j]['name'] + ' : ';
                     }
-                    str += response.datas[i]['list_interval'][j]['minimum'] + ' ~ ';
+                    str += response.datas[i]['list_interval'][j]['minimum'] + ' < ';
                     str += response.datas[i]['list_interval'][j]['maximum'] + ' ' ;
                     str += '( ' + response.datas[i]['list_interval'][j]['unit'] + ' )';
 
-                    console.log(response.datas[i]['list_interval'][j]);
 
                     if (response.datas[i]['list_interval'].length != i + 1) {
                         str += "<br />";
@@ -287,6 +291,14 @@ function get_test_list(diagnosis_id) {
                 
                 $('#laboratory_test_list_table').append(str);
             }
+
+            $("#patient_chart").val(response.chart);
+            $("#patient_name").val(response.Name);
+            $('input:radio[name=gender]').filter('[value=' + response.gender + ']').prop('checked', true);
+            $("#patient_dob").val(response.Date_of_Birth);
+            $("#patient_depart").val(response.Depart);
+            $("#patient_phone").val(response.phone);
+
         },
         error: function (request, status, error) {
             console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -304,7 +316,7 @@ function worker_on(is_run) {
             path = get_listener_path();
             w = new Worker(path);
             w.onmessage = function (event) {
-                console.log(timer_count);
+                //console.log(timer_count);
                 timer_count += 1;
                 if (timer_count >= 18) {
                     timer_count = 0;

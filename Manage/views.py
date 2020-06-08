@@ -1,6 +1,7 @@
 
 import calendar
 import os
+import math
 from django.utils.translation import gettext as _
 
 from openpyxl import Workbook,load_workbook
@@ -12,7 +13,7 @@ from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from django.http import JsonResponse, HttpResponseRedirect,HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles.templatetags.staticfiles import static
-from django.db.models import Q, Count, F, Min,Sum, Case,When ,Value,CharField
+from django.db.models import Q, Count, F, Min,Sum, Case,When ,Value,CharField,Avg
 import operator
 import functools
 
@@ -208,15 +209,13 @@ def search_payment(request):
             'payment__paymentrecord_set',
         ).order_by("-id")
 
-    #print(receptions)
+    count_page = receptions.values('id')
+
     payment_total = receptions.filter().aggregate(
         Sum('payment__sub_total'),
         Sum('payment__total'),
         Sum('payment__additional'),
         )
-
-    
-
 
     #unpaid 구하기
     real_paid_total = receptions.aggregate(
@@ -235,7 +234,7 @@ def search_payment(request):
     payment_total_unpaid = payment_total_total - payment_total_paid_amount
 
 
-    for reception in receptions:
+    for reception in receptions[int(page_context) * (int(page) -1): int(page_context) * int(page)]:
         data = {
             'no':reception.id,
             'date':reception.recorded_date.strftime('%Y-%m-%d'),
@@ -333,8 +332,6 @@ def search_payment(request):
         paid_by_card = False
         paid_by_cash = False
 
-        #print(reception.payment.total)
-
 
 
         #if list_paid_record.count() != 0:
@@ -382,7 +379,7 @@ def search_payment(request):
 
         datas.append(data)
 
-    paginator = Paginator(datas, page_context)
+    paginator = Paginator(count_page, page_context)
     try:
         paging_data = paginator.page(page)
     except PageNotAnInteger:
@@ -392,7 +389,7 @@ def search_payment(request):
 
 
     context = {
-            'datas':list(paging_data),
+            'datas':datas,
             'page_range_start':paging_data.paginator.page_range.start,
             'page_range_stop':paging_data.paginator.page_range.stop,
             'page_number':paging_data.number,
@@ -729,8 +726,11 @@ def doctor_profit(request):
         filter_search = request.POST.get('search')
 
         receptions = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').select_related('payment').filter(payment__progress='paid').order_by("-id")
+
+        count_page = receptions.values('id')
+
         #receptions = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').select_related('diagnosis').select_related('payment').order_by("-id")
-        for reception in receptions:
+        for reception in receptions[int(page_context) * (int(page) -1): int(page_context) * int(page)]:
             exams = []
             precedures = []
             radiographys = []
@@ -843,7 +843,7 @@ def doctor_profit(request):
 
 
         receptions = Reception.objects.filter(**kwargs ,recorded_date__range = (date_min, date_max), progress = 'done').select_related('payment').filter(payment__progress='paid').order_by("-id")
-
+        count_page = receptions.values('id')
         
         
         amount_exam_fee = 0
@@ -853,7 +853,7 @@ def doctor_profit(request):
 
         
         
-        for reception in receptions:
+        for reception in receptions[int(page_context) * (int(page) -1): int(page_context) * int(page)]:
             data = {}
             try:
                 exam_fee = []
@@ -967,7 +967,7 @@ def doctor_profit(request):
         'amount_total':query_total['amount_total'] if query_total['amount_total'] is not None else 0,
         })
     
-    paginator = Paginator(datas, page_context)
+    paginator = Paginator(count_page, page_context)
     try:
         paging_data = paginator.page(page)
     except PageNotAnInteger:
@@ -977,7 +977,7 @@ def doctor_profit(request):
     
 
     context.update({
-                'datas':list(paging_data),
+                'datas':datas,
                 'page_range_start':paging_data.paginator.page_range.start,
                 'page_range_stop':paging_data.paginator.page_range.stop,
                 'page_number':paging_data.number,
@@ -998,13 +998,16 @@ def audit_excel(request):
 
     date_start = request.GET.get('date_start')
     date_end = request.GET.get('date_end')
+    depart = request.GET.get('depart','')
 
     date_min = datetime.datetime.combine(datetime.datetime.strptime(date_start, "%Y-%m-%d").date(), datetime.time.min)
     date_max = datetime.datetime.combine(datetime.datetime.strptime(date_end, "%Y-%m-%d").date(), datetime.time.max)
 
     kwargs = {}
     kwargs['progress'] = 'done'
-
+    if depart != '':
+        kwargs['depart_id'] = depart
+         
     datas = []
     receptions = Reception.objects.filter(
             **kwargs ,
@@ -1034,15 +1037,15 @@ def audit_excel(request):
     #처음 시작 A7 ~ W7
     current_row = 7
     data_num = 1
-    for reception in receptions:
-        recorded_date = reception.recorded_date
+    for i in range(receptions.count()):
+        recorded_date = receptions[i].recorded_date
         #기본 정보
         ws['A' + str(current_row)] = data_num
-        ws['B' + str(current_row)] = reception.recorded_date.strftime('%Y-%m-%d')
-        ws['C' + str(current_row)] = reception.patient.get_chart_no()
-        ws['D' + str(current_row)] = reception.patient.name_kor + ' / ' + reception.patient.name_eng
-        ws['E' + str(current_row)] = reception.depart.name
-        ws['F' + str(current_row)] = reception.doctor.name_short
+        ws['B' + str(current_row)] = receptions[i].recorded_date.strftime('%Y-%m-%d')
+        ws['C' + str(current_row)] = receptions[i].patient.get_chart_no()
+        ws['D' + str(current_row)] = receptions[i].patient.name_kor + ' / ' + receptions[i].patient.name_eng
+        ws['E' + str(current_row)] = receptions[i].depart.name
+        ws['F' + str(current_row)] = receptions[i].doctor.name_short
 
 
 
@@ -1050,7 +1053,7 @@ def audit_excel(request):
         ##진료비
         temp_row = current_row
         highest = 1
-        tmp_exam_set = reception.diagnosis.exammanager_set.all()
+        tmp_exam_set = receptions[i].diagnosis.exammanager_set.all()
         for tmp_exam in tmp_exam_set:
             ws['G' + str(temp_row)] = tmp_exam.exam.name
             ws['H' + str(temp_row)] = "-"
@@ -1063,7 +1066,7 @@ def audit_excel(request):
 
         ##약
         temp_row = current_row
-        tmp_medicine_set = reception.diagnosis.medicinemanager_set.all()
+        tmp_medicine_set = receptions[i].diagnosis.medicinemanager_set.all()
         for tmp_medicine in tmp_medicine_set:
             ws['J' + str(temp_row)] = tmp_medicine.medicine.name
             ws['K' + str(temp_row)] = tmp_medicine.amount
@@ -1077,7 +1080,7 @@ def audit_excel(request):
 
         ##검사
         temp_row = current_row
-        tmp_test_set = reception.diagnosis.testmanager_set.all()
+        tmp_test_set = receptions[i].diagnosis.testmanager_set.all()
         for tmp_test in tmp_test_set:
             ws['M' + str(temp_row)] = tmp_test.test.name
             ws['N' + str(temp_row)] = "-"
@@ -1088,9 +1091,8 @@ def audit_excel(request):
         if tmp_test_set.count() > highest:
             highest = tmp_test_set.count() 
 
-
         ##처치 및 방사선
-        tmp_precedure_set = reception.diagnosis.preceduremanager_set.all()
+        tmp_precedure_set = receptions[i].diagnosis.preceduremanager_set.all()
         temp_row = current_row
         temp_row_p = current_row
         for tmp_precedure in tmp_precedure_set:
@@ -1115,18 +1117,24 @@ def audit_excel(request):
             highest = tmp_precedure_set.exclude(precedure__code__icontains='R').count()
         
         
-        paid_sum = reception.payment.paymentrecord_set.aggregate(Sum('paid')).get('paid__sum')
+        paid_sum = receptions[i].payment.paymentrecord_set.aggregate(Sum('paid')).get('paid__sum')
+        if paid_sum is None:
+            paid_sum = 0
 
-        ws['V' + str(current_row)] = reception.payment.sub_total
-        if reception.payment.discounted != 0:
-            ws['W' + str(current_row)] = reception.payment.sub_total / 100 * reception.payment.discounted
+        ws['V' + str(current_row)] = receptions[i].payment.sub_total
+        if receptions[i].payment.discounted != 0:
+            ws['W' + str(current_row)] = receptions[i].payment.sub_total / 100 * receptions[i].payment.discounted
         else:
-            ws['W' + str(current_row)] = reception.payment.discounted_amount
-        ws['X' + str(current_row)] = reception.payment.additional
-        ws['Y' + str(current_row)] = reception.payment.total
-        ws['Z' + str(current_row)] = reception.payment.total - paid_sum
+            ws['W' + str(current_row)] = receptions[i].payment.discounted_amount
+        ws['X' + str(current_row)] = receptions[i].payment.additional
+        ws['Y' + str(current_row)] = receptions[i].payment.total
+        ws['Z' + str(current_row)] = receptions[i].payment.total - paid_sum
         ws['AA' + str(current_row)] = paid_sum
-        ws['AB' + str(current_row)] = reception.payment.memo 
+        if receptions[i].payment.paymentrecord_set.first() is None:
+            ws['AB' + str(current_row)] = '-'
+        else:
+            ws['AB' + str(current_row)] = receptions[i].payment.paymentrecord_set.first().method
+        ws['AC' + str(current_row)] = receptions[i].payment.memo 
 
 
         if highest != 0:
@@ -1143,6 +1151,7 @@ def audit_excel(request):
             ws.merge_cells('Z' + str(current_row) + ':Z' + str(current_row + highest-1))
             ws.merge_cells('AA' + str(current_row) + ':AA' + str(current_row + highest-1))
             ws.merge_cells('AB' + str(current_row) + ':AB' + str(current_row + highest-1))
+            ws.merge_cells('AC' + str(current_row) + ':AC' + str(current_row + highest-1))
 
         current_row += highest 
         data_num +=1
@@ -1156,7 +1165,6 @@ def audit_excel(request):
     for row in rows:
         for cell in row:
             cell.border = border_thin
-
 
 
     wb.save(response)
@@ -1319,11 +1327,13 @@ def rec_report_excel(request):
     ws['C' + str(current_row)] = 'Tổng tiền giảm giá (2)'
     ws['F' + str(current_row)] = total_discount
 
-    ws['G' + str(current_row)] = 'Nhi'
-    ws['H' + str(current_row)] = 'Da liễu'
+    ws['G' + str(current_row)] = 'Da liễu'
+    ws['H' + str(current_row)] = 'Tai Mũi Họng'
     ws['I' + str(current_row)] = 'Nội'
-    ws['J' + str(current_row)] = 'Phục hồi chức năng'
-    ws['K' + str(current_row)] = 'Phẫu thuật thẩm mỹ'
+    ws['J' + str(current_row)] = 'Phẫu thuật thẩm mỹ'
+    ws['K' + str(current_row)] = 'Phục hồi chức năng'
+
+
 
     current_row +=1
     ws.merge_cells('C' + str(current_row) + ':E' + str(current_row))
@@ -1373,8 +1383,8 @@ def rec_report_excel(request):
 
     ws['G' + str(current_row)] = derm_total
     ws['H' + str(current_row)] = ent_total
-    ws['I' + str(current_row)] = ps_total
-    ws['J' + str(current_row)] = im_total
+    ws['I' + str(current_row)] = im_total
+    ws['J' + str(current_row)] = ps_total
     ws['K' + str(current_row)] = pm_total
 
 
@@ -1387,8 +1397,8 @@ def rec_report_excel(request):
 
     ws['G' + str(current_row)] = derm_total_paid
     ws['H' + str(current_row)] = ent_total_paid
-    ws['I' + str(current_row)] = ps_total_paid
-    ws['J' + str(current_row)] = im_total_paid
+    ws['I' + str(current_row)] = im_total_paid
+    ws['J' + str(current_row)] = ps_total_paid
     ws['K' + str(current_row)] = pm_total_paid
 
     ws['L' + str(current_row)] = '=SUM(G' + str(current_row) + ':K' + str(current_row) +')-F' + str(current_row)
@@ -1422,8 +1432,8 @@ def rec_report_excel(request):
 
     ws['G' + str(current_row)] = derm_total - derm_total_paid
     ws['H' + str(current_row)] = ent_total - ent_total_paid
-    ws['I' + str(current_row)] = ps_total - ps_total_paid
-    ws['J' + str(current_row)] = im_total - im_total_paid
+    ws['I' + str(current_row)] = im_total - im_total_paid
+    ws['J' + str(current_row)] = ps_total - ps_total_paid
     ws['K' + str(current_row)] = pm_total - pm_total_paid
 
 
@@ -1457,7 +1467,7 @@ def rec_report_excel(request):
 #고객 정보 다운로드
 def cumstomer_management_excel(request):
     today = datetime.date.today().strftime('%Y%m%d')
-    print(today)
+
     #이름 설정
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename="CUSTOMER INFORMATION ' + today +'.xlsx"'
@@ -1786,6 +1796,103 @@ def test_add_edit_delete(request):
         'result':True,
         })
 
+def test_get_interval_list(request):
+    test_id = request.POST.get('test_id')
+
+    query = TestReferenceInterval.objects.filter(test_id = test_id,use_yn='Y')
+    datas=[]
+    for data in query:
+        datas.append({
+            'id':data.id,
+            'minimum':data.minimum,
+            'maximum':data.maximum,
+            'unit':data.unit,
+            'unit_vie':data.unit_vie,
+            'name':data.name,
+            'name_vie':data.name_vie,
+            'sign':data.sign,
+            })
+
+    return JsonResponse({
+        'result':True,
+        'datas':datas,
+        })
+
+
+def test_get_interval(request):
+    id = request.POST.get('id')
+    data = TestReferenceInterval.objects.get(id = id)
+
+    return JsonResponse({
+        'result':True,
+        'id':data.id,
+        'minimum':data.minimum,
+        'maximum':data.maximum,
+        'unit':data.unit,
+        'unit_vie':data.unit_vie,
+        'name':data.name,
+        'name_vie':data.name_vie,
+        'sign':data.sign,
+        })
+
+
+def test_save_interval(request):
+    selected_test = request.POST.get('selected_test')
+    id = request.POST.get('id','')
+    remark = request.POST.get('remark')
+    remark_vi = request.POST.get('remark_vi')
+    unit = request.POST.get('unit')
+    unit_vi = request.POST.get('unit_vi')
+    minimum = request.POST.get('minimum')
+    maximum = request.POST.get('maximum')
+    sign = request.POST.get('sign')
+
+    now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    if id != '':
+        test_range = TestReferenceInterval.objects.get(id = id)
+
+    else:
+        test_range = TestReferenceInterval()
+        test_range.date_register = now
+        test_range.registrant = request.user.id
+
+
+    test_range.test_id = selected_test
+    test_range.name = remark
+    test_range.name_vi = remark_vi
+    test_range.unit = unit
+    test_range.unit_vi = unit_vi
+    test_range.minimum = minimum
+    test_range.maximum = maximum
+    test_range.sign = sign
+
+
+    test_range.date_modify = now
+    test_range.modifier = request.user.id
+
+    test_range.save()
+
+    return JsonResponse({
+        'result':True,
+        })
+
+
+def test_delete_interval(request):
+    id = request.POST.get('id')
+    test_range = TestReferenceInterval.objects.get(id = id)
+    test_range.use_yn = 'N'
+
+    test_range.date_modify = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    test_range.modifier = request.user.id
+
+    test_range.save()
+
+    return JsonResponse({
+        'result':True,
+        })
+
+
+
 
 def inventory_precedure(request):
 
@@ -1901,8 +2008,6 @@ def precedure_add_edit_set(request):
 
         last_code = Precedure.objects.filter(precedure_class_id=precedure_class).order_by('code').last()
         precedure_class = int(precedure_class)
-        print(precedure_class)
-        print(last_code)
 
         if precedure_class ==1: #D
             CODE = 'D'
@@ -1949,8 +2054,6 @@ def precedure_add_edit_set(request):
                 data.code = CODE + str('%04d' % (int(temp_code[1]) + 1))
 
             
-        print(data.code)
-        
 
     else:
         data = Precedure.objects.get(id=id)
@@ -2559,7 +2662,7 @@ def draft(request):
         #부서 - 병원
         depart_type = COMMCODE.objects.filter(upper_commcode = '000002',commcode_grp = 'DEPART_CLICINC',use_yn="Y").annotate(code = F('commcode'),name = f_name ).values('code','name','id')
 
-    elif request.META['SERVER_PORT'] == '8888':#경천애인
+    elif request.META['SERVER_PORT'] == '8888' or request.META['SERVER_PORT'] == '22222':#경천애인
         url = 'Manage/Draft_KBL.html'
         #부서 - KBL
         depart_type= COMMCODE.objects.filter(upper_commcode = '000002',commcode_grp = 'DEPART_KBL', use_yn="Y").annotate(code = F('commcode'),name = f_name ).values('code','name','id')
@@ -2624,10 +2727,8 @@ def draft_search(request):
     if status != '':
         kwargs['status']=status
 
-    print(kwargs)
-
     draft_list=[]
-    if request.META['SERVER_PORT'] == '8888':#경천애인
+    if request.META['SERVER_PORT'] == '8888' or request.META['SERVER_PORT'] == '22222':#경천애인
         draft_query = Draft.objects.filter(date_registered__range = (date_min, date_max),**kwargs,use_yn='Y',is_KBL='Y').order_by('-date_registered')
     else:
         draft_query = Draft.objects.filter(date_registered__range = (date_min, date_max),**kwargs,use_yn='Y',is_KBL='N').order_by('-date_registered')
@@ -2753,7 +2854,6 @@ def draft_save(request):
     new_edit_MORE_CMNTS=request.POST.get("new_edit_MORE_CMNTS")
     new_edit_status=request.POST.get("new_edit_status")
 
-    print(id)
 
     if id != '':
         draft = Draft.objects.get(pk = id)
@@ -2777,7 +2877,7 @@ def draft_save(request):
     draft.modifier = request.user.id
     draft.date_last_modified = datetime.datetime.now()
 
-    if request.META['SERVER_PORT'] == '8888':#경천애인
+    if request.META['SERVER_PORT'] == '8888' or request.META['SERVER_PORT'] == '22222':#경천애인
         draft.is_KBL='Y'
 
     draft.save()
@@ -2851,7 +2951,6 @@ def draft_save_file(request):
         files = request.FILES.getlist('file') 
 
         if form.is_valid():
-           print(selected_file_id)
            if selected_file_id != '': #수정
                 file_instance = Board_File.objects.get(id = selected_file_id)
            else:
@@ -2907,7 +3006,7 @@ def check_appraove(request):
     type = request.POST.get('type')
     val = request.POST.get('val')
 
-    print(val)
+
 
     draft = Draft.objects.get(id = id )
 
@@ -3440,8 +3539,6 @@ def employee_search(request):
             ex_list.append( Q(**{'depart':data['commcode']} ) )
     
 
-    print(ex_list)
-
     query_user = User.objects.filter(
         functools.reduce(operator.or_, argument_list),
         **kwargs
@@ -3578,7 +3675,6 @@ def employee_add_edit(request):
     if "DOCTOR" in depart: #의사 권한은 별도로 ... 
         str_split = depart.split('_')
         
-        print(str_split)
         commcode = COMMCODE.objects.get(upper_commcode = '000002', commcode_grp='DEPART_CLICINC', commcode='DOCTOR',se1 = str_split[1])
        
         user.depart_doctor = str_split[1]
@@ -3775,7 +3871,7 @@ def board_list(request,id=None):
     kwargs['board_type'] = 'BASIC' #일반 게시판
 
     kwargs['is_KBL'] = 'N'
-    if request.META['SERVER_PORT'] == '8888':#경천애인
+    if request.META['SERVER_PORT'] == '8888' or request.META['SERVER_PORT'] == '22222':#경천애인
         kwargs['is_KBL'] = 'Y'
 
 
@@ -3803,7 +3899,7 @@ def board_list(request,id=None):
     for item in query:
         comment_count = Board_Comment.objects.filter(content_id = item.id, use_yn = 'Y').count()
         creator = users.get(id = int(item.creator))
-        file_count = Board_File.objects.filter(board_id = item.id).count()
+        file_count = Board_File.objects.filter(board_id = item.id,board_type='BASIC').count()
 
 
         contents_list.append({
@@ -3878,7 +3974,7 @@ def board_create_edit(request,id=None):
         file_form = board_file_form()
 
         load_contents.creator = request.user.id
-        if request.META['SERVER_PORT'] == '8888':#경천애인
+        if request.META['SERVER_PORT'] == '8888' or request.META['SERVER_PORT'] == '22222':#경천애인
             load_contents.is_KBL = 'Y' 
     else: # 글 수정 
         load_contents = Board_Contents.objects.get(id = id)
@@ -4189,7 +4285,7 @@ def board_work_list(request,id=None):
 
     # - Depart
     dict_depart = {}
-    if request.META['SERVER_PORT'] == '8888':#경천애인
+    if request.META['SERVER_PORT'] == '8888' or request.META['SERVER_PORT'] == '22222':#경천애인
         ##경천
         query_depart_kbl= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL',upper_commcode ='000002' )
         for data in query_depart_kbl.annotate(code = F('commcode'),name = fname).values('code','name'):
@@ -4199,7 +4295,10 @@ def board_work_list(request,id=None):
     else:
         ##IMEDI
         query_depart_medical= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC',upper_commcode ='000002' )
-        for data in query_depart_medical.annotate(code = F('commcode'),name = fname).values('code','name'):
+        for data in query_depart_medical.annotate(code = F('commcode'),name = fname).values('code','name','id'):
+            if data['code'] == 'DOCTOR':
+                temp_commcode = COMMCODE.objects.get(id = data['id'])
+                data['code'] += '_' + temp_commcode.se1
             dict_depart.update({
                 data['code'] : data['name']
                 })
@@ -4258,7 +4357,7 @@ def board_work_list(request,id=None):
                 'due_date':'' if read_page.date_done == def_date else read_page.date_done,
                 }
             selected_status = read_page.status
-            query_file = Board_File.objects.filter(board_id = id,board_type='BASIC')
+            query_file = Board_File.objects.filter(board_id = id,board_type='COWORK')
 
             list_file = []
             for file in query_file:
@@ -4293,13 +4392,19 @@ def board_work_list(request,id=None):
         kwargs['options'] = view_division_filter
 
     kwargs['is_KBL'] = 'N'
-    if request.META['SERVER_PORT'] == '8888':#경천애인
+    if request.META['SERVER_PORT'] == '8888' or request.META['SERVER_PORT'] == '22222':#경천애인
         kwargs['is_KBL'] = 'Y'
 
+    user_depart = request.user.depart
+    if user_depart == 'DOCTOR':
+        user_depart += '_' + request.user.depart_doctor
 
     if request.user.depart != 'ADMIN':
-        argument_list.append( Q(**{'depart_to':request.user.depart} ) ) 
-        argument_list.append( Q(**{'depart_from':request.user.depart} ) ) 
+        argument_list.append( Q(**{'depart_to1':user_depart} ) ) 
+        argument_list.append( Q(**{'depart_to2':user_depart} ) ) 
+        argument_list.append( Q(**{'depart_to3':user_depart} ) ) 
+        argument_list.append( Q(**{'depart_to4':user_depart} ) ) 
+        argument_list.append( Q(**{'depart_from':user_depart} ) ) 
 
     if search_string != '':
         argument_list.append( Q(**{'title__icontains':search_string} ) ) 
@@ -4316,7 +4421,7 @@ def board_work_list(request,id=None):
     for item in query:
         comment_count = Board_Comment.objects.filter(content_id = item.id, use_yn = 'Y').count()
         creator = users.get(id = int(item.creator))
-        file_count = Board_File.objects.filter(board_id = item.id).count()
+        file_count = Board_File.objects.filter(board_id = item.id,board_type='COWORK').count()
 
 
         #댓글 불러오기
@@ -4354,7 +4459,10 @@ def board_work_list(request,id=None):
             'creator':creator.user_id,
             'date':item.created_date.strftime('%Y-%m-%d'),
             'depart_from':dict_depart[item.depart_from],
-            'depart_to':dict_depart[item.depart_to],
+            'depart_to1':dict_depart[item.depart_to1],
+            'depart_to2':'' if item.depart_to2 == '' else dict_depart[item.depart_to2],
+            'depart_to3':'' if item.depart_to3 == '' else dict_depart[item.depart_to3],
+            'depart_to4':'' if item.depart_to4 == '' else dict_depart[item.depart_to4],
             'status':dict_status[item.status],
             'is_file':False if file_count is 0 else True,
             'view_count':item.view_count,
@@ -4392,6 +4500,7 @@ def board_work_list(request,id=None):
                 'view_division_filter':view_division_filter,
                 'view_contents_count':view_contents_count,
                 'dict_division':dict_division,
+                'dict_division':dict_division,
                 
                 
                 'dict_status':dict_status,
@@ -4415,6 +4524,11 @@ def board_work_create_edit(request,id=None):
     is_top= '0'
     division_selected = None
     depart_to_selected = None
+    depart_selected1 = ''
+    depart_selected2 = ''
+    depart_selected3 = ''
+    depart_selected4 = ''
+    status_selected = ''
     #language
     
     list_file = []
@@ -4430,17 +4544,24 @@ def board_work_create_edit(request,id=None):
             load_contents.depart_from = request.user.depart + "_" + request.user.depart_doctor
 
             
-        if request.META['SERVER_PORT'] == '8888':#경천애인
+        if request.META['SERVER_PORT'] == '8888' or request.META['SERVER_PORT'] == '22222':#경천애인
             load_contents.is_KBL = 'Y'
     else: # 글 수정 
         load_contents = Board_Contents.objects.get(id = id)
         form = board_form(instance = load_contents)
         division_selected = load_contents.options
+        depart_selected1 = load_contents.depart_to1
+        depart_selected2 = load_contents.depart_to2
+        depart_selected3 = load_contents.depart_to3
+        depart_selected4 = load_contents.depart_to4
+
+        status_selected = load_contents.status
+
 
         is_top = load_contents.top_seq
 
         file_form = board_file_form()
-        query_file = Board_File.objects.filter(board_id = id)
+        query_file = Board_File.objects.filter(board_id = id,board_type = 'COWORK')
         for file in query_file:
             list_file.append({
                 'id':file.id,
@@ -4460,20 +4581,29 @@ def board_work_create_edit(request,id=None):
         if division_selected is not None:
             division_select_valid = True
 
-        depart_to_select_valid = False
-        depart_to_selected = request.POST.get('select_depart_to',None)
-        if depart_to_selected is not None:
-            depart_to_select_valid = True
+        #depart_to_select_valid = False
+        #depart_to_selected = request.POST.get('select_depart_to',None)
+        #if depart_to_selected is not None:
+        #    depart_to_select_valid = True
+
+        
+        depart_to_selected1 = request.POST.get('select_depart_to1','')
+        depart_to_selected2 = request.POST.get('select_depart_to2','')
+        depart_to_selected3 = request.POST.get('select_depart_to3','')
+        depart_to_selected4 = request.POST.get('select_depart_to4','')
 
         satus_selected = request.POST.get('select_status','SUBMIT')
 
-        if form.is_valid() and file_form.is_valid() and division_select_valid and depart_to_select_valid:
+        if form.is_valid() and file_form.is_valid() and division_select_valid:
             load_contents.board_type = 'COWORK'
             load_contents.title = form.cleaned_data['title']
             load_contents.contents = form.cleaned_data['contents']
             load_contents.options = division_selected
             load_contents.status = satus_selected
-            load_contents.depart_to = depart_to_selected
+            load_contents.depart_to1 = depart_to_selected1
+            load_contents.depart_to2 = depart_to_selected2
+            load_contents.depart_to3 = depart_to_selected3
+            load_contents.depart_to4 = depart_to_selected4
 
 
             load_contents.lastest_modifier = request.user.id
@@ -4520,7 +4650,7 @@ def board_work_create_edit(request,id=None):
 
     ##경천
     list_depart = []
-    if request.META['SERVER_PORT'] == '8888':#경천애인
+    if request.META['SERVER_PORT'] == '8888' or request.META['SERVER_PORT'] == '22222':#경천애인
         query_depart_kbl= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_KBL',upper_commcode ='000002' ).annotate(code = F('commcode'),name = f_name ).values('code','name')
         for data in query_depart_kbl:
             list_depart.append({
@@ -4530,8 +4660,19 @@ def board_work_create_edit(request,id=None):
     else:
         ##IMEDI
         list_depart_medical = []
-        query_depart_medical= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC',upper_commcode ='000002' ).annotate(code = F('commcode'),name = f_name ).values('code','name')
+        query_depart_medical= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_CLICINC',upper_commcode ='000002' ).annotate(code = F('commcode'),name = f_name ).values('code','name','id')
         for data in query_depart_medical:
+            if data['code'] == 'DOCTOR':
+                temp_commcode = COMMCODE.objects.get(id = data['id'])
+                data['code'] += '_' + temp_commcode.se1
+            list_depart.append({
+                'id':data['code'],
+                'name':data['name']
+                }) 
+
+    ##관리자
+    query_depart_admin= COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='DEPART_ADMIN',upper_commcode ='000002' ).annotate(code = F('commcode'),name = f_name).values('code','name')
+    for data in query_depart_admin:
             list_depart.append({
                 'id':data['code'],
                 'name':data['name']
@@ -4557,12 +4698,17 @@ def board_work_create_edit(request,id=None):
                 'list_file_count':len(list_file),
 
                 'list_division':list_division,
-                'division_selected':division_selected, #division
-                'depart_to_selected':depart_to_selected,
+
                 'list_depart':list_depart,
                 'list_status':list_status,
                 
                 'option_err':option_err,
+
+                'division_selected':division_selected, #division
+                'depart_selected1':depart_selected1,
+                'depart_selected2':depart_selected2,
+                'depart_selected3':depart_selected3,
+                'status_selected':status_selected,
 
             }
         )
@@ -4737,7 +4883,6 @@ def sms_history_search(request):
     option = request.POST.get('option','')
     string = request.POST.get('string','')
 
-    print(type)
     kwargs = {}
     if type != '':
         kwargs['type'] = type
@@ -4746,7 +4891,7 @@ def sms_history_search(request):
     #if type != '':
     #    kwargs['type'] == type
     kwargs['is_KBL'] = 'N'
-    if request.META['SERVER_PORT'] == '8888':#경천애인
+    if request.META['SERVER_PORT'] == '8888' or request.META['SERVER_PORT'] == '22222':#경천애인
         kwargs['is_KBL'] = 'Y'
 
     argument_list = [] 
@@ -4969,6 +5114,7 @@ def statistics_search(request):
 
  
     total_revenue = 0
+    total_purchace = 0
     
 
 
@@ -5057,25 +5203,93 @@ def statistics_search(request):
                 'diagnosis__medicinemanager_set',
             )
 
-            if not sub_query:
-                continue
+
 
             for data in sub_query: 
-                print(data.id)
                 medicine_set = MedicineManager.objects.filter(diagnosis_id = data.diagnosis.id, medicine_id=medicine.id)
                 for set_data in medicine_set:
                     count += set_data.amount * set_data.days
                     price_sum += medicine.get_price(data.recorded_date) * set_data.amount * set_data.days
                     
+            #input
+            beginning_count = 0
+            beginning_unit_price = 0
+
+            input = 0
+            input_price = 0
+             
+            consuming_count = 0
+
+            medicine_log = None
+            if len(kwargs) == 0:
+
+
+                #입고
+                medicine_log = MedicineLog.objects.filter(
+                    date__range = (date_min, date_max), 
+                    type='add',
+                    medicine_id = medicine.id
+                    )
+                #입고 및 출고 없으면 출력 안함
+                if not sub_query and not medicine_log:
+                    continue
+
+                for data in medicine_log:
+                    input += data.changes
+                    input_price += medicine.get_price_input(data.date) * data.changes
+
+                #beginning
+                beginning_date = date_min - datetime.timedelta(1)  
+                
+                add_count = MedicineLog.objects.filter(
+                    date__range = (date_min, date_max), 
+                    type='add',
+                    medicine_id = medicine.id
+                    ).aggregate(Sum('changes'))
+
+                
+
+                if add_count['changes__sum'] is None:
+                    add_count = 0
+                else:
+                    add_count = add_count['changes__sum'] 
+
+                dec_count = MedicineLog.objects.filter(
+                    date__range = (date_min, date_max), 
+                    type='add',
+                    medicine_id = medicine.id
+                    ).aggregate(Sum('changes'))
+
+                if dec_count['changes__sum'] is None:
+                    dec_count = 0
+                else:
+                    dec_count = dec_count['changes__sum'] 
+
+                beginning_count = medicine.inventory_count + dec_count - add_count
+                beginning_unit_price = medicine.get_price(beginning_date)
+
             data_list.append({
                 'id':medicine.id,
+                'code':medicine.code,
                 'name':medicine.name,
                 'name_vi':medicine.name_vie,
+                'unit':medicine.unit,
+
+                'beginning_count':beginning_count,
+                'beginning_unit_price':beginning_unit_price,
+
+                'input':input,
+                'input_average':0 if input is 0 else math.trunc(input_price / input),
+                'input_price':input_price,
+
                 'count':count,
+                'price_average':0 if count is 0 else math.trunc(price_sum / count),
                 'price_sum':price_sum,
+
                 })
 
             total_revenue += price_sum
+            total_purchace +=input_price
 
 
     elif type == 'DEPART':
@@ -5113,7 +5327,8 @@ def statistics_search(request):
         'result':True,
         'datas':data_list,
 
-        'total_revenue':total_revenue
+        'total_revenue':total_revenue,
+        'total_purchace':total_purchace,
         })
 
 
@@ -5328,12 +5543,42 @@ def search_customer_info(request):
             })
 
 
+        
+    #top20
+    query_top20 = Reception.objects.filter(
+                **kwargs ,
+                recorded_date__range = (date_min, date_max), 
+            ).exclude(
+                progress='deleted'
+            ).prefetch_related(
+                'payment__paymentrecord_set'
+            ).values(
+                'patient_id'
+            ).annotate(
+                method_count= Count('payment__paymentrecord__method'),
+                total_price = Sum('payment__paymentrecord__paid')
+            ).order_by('-total_price')[:20]
+    datas_top20 = []
+    for data in query_top20:
+        patient = Patient.objects.get(id = data['patient_id'])
+        last_visit = Reception.objects.filter(patient_id = patient.id, ).exclude(progress='deleted').order_by('-recorded_date').first()
+        datas_top20.append({
+            'name':patient.name_kor + ' / ' + patient.name_eng,
+            'date_of_birth':patient.date_of_birth.strftime('%Y-%m-%d'),
+            'gender':patient.gender,
+            'phone':patient.phone, 
+            'last_visit':last_visit.recorded_date.strftime('%Y-%m-%d'),
+            'total_amount':data['total_price'],
+            })
+    
+
     return JsonResponse({
         'result':True,
         'datas_gender':data_list_gender,
         'datas_nation':data_list_nation,
         'datas_payment_method':data_list_payment_method,
         'datas_age':data_list_age,
+        'datas_top20':datas_top20,
 
         })
 
@@ -5384,9 +5629,6 @@ def search_ymw(request):
 
     date_min = datetime.datetime.combine(start, datetime.time.min)
     date_max = datetime.datetime.combine(end, datetime.time.max)
-
-    print(date_min)
-    print(date_max)
 
 
     data_list_year = []

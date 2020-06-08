@@ -114,16 +114,21 @@
         padding-right:10px;
     }
 
+#document_control_depart_div{
+    display:inline-table;
+    width:150px;
+}
 
-    .nav-tabs > li.active > a,
-    .nav-tabs > li.active > a:hover,
-    .nav-tabs > li.active > a:focus {
-        color: #fff;
-        cursor: default;
-        background-color: rgb(90,64,129);
-        border: 1px solid rgb(90,64,129);
-        border-bottom-color: transparent;
-    }
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+    color: #fff;
+    cursor: default;
+    background-color: rgb(90,64,129);
+    border: 1px solid rgb(90,64,129);
+    border-bottom-color: transparent;
+}
 
 .nav-tabs > li > a {
     background-color: #eee;

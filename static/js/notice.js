@@ -1,0 +1,11 @@
+jQuery.browser = {};
+
+$(function () {
+
+
+
+
+
+
+
+});

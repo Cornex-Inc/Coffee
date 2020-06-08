@@ -1,26 +1,44 @@
 ﻿
 jQuery.browser = {};
 var reception_event_count = 0;
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+
 $(function () {
     //init
 
 
     //Patient 
-    if ($("#patient_date_of_birth").length > 0) {
-        $("#patient_date_of_birth").daterangepicker({
-            singleDatePicker: true,
-            showDropdowns: true,
-            locale: {
-                format: 'YYYY-MM-DD',
-            },
-        });
-    }
-
     $('#patient_search_input').keydown(function (key) {
         if (key.keyCode == 13) {
             patient_search();
         }
     })
+
+
+    if ($("#patient_date_of_birth").length > 0) {
+        $("#patient_date_of_birth").daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            autoUpdateInput: false,
+            locale: {
+                format: 'YYYY-MM-DD',
+            },
+        });
+    }
+    //선택 시 
+    $('#patient_date_of_birth').on('apply.daterangepicker', function (ev, picker) {
+        var today = moment().format('YYYY[-]MM[-]DD');
+        if ($("#language").val() == 'vi') {
+            $(this).val(picker.startDate.format('DD/MM/YYYY'));
+        }
+    });
+
+
+
 
     //Reception search
     if ($("#reception_waiting_date_start").length > 0) {
@@ -39,48 +57,19 @@ $(function () {
             }
         });
     }
-    //$('#reception_waiting_date').on('apply.daterangepicker', function () {
-    //    today = moment().format('YYYY[-]MM[-]DD');
-    //    date = $('#reception_waiting_date').val();
-    //    if (date == today) {
-    //        reception_waiting_date_worker(true);
-    //    } else {
-    //        reception_waiting_date_worker(false);
-    //        reception_search();
-    //    }
-    //});
-
-    
-
-    $("#depart_select").change(function () {
-        get_doctor($("#depart_select"));
-    });
-    $("#edit_reception_depart").change(function () {
-        get_doctor($("#edit_reception_depart"));
-    });
 
 
-
-    $("#reception_waiting_date_start, #reception_waiting_date_end").change(function () {
-        reception_search();
-    });
-
-    $("#reception_waiting_depart").change(function () {
-        reception_search();
-        get_doctor($("#reception_waiting_depart"));
-    });
-    $("#reception_waiting_doctor").change(function () {
+    //선택 시 
+    $('#reception_waiting_date_start, #reception_waiting_date_end').on('apply.daterangepicker', function (ev, picker) {
+        var today = moment().format('YYYY[-]MM[-]DD');
+        if ($("#language").val() == 'vi') {
+            $(this).val(picker.startDate.format('DD/MM/YYYY'));
+        }
         reception_search();
     });
 
 
-    $("#reservation_depart_select").change(function () {
-        reservation_search();
-        get_doctor($("#reservation_depart_select"));
-    });
-    $("#reservation_doctor_select").change(function () {
-        reservation_search();
-    });
+
 
 
 
@@ -145,10 +134,58 @@ $(function () {
     });
 
     $('#reception_reservation_date_start,#reception_reservation_date_end').on('apply.daterangepicker', function () {
+        var today = moment().format('YYYY[-]MM[-]DD');
+        if ($("#language").val() == 'vi') {
+            $(this).val(picker.startDate.format('DD/MM/YYYY'));
+        }
         reservation_search();
     });
 
-    reservation_search();
+
+    if ($("#language").val() == 'vi') {
+        var today = moment().format('DD[/]MM[/]YYYY');
+        $('#reception_waiting_date_start,#reception_waiting_date_end').val(today);
+        $('#reception_reservation_date_start,#reception_reservation_date_end').val(today);
+
+        reservation_search();
+        reception_search();
+    }
+
+
+    $("#depart_select").change(function () {
+        get_doctor($("#depart_select"));
+    });
+    $("#edit_reception_depart").change(function () {
+        get_doctor($("#edit_reception_depart"));
+    });
+
+
+
+
+    $("#reception_waiting_depart").change(function () {
+        reception_search();
+        get_doctor($("#reception_waiting_depart"));
+    });
+    $("#reception_waiting_doctor").change(function () {
+        reception_search();
+    });
+
+
+    $("#reservation_depart_select").change(function () {
+        reservation_search();
+        get_doctor($("#reservation_depart_select"));
+    });
+    $("#reservation_doctor_select").change(function () {
+        reservation_search();
+    });
+
+    $("#search_depart_filter_package").change(function () {
+        get_doctor($("#search_depart_filter_package"));
+    });
+    $("#depart_filter_reg").change(function () {
+        get_doctor($("#depart_filter_reg"));
+    });
+
 
     //보험
     $('#patient_tax_invoice_click').click(function () {
@@ -697,6 +734,24 @@ $(function () {
     new_patient_option(false);
 
 
+
+    
+
+
+    $("#search_filter_package").change(function () {
+        search_package_item();
+    });
+    $("#search_string_package").click(function () {
+        if (key.keyCode == 13) {
+            search_package_item();
+        }
+    });
+
+    $("#search_btn_package").click(function () {
+        search_package_item();
+    });
+
+
 });
 
 
@@ -717,6 +772,10 @@ function get_doctor(part, depart = null, selected= null) {
         doctor = $('#reservation_doctor_select');
     } else if (part_id == 'edit_reception_depart') {
         doctor = $('#edit_reception_doctor');
+    } else if (part_id == 'search_depart_filter_package') {
+        doctor = $("#search_doctor_filter_package");
+    } else if (part_id == 'depart_filter_reg') {
+        doctor = $("#doctor_filter_reg");
     }
 
     if (depart == null)
@@ -905,6 +964,9 @@ function save_patient() {
     var name_kor = $('#patient_name_kor').val();
     var name_eng = $('#patient_name_eng').val();
     var date_of_birth = $('#patient_date_of_birth').val();
+    if ($("#language").val() == 'vi') {
+        date_of_birth = moment(date_of_birth, 'DD/MM/YYYY').format('YYYY-MM-DD');
+    }
     var gender = $('#patient_gender').val();
     var nationality = $("#patient_nationality").val();
     //var gender = $('input[name="gender"]:checked').val();
@@ -1034,6 +1096,9 @@ function save_recept() {
     var name_kor = $('#patient_name_kor').val();
     var name_eng = $('#patient_name_eng').val();
     var date_of_birth = $('#patient_date_of_birth').val();
+    if ($("#language").val() == 'vi') {
+        date_of_birth = moment(date_of_birth, 'DD/MM/YYYY').format('YYYY-MM-DD');
+    }
     var gender = $('#patient_gender').val();
     var nationality = $("#patient_nationality").val();
     //var gender = $('input[name="gender"]:checked').val();
@@ -1169,7 +1234,13 @@ function set_patient_data(patient_id) {
             $('#patient_chart').val(response.chart);
             $('#patient_name_kor').val(response.name_kor);
             $('#patient_name_eng').val(response.name_eng);
-            $('#patient_date_of_birth').val(response.date_of_birth);
+
+            if ($("#language").val() == 'vi') {
+                $('#patient_date_of_birth').val( moment(response.date_of_birth, 'YYYY-MM-DD').format('DD/MM/YYYY') );
+            } else {
+                $('#patient_date_of_birth').val(response.date_of_birth);
+            }
+            
             $('#patient_address').val(response.address);
             $('#patient_phone').val(response.phone);
             $("#patient_gender").val(response.gender);
@@ -1236,7 +1307,13 @@ function patient_search(data) {
 
                     str += response.datas[i]['chart'] + "</td>" +
                         "<td>" + response.datas[i]['name_kor'] + '<br />' + response.datas[i]['name_eng'] + "</td>" +
-                        "<td>" + response.datas[i]['date_of_birth'] + ' (' + response.datas[i]['gender'] + '/' + response.datas[i]['age'] + ")</td>" +
+                        "<td>";
+                    if ($("#language").val() == 'vi') {
+                        str += moment(response.datas[i]['date_of_birth'], 'YYYY-MM-DD').format('DD/MM/YYYY');
+                    } else {
+                        str += response.datas[i]['date_of_birth'];
+                    }
+                     str += ' (' + response.datas[i]['gender'] + '/' + response.datas[i]['age'] + ")</td>" +
                         "<td>" + response.datas[i]['phonenumber'] + "</td>" +
                         "<td>" + response.datas[i]['depart'] + "</td>" +
                         "<td>" + response.datas[i]['last_visit'] + "</td></tr>";
@@ -1321,6 +1398,14 @@ function reception_search() {
 
     date_start = $('#reception_waiting_date_start').val().trim();
     date_end = $('#reception_waiting_date_end').val().trim();
+    console.log(date_end)
+    if ($("#language").val() == 'vi') {
+        date_start = moment(date_start, 'DD/MM/YYYY').format('YYYY-MM-DD');
+        date_end = moment(date_end, 'DD/MM/YYYY').format('YYYY-MM-DD');
+    }
+    console.log(date_start)
+    console.log(date_end)
+
 
 
     depart = $('#reception_waiting_depart option:selected').val().trim();
@@ -1352,12 +1437,26 @@ function reception_search() {
                         }
                     str += response.datas[i]['chart'] + "</td>" +
                         "<td>" + response.datas[i]['name_kor'] + "<br/>" + response.datas[i]['name_eng'] + "</td>" +
-                        "<td>" + response.datas[i]['date_of_birth'] +' ('+ response.datas[i]['gender']+'/' + response.datas[i]['age'] + ")</td>" +
+                        "<td>";
+                    if ($("#language").val() == 'vi') {
+                        str += moment(response.datas[i]['date_of_birth'], 'YYYY-MM-DD').format('DD/MM/YYYY');
+                    } else {
+                        str += response.datas[i]['date_of_birth'];
+                    }
+
+                    str += ' (' + response.datas[i]['gender'] + '/' + response.datas[i]['age'] + ")</td>" +
                         "<td>" + response.datas[i]['depart'] + "</td>" +
                         "<td>" + response.datas[i]['doctor'] + "</td>" +
                         "<td>" + response.datas[i]['time'] + "</td>" +
-                        "<td> " + response.datas[i]['is_new'] + "</td>" + 
-                        "<td> <input type='button' class='btn btn-default' value='Edit' onclick='reception_edit(" + response.datas[i]['id'] + ")'/></td></tr > ";
+                        "<td> " + response.datas[i]['is_new'] + "</td>" +
+                        "<td>" +
+                        "<input type='button' class='btn btn-default' value='Edit' onclick='reception_edit(" + response.datas[i]['id'] + ")' /></td>";
+                    if (response.datas[i]['package'] == null) {;
+                        str += "<td></td>";
+                    } else {
+                        str += "<td><input type='button' class='btn btn-danger' value='PKG' onclick='patient_package_history_modal(" + response.datas[i]['package'] + ")' /></td>";
+                    }
+                        str+="</tr> ";
 
                     $('#Rectption_Status').append(str);
                 }
@@ -1433,8 +1532,10 @@ function reservation_search(Today = false) {
     //date = today = moment().format('YYYY[-]MM[-]DD');
     date_start = $('#reception_reservation_date_start').val();
     date_end = $('#reception_reservation_date_end').val();
-    if (date == '')
-        date = today = moment().format('YYYY[-]MM[-]DD');
+    if ($("#language").val() == 'vi') {
+        date_start = moment(date_start, 'DD/MM/YYYY').format('YYYY-MM-DD');
+        date_end = moment(date_end, 'DD/MM/YYYY').format('YYYY-MM-DD');
+    }
     depart = $('#reservation_depart_select option:selected').val();
     doctor = $('#reservation_doctor_select option:selected').val();
 
@@ -1462,15 +1563,28 @@ function reservation_search(Today = false) {
                             str += "<td style=color:rgb(228,97,131);>";
                         } else {
                             str += "<td>";
-                        }
-
-                    str +=  response.datas[i]['chart'] + "</td>" +
+                    }
+                    console.log(response.datas[i])
+                    str += response.datas[i]['chart'] + "</td>" +
                         "<td>" + response.datas[i]['name'] + "</td>" +
-                        "<td>" + response.datas[i]['date_of_birth'] + "</td>" +
+                        "<td>";
+                    if ($("#language").val() == 'vi') {
+                        str += moment(response.datas[i]['date_of_birth'], 'YYYY-MM-DD').format('DD/MM/YYYY');
+                    } else {
+                        str += response.datas[i]['date_of_birth'];
+                    }
+                     str +="</td>" +
                         "<td>" + response.datas[i]['phone'] + "</td>" +
                         "<td>" + response.datas[i]['depart'] + "</td>" +
-                        "<td>" + response.datas[i]['doctor'] + "</td>" +
-                        "<td>" + response.datas[i]['time'] + "</td></tr>"
+                        "<td>" + response.datas[i]['doctor'] + "</td>";
+                    if ($("#language").val() == 'vi') {
+                        str += "<td>" + response.datas[i]['time'] + " " +
+                            moment(response.datas[i]['date'], 'YYYY-MM-DD').format('DD/MM/YYYY') + "</td>";
+                    } else {
+                        str += "<td>" + response.datas[i]['date'] + ' ' +
+                            response.datas[i]['time'] + "</td>";
+                    }
+                        str +="</tr>"
 
                     $('#Reservation_Status').append(str);
                 }
@@ -1569,5 +1683,315 @@ function edit_reception_del() {
     }
 
     
+
+}
+
+
+
+
+
+//패키지
+
+function patient_package_list_modal() {
+
+
+    var patient_id = $("#patient_id").val()
+
+    //if (patient_id == '') {
+    //    alert(gettext('Select Patient first.'));
+    //    return;
+    //}
+
+    patient_package_list(patient_id)
+
+    $('#patient_package_list_modal').modal({ backdrop: 'static', keyboard: false });
+    $('#patient_package_list_modal').modal('show');
+
+
+
+}
+
+
+function patient_package_list(patient_id) {
+
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/patient_package_list/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+
+            'patient_id': patient_id,
+        },
+        dataType: 'Json',
+        success: function (response) {
+
+
+
+            //chart no
+            $('#patient_package_chart').val(response['chart']);
+            //name
+            $('#patient_package_name').val(response['name_kor'] + " / " + response['name_eng']);
+            //date of birth
+            $('#patient_package_date_of_birth').val(response['date_of_birth'] + ' (' + response['gender'] + '/' + response['age'] + ")");
+
+
+
+
+            $('#patient_package_list_table > tbody ').empty();
+            for (var i = 0; i < response.datas.length; i++) {
+
+                var str = "<tr>";
+
+                str += " <td>" + (i + 1) + "</td>" +
+                    "<td>" + response.datas[i]['depart'] + "</td>" +
+                    "<td>" + response.datas[i]['name'] + "</td>" +
+                    "<td>" + response.datas[i]['count_now'] + ' / ' + response.datas[i]['count_max'] + "</td>" +
+                    "<td><a class='btn btn-default btn-xs' href='javascript: void (0);' onclick='patient_package_history_modal(" + response.datas[i]['id'] + ")' ><i class='fa fa-lg fa-search'></i></a></td>" +
+                    "<td><a class='btn btn-warning btn-xs' href='javascript: void (0);' onclick='patient_package_registration_modal(" + response.datas[i]['id'] + "," + response.datas[i]['depart_id'] + "," + response.datas[i]['doctor'] +")'>" + gettext('Registration') + "</a></td>" +
+                    "</tr>";
+
+                $('#patient_package_list_table > tbody').append(str);
+            }
+
+
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+}
+
+function patient_package_history(id = null) {
+    if (id == null) { return; }
+
+
+
+}
+
+function patient_package_registration_modal(id = null,depart,doctor) {
+    if (id == null) { return; }
+
+    $("#patient_package_registration_id").val(id);
+    $("#depart_filter_reg").val(depart);
+
+
+    get_doctor($("#depart_filter_reg"),null, doctor);
+
+    $('#patient_package_reception_modal').modal({ backdrop: 'static', keyboard: false });
+    $('#patient_package_reception_modal').modal('show');
+
+}
+
+function patient_package_reception() {
+    var id = $("#patient_package_registration_id").val();
+    var patient_id = $("#patient_id").val();
+    var depart_id = $("#depart_filter_reg").val();
+    var doctor_id = $("#doctor_filter_reg").val();
+
+
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/patient_package_reception/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+
+            'id': id, //패키지 아이디
+            'patient_id': patient_id,
+            'depart_id': depart_id,
+            'doctor_id': doctor_id,
+        },
+        dataType: 'Json',
+        success: function (response) {
+            if (response.result) {
+                alert(gettext('has been Recepted.'))
+                $('#patient_package_reception_modal').modal('hide');
+                $('#patient_package_list_modal').modal('hide');
+
+
+                reception_search(true);
+                earse_inputs();
+                set_new_patient(false);
+
+
+                //완료 처리
+            }
+
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+
+
+}
+
+function package_add_modal() {
+
+    $('#search_filter_package').val('');
+    $('#search_string_package').val('');
+    search_package_item();
+
+    $('#package_add_modal').modal({ backdrop: 'static', keyboard: false });
+    $('#package_add_modal').modal('show');
+}
+
+function search_package_item(page = null) {
+    var context_in_page = 10;
+
+    var string = $('#search_string_package').val();
+    //var filter = $('#precedure_search_select').val();
+    var filter = $("#search_depart").val();
+
+   
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/package_list/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+
+            'string': string,
+            //'filter': filter,
+            'filter': filter,
+
+            'page': page,
+            'context_in_page': context_in_page,
+        },
+        dataType: 'Json',
+        success: function (response) {
+            $('#package_list_table > tbody ').empty();
+            for (var i = 0; i < context_in_page; i++) {
+                if (response.datas[i]) {
+                    var str = "<tr style='cursor:pointer;' onclick='set_package_to_patient(" + response.datas[i]['id'] + ")'>"
+                    
+                    str += " <td>" + response.datas[i]['code'] + "</td>" +
+                        "<td>" + response.datas[i]['name'] + "</td>" +
+                        "<td>" + numberWithCommas( response.datas[i]['price'] ) + "</td>" +
+                        "<td>" + response.datas[i]['count'] + "</td>" +
+                        "</tr>";
+
+                } else {
+                    var str = "<tr><td></td><td></td><td></td><td></td></tr>";
+                }
+                $('#package_list_table > tbody').append(str);
+            }
+
+
+            //페이징
+            $('#medicine_pagnation').html('');
+            str = '';
+            if (response.has_previous == true) {
+                str += '<li> <a onclick="search_package_item(' + (response.page_number - 1) + ')">&laquo;</a></li>';
+            } else {
+                str += '<li class="disabled"><span>&laquo;</span></li>';
+            }
+
+            for (var i = response.page_range_start; i < response.page_range_stop; i++) {
+                if (response.page_number == i) {
+                    str += '<li class="active"><span>' + i + ' <span class="sr-only">(current)</span></span></li>';
+                }
+                else if (response.page_number + 5 > i && response.page_number - 5 < i) {
+                    str += '<li> <a onclick="search_package_item(' + i + ')">' + i + '</a></li>';
+                }
+                else {
+                }
+
+            }
+            if (response.has_next == true) {
+                str += '<li><a onclick="search_package_item(' + (response.page_number + 1) + ')">&raquo;</a></li>';
+            } else {
+                str += '<li class="disabled"><span>&raquo;</span></li>';
+            }
+            $('#medicine_pagnation').html(str);
+
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+}
+
+
+function set_package_to_patient(id) {
+
+    var patient_id = $("#patient_id").val()
+    var depart_id = $("#search_depart_filter_package").val()
+    var doctor_id = $("#search_doctor_filter_package").val()
+
+    if (depart_id == '' || doctor_id=='') {
+        alert(gettext('Select Depart and Doctor first.'));
+        return;
+    }
+
+    if (confirm(gettext('Do you want to add the service to the patient?'))) {
+
+        $.ajax({
+            type: 'POST',
+            url: '/receptionist/set_package_to_patient/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+
+                'id': id, // 패키지 ID
+                'patient_id': patient_id,
+                'depart_id': depart_id,
+                'doctor_id': doctor_id,
+            },
+            dataType: 'Json',
+            success: function (response) {
+                var str = gettext('Saved.') + "\n" + gettext('Make payments on the storage screen');
+                alert(gettext('Saved.'));
+                $('#package_add_modal').modal('hide');
+                patient_package_list(patient_id);
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+            },
+        })
+
+
+    }
+}
+
+function patient_package_history_modal(id = null) {
+    if (id == null) { return;}
+
+    console.log(id)
+
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/patient_package_history_modal/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'id':id,
+        },
+        dataType: 'Json',
+        success: function (response) {
+            $('#patient_package_history_list > tbody ').empty();
+            for (var i = 0; i < response.datas.length; i++) {
+                    var str = "<tr>"
+
+                    str += " <td>" + (i + 1) + "</td>" +
+                        "<td>" + response.datas[i]['patient_name'] + "</td>" +
+                        "<td>" + response.datas[i]['precedure_name'] + "</td>" +
+                        "<td>" + response.datas[i]['round'] + "</td>" +
+                        "<td>" + response.datas[i]['date_bought'] + "</td>" +
+                        "<td>" + response.datas[i]['date_used'] + "</td>" +
+                        "</tr>";
+
+                $('#patient_package_history_list > tbody').append(str);
+
+            }
+            $('#patient_package_history_modal').modal({ backdrop: 'static', keyboard: false });
+            $('#patient_package_history_modal').modal('show');
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+
 
 }

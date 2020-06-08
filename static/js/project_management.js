@@ -31,7 +31,7 @@ $(function () {
         search_project();
     });
 
-    $(".depart_select").change(function () {
+    $(".depart_select,#project_date_start,#project_date_end").change(function () {
         search_project();
     });
 
@@ -621,7 +621,7 @@ function search_project(page = null) {
             $('#table_pagnation').html('');
             str = '';
             if (response.has_previous == true) {
-                str += '<li> <a onclick="search_patient(' + (response.page_number - 1) + ')">&laquo;</a></li>';
+                str += '<li> <a onclick="search_project(' + (response.page_number - 1) + ')">&laquo;</a></li>';
             } else {
                 str += '<li class="disabled"><span>&laquo;</span></li>';
             }
@@ -631,14 +631,14 @@ function search_project(page = null) {
                     str += '<li class="active"><span>' + i + ' <span class="sr-only">(current)</span></span></li>';
                 }
                 else if (response.page_number + 5 > i && response.page_number - 5 < i) {
-                    str += '<li><a onclick="search_patient(' + i + ')">' + i + '</a></li>';
+                    str += '<li><a onclick="search_project(' + i + ')">' + i + '</a></li>';
                 }
                 else {
                 }
 
             }
             if (response.has_next == true) {
-                str += '<li><a onclick="search_patient(' + (response.page_number + 1) + ')">&raquo;</a></li>';
+                str += '<li><a onclick="search_project(' + (response.page_number + 1) + ')">&raquo;</a></li>';
             } else {
                 str += '<li class="disabled"><span>&raquo;</span></li>';
             }
@@ -657,6 +657,9 @@ function search_project(page = null) {
 
 
 function project_select(obj) {
+
+    $("#project_list_table tr").removeClass('danger');
+    $(obj).addClass('danger');
 
     $('li[role="presentation"]').hide();
     $('li[role="presentation"]').attr('class','');
@@ -857,8 +860,13 @@ function get_detail_list(selected_project_id = '') {
                     "<td>" + response.datas[i]['date'] + "</td>" +
                     "<td>" + response.datas[i]['note'] + "</td>" +
                     "<td>" +
-                    '<a class="btn btn-default btn-xs btn_default_tmp" href="javascript: void (0);" onclick="list_file(' + response.datas[i]["id"] + ',&#39;PROJECT_D&#39;)" > <i class="fa fa-lg fa-file-o"></i></a >' +
-                    "</td>" +
+                    '<a class="btn ';
+                if (response.datas[i]['is_file']) {
+                    str += 'btn btn-success btn-xs" href = "javascript: void(0);" onclick = "list_file(' + response.datas[i]["id"] + ',&#39;PROJECT_DTL&#39;)"> <i class="fa fa-lg fa-file"></i></a > ';
+                } else {
+                    str += 'btn btn-default btn-xs" href="javascript: void (0); " onclick="list_file(' + response.datas[i]["id"] + ',&#39;PROJECT_DTL&#39;)"> <i class="fa fa-lg fa-file-o"></i></a > ';
+                }
+                str += "</td>" +
                     "<td>" +
                     "<a class='btn btn-default btn-xs btn_default_tmp' href='javascript: void (0);' onclick='detailed_info_modal(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-pencil'></i></a >" +
                     "<a class='btn btn-danger btn-xs btn_danger_tmp' href='javascript: void (0);' onclick='detail_delete(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-trash'></i></a >" +
@@ -871,8 +879,8 @@ function get_detail_list(selected_project_id = '') {
 
             //체크박스 이벤트
             $(".check_detail").unbind();
-            $(".check_detail").bind('change',function(e){
-                e.preventDefault();
+            $(".check_detail").bind('change',function(event){
+                event.preventDefault();
                 var id = $(this).attr('detail-check');
                 var checked = $(this).is(':checked');
 
@@ -1046,8 +1054,13 @@ function get_visa_list(selected_project_id = '') {
                     "<td>" + response.datas[i]['date_subbmit_doc'] + "</td>" +
                     "<td>" + response.datas[i]['date_expected'] + "</td>" +
                     "<td>" +
-                    '<a class="btn btn-default btn-xs" href="javascript: void (0);" onclick="list_file(' + response.datas[i]["id"] + ',&#39;VISA&#39;)" > <i class="fa fa-lg fa-file-o"></i></a >' +
-                    "</td>" +
+                    '<a class="btn ';
+                if (response.datas[i]['is_file']) {
+                    str += 'btn btn-success btn-xs btn_success_tmp" href = "javascript: void(0);" onclick = "list_file(' + response.datas[i]["id"] + ',&#39;VISA&#39;)" > <i class="fa fa-lg fa-file"></i></a > ';
+                } else {
+                    str += 'btn btn-default btn-xs" href="javascript: void (0); " onclick="list_file(' + response.datas[i]["id"] + ',&#39;VISA&#39;)" > <i class="fa fa-lg fa-file-o"></i></a > ';
+                }
+                str += "</td>" +
                     "<td>" +
                     "<a class='btn btn-default btn-xs' href='javascript: void (0);' onclick='visa_modal(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-pencil'></i></a >" +
                     "<a class='btn btn-danger btn-xs' href='javascript: void (0);' onclick='visa_delete(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-trash'></i></a >" +
@@ -1229,8 +1242,13 @@ function get_work_permit_list(selected_project_id = '') {
                     "<td>" + response.datas[i]['expected_date'] + "</td>" +
                     "<td>" + response.datas[i]['note'] + "</td>" +
                     "<td>" +
-                    '<a class="btn btn-default btn-xs" href="javascript: void (0);" onclick="list_file(' + response.datas[i]["id"] + ',&#39;WORK_PERMIT&#39;)" > <i class="fa fa-lg fa-file-o"></i></a >' +
-                    "</td>" +
+                    '<a class="btn ';
+                if (response.datas[i]['is_file']) {
+                    str += 'btn btn-success btn - xs" href = "javascript: void(0);" onclick = "list_file(' + response.datas[i]["id"] + ',&#39; WORK_PERMIT&#39;)" > <i class="fa fa-lg fa-file"></i></a > ';
+                } else {
+                    str += 'btn btn-default btn - xs" href="javascript: void (0); " onclick="list_file(' + response.datas[i]["id"] + ',&#39; WORK_PERMIT&#39;)" > <i class="fa fa-lg fa-file-o"></i></a > ';
+                }
+                    str +="</td>" +
                     "<td>" +
                     "<a class='btn btn-default btn-xs' href='javascript: void (0);' onclick='work_permit_modal(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-pencil'></i></a >" +
                     "<a class='btn btn-danger btn-xs' href='javascript: void (0);' onclick='work_permit_delete(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-trash'></i></a >" +

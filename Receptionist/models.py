@@ -689,14 +689,48 @@ class Package_Manage(models.Model):
 
 class Sign_Manage(models.Model):
 
-    #환자 
+    #접수 - 물리 FK
     reception = models.ForeignKey(
         to = Reception,
         on_delete = models.DO_NOTHING,
         null=True,
         )
+    
+    #과 - 논리 FK
+    depart = models.CharField(
+        max_length = 16,
+        default = '',
+        )
 
+    #환자 - 논리 FK
+    patient_id = models.CharField(
+        max_length = 16,
+        default = '',
+        )
 
+    #환자 이름 한/영
+    patient_name = models.CharField(
+        max_length = 16,
+        default = '',
+        )
+
+    #구분
+    type = models.CharField(
+        max_length = 16,
+        default = '',
+        )
+
+    #문서 번호
+    document = models.CharField(
+        max_length = 64,
+        default = '',
+        )
+
+    #사인 확인
+    is_sign = models.CharField(
+        max_length = 2,
+        default='N',
+        )
 
 
     #사인 데이타 - base64
@@ -704,10 +738,10 @@ class Sign_Manage(models.Model):
         default='',
         )
 
-    #사인 확인
-    is_sign = models.CharField(
-        max_length = 2,
-        default='N',
+    #사인 날짜
+    sign_date = models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
         )
 
     

@@ -254,9 +254,41 @@ class TestReferenceInterval(models.Model):
         null=True,
         )
 
+    sign = models.CharField(
+        max_length = 4,
+        default='',
+        )
+
+
+    #사용 유무
     use_yn = models.CharField(
         max_length = 12,
         default='Y',
+        )
+
+    
+    #등록자 - 논리 FK
+    registrant = models.CharField(
+        max_length = 4,
+        default='',
+        )
+
+    #등록 날짜 시간
+    date_register= models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
+        )
+
+    #마지막 수정자 - 논리 FK
+    modifier = models.CharField(
+        max_length = 4,
+        default='',
+        )
+
+    #마지막 수정 날짜 시간
+    date_modify= models.CharField(
+        max_length = 20,
+        default='0000-00-00 00:00:00'
         )
 
 

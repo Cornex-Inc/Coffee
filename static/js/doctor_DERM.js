@@ -3,7 +3,8 @@ jQuery.browser = {};
 var timer_count = 0;
 var image_tmp_count = 0;
 
-
+var canvas = null
+var signaturePad = null;
 
 
 function numberWithCommas(x) {
@@ -74,6 +75,9 @@ $(function () {
         }
         else if (id == 'diagnosis_select_bundle_title') {
             $('#diagnosis_select_bundle_contents').show();
+        }
+        else if (id == 'diagnosis_select_package_title') {
+            $('#diagnosis_select_package_contents').show();
         }
     });
 
@@ -503,6 +507,23 @@ $(function () {
 
         
     })
+
+    
+    //패키지
+    $("#diagnosis_select_package_title").hide(); 
+
+
+    //싸인패드
+    canvas = document.getElementById("sign");
+    signaturePad = new SignaturePad(canvas);
+    signaturePad.backgroundColor = "rgb(0,0,0,0)";
+
+
+    $("#sign_pad_clear").click(function () {
+        signaturePad.clear();
+        signaturePad.backgroundColor = "rgb(0,0,0,0)";
+    });
+
 });
 
 
@@ -600,7 +621,6 @@ function get_all_diagnosis() {
 
 
 
-
 }
 
 function show_total_price() {
@@ -649,6 +669,19 @@ function set_all_empty() {
     
 
     show_total_price();
+
+    //패키지
+    $("#selected_package_id").val('')
+
+    $("#diagnosis_select_package_title").hide(); 
+    //초기 시 진료 아이템 보이기
+    $('#diagnosis_select_test_contents').hide();
+    $('#diagnosis_select_precedure_contents').hide();
+    $('#diagnosis_select_medicine_contents').hide();
+    $('#diagnosis_select_bundle_contents').hide();
+    $('#diagnosis_select_package_contents').hide();
+
+    $('#diagnosis_select_exam_contents').show();
 }
 
 
@@ -708,6 +741,39 @@ function reception_select(reception_id) {
             get_vital();
             get_all_diagnosis();
 
+
+            //패키지
+            $("#diagnosis_select_package > tbody").empty();
+            if (response.package) {
+                console.log(response.package)
+                $("#selected_package_id").val(response.package.id);
+
+                var str = '<tr>';
+                str += '<td>' + response.package.name + '</td>';
+                str += '<td>' + response.package.round + '</td>';
+                str += "<td><a class='btn btn-default btn-xs' style='margin-right:5px;' href='javascript: void (0);' onclick='patient_package_history_modal(" + response.package.id + ")' ><i class='fa fa-lg fa-search'></i></a></td>" +
+                     "</tr > ";
+
+
+
+                $("#diagnosis_select_package > tbody").append(str);
+
+                $("#diagnosis_select_package_title").show();
+            } else {
+                $("#selected_package_id").val('');
+                $("#diagnosis_select_package_title").hide();
+            }
+
+            //불러올 때 진료 아이템 우선 보이기
+            $('#diagnosis_select_test_contents').hide();
+            $('#diagnosis_select_precedure_contents').hide();
+            $('#diagnosis_select_medicine_contents').hide();
+            $('#diagnosis_select_bundle_contents').hide();
+            $('#diagnosis_select_package_contents').hide();
+
+            $('#diagnosis_select_exam_contents').show();
+
+            
 
         },
         error: function (request, status, error) {
@@ -800,7 +866,7 @@ function get_diagnosis(reception_no) {
         },
         dataType: 'Json',
         success: function (response) {
-
+            
             $('#diagnosis').val(response.datas['diagnosis']);
             $('#diagnosis_selected tbody').empty();
 
@@ -860,6 +926,7 @@ function get_diagnosis(reception_no) {
             
             var list_check_img = eval(response.datas['img_check_list'])
             image_tmp_count = 0;
+            $("#dx_img_show,#dx_img_div").html('');
             for (var i = 0; i < list_check_img.length; i++) {
                 var tmp = list_check_img[i]
                 $("#dx_img_show").append("<div class='check_img' style='background-image: url(&#39;/static/img/Medical_Exam_X.png&#39;);left:" + tmp['left'] + "px;top:" + tmp['top'] + "px;' " +
@@ -939,7 +1006,12 @@ function reception_waiting(Today = false, alarm = false) {
                         ");" +
                         "get_diagnosis(" + response.datas[i]['reception_no'] +
                         ");'><td>" + (parseInt(i) + 1) + "</td>" +
-                        "<td>" + response.datas[i]['chart'] + "</td>" +
+                        "<td>";
+                    if (response.datas[i]['package']) { // 패키지 접수
+                        str += '<i class="fa fa-product-hunt"></i> ';
+                    }
+
+                        str += response.datas[i]['chart'] + "</td>" +
                         "<td>" + response.datas[i]['name_kor'] + "<br/>" + response.datas[i]['name_eng'] + "</td>" +
                         "<td>" + response.datas[i]['date_of_birth'] + '<br/>' + ' (' + response.datas[i]['age'] + '/' + response.datas[i]['gender'] + ")</td>";
                     if (string == '') {
@@ -1134,8 +1206,10 @@ function diagnosis_save(set) {
         });
     }
 
-    console.log(img_check_list)
 
+
+    //패키지
+    var package_id = $("#selected_package_id").val();
 
     $.ajax({
         type: 'POST',
@@ -1158,7 +1232,9 @@ function diagnosis_save(set) {
             'past_history': $("#history_past").val(),
             
 
-            'img_check_list': JSON.stringify(img_check_list)
+            'img_check_list': JSON.stringify(img_check_list),
+
+            'package_id': package_id,
         },
         dataType: 'Json',
         success: function (response) {
@@ -1272,3 +1348,197 @@ $('#print_test').on('click', function () {
 
 
 
+//패키지
+function patient_package_history_modal(id = null) {
+    if (id == null) { return; }
+
+    console.log(id)
+
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/patient_package_history_modal/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'id': id,
+        },
+        dataType: 'Json',
+        success: function (response) {
+            $('#patient_package_history_list > tbody ').empty();
+            for (var i = 0; i < response.datas.length; i++) {
+                var str = "<tr>"
+
+                str += " <td>" + (i + 1) + "</td>" +
+                    "<td>" + response.datas[i]['patient_name'] + "</td>" +
+                    "<td>" + response.datas[i]['precedure_name'] + "</td>" +
+                    "<td>" + response.datas[i]['round'] + "</td>" +
+                    "<td>" + response.datas[i]['date_bought'] + "</td>" +
+                    "<td>" + response.datas[i]['date_used'] + "</td>" +
+                    "</tr>";
+
+                $('#patient_package_history_list > tbody').append(str);
+
+            }
+            $('#patient_package_history_modal').modal({ backdrop: 'static', keyboard: false });
+            $('#patient_package_history_modal').modal('show');
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+
+
+}
+
+
+//동의서 모달
+function list_aggreement() {
+
+    var reception_id = $('#selected_reception').val();
+    if (reception_id == '') {
+        alert(gettext('Select patient first.'));
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/list_agreement/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'reception_id': reception_id,
+
+        },
+        dataType: 'Json',
+        success: function (response) {
+            $('#aggreement_list > tbody ').empty();
+            for (var i = 0; i < response.datas.length; i++) {
+                var str = "<tr>"
+
+                str += " <td>" + (i + 1) + "</td>" +
+                    "<td>" + response.datas[i]['depart'] + "</td>" +
+                    "<td>" + response.datas[i]['name'] + "</td>" +
+                    "<td>" + response.datas[i]['date'] + "</td>" +
+                    "<td>";
+                if (response.datas[i]['is_sign'] =='N') {
+                    str += "<a class='btn btn-primary btn-xs' href='javascript: void (0);' onclick='sign_pad_modal(null,&#39;" + response.datas[i]['type'] + "&#39;)'> <i class='fa fa-lg fa-pencil-square-o'></i></a>";
+                } else {
+                    str += "<a class='btn btn-default btn-xs' href='javascript: void (0);' onclick='sign_pad_modal(" + response.datas[i]['id'] + ",&#39;" + response.datas[i]['type'] + "&#39;)' > <i class='fa fa-lg fa-pencil'></i></a>" +
+                        "<a class='btn btn-danger btn-xs' href='javascript: void (0);' onclick='sign_pad_delete(" + response.datas[i]['id'] + ")' > <i class='fa fa-lg fa-trash'></i></a>";
+                }
+                str += "</td></tr>";
+
+                $('#aggreement_list > tbody').append(str);
+
+            }
+
+            $('#agreement_list_modal').modal({ backdrop: 'static', keyboard: false });
+            $('#agreement_list_modal').modal('show');
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+
+}
+
+
+function sign_pad_modal(id, type) {
+
+    $("#selected_sign_pad_id").val(id);
+    $("#selected_sign_pad_type").val(type);
+
+    signaturePad.clear();
+    signaturePad.backgroundColor = "rgb(0,0,0,0)";
+
+    console.log($("#selected_sign_pad_type").val())
+
+    if (id != null) {
+        $.ajax({
+            type: 'POST',
+            url: '/receptionist/get_agreement/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+                'id': id,
+
+            },
+            dataType: 'Json',
+            success: function (response) {
+                signaturePad.fromDataURL(response.sign_pad_data);
+                console.log($("#selected_sign_pad_type").val())
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+            },
+        })
+
+    }
+
+    $('#sign_pad_modal').modal({ backdrop: 'static', keyboard: false });
+    $('#sign_pad_modal').modal('show');
+}
+
+function sign_pad_save() {
+    var reception_id = $('#selected_reception').val();
+    var sign_pad_id = $('#selected_sign_pad_id').val();
+    var sign_pad_type = $('#selected_sign_pad_type').val();
+
+    var sign_pad_data = signaturePad.toDataURL();
+    console.log($("#selected_sign_pad_type").val())
+    $.ajax({
+        type: 'POST',
+        url: '/receptionist/save_agreement/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'reception_id': reception_id,
+            'sign_pad_id': sign_pad_id,
+            'sign_pad_type': sign_pad_type,
+            'sign_pad_data': sign_pad_data,
+        },
+        dataType: 'Json',
+        success: function (response) {
+            if (response.result) {
+                alert(gettext('Saved.'));
+                list_aggreement();
+                $('#sign_pad_modal').modal('hide');
+            }
+
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+        },
+    })
+}
+
+function sign_pad_delete(id=null) {
+    if (id == null) { return;}
+
+    if (confirm(gettext('Do you want to delete?'))) {
+        $.ajax({
+            type: 'POST',
+            url: '/receptionist/delete_agreement/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+                'id': id,
+            },
+            dataType: 'Json',
+            success: function (response) {
+                if (response.result) {
+                    alert(gettext('Deleted.'));
+                    list_aggreement();
+                }
+
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+            },
+        })
+
+
+    }
+
+
+}

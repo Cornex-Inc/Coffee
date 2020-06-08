@@ -261,8 +261,9 @@ function edit_database_test(id = null) {
     $("#add_edit_database_type option:first").prop("selected", true);
     $("#add_edit_database_multiple_level option:first").prop("selected", true);
 
-
+    $("#interval_div").hide();
     if (id != null) {
+        $("#interval_div").show();
         $("#add_edit_database_header").html(gettext('Edit Data'));
         $.ajax({
             type: 'POST',
@@ -274,7 +275,6 @@ function edit_database_test(id = null) {
             dataType: 'Json',
             success: function (response) {
                 if (response.result == true) {
-                    console.log(response);
                     $("#add_edit_database_id").val(response.id);
                     $("#add_edit_database_name").val(response.name);
                     $("#add_edit_database_name_vie").val(response.name_vie);
@@ -282,6 +282,7 @@ function edit_database_test(id = null) {
                     $("#add_edit_database_price_dollar").val(response.price_dollar);
                     $("#add_edit_database_class").val(response.precedure_class_id);
 
+                    get_test_interval(id)
                 } else {
                     alert(gettext('Please Refresh this page.'));
                 }
@@ -294,10 +295,158 @@ function edit_database_test(id = null) {
     }
     $('#add_edit_database').modal({ backdrop: 'static', keyboard: false });
     $('#add_edit_database').modal('show');
+}
+
+function get_test_interval(test_id = null) {
+    if (test_id == null)
+        return;
+
+    $.ajax({
+        type: 'POST',
+        url: '/manage/test_get_interval_list/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+            'test_id': test_id,
+        },
+        dataType: 'Json',
+        success: function (response) {
+                $("#test_interval_table > tbody").empty();
+
+                for (var i = 0; i < response.datas.length; i++) {
+                    var str = '<tr>' +
+                        '<td>' + response.datas[i].name + '</td>' +
+                        '<td>' + response.datas[i].minimum + '</td>' +
+                        '<td>' + response.datas[i].sign + '</td>' +
+                        '<td>' + response.datas[i].maximum + '</td>' +
+                        '<td>' + response.datas[i].unit + '</td>' +
+                        '<td>' +
+                        "<a class='btn btn-default btn-xs' style='margin-right:10px;' href='javascript: void (0);' onclick='interval_modal(" + response.datas[i]['id'] + ")' ><i class='fa fa-lg fa-pencil'></i></a>" +
+                        "<a class='btn btn-danger btn-xs' href='javascript: void (0);' onclick='delete_interval(" + response.datas[i]['id'] + ")' ><i class='fa fa-lg fa-trash'></i></a>" +
+                        '</td>' +
+                        '</tr>';
+
+                    $("#test_interval_table > tbody").append(str);
+                }
+
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+        },
+    })
+}
+
+function interval_modal(id = null) {
+    $("#interval_selected").val('');
+    $("#interval_remark").val('');
+    $("#interval_remark_vi").val('');
+    $("#interval_unit").val('');
+    $("#interval_unit_vi").val('');
+    $("#interval_minimum").val('');
+    $("#interval_maximum").val('');
+    $("#interval_sign").val('');
+
+    if (id != null) {
+        $.ajax({
+            type: 'POST',
+            url: '/manage/test_get_interval/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+                'id': id,
+            },
+            dataType: 'Json',
+            success: function (response) {
+                $("#interval_selected").val(response.id);
+                $("#interval_remark").val(response.name);
+                $("#interval_remark_vi").val(response.name_vie);
+                $("#interval_unit").val(response.unit);
+                $("#interval_unit_vi").val(response.unit_vie);
+                $("#interval_minimum").val(response.minimum);
+                $("#interval_maximum").val(response.maximum);
+                $("#interval_sign").val(response.sign);
+
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            },
+        })
+    }
+
+    $('#add_edit_interval').modal({ backdrop: 'static', keyboard: false });
+    $("#add_edit_interval").modal('show');
+}
+
+function save_interval() {
+
+    var selected_test = $("#add_edit_database_id").val();
+
+    var id = $("#interval_selected").val();
+    var remark = $("#interval_remark").val();
+    var remark_vi = $("#interval_remark_vi").val();
+    var unit = $("#interval_unit").val();
+    var unit_vi = $("#interval_unit_vi").val();
+    var minimum = $("#interval_minimum").val();
+    var maximum = $("#interval_maximum").val();
+    var sign = $("#interval_sign").val();
+
+    $.ajax({
+        type: 'POST',
+        url: '/manage/test_save_interval/',
+        data: {
+            'csrfmiddlewaretoken': $('#csrf').val(),
+
+            'selected_test': selected_test,
+            'id': id,
+            'remark': remark,
+            'remark_vi': remark_vi,
+            'unit': unit,
+            'unit_vi': unit_vi,
+            'minimum': minimum,
+            'maximum': maximum,
+            'sign': sign,
+        },
+        dataType: 'Json',
+        success: function (response) {
+
+            alert(gettext('Saved.'));
+            $("#add_edit_interval").modal('hide');
+            edit_database_test($("#add_edit_database_id").val());
+
+        },
+        error: function (request, status, error) {
+            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+        },
+    })
 
 
 }
 
+function delete_interval(id = null) {
+    if (id == null) return;
+
+    if (confirm(gettext('Do you want to delete?'))) {
+
+        $.ajax({
+            type: 'POST',
+            url: '/manage/test_delete_interval/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
+                'id': id,
+            },
+            dataType: 'Json',
+            success: function (response) {
+                alert(gettext('Deleted.'));
+                edit_database_test($("#add_edit_database_id").val());
+
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            },
+        })
+
+    }
+
+
+}
 
 function save_database_test(id = null) {
     var id = $("#add_edit_database_id").val();

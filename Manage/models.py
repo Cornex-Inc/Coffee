@@ -75,8 +75,26 @@ class Board_Contents(models.Model):
         default=''
         )
 
-    #요청부서
-    depart_to = models.CharField(
+    #요청부서1
+    depart_to1 = models.CharField(
+        max_length = 8,
+        default=''
+        )
+
+    #요청부서2
+    depart_to2 = models.CharField(
+        max_length = 8,
+        default=''
+        )
+
+    #요청부서3
+    depart_to3 = models.CharField(
+        max_length = 8,
+        default=''
+        )
+
+    #요청부서4
+    depart_to4 = models.CharField(
         max_length = 8,
         default=''
         )
@@ -107,8 +125,6 @@ class Board_Contents(models.Model):
 
     def __str__(self):
         return self.title
-
-
 
 
 class Board_Comment(models.Model):
@@ -235,6 +251,7 @@ class Board_File(models.Model):
         max_length = 128,
         default = ''
         )
+
 
 class Board_View_Log(models.Model):
     
@@ -448,9 +465,6 @@ class Draft(models.Model):
         )
 
 
-
-
-
 class sms_history(models.Model):
 
     #KBL??
@@ -521,11 +535,6 @@ class sms_history(models.Model):
         max_length = 20,
         default='0000-00-00 00:00:00'
         )
-
-
-
-
-
 
 
 @receiver(models.signals.post_delete, sender=Board_File)

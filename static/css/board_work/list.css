@@ -108,10 +108,11 @@ textarea{
     table-layout: fixed;
 }
 
-#contents_table thead tr th{
-    vertical-align:middle;
-    text-align:center;
-}
+    #contents_table th, #contents_table td {
+        vertical-align: middle;
+        text-align: center;
+        word-break: break-all;
+    }
 
     #contents_table thead tr th:nth-child(1) {
         width:50px;
@@ -119,12 +120,14 @@ textarea{
     #contents_table thead tr th:nth-child(2) {
         width: 70px;
     }
-    #contents_table thead tr th:nth-child(4), #contents_table thead tr th:nth-child(5), #contents_table thead tr th:nth-child(7) {
+    #contents_table thead tr th:nth-child(4), #contents_table thead tr th:nth-child(5) {
         width: 100px;
     }
-    #contents_table thead tr th:nth-child(5) {
-        
-    }
+# #contents_table thead tr th:nth-child(7){
+    width:150px;
+}
+#contents_table thead tr th:nth-child(5) {
+}
     #contents_table thead tr th:nth-child(6), #contents_table thead tr th:nth-child(8), #contents_table thead tr th:nth-child(9) {
         width: 110px
     }

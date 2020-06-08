@@ -30,6 +30,10 @@ urlpatterns = [
     path('test_add_edit_get/',views.test_add_edit_get,name='test_add_edit_get'),
     path('test_add_edit_set/',views.test_add_edit_set,name='test_add_edit_set'),
     path('test_add_edit_delete/',views.test_add_edit_delete,name='test_add_edit_delete'),
+    path('test_get_interval_list/',views.test_get_interval_list),
+    path('test_get_interval/',views.test_get_interval),
+    path('test_save_interval/',views.test_save_interval),
+    path('test_delete_interval/',views.test_delete_interval),
 
     #처치 아이템
     path('inventory_precedure/',views.inventory_precedure,name='inventory_precedure'),

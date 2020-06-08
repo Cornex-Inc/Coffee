@@ -47,7 +47,7 @@ def get_test_manage(request):
 
             'Lab':test_manage.name_service,
             'date_ordered':'' if test_manage.date_ordered is None else test_manage.date_ordered.strftime('%Y-%m-%d %H:%M') ,
-            'date_examination':'' if test_manage.date_examination is None else test_manage.date_examination.strftime('%Y-%m-%d %H:%M:%S') ,
+            'date_examination':'' if test_manage.date_examination is None else test_manage.date_examination.strftime('%Y-%m-%d'),#('%Y-%m-%d %H:%M:%S') ,
             'date_expected':'' if test_manage.date_expected is None else test_manage.date_expected.strftime('%Y-%m-%d') ,
             'result':test_manage.result,
             'unit': '' ,#if test_manage.manager.test.unit is None else '(' + test_manage.manager.test.unit + ')',
@@ -156,7 +156,7 @@ def save(request):
 
 
     if test_examination:
-        testmanage.date_examination = datetime.datetime.strptime(test_examination,('%Y-%m-%d %H:%M:%S'))
+        testmanage.date_examination = datetime.datetime.strptime(test_examination,('%Y-%m-%d'))#('%Y-%m-%d %H:%M:%S'))
     else:
         testmanage.date_examination = None
 
@@ -192,7 +192,7 @@ def get_test_list(request):
 
 
         datas.append({
-            'id':test.testmanage.id,
+                'id':test.testmanage.id,
                 'name_service':test.testmanage.name_service,
                 'date_ordered':'' if test.testmanage.date_ordered is None else test.testmanage.date_ordered.strftime('%Y-%m-%d'),
                 'date_examination':'' if test.testmanage.date_examination is None else test.testmanage.date_examination.strftime('%Y-%m-%d') ,
@@ -203,8 +203,23 @@ def get_test_list(request):
                 'list_interval':list_interval,
             })
 
+    diagnosis = Diagnosis.objects.get(id = diagnosis_id)
+    print(diagnosis.reception)
+     
       
-    return JsonResponse({'datas':datas})
+    return JsonResponse({
+        'datas':datas,
+
+        'chart':diagnosis.reception.patient.get_chart_no(),
+        'Name':diagnosis.reception.patient.name_kor + ' / ' + diagnosis.reception.patient.name_eng,
+        'Depart':diagnosis.reception.depart.name + ' ( ' + diagnosis.reception.doctor.name_kor + ' )',
+        'Date_of_Birth': diagnosis.reception.patient.date_of_birth.strftime('%Y-%m-%d'),
+        'gender': diagnosis.reception.patient.gender,
+        'phone': diagnosis.reception.patient.phone,
+
+                        
+
+        })
 
 
 @login_required

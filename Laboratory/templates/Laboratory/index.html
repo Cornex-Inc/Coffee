@@ -52,7 +52,64 @@
                 </table>
             </div>
         </div>
-
+        <div class="laboratory_list partition">
+            <div class="status_table_title">
+                <span class="btn btn-warning" style=" margin-bottom:7.5px;  font-size: 14px;height: 23px;padding-top: 1px; color:rgb(80,80,80);">{{ _('Patient Information') }}</span>
+             </div>
+            <div>
+                <table class="table" id="patient_info_table">
+                    <tr>
+                        <td>
+                            <div class="input-group lab_control_input-group">
+                                <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Chart No.') }}</span>
+                                <input type="text" class="form-control" aria-describedby="sizing-addon1" id="patient_chart" readonly/>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="input-group lab_control_input-group">
+                                <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Name') }}</span>
+                                <input type="text" class="form-control" aria-describedby="sizing-addon1" id="patient_name"/>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="input-group">
+                                <span class="input-group-addon lab_manage_title" style="border:1px solid #ccc" id="basic-addon1">Gender</span>
+                                <ul id="patient_gender">
+                                    <li>
+                                        <label for="patient_gender_0"><input type="radio" name="gender" value="Male" id="patient_gender_0">Male</label>
+                                    </li>
+                                    <li>
+                                        <label for="patient_gender_1"><input type="radio" name="gender" value="Female" id="patient_gender_1">Female</label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="input-group lab_control_input-group">
+                                <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Date of Birth') }}</span>
+                                <input type="text" class="form-control" aria-describedby="sizing-addon1" id="patient_dob"/>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="input-group lab_control_input-group">
+                                <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Depart') }}</span>
+                                <input type="text" class="form-control" aria-describedby="sizing-addon1" id="patient_depart"/>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="input-group lab_control_input-group">
+                                <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Phone Number') }}</span>
+                                <input type="text" class="form-control" aria-describedby="sizing-addon1" id="patient_phone"/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
         <div class="laboratory_list partition">
              <div class="status_table_title">
                 <span class="btn btn-warning" style=" margin-bottom:7.5px;  font-size: 14px;height: 23px;padding-top: 1px; color:rgb(80,80,80);">{{ _('Lab Finding') }}</span>
@@ -79,10 +136,13 @@
         <div class="laboratory_control partition">
             <div class="status_table_title">
                 <span class="btn btn-warning" style="margin-bottom:7.5px; font-size: 14px;height: 23px;padding-top: 1px; color:rgb(80,80,80);">{{ _('Result Report') }}</span>
+                {% if user.depart == 'LABORATORY' or user.depart == 'ADMIN' %}
                 <input type="button" class="btn btn-danger" value="{{ _('Save') }}" onclick="laboratory_control_save(true)" style="float:right; margin-right:5px;"/>
+                {% endif %}
             </div>
-            
+            <input type="hidden" id="selected_test_manage" />
             <table class="table" id="laboratory_control_table">
+                <!--
                 <tr>
                     <td>
                         <input type="hidden" id="selected_test_manage" />
@@ -108,6 +168,7 @@
                         </div>
                     </td>
                 </tr>
+                    -->
                 <tr>
                     <td>
                         <div class="input-group lab_control_input-group">
@@ -132,6 +193,14 @@
                         </div>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <div class="input-group lab_control_input-group">
+                            <span class="input-group-addon lab_manage_title" id="basic-addon1">{{ _('Examination Date') }}</span>
+                            <input type="text" class="form-control" aria-describedby="sizing-addon1" id="date_examination" autocomplete="off"/>
+                        </div>
+                    </td>
+                </tr>
                 <tbody id="lab_control_result_table">
 
 
@@ -147,9 +216,9 @@
                 </tr>
             </table>
             <div style="width:100%; text-align:left;">
-            <input type="button" class="btn btn-primary"  id="laboratory_control_cancel" value="{{ _('Cancel') }}"/>
+            <!--input type="button" class="btn btn-primary"  id="laboratory_control_cancel" value="{{ _('Cancel') }}"/>-->
             
-                </div>
+            </div>
         </div>
     </div>
 

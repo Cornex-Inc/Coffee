@@ -8,46 +8,86 @@ function numberWithCommas(x) {
 $(function () {
 
 
-    search_patient();
 
     //검색
-    $('#patient_search').keydown(function (key) {
+    $('#document_search').keydown(function (key) {
         if (key.keyCode == 13) {
-            search_patient();
+            document_search();
         }
     })
 
-    $("#patient_search_btn").click(function () {
-        search_patient();
+    $("#document_search_btn").click(function () {
+        document_search();
     });
 
 
-    //문자 글자 고정
-    $("#sms_modal_content").keydown(function () {
-        if ($(this).val().length > 67) {
-            $(this).val($(this).val().substring(0, 67));
+
+
+
+    //파일
+
+    //파일 세팅
+    //$("#id_file").attr('accept', "image/*,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+    //파일 버튼 선택
+    $("#btn_file").click(function () {
+        $("#id_file").click();
+    });
+    //파일 선택시 입력 창 변경
+    $("#id_file").change(function (e) {
+        for (i = 0; i < e.target.files.length; i++) {
+            $("#new_edit_file_filename").val(document.getElementById("id_file").value);
         }
-    })
+    });
+
+    //파일 서브밋
+    $('#id_ajax_upload_form').submit(function (e) {
+        e.preventDefault();
+        $form = $(this)
+        var formData = new FormData(this);
+
+        $("#overlay").fadeOut(300);
+        $.ajax({
+            url: '/KBL/file_save/',
+            type: 'POST',
+            data: formData,
+            success: function (response) {
+                $('.error').remove();
+                console.log(response)
+                if (response.error) {
+                    $.each(response.errors, function (name, error) {
+                        error = '<small class="text-muted error">' + error + '</small>'
+                        $form.find('[name=' + name + ']').after(error);
+                    })
+                } else {
+
+                    alert(gettext('Saved'));
+                    $('#new_edit_file').modal('hide');
+                    document_search();
+
+
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false,
+            complete: function () {
+                $("#overlay").fadeOut(300);
+            },
+            beforeSend: function () {
+                $("#overlay").fadeIn(300);
+            },
+        });
+    });
+
+
+
+    document_search();
 
 });
 
 
 
-function visa_management_modal(id = null) {
-
-    $('#visa_management_modal').modal({ backdrop: 'static', keyboard: false });
-    $('#visa_management_modal').modal('show');
-
-}
-
-function detailed_info_modal(id = null) {
-    $('#detailed_info_modal').modal({ backdrop: 'static', keyboard: false });
-    $('#detailed_info_modal').modal('show');
-}
-
-
-
-function search_patient(page = null) {
+function document_search(page = null) {
     var context_in_page = 10;
 
 
@@ -57,7 +97,7 @@ function search_patient(page = null) {
 
     $.ajax({
         type: 'POST',
-        url: '/manage/customer_manage_get_patient_list/',
+        url: '/KBL/document_search/',
         data: {
             'csrfmiddlewaretoken': $('#csrf').val(),
             'category': category,
@@ -68,35 +108,27 @@ function search_patient(page = null) {
         },
         dataType: 'Json',
         success: function (response) {
-            $('#patient_list_table > tbody ').empty();
+            $('#file_list_table > tbody ').empty();
             for (var i = 0; i < context_in_page; i++) {
                 if (response.datas[i]) {
-                    var str = "<tr style='cursor:pointer;' onclick='set_patient_data(" +
-                        parseInt(response.datas[i]['id']) +
-                        ")'><td>" + response.datas[i]['id'] + "</td>";
+                    var str = "<tr>";
 
-                    if (response.datas[i]['has_unpaid']) {
-                        str += "<td style=color:rgb(228,97,131);>";
-                    } else {
-                        str += "<td>";
-                    }
-
-                    str += response.datas[i]['chart'] + "</td>" +
-                        "<td>" + response.datas[i]['name_kor'] + '<br />' + response.datas[i]['name_eng'] + "</td>" +
-                        "<td>" + response.datas[i]['date_of_birth'] + ' (' + response.datas[i]['gender'] + '/' + response.datas[i]['age'] + ")</td>" +
-                        "<td>" + response.datas[i]['phonenumber'] + "</td>" +
-                        "<td>" + response.datas[i]['date_registered'] + "</td>" +
-                        "<td>" + response.datas[i]['memo'] + "</td>" +
-                        "<td>" + response.datas[i]['visits'] + "</td>" +
-                        "<td>" + numberWithCommas(response.datas[i]['paid_total']) + "</td>" +
-                        "<td><a class='btn btn-default' onclick=sms_modal('" + response.datas[i]['id'] + "')>&nbsp;<i class='fa fa-2x fa-mobile'></i>&nbsp;</a></td></tr>";
-                    //"<td><a class='btn btn-default btn-xs' href='javascript: void (0);' onclick='delete_database_precedure(" + response.datas[i]['id'] + ")' ><i class='fa fa-lg fa-history'></i></a></td></tr>";
+                    str += "<td>" + response.datas[i]['id'] + "</td>" +
+                        "<td>" + response.datas[i]['board_type'] + "</td>" +
+                        "<td>" + response.datas[i]['document_name'] + "</td>" +
+                        "<td>" + response.datas[i]['user'] + "</td>" +
+                        "<td>" + response.datas[i]['registered_date'] + "</td>" +
+                        '<td><a href="' + response.datas[i]['document_url'] + '"download="' + response.datas[i]['document_name'] + '"><i class="fa fa-lg fa-download"></i></a></td>' +
+                        "<td>" +
+                        "<a class='btn btn-default btn-xs' style='margin-right:5px;' href='javascript: void (0);' onclick='file_add_modal(" + response.datas[i].id + ")' ><i class='fa fa-lg fa-pencil'></i></a>" +
+                        "<a class='btn btn-danger btn-xs' href='javascript: void (0);' onclick='delete_file(" + response.datas[i].id + ")' ><i class='fa fa-lg fa-trash'></i></a>" +
+                        '</td></tr > ';
 
 
                 } else {
-                    var str = "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
+                    var str = "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
                 }
-                $('#patient_list_table').append(str);
+                $('#file_list_table').append(str);
             }
 
 
@@ -104,7 +136,7 @@ function search_patient(page = null) {
             $('#table_pagnation').html('');
             str = '';
             if (response.has_previous == true) {
-                str += '<li> <a onclick="search_patient(' + (response.page_number - 1) + ')">&laquo;</a></li>';
+                str += '<li> <a onclick="document_search(' + (response.page_number - 1) + ')">&laquo;</a></li>';
             } else {
                 str += '<li class="disabled"><span>&laquo;</span></li>';
             }
@@ -114,14 +146,14 @@ function search_patient(page = null) {
                     str += '<li class="active"><span>' + i + ' <span class="sr-only">(current)</span></span></li>';
                 }
                 else if (response.page_number + 5 > i && response.page_number - 5 < i) {
-                    str += '<li><a onclick="search_patient(' + i + ')">' + i + '</a></li>';
+                    str += '<li><a onclick="document_search(' + i + ')">' + i + '</a></li>';
                 }
                 else {
                 }
 
             }
             if (response.has_next == true) {
-                str += '<li><a onclick="search_patient(' + (response.page_number + 1) + ')">&raquo;</a></li>';
+                str += '<li><a onclick="document_search(' + (response.page_number + 1) + ')">&raquo;</a></li>';
             } else {
                 str += '<li class="disabled"><span>&raquo;</span></li>';
             }
@@ -141,220 +173,103 @@ function search_patient(page = null) {
 
 
 
+function file_add_modal(id = '') {
 
-function sms_modal(patient_id) {
-    $("#sms_modal_name").val('');
-    $("#sms_modal_phone").val('');
-    $("#sms_modal_content").val('');
+    $("#selected_file_id").val(id);
 
-    $.ajax({
-        type: 'POST',
-        url: '/manage/customer_manage_get_patient_sms_info/',
-        data: {
-            'csrfmiddlewaretoken': $('#csrf').val(),
-            'patient_id': patient_id,
-        },
-        dataType: 'Json',
-        success: function (response) {
-            $('#sms_modal_name').val(response.name_kor + ' / ' + response.name_eng);
-            $('#sms_modal_phone').val(response.phone);
+    $("#id_file").val('');
 
+    $("#new_edit_file_name").val('');//Document Name
+    $("#new_edit_file_remark").val('');
+    $("#new_edit_file_filename").val('');
 
-            $('#sms_modal').modal({ backdrop: 'static', keyboard: false });
-            $('#sms_modal').modal('show');
-        },
-        error: function (request, status, error) {
-            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+    $("#new_edit_file_old_file").html('');
+    $("#new_edit_file_old_file_div").hide();
+    if (id != '') { // 불러오기
+        $.ajax({
+            type: 'POST',
+            url: '/KBL/file_get/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
 
-        },
-    })
+                'id': id,
+            },
+            dataType: 'Json',
+            success: function (response) {
 
+                $("#new_edit_file_name").val(response.title);
+                $("#new_edit_file_remark").val(response.memo);
+
+                $("#new_edit_file_old_file_div").show();
+                $("#new_edit_file_old_file").html(response.origin_name);
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+            },
+        })
+
+    }
+
+    $('#new_edit_file').modal({ backdrop: 'static', keyboard: false });
+    $('#new_edit_file').modal('show');
 }
 
-
-
-function send_sms() {
-
-    var receiver = $("#sms_modal_name").val()
-    var phone = $("#sms_modal_phone").val()
-    var contents = $("#sms_modal_content").val();
-    $("#overlay").fadeOut(300);
-
-    if (receiver == '') {
-        alert(gettext('Name is Empty.'));
-        return;
-    }
-    if (phone == '') {
-        alert(gettext('Phone Number is Empty.'));
-        return;
-    }
-    if (contents == '') {
-        alert(gettext('Content is Empty.'));
-        return;
-    }
-
-    $.ajax({
-        type: 'POST',
-        //url: '/manage/employee_check_id/',
-        url: '/manage/sms/send_sms/',
-        data: {
-            'csrfmiddlewaretoken': $('#csrf').val(),
-
-            'type': 'MANUAL',
-            'receiver': receiver,
-
-            'phone': phone,
-            'contents': contents,
-        },
-        beforeSend: function () {
-            $("#overlay").fadeIn(300);
-        },
-        dataType: 'Json',
-        success: function (response) {
-            console.log(response);
-            if (response.res == true) {
-                var url = 'http://kbl.cornex.co.kr/sms/sms_send.php?msg_id=' + response.id + '&phone=' + phone + '&contents=' + contents;
-                console.log('url : ' + url);
-
-                $.ajax({
-                    crossOrigin: true,
-                    type: 'GET',
-                    //url: '/manage/employee_check_id/',
-                    url: url,
-                    data: {
-                        //'csrfmiddlewaretoken': $('#csrf').val(),
-                        //'msg_id': response.id,
-                        //'phone': $("#phone_number").val(),
-                        //'contents': $("#contents").val(),
-                    },
-                    dataType: 'Json',
-                    //jsonp: "callback", 
-                    success: function (response) {
-                        //전송 완료 시 창 닫기. 결과는 이력에서 확인
-                        $('#sms_modal').modal('show');
-                        json_response = JSON.parse(response);
-
-                        console.log(json_response);
-
-                        $.ajax({
-                            type: 'POST',
-                            url: '/manage/sms/recv_result/',
-                            data: {
-                                'csrfmiddlewaretoken': $('#csrf').val(),
-                                'msg_id': json_response.msg_id,
-                                'status': json_response.status,
-                                'code': json_response.code,
-                                'tranId': json_response.tranId,
-                            },
-                            dataType: 'Json',
-                            success: function (response) {
-
-                            },
-                            error: function (request, status, error) {
-                                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-                            },
-                        })
-                    },
-                    error: function (request, status, error) {
-                        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-                    },
-                })
-            }
-        },
-        error: function (request, status, error) {
-            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-        },
-        complete: function () {
-            $("#overlay").fadeOut(300);
-            $('#sms_modal').modal('hide');
+function save_file() {
+    id = $("#selected_file_id").val();
+    draft_id = $("#selected_file_list").val();
+    //신규
+    if (id == '') {
+        if ($("#id_file").val() == '') {
+            alert(gettext('Select File.'));
+            return;
         }
-    })
-
-}
-
+    }
+    //수정
 
 
-
-function show_past_history(reception_id = null) {
-    if (reception_id == null) {
+    file_name = $("#new_edit_file_name").val();//문서이름
+    if (file_name == '') {
+        alert(gettext('File Name is Empty.'));
         return;
     }
 
-    $('#past_diagnosis_showlarge_table tbody').empty();
-    $.ajax({
-        type: 'POST',
-        url: '/manage/customer_manage_get_patient_visit_history/',
-        data: {
-            'csrfmiddlewaretoken': $('#csrf').val(),
-            'reception_id': reception_id,
-        },
-        dataType: 'Json',
-        success: function (response) {
-            if (response.result) {
-                var str = "<tr style='background:#94ee90'><td colspan='5'>" + response['date'] + "(" + response.data['day'] + ")[" + response.data['doctor'] + "]</td>" +
-                    "</td></tr>" + /*"<tr><td colspan='5'>History: D-" + response.data['diagnosis']  + */
-
-                    "<tr><td colspan='5'><font style='font-weight:700;'>History:</font><br/><font style='font-weight:700; color:#d2322d'>S - </font>" + response.data['subjective'] + "<br/><font style='font-weight:700; color:#d2322d'>O - </font>" +
-                    response.data['objective'] + "<br/><font style='font-weight:700; color:#d2322d'>A - </font>" +
-                    response.data['assessment'] + "<br/><font style='font-weight:700; color:#d2322d'>P - </font>" +
-                    response.data['plan'] + "<br/><font style='font-weight:700; color:#d2322d'>D - </font>" +
-                    response.data['diagnosis'] +
-                    "</td></tr>";
-
-
-                for (var j in response.data['exams']) {
-                    str += "<tr><td>" + response.data['exams'][j]['name'] + "</td><td>" +
-                        "</td><td>" +
-                        "</td><td>" +
-                        "</td><td>" +
-                        "</td></tr>";
-                }
-
-                for (var j in response.data['tests']) {
-                    str += "<tr><td>" + response.data['tests'][j]['name'] + "</td><td>" +
-                        "</td><td>" +
-                        "</td><td>" +
-                        "</td><td>" +
-                        "</td></tr>";
-                }
-                for (var j in response.data['precedures']) {
-                    str += "<tr><td>" + response.data['precedures'][j]['name'] + "</td><td>" +
-                        "</td><td>" +
-                        "</td><td>" +
-                        "</td><td>" +
-                        "</td></tr >";
-                }
-                for (var j in response.data['medicines']) {
-                    str += "<tr><td>" + response.data['medicines'][j]['name'] + "</td><td>" +
-                        response.data['medicines'][j]['unit'] + "</td><td>" +
-                        response.data['medicines'][j]['amount'] + "</td><td>" +
-                        response.data['medicines'][j]['days'] + "</td><td>" +
-                        response.data['medicines'][j]['memo'] + "</td></tr >";
-                }
-            } else {
-                str = 'Noresult';
-            }
-
-            $('#past_diagnosis_showlarge_table tbody').append(str);
-
-        },
-        error: function (request, status, error) {
-            console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-        },
-    })
+    remark = $("#new_edit_file_remark").val();
 
 
 
-    $('#past_diagnosis_showlarge_modal').modal({ backdrop: 'static', keyboard: false });
-    $('#past_diagnosis_showlarge_modal').modal('show');
+
+    $('#id_ajax_upload_form').submit();
 
 }
 
+function delete_file(id = '') {
 
-function download_excel() {
+    if (id == '') {
+        return;
+    }
 
-    var url = '/manage/cumstomer_management_excel'
+    if (confirm(gettext('Do you want to delete?'))) {
+        $.ajax({
+            type: 'POST',
+            url: '/KBL/file_delete/',
+            data: {
+                'csrfmiddlewaretoken': $('#csrf').val(),
 
-    window.open(url);
+                'id': id,
+            },
+            dataType: 'Json',
+            success: function (response) {
+                if (response.result) {
+                    alert(gettext('Deleted.'));
+                    document_search($("#selected_file_list").val());
+                }
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+            },
+        })
+    }
 
 }

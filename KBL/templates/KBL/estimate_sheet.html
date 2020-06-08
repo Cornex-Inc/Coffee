@@ -12,7 +12,7 @@
                 <div class="search_control_div">
                     <div class="input-group depart_select" id="estimate_status_div">
                         <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('Status') }}</span>
-                        <select id="estimate_status" class="form-control costom-select " aria-describedby="basic-addon1" >
+                        <select id="estimate_filter_status" class="form-control costom-select " aria-describedby="basic-addon1" >
                             <option value="" selected="">{{ _('ALL') }}</option>     
                             {% for data in list_status %}
                             <option value="{{ data.id }}">{{ data.name }}</option>
@@ -21,7 +21,7 @@
                     </div>
                     <div class="input-group depart_select" id="estimate_in_charge_div">
                         <span class="input-group-addon patient_table_title" id="basic-addon1">{{ _('In Charge') }}</span>
-                        <select id="estimate_in_charge" class="form-control costom-select " aria-describedby="basic-addon1" >
+                        <select id="estimate_filter_in_charge" class="form-control costom-select " aria-describedby="basic-addon1" >
                             <option value="" selected="">{{ _('ALL') }}</option>          
                         </select>
                     </div>

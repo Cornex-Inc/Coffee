@@ -28,19 +28,32 @@
                 </div>
 
             </div>
-            <div class="total_div">
+            <!--<div class="total_div">
                 <span>{{ _('Total Revenue') }} : </span>
                 <span></span>
-            </div>
+                <span>{{ _('Total Revenue') }} : </span>
+                <span></span>
+            </div>-->
             <br />
             <div class="precedure_database_list">
                 <div class="precedure_database_table">
-                    <table class="table table-hover table-striped" id="statistics_table">
+                    <table class="table table-hover table-striped table-bordered" id="statistics_table">
                         <thead>
                             <tr>
-                                <th>{{ _('Nmae') }}</th>
-                                <th>{{ _('Count') }}</th>
-                                <th>{{ _('Revenue') }}</th>
+                                <th>{{ _('No.') }}</th>
+                                <th>{{ _('Medicine Name') }}</th>
+                                <th>{{ _('Unit') }}</th>
+                                <th>{{ _('Lastest Inventory') }}</th>
+                                <th>{{ _('Lastest Price') }}</th>
+                                <th>{{ _('Lastest Total Amount') }}</th>
+                                <th>{{ _('Input Amount') }}</th>
+                                <th>{{ _('Average Price') }}</th>
+                                <th>{{ _('Total INPUT Amount') }}</th>
+                                <th>{{ _('Total Cunsuming Amount') }}</th>
+                                <th>{{ _('Total Consuming Fee') }}</th>
+                                <th>{{ _('Sold Price') }}</th>
+                                <th>{{ _('Total Revenue') }}</th>
+                                <th>{{ _('Profit') }}</th>
                             </tr>
                         </thead>
                         <tbody id="statistics_table_body">
@@ -49,13 +62,44 @@
                             <th></th>
                             <th></th>
                             <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                         </tr>
+                        <tfoot>
+                            <tr>
+                                <th>-</th>
+                                <th>Total</th>
+                                <th>-</th>
+                                <th>-</th>
+                                <th>-</th>
+                                <th id="total_lastest_amount">-</th>
+                                <th>-</th>
+                                <th>-</th>
+                                <th id="total_input_amount">-</th>
+                                <th>-</th>
+                                <th id="total_consuming_fee">-</th>
+                                <th>-</th>
+                                <th id="total_revenue">-</th>
+                                <th id="total_profit">-</th>
+                            </tr>
+                        </tfoot>
                     </table>
                     <br />
-                    <div class="total_div">
+                    <!--<div class="total_div">
                         <span>{{ _('Total Revenue') }} : </span>
                         <span></span>
-                    </div>
+                        <span>{{ _('Total Revenue') }} : </span>
+                        <span></span>
+                    </div>-->
 
                     <br />
                     <br />
@@ -71,7 +115,7 @@
 {% endblock %}
 
 {% block style %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/statistics/statistics.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/statistics/statistics_medicine.css' %}" />
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">

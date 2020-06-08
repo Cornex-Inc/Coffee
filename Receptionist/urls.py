@@ -89,4 +89,11 @@ urlpatterns = [
 
     path('patient_package_history_modal/',views.patient_package_history_modal),
 
+
+    
+    #동의서
+    path('list_agreement/',views.list_agreement),
+    path('save_agreement/',views.save_agreement),
+    path('get_agreement/',views.get_agreement),
+    path('delete_agreement/',views.delete_agreement),
 ]

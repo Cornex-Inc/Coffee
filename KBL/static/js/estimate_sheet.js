@@ -26,7 +26,7 @@ $(function () {
         }
     })
 
-    $("#estimate_date_start,#estimate_date_end,#estimate_status,#estimate_in_charge").change(function () {
+    $("#estimate_date_start,#estimate_date_end,#estimate_filter_status,#estimate_filter_in_charge").change(function () {
         search_estimate();
     });
 
@@ -156,8 +156,8 @@ function search_estimate(page = null) {
     var context_in_page = 10;
 
 
-    var estimate_status = $('#estimate_status').val();
-    var in_charge = $('#estimate_in_charge').val();
+    var estimate_status = $('#estimate_filter_status').val();
+    var in_charge = $('#estimate_filter_in_charge').val();
     var start = $('#estimate_date_start').val();
     var end = $('#estimate_date_end').val();
     var string = $('#estimate_search').val();

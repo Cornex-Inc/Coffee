@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 import datetime ,calendar
 from django.utils import timezone
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
-from django.db.models import Q,Case,When, CharField,Count,Sum
+from django.db.models import F,Q,Case,When, CharField,Count,Sum
 import operator
 import functools
 from django.http import JsonResponse
@@ -691,7 +691,8 @@ def reservation_search(request):
             'start':reservation.reservation_date.strftime('%Y-%m-%d %H:%M:00'),
             'depart': reservation.depart.name,
             'doctor': reservation.doctor.name_kor,
-            'time':reservation.reservation_date.strftime('%Y-%m-%d %H:%M:00'),
+            'date':reservation.reservation_date.strftime('%Y-%m-%d'),
+            'time':reservation.reservation_date.strftime('%H:%M:00'),
             'memo':reservation.memo,
             }
       
@@ -780,7 +781,6 @@ def waiting_list(request):
     #else:
     #    receptions = Reception.objects.select_related('patient').filter(  recorded_date__range = (date_min, date_max) )
     #
-
 
 
     datas=[]
@@ -1100,6 +1100,7 @@ def waiting_selected(request):
         medicines.append(medicine)
 
 
+
     datas = {
         'chart':reception.patient.get_chart_no(),
         'name_kor':reception.patient.name_kor,
@@ -1134,7 +1135,8 @@ def waiting_selected(request):
         'discount':'' if payment.discounted is None else payment.discounted,
         'discount_amount':'' if payment.discounted_amount is None else payment.discounted_amount,
 
-        'date':reception.recorded_date.strftime('%d/%m/%Y')
+        'date':reception.recorded_date.strftime('%d/%m/%Y'),
+        
         
     }
     if reception.reservation:
@@ -1157,7 +1159,7 @@ def waiting_selected(request):
 
         'need_invoice':reception.need_invoice,
         'need_insurance':reception.need_insurance,
-
+        'method':payment_record.method,
         }
     return JsonResponse(context)
 
@@ -1234,7 +1236,6 @@ def storage_page_save(request):
 
     list_checked = request.POST.get('list_checked')
     list_checked = json.loads(list_checked)
-    print(list_checked)
 
 
     for data in list_checked:
@@ -2260,7 +2261,7 @@ def document_lab(request,reception_id):
     no = 0
     for lab in manager_set:
         test = TestManage.objects.get(manager_id = lab.id)
-        reference_query = TestReferenceInterval.objects.filter(test_id = lab.test_id)
+        reference_query = TestReferenceInterval.objects.filter(test_id = lab.test_id,use_yn='Y')
         list_interval = []
         unit = ''
         unit_vie = ''
@@ -2294,7 +2295,7 @@ def document_lab(request,reception_id):
             {
                 'chart':reception.patient.get_chart_no(),
                 'name':reception.patient.get_name_kor_eng(),
-                'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),   
+                'date_of_birth':reception.patient.date_of_birth.strftime('%d/%m/%Y'),   
                 'age':reception.patient.get_age(),
                 'gender':reception.patient.get_gender_simple(),
                 'depart_full':reception.depart.full_name,
@@ -2302,12 +2303,12 @@ def document_lab(request,reception_id):
                 'doctor':reception.doctor.name_short,
                 'address':reception.patient.address,
                 'phone':reception.patient.phone,
-                'date_time':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),    
+                'date_time':reception.recorded_date.strftime('%H:%M %d/%m/%Y'),    
                 'test_res':test_res,
                 'nationality':reception.patient.nationality,
 
 
-                'date_today':datetime.datetime.now().strftime('%Y-%m-%d'),
+                'date_today':datetime.datetime.now().strftime('%d/%m/%Y'),
 
                 'diagnostic':diagnostic,
             },
@@ -2342,7 +2343,7 @@ def document_prescription(request,reception_id):
             {
                 'chart':reception.patient.get_chart_no(),
                 'name':reception.patient.get_name_kor_eng(),
-                'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),   
+                'date_of_birth':reception.patient.date_of_birth.strftime('%d/%m/%Y'),   
                 'age':reception.patient.get_age(),
                 'gender':reception.patient.get_gender_simple(),
                 'depart_full':reception.depart.full_name,
@@ -2350,14 +2351,14 @@ def document_prescription(request,reception_id):
                 'doctor':reception.doctor.name_short,
                 'address':reception.patient.address,
                 'phone':reception.patient.phone,
-                'date_time':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),    
+                'date_time':reception.recorded_date.strftime('%H:%M %d/%m/%Y'),    
                 'medicine_res':medicine_res,
-                'reservation_date':'' if reception.reservation_id is None else reception.reservation.reservation_date.strftime('%Y-%m-%d %H:%M'),
+                'reservation_date':'' if reception.reservation_id is None else reception.reservation.reservation_date.strftime('%H:%M %d/%m/%Y'),
                 'doctor':reception.doctor.name_eng,
                 'nationality':reception.patient.nationality,
 
 
-                'date_today':datetime.datetime.now().strftime('%Y-%m-%d'),
+                'date_today':datetime.datetime.now().strftime('%d/%m/%Y'),
 
                 'diagnostic':diagnostic
             },
@@ -2468,7 +2469,7 @@ def document_medical_receipt(request,reception_id):
             {
                 'chart':reception.patient.get_chart_no(),
                 'name':reception.patient.get_name_kor_eng(),
-                'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),   
+                'date_of_birth':reception.patient.date_of_birth.strftime('%d/%m/%Y'),   
                 'age':reception.patient.get_age(),
                 'gender':reception.patient.get_gender_simple(),
                 'depart_full':reception.depart.full_name,
@@ -2476,7 +2477,7 @@ def document_medical_receipt(request,reception_id):
                 'doctor':reception.doctor.name_short,
                 'address':reception.patient.address,
                 'phone':reception.patient.phone,
-                'date_time':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),    
+                'date_time':reception.recorded_date.strftime('%H:%M %d/%m/%Y'),    
                 'doctor':reception.doctor.name_eng,
                 'diagnostic':reception.diagnosis.diagnosis,
                 'nationality':reception.patient.nationality,
@@ -2497,7 +2498,7 @@ def document_medical_receipt(request,reception_id):
                 'discount':f"{discount:,}",
                 'total_payment':f"{total:,}",
 
-                'date_today':reception.recorded_date.strftime('%Y-%m-%d'),
+                'date_today':reception.recorded_date.strftime('%d/%m/%Y'),
             },
         )
 
@@ -2512,55 +2513,7 @@ def document_medical_receipt_old(request,reception_id,):
 
     exams = []
     no = 1
-    for data in exam_set:
-        exam = {}
-        exam.update({
-            'no':no,
-            'name':data.exam.name,
-            'price':f"{data.exam.get_price(reception.recorded_date):,}",
-            })
-        no += 1
-        exams.append(exam)
-
-    tests = []
-    for data in test_set:
-        test = {}
-        test.update({
-            'no':no,
-            'name':data.test.name,
-            'price':f"{data.test.get_price(reception.recorded_date):,}",
-            })
-        no += 1
-        tests.append(test)
-
-    precedures = []
-    for data in precedure_set:
-        precedure = {}
-        precedure.update({
-            'no':no,
-            'name':data.precedure.name,
-            'amount':data.amount,
-            'price':f"{data.precedure.get_price(reception.recorded_date):,}",
-            'sub_total':f"{data.precedure.get_price(reception.recorded_date) * data.amount:,}",
-            })
-        no += 1
-        precedures.append(precedure)
-
-    medicine_show_no = no
-    total_medicine_fee = 0
-    medicines= []
-    for data in medicine_set:
-        medicine = {}
-        medicine.update({
-            'no':no,
-            'name':data.medicine.name,
-            'amount':data.amount * data.days,
-            'price':f"{data.medicine.get_price(reception.recorded_date):,}",
-            'sub_total':f"{data.medicine.get_price(reception.recorded_date) * data.amount * data.days:,}",
-            })
-        no += 1
-        medicines.append(medicine)
-        total_medicine_fee += data.amount * data.days * data.medicine.get_price(reception.recorded_date)
+    
 
     type= request.GET.get('type')
     if type == 'bf':
@@ -2570,7 +2523,6 @@ def document_medical_receipt_old(request,reception_id,):
         total_amount= request.GET.get('total_amount',0)
         total_amount = int(total_amount.replace(',', ''))
 
-        print(discount_input)
         if discount_input is not 0 and discount_input is not '':
             discount = round( ( int( discount_input) / 100) * total_amount )
         elif discount_amount is not 0 and discount_amount is not '':
@@ -2581,6 +2533,56 @@ def document_medical_receipt_old(request,reception_id,):
         additional = additional_amount
         sub_total = total_amount + additional
         total = total_amount - discount + additional
+
+        for data in exam_set:
+            exam = {}
+            exam.update({
+                'no':no,
+                'name':data.exam.name,
+                'price':f"{data.exam.get_price():,}",
+                })
+            no += 1
+            exams.append(exam)
+
+        tests = []
+        for data in test_set:
+            test = {}
+            test.update({
+                'no':no,
+                'name':data.test.name,
+                'price':f"{data.test.get_price():,}",
+                })
+            no += 1
+            tests.append(test)
+
+        precedures = []
+        for data in precedure_set:
+            precedure = {}
+            precedure.update({
+                'no':no,
+                'name':data.precedure.name,
+                'amount':data.amount,
+                'price':f"{data.precedure.get_price():,}",
+                'sub_total':f"{data.precedure.get_price() * data.amount:,}",
+                })
+            no += 1
+            precedures.append(precedure)
+
+        medicine_show_no = no
+        total_medicine_fee = 0
+        medicines= []
+        for data in medicine_set:
+            medicine = {}
+            medicine.update({
+                'no':no,
+                'name':data.medicine.name,
+                'amount':data.amount * data.days,
+                'price':f"{data.medicine.get_price():,}",
+                'sub_total':f"{data.medicine.get_price() * data.amount * data.days:,}",
+                })
+            no += 1
+            medicines.append(medicine)
+            total_medicine_fee += data.amount * data.days * data.medicine.get_price()
 
 
     else:
@@ -2595,9 +2597,61 @@ def document_medical_receipt_old(request,reception_id,):
         additional = reception.payment.additional
         sub_total = reception.payment.sub_total + additional
         total = reception.payment.sub_total - discount + additional
+
+        for data in exam_set:
+            exam = {}
+            exam.update({
+                'no':no,
+                'name':data.exam.name,
+                'price':f"{data.exam.get_price(reception.recorded_date):,}",
+                })
+            no += 1
+            exams.append(exam)
+
+        tests = []
+        for data in test_set:
+            test = {}
+            test.update({
+                'no':no,
+                'name':data.test.name,
+                'price':f"{data.test.get_price(reception.recorded_date):,}",
+                })
+            no += 1
+            tests.append(test)
+
+        precedures = []
+        for data in precedure_set:
+            precedure = {}
+            precedure.update({
+                'no':no,
+                'name':data.precedure.name,
+                'amount':data.amount,
+                'price':f"{data.precedure.get_price(reception.recorded_date):,}",
+                'sub_total':f"{data.precedure.get_price(reception.recorded_date) * data.amount:,}",
+                })
+            no += 1
+            precedures.append(precedure)
+
+        medicine_show_no = no
+        total_medicine_fee = 0
+        medicines= []
+        for data in medicine_set:
+            medicine = {}
+            medicine.update({
+                'no':no,
+                'name':data.medicine.name,
+                'amount':data.amount * data.days,
+                'price':f"{data.medicine.get_price(reception.recorded_date):,}",
+                'sub_total':f"{data.medicine.get_price(reception.recorded_date) * data.amount * data.days:,}",
+                })
+            no += 1
+            medicines.append(medicine)
+            total_medicine_fee += data.amount * data.days * data.medicine.get_price(reception.recorded_date)
+
+
+
     
     is_medicine_show = request.GET.get('is_medicine_show')
-    print(is_medicine_show)
     if is_medicine_show== 'false':
         no = medicine_show_no +1
 
@@ -2606,7 +2660,7 @@ def document_medical_receipt_old(request,reception_id,):
             {
                 'chart':reception.patient.get_chart_no(),
                 'name':reception.patient.get_name_kor_eng(),
-                'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),   
+                'date_of_birth':reception.patient.date_of_birth.strftime('%d/%m/%Y'),   
                 'age':reception.patient.get_age(),
                 'gender':reception.patient.get_gender_simple(),
                 'depart_full':reception.depart.full_name,
@@ -2614,11 +2668,11 @@ def document_medical_receipt_old(request,reception_id,):
                 'doctor':reception.doctor.name_short,
                 'address':reception.patient.address,
                 'phone':reception.patient.phone,
-                'date_time':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),    
+                'date_time':reception.recorded_date.strftime('%H:%M %d/%m/%Y'),    
                 'doctor':reception.doctor.name_eng,
                 'diagnostic':reception.diagnosis.diagnosis,
                 'nationality':reception.patient.nationality,
-                'date_today':reception.recorded_date.strftime('%Y-%m-%d'),
+                'date_today':reception.recorded_date.strftime('%d/%m/%Y'),
 
                 'sub_total':f"{sub_total:,}",
                 'total':f"{total:,}",
@@ -2677,7 +2731,7 @@ def document_medicine_receipt(request,reception_id):
             {
                 'chart':reception.patient.get_chart_no(),
                 'name':reception.patient.get_name_kor_eng(),
-                'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),   
+                'date_of_birth':reception.patient.date_of_birth.strftime('%d/%m/%Y'),   
                 'age':reception.patient.get_age(),
                 'gender':reception.patient.get_gender_simple(),
                 'depart_full':reception.depart.full_name,
@@ -2685,12 +2739,12 @@ def document_medicine_receipt(request,reception_id):
                 'doctor':reception.doctor.name_short,
                 'address':reception.patient.address,
                 'phone':reception.patient.phone,
-                'date_time':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),    
+                'date_time':reception.recorded_date.strftime('%H:%M %d/%m/%Y'),    
                 'doctor':reception.doctor.name_eng,
                 'nationality':reception.patient.nationality,
 
 
-                'date_reception':reception.recorded_date.strftime('%Y-%m-%d'),
+                'date_reception':reception.recorded_date.strftime('%d/%m/%Y'),
 
                 'medicines':medicines,
                 
@@ -2765,7 +2819,7 @@ def document_subclinical(request,reception_id):
             {
                 'chart':reception.patient.get_chart_no(),
                 'name':reception.patient.get_name_kor_eng(),
-                'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),   
+                'date_of_birth':reception.patient.date_of_birth.strftime('%d/%m/%Y'),   
                 'age':reception.patient.get_age(),
                 'gender':reception.patient.get_gender_simple(),
                 'depart_full':reception.depart.full_name,
@@ -2773,13 +2827,13 @@ def document_subclinical(request,reception_id):
                 'doctor':reception.doctor.name_short,
                 'address':reception.patient.address,
                 'phone':reception.patient.phone,
-                'date_time':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),    
+                'date_time':reception.recorded_date.strftime('%H:%M %d/%m/%Y'),    
                 'doctor':reception.doctor.name_eng,
                 'diagnostic':reception.diagnosis.diagnosis,
                 'nationality':reception.patient.nationality,
 
 
-                'date_today':reception.recorded_date.strftime('%Y-%m-%d'),
+                'date_today':reception.recorded_date.strftime('%d/%m/%Y'),
 
                 'tests':tests,
                 'image_analysations':image_analysations,
@@ -2793,7 +2847,7 @@ def document_medical_report(request,reception_id):
     reception = Reception.objects.get(id = reception_id)
     report = Report.objects.get(reception_id = reception_id)
 
-    next_visit = '' if reception.reservation is None else reception.reservation.reservation_date.strftime("%Y-%m-%d %H:%M")
+    next_visit = '' if reception.reservation is None else reception.reservation.reservation_date.strftime("%H:%M %d/%m/%Y")
     ICD_code_vie =''
     ICD_ =''
     ICD_code_en =''
@@ -2814,7 +2868,7 @@ def document_medical_report(request,reception_id):
             {
                 'chart':reception.patient.get_chart_no(),
                 'name':reception.patient.get_name_kor_eng(),
-                'date_of_birth':reception.patient.date_of_birth.strftime('%Y-%m-%d'),   
+                'date_of_birth':reception.patient.date_of_birth.strftime('%d/%m/%Y'),   
                 'age':reception.patient.get_age(),
                 'gender':reception.patient.get_gender_simple(),
                 'depart_full':reception.depart.full_name,
@@ -2822,10 +2876,10 @@ def document_medical_report(request,reception_id):
                 'doctor':reception.doctor.name_short,
                 'address':reception.patient.address,
                 'phone':reception.patient.phone,
-                'date_time':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),    
+                'date_time':reception.recorded_date.strftime('%H:%M %d/%m/%Y'),    
                 'doctor':reception.doctor.name_eng,
                 'nationality':reception.patient.nationality,
-                'date_today':reception.recorded_date.strftime('%Y-%m-%d'),
+                'date_today':reception.recorded_date.strftime('%d/%m/%Y'),
 
                 'chief_complaint':'<br />' if reception.chief_complaint is None else reception.chief_complaint,
                 'past_history':reception.patient.history.past_history,
@@ -2840,7 +2894,7 @@ def document_medical_report(request,reception_id):
                 'plan':'<br />'if reception.diagnosis.plan is None else reception.diagnosis.plan,
                 'doctor_reommend':report.report,
 
-                'recorded_date':reception.recorded_date.strftime('%Y-%m-%d'),
+                'recorded_date':reception.recorded_date.strftime('%d/%m/%Y'),
                 'next_visit':next_visit,
             },
         )
@@ -2865,8 +2919,6 @@ def package_list(request):
             'price':data.get_price(),
             'count':data.count,
             })
-
-    print(datas)
 
 
         
@@ -3088,4 +3140,132 @@ def patient_package_history_modal(request):
     return JsonResponse({
         'result':True,
         'datas':datas,
+        })
+
+
+def list_agreement(request):
+
+    f_name = F('commcode_name_en')
+    if request.session[translation.LANGUAGE_SESSION_KEY] == 'ko':
+        f_name = F('commcode_name_ko')
+    elif request.session[translation.LANGUAGE_SESSION_KEY] == 'vi':
+        f_name = F('commcode_name_vi')
+
+    list_agreement = []
+    query_agreement = COMMCODE.objects.filter(use_yn = 'Y',commcode_grp='PT_SIGN').annotate(code = F('commcode'),name = F('commcode_name_en') ).values('code','name')
+    for data in query_agreement:
+        list_agreement.append({
+            'id':data['code'],
+            'name':data['name']
+            })
+    
+    reception_id = request.POST.get('reception_id')
+    depart =request.user.doctor.depart.name
+
+    #reception
+    #depart
+    #patient_id
+    #patient_name
+    #type
+    #document
+    #is_sign
+    #sign_data
+
+    datas = []
+    #sign_query = Sign_Manage.objects.filter(reception = reception_id, depart = depart)
+    for data in query_agreement:
+        try:
+            sign_query = Sign_Manage.objects.get(reception = reception_id,document = data['code'],use_yn = 'Y')
+        except Sign_Manage.DoesNotExist:
+            sign_query = None
+
+        datas.append({
+            'id':'' if sign_query is None else sign_query.id,
+            'name':data['name'],
+            'date':'' if sign_query is None else sign_query.sign_date[0:10],
+            'depart':depart,
+
+            'type':data['code'],
+            'is_sign':'N' if sign_query is None else sign_query.is_sign,
+            }) 
+
+
+    return JsonResponse({
+        'result':True,
+        'datas':datas,
+
+        })
+
+
+
+def save_agreement(request):
+
+    reception_id = request.POST.get('reception_id','')
+    sign_pad_id = request.POST.get('sign_pad_id')
+    sign_pad_type = request.POST.get('sign_pad_type')
+    sign_pad_data = request.POST.get('sign_pad_data')
+
+
+
+    if sign_pad_id == '':
+        sign_pad = Sign_Manage()
+
+        sign_pad.registrant = request.user.id
+        sign_pad.date_register = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    else:
+        sign_pad = Sign_Manage.objects.get(id = sign_pad_id)
+
+    reception = Reception.objects.get(id = reception_id)
+
+    sign_pad.reception_id = reception_id
+    sign_pad.depart = reception.depart_id
+    sign_pad.patient_id = reception.patient_id
+    sign_pad.patient_name = reception.patient.name_kor + '/' +  reception.patient.name_eng
+
+    sign_pad.document = sign_pad_type
+    sign_pad.is_sign = 'Y'
+    sign_pad.sign_data = sign_pad_data
+    sign_pad.sign_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    sign_pad.modifier = request.user.id
+    sign_pad.date_modify = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    sign_pad.save()
+
+
+
+
+
+    return JsonResponse({
+        'result':True,
+
+        })
+
+
+def get_agreement(request):
+
+    id = request.POST.get('id')
+
+    sign_pad = Sign_Manage.objects.get(id = id)
+
+
+    return JsonResponse({
+        'result':True,
+        'sign_pad_data':sign_pad.sign_data,
+        })
+    
+
+def delete_agreement(request):
+    id = request.POST.get('id')
+
+    sign_pad = Sign_Manage.objects.get(id = id)
+    sign_pad.use_yn = 'N'
+
+    sign_pad.modifier = request.user.id
+    sign_pad.date_modify = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    sign_pad.save()
+
+    return JsonResponse({
+        'result':True,
         })

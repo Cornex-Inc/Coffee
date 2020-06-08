@@ -148,6 +148,10 @@ input[type=checkbox] {
     margin-right:20px;
 }
 
+.option_select_request_to_div{
+    width:250px;
+}
+
 .option_check_label {
     display: inline;
 }

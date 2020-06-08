@@ -148,9 +148,18 @@ input[type=checkbox] {
     margin-right:20px;
 }
 
-.option_check_label {
-    display: inline;
+.option_select_request_to_div{
+    width:273px;
+   
 }
+    .option_select_request_to_div > .form-control {
+        padding:5px;
+
+    }
+
+    .option_check_label {
+        display: inline;
+    }
 
 .delete_files {
     display: inline;

@@ -58,15 +58,14 @@
     }
 
 
-#patient_search {
-    width: 110px;
+#wp_search {
+    width: 200px;
     display: inline;
 }
 
 .search_control_div {
     text-align: right;
     float: right;
-    width:800px;
     margin-bottom:10px;
 }
 
@@ -82,54 +81,39 @@
     width: 100px;
 }
 
-#patient_list_table {
+#work_permit_list_table {
     table-layout: fixed;
     letter-spacing: -1px;
 }
 
-    #patient_list_table thead tr th {
+#work_permit_list_table thead tr th {
+    vertical-align: middle;
+    text-align: center;
+}
+
+    #work_permit_list_table tbody tr td {
         vertical-align: middle;
         text-align: center;
+        height: 41px;
     }
 
-    #patient_list_table tbody tr td {
-        vertical-align: middle;
-        text-align: center;
-        height: 47px;
-    }
 
-    #patient_list_table thead tr th:nth-child(1) {
-        width: 60px;
-    }
 
-    #patient_list_table thead tr th:nth-child(2) {
-        width: 100px;
-    }
+    #work_permit_list_table th:nth-child(1){width:50px;}
+    #work_permit_list_table th:nth-child(2){width:90px;}
+    #work_permit_list_table th:nth-child(3){width:150px;}
+    #work_permit_list_table th:nth-child(4) {width:220px;}
+    #work_permit_list_table th:nth-child(5){width:100px;}
+    #work_permit_list_table th:nth-child(6){width:170px;}
+    #work_permit_list_table th:nth-child(7){width:140px;}
+    #work_permit_list_table th:nth-child(8){width:130px;}
+    #work_permit_list_table th:nth-child(9){width:120px;}
+    #work_permit_list_table th:nth-child(10){width:100px;}
+    #work_permit_list_table th:nth-child(11){width:90px;}
+    #work_permit_list_table th:nth-child(12){width:330px;}
+    #work_permit_list_table th:nth-child(13){width:50px;}
+    #work_permit_list_table th:nth-child(14) {width: 85px;}
 
-    #patient_list_table thead tr th:nth-child(3) {
-        width: 180px;
-    }
-
-    #patient_list_table thead tr th:nth-child(4),
-    #patient_list_table thead tr th:nth-child(5),
-    #patient_list_table thead tr th:nth-child(6) {
-        width: 120px;
-    }
-
-    #patient_list_table thead tr th:nth-child(7) {
-    }
-
-    #patient_list_table thead tr th:nth-child(8) {
-        width: 65px;
-    }
-
-    #patient_list_table thead tr th:nth-child(9) {
-        width: 120px;
-    }
-
-    #patient_list_table thead tr th:nth-child(10) {
-        width: 65px;
-    }
 
     #patient_list_table td:nth-child(9) {
         text-align: right;
@@ -194,6 +178,41 @@
     }
 
 
+#file_table {
+    table-layout: fixed;
+}
+
+    #file_table thead tr th, #file_table tbody tr td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+        #file_table thead tr th:nth-child(1){width: 50px;}
+
+        #file_table thead tr th:nth-child(2),
+        #file_table thead tr th:nth-child(5) {
+            width: 150px;
+        }
+
+        #file_table thead tr th:nth-child(3) {
+            width: 80px;
+        }
+
+        #file_table thead tr th:nth-child(4) {
+            width: 100px;
+        }
+
+        #file_table tbody tr td:nth-child(2),
+        #file_table tbody tr td:nth-child(5) {
+            text-align: left;
+        }
+
+#filter_status {
+    width: 150px;
+}
+#filter_date {
+    width:200px
+}
 
 
 #modalBody .input-group {

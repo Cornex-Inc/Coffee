@@ -10,7 +10,7 @@
     <div class="content_div partition">
         <div class="board_list_wrap">
 
-            <span class="btn btn-danger title_span">{{ _('Board List') }}</span>
+            <span class="btn btn-danger title_span">{{ _('Board Write') }}</span>
             <div class="">
             <table class="table" id="content_table">
                 <tbody>
@@ -27,20 +27,6 @@
                                 {% endfor %}
                             </select>
                         </div>
-
-                        <div class="input-group option_select_div">
-                            <span class="input-group-addon" id="basic-addon1">{{ _('Requested Depart') }}</span>
-                            <select name="select_depart_to" class="form-control" required>
-                                <option value="">----------</option>
-
-
-                                {% for data in list_depart %}
-                                    <option value="{{data.id}}" {% if data.id == division_selected %} selected {% endif %}>{{ data.name }}</option>
-                                {% endfor %}
-
-                            </select>
-                        </div>
-
                         <div class="input-group option_select_div">
                             <span class="input-group-addon" id="basic-addon1">{{ _('Status') }}</span>
                             <select name="select_status" class="form-control" id="select_status" required>
@@ -48,6 +34,46 @@
                                     <option value="{{division.id}}" {% if division.id == division_selected %} selected {% endif %}>{{ division.name }}</option>
                                 {% endfor %}
                             </select>
+                        </div>
+
+                        <div style="margin-top:10px;">
+                            <div class="input-group option_select_div option_select_request_to_div">
+                                <span class="input-group-addon" id="basic-addon1">{{ _('Requested Depart 1') }}</span>
+                                <select name="select_depart_to1" class="form-control" required>
+                                    <option value="">----------</option>
+                                    {% for data in list_depart %}
+                                        <option value="{{data.id}}" {% if data.id == depart_selected1 %} selected {% endif %}>{{ data.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="input-group option_select_div option_select_request_to_div">
+                                <span class="input-group-addon" id="basic-addon1">{{ _('Requested Depart 2') }}</span>
+                                <select name="select_depart_to2" class="form-control">
+                                    <option value="">----------</option>
+                                    {% for data in list_depart %}
+                                        <option value="{{data.id}}" {% if data.id == depart_selected2 %} selected {% endif %}>{{ data.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="input-group option_select_div option_select_request_to_div">
+                                <span class="input-group-addon" id="basic-addon1">{{ _('Requested Depart 3') }}</span>
+                                <select name="select_depart_to3" class="form-control">
+                                    <option value="">----------</option>
+                                    {% for data in list_depart %}
+                                        <option value="{{data.id}}" {% if data.id == depart_selected3 %} selected {% endif %}>{{ data.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="input-group option_select_div option_select_request_to_div">
+                                <span class="input-group-addon" id="basic-addon1">{{ _('Requested Depart 4') }}</span>
+                                <select name="select_depart_to4" class="form-control">
+                                    <option value="">----------</option>
+                                    {% for data in list_depart %}
+                                        <option value="{{data.id}}" {% if data.id == depart_selected4 %} selected {% endif %}>{{ data.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
                         </div>
 
                     </td>
@@ -167,6 +193,6 @@ $(document).ready(function () {
 <script src="{% static 'summernote-0.8.16-dist/lang/summernote-vi-VN.min.js'%}"></script>
 <script src="{% static 'summernote-0.8.16-dist/lang/summernote-ko-KR.min.js'%}"></script>
 
-<script src="{% static 'js/board/create_edit.js'%}"></script>
+<script src="{% static 'js/board_work/create_edit.js'%}"></script>
 
 {% endblock %}

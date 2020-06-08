@@ -41,6 +41,17 @@ def waiting_selected(request):
     diagnosis = Diagnosis.objects.get(pk = diagnosis_id)
     medicine_set = MedicineManager.objects.filter(diagnosis_id = diagnosis_id)
 
+    try:
+        medicine_manage = MedicineManage.objects.get(diagnosis_id = diagnosis_id)
+        if request.user.depart == 'PHARMACY':
+            if medicine_manage.progress == 'changed' or medicine_manage.progress == 'new':
+                medicine_manage.progress = 'checked'
+                medicine_manage.save()
+    except MedicineManage.DoesNotExist:
+        pass
+
+
+
     medicines = []
     for data in medicine_set:
         medicine = {}

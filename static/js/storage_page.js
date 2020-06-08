@@ -14,29 +14,38 @@ $(function () {
         },
     }).on('show.daterangepicker', function (ev, picker) {
         picker.container.find(".hourselect").empty()
-        picker.container.find(".hourselect").append('<option value = "9" selected> 9</option>');
-        picker.container.find(".hourselect").append('<option value = "10" > 10</option>');
-        picker.container.find(".hourselect").append('<option value = "11" > 11</option>');
-        picker.container.find(".hourselect").append('<option value = "12" > 12</option>');
-        picker.container.find(".hourselect").append('<option value = "13" > 13</option>');
-        picker.container.find(".hourselect").append('<option value = "14" > 14</option>');
-        picker.container.find(".hourselect").append('<option value = "15" > 15</option>');
-        picker.container.find(".hourselect").append('<option value = "16" > 16</option>');
-        picker.container.find(".hourselect").append('<option value = "17" > 17</option>');
+        picker.container.find(".hourselect").append('<option value ="9" selected> 9</option>');
+        picker.container.find(".hourselect").append('<option value ="10">10</option>');
+        picker.container.find(".hourselect").append('<option value ="11">11</option>');
+        picker.container.find(".hourselect").append('<option value ="12">12</option>');
+        picker.container.find(".hourselect").append('<option value ="13">13</option>');
+        picker.container.find(".hourselect").append('<option value ="14">14</option>');
+        picker.container.find(".hourselect").append('<option value ="15">15</option>');
+        picker.container.find(".hourselect").append('<option value ="16">16</option>');
+        picker.container.find(".hourselect").append('<option value ="17">17</option>');
+        picker.container.find(".hourselect").append('<option value ="18">18</option>');
     });
     
     $('#id_follow_update').on('apply.daterangepicker', function (ev, picker) {
         var hour = picker.container.find(".hourselect").children("option:selected").val();
         if (hour < 9)
             hour = 9;
-        else if (hour > 18)
-            hour = 18;
+        else if (hour > 19)
+            hour = 19;
         picker.startDate.set({ hour: hour, });
-        $('#id_follow_update').val(picker.startDate.format('YYYY-MM-DD HH:mm:ss'));
+        if ($("#language").val() == 'vi') {
+            $('#id_follow_update').val(picker.startDate.format('HH:mm:ss DD/MM/YYYY'));
+        } else {
+            $('#id_follow_update').val(picker.startDate.format('YYYY-MM-DD HH:mm:ss'));
+        }
+        
         if (confirm(gettext("Do you want to change reservation?"))) {
             var reservation_date = picker.startDate.format('YYYY-MM-DD HH:mm:ss');
             var reception = $('#selected_reception').val();
+            if ($("#language").val() == 'vi') {
 
+            }
+        
             $.ajax({
                 type: 'POST',
                 url: '/receptionist/reservation_save/',
@@ -50,7 +59,7 @@ $(function () {
                 },
                 error: function (request, status, error) {
                     console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-
+        
                 },
             })
         } 
@@ -80,6 +89,12 @@ $(function () {
        
     });
 
+    $('#storage_search_input').keydown(function (key) {
+        if (key.keyCode == 13) {
+            waiting_list();
+        }
+    })
+
     $('#storage_list_calendar_start').daterangepicker({
         singleDatePicker:true,
         showDropdowns: true,
@@ -94,8 +109,22 @@ $(function () {
             format: 'YYYY-MM-DD'
         }
     });
-    $("#storage_list_calendar_start, #storage_list_calendar_end, #reception_waiting_depart").change(function () {
+    //초기값
+    if ($("#language").val() == 'vi') {
+        var today = moment().format('DD[/]MM[/]YYYY');
+        $('#storage_list_calendar_start,#storage_list_calendar_end').val(today);
+    }
+    //선택 시 
+    $('#storage_list_calendar_start, #storage_list_calendar_end').on('apply.daterangepicker', function (ev, picker) {
+        var today = moment().format('YYYY[-]MM[-]DD');
+        if ($("#language").val() == 'vi') {
+            $(this).val(picker.startDate.format('DD/MM/YYYY'));
+            today = moment().format('DD[/]MM[/]YYYY');
+        }
+        waiting_list();
+    });
 
+    $("#reception_waiting_depart").change(function () {
         waiting_list();
     });
 
@@ -114,12 +143,16 @@ $(function () {
             var additional_amount = $("#additional_amount").val();
             var total_amount = $("#total_amount").val();
 
+            var show_medication_contents = $("#show_medication_contents").is(':checked');
+
             for_bf += '?type=bf';
 
+            for_bf += '&is_medicine_show=' + show_medication_contents;
             for_bf += '&discount_input=' + discount_input;
             for_bf += '&discount_amount=' + discount_amount;
             for_bf += '&additional_amount=' + additional_amount;
             for_bf += '&total_amount=' + total_amount;
+
         }
 
         $("#dynamic_div").html('');
@@ -170,11 +203,7 @@ $(function () {
     });
 
 
-    $('#storage_search_input').keydown(function (key) {
-        if (key.keyCode == 13) {
-            waiting_list();
-        }
-    })
+
 
     waiting_list();
 });
@@ -461,8 +490,16 @@ function waiting_selected(paymentrecord_id) {
             $('#patient_date_of_birth').val(response.datas['date_of_birth']);
             $('#patient_phone').val(response.datas['phone']);
             $('#patient_address').val(response.datas['address']);
-            $('#patient_doctor').val(response.datas['doctor_kor'] + ' / ' + response.datas['doctor_eng'])
-            $('#id_follow_update').val(response.datas['reservation']);
+            $('#patient_doctor').val(response.datas['doctor_kor'] + ' / ' + response.datas['doctor_eng']);
+            if ($("#language").val() == 'vi') {
+                if (response.datas['reservation'] == '' || response.datas['reservation'] == undefined)
+                    $('#id_follow_update').val('');
+                else
+                    $('#id_follow_update').val(moment(response.datas['reservation'], 'YYYY-MM-DD HH:mm:ss').format('HH:mm:ss DD/MM/YYYY'));
+            } else {
+                $('#id_follow_update').val(response.datas['reservation']);
+            }
+
             $('#recommendation').val(response.datas['recommendation']);
 
             $('#need_invoice').prop('checked', response.need_invoice);
@@ -801,12 +838,11 @@ function get_bill_list(reception_id) {
 function waiting_list(Today = false) {
     var date, start, end;
 
-    if (Today == true) {
-        start = today = moment().format('YYYY[-]MM[-]DD');
-        end = today = moment().format('YYYY[-]MM[-]DD');
-    } else {
-        start = $('#storage_list_calendar_start').val();
-        end = $('#storage_list_calendar_end').val();
+    start = $('#storage_list_calendar_start').val();
+    end = $('#storage_list_calendar_end').val();
+    if ($("#language").val() == 'vi') {
+        start = moment(start, 'DD/MM/YYYY').format('YYYY-MM-DD');
+        end = moment(end, 'DD/MM/YYYY').format('YYYY-MM-DD');
     }
 
     $.ajax({
@@ -845,10 +881,14 @@ function waiting_list(Today = false) {
                 } else {
                     str += "<td style='vertical-align:middle;'>";
                 }
-                    str += response.datas[i]['chart'] + "</td>" +
-                        "<td style='vertical-align:middle;' >" + response.datas[i]['name_kor'] + '<br/>' + response.datas[i]['name_eng'] + response.datas[i]['marking'] + "</td>" +
-                    "<td style='vertical-align:middle;' >" + response.datas[i]['date'] + "</td>" +
-                    "<td style='vertical-align:middle;' >" + response.datas[i]['Depart'] + '<br/>' + response.datas[i]['Doctor'] + "</td>" +
+                str += response.datas[i]['chart'] + "</td>" +
+                    "<td style='vertical-align:middle;' >" + response.datas[i]['name_kor'] + '<br/>' + response.datas[i]['name_eng'] + response.datas[i]['marking'] + "</td>";
+                if ($("#language").val() == 'vi') {
+                    str += "<td style='vertical-align:middle;' >" + moment(response.datas[i]['date'], 'YYYY-MM-DD').format('DD/MM/YYYY') + "</td>"; 
+                } else {
+                    str +=  "<td style='vertical-align:middle;' >" + response.datas[i]['date'] + "</td>";
+                }
+                    str += "<td style='vertical-align:middle;' >" + response.datas[i]['Depart'] + '<br/>' + response.datas[i]['Doctor'] + "</td>" +
                     "<td style='vertical-align:middle;' >" + numberWithCommas( response.datas[i]['paid'] )+ '</td>' +
                     "<td style='vertical-align:middle;' >" + numberWithCommas(Number(response.datas[i]['unpaid_total']) )+ '</td></td>'; 
                  
@@ -882,7 +922,7 @@ function get_today_list() {
             'doctor': $("#waiting_list_doctor option:selected").val(),
             'depart': $('#depart_select').val(),
         },
-        dataType: 'Json',  
+        dataType: 'Json',
         success: function (response) {
             $("#check_bf_af").val('bf');
             $('#storage_today_table > tbody ').empty();
@@ -937,7 +977,15 @@ function get_today_selected(reception_id) {
             $('#patient_phone').val(response.datas['phone']);
             $('#patient_address').val(response.datas['address']);
             $('#patient_doctor').val(response.datas['doctor_kor'] + ' / ' + response.datas['doctor_eng'])
-            $('#id_follow_update').val(response.datas['reservation']);
+            if ($("#language").val() == 'vi') {
+                if (response.datas['reservation'] == '' || response.datas['reservation'] == undefined)
+                    $('#id_follow_update').val('');
+                else
+                    $('#id_follow_update').val(moment(response.datas['reservation'], 'YYYY-MM-DD HH:mm:ss').format('HH:mm:ss DD/MM/YYYY'));
+            } else {
+                $('#id_follow_update').val(response.datas['reservation']);
+            }
+            
             $('#recommendation').val(response.datas['recommendation']);
 
             $('#need_invoice').prop('checked', response.need_invoice);

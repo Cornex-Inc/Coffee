@@ -257,6 +257,10 @@
     background-color: #d9534f !important;
 }
 
+.btn_success_tmp {
+    background-color: #5cb85c !important;
+}
+
 .label-purple {
     background: rgb(168,166,202)
 }

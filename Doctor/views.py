@@ -639,10 +639,10 @@ def reception_waiting(request):
     for reception in receptions:
         data={}
 
-        try:
-            package = Package_Manage.objects.get(reception_id = reception.id).id
-        except Package_Manage.DoesNotExist:
-            package = None
+        #try:
+        #    package = Package_Manage.objects.get(reception_id = reception.id).id
+        #except Package_Manage.DoesNotExist:
+        #    package = None
 
         data.update({
             'id':reception.patient.id,
@@ -657,7 +657,7 @@ def reception_waiting(request):
             'reception_datetime':reception.recorded_date.strftime('%Y-%m-%d %H:%M'),
             'status': reception.progress,
 
-            'package':package,
+            #'package':package,
             })
         datas.append(data)
 
@@ -722,17 +722,17 @@ def reception_select(request):
 
 
     #패키지 선택 시
-    try:
-        package = Package_Manage.objects.get(reception = reception)
-        context.update({
-            'package': {
-                'id':package.id,
-                'name':package.precedure.name,
-                'round':package.itme_round,
-                }
-             })
-    except Package_Manage.DoesNotExist:
-        context.update({'package': None})
+    #try:
+    #    package = Package_Manage.objects.get(reception = reception)
+    #    context.update({
+    #        'package': {
+    #            'id':package.id,
+    #            'name':package.precedure.name,
+    #            'round':package.itme_round,
+    #            }
+    #         })
+    #except Package_Manage.DoesNotExist:
+    #    context.update({'package': None})
 
         
     return JsonResponse(context)
@@ -972,9 +972,11 @@ def diagnosis_save(request):
             result.save()
             try:
                 medicine_manage = MedicineManage.objects.get(diagnosis_id = diagnosis_result.id)
+                if medicine_manage.progress is not 'done':
+                    medicine_manage.progress = 'changed'
             except MedicineManage.DoesNotExist:
                 medicine_manage = MedicineManage(diagnosis_id = diagnosis_result.id)
-                medicine_manage.save()
+            medicine_manage.save()
 
             total_amount +=  int(result.days) * int(result.amount) * int(result.medicine.get_price())
 
@@ -1022,12 +1024,12 @@ def diagnosis_save(request):
 
     
     #패키지
-    package_id = request.POST.get('package_id')
-    print(package_id)
-    if package_id != '':
-        package = Package_Manage.objects.get(id = package_id)
-        package.date_used = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        package.save()
+    #package_id = request.POST.get('package_id')
+    #print(package_id)
+    #if package_id != '':
+    #    package = Package_Manage.objects.get(id = package_id)
+    #    package.date_used = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    #    package.save()
 
     context = {'result':True}
     return JsonResponse(context)

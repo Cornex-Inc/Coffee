@@ -61,7 +61,8 @@ $(function () {
 
 function search_doctor_profit(page = null) {
     var page_context = 10;
-
+    if (page == null)
+        page = 1;
 
     $.ajax({
         type: 'POST',
@@ -230,4 +231,34 @@ function search_doctor_profit(page = null) {
 
         },
     })
+}
+
+
+function excel_download() {
+
+    var date_start = $("#doctor_search_date_start").val();
+    var date_end = $("#doctor_search_date_end").val();
+
+    var url = '/manage/audit_excel?'
+    url += 'date_start=' + date_start + '&';
+    url += 'date_end=' + date_end + '&';
+    url += 'depart=' + "7" + '&';
+
+    window.open(url);
+    ///$.ajax({
+    ///    type: 'POST',
+    ///    url: '/manage/audit_excel/',
+    ///    data: {
+    ///        'csrfmiddlewaretoken': $('#csrf').val(),
+    ///    },
+    ///    dataType: 'Json',
+    ///    success: function (response) {
+    ///        
+    ///
+    ///    },
+    ///    error: function (request, status, error) {
+    ///        console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+    ///
+    ///    },
+    ///})
 }

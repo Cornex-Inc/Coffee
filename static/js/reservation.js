@@ -11,7 +11,18 @@ $(function () {
             locale: { cancelLabel: 'Clear' }
         },
     });
-
+    //초기값
+    if ($("#language").val() == 'vi') {
+        var today = moment().format('DD[/]MM[/]YYYY');
+        $('#reservation_search_date').val(today);
+    }
+    //선택 시 
+    $('#reservation_search_date').on('apply.daterangepicker', function (ev, picker) {
+        var today = moment().format('YYYY[-]MM[-]DD');
+        if ($("#language").val() == 'vi') {
+            $(this).val(picker.startDate.format('DD/MM/YYYY'));
+        }
+    });
 
     $('#reservation_search_doctor').empty();
     $('#reservation_search_doctor').append(new Option('---------', ''));

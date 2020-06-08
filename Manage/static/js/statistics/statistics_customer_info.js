@@ -103,6 +103,23 @@ function database_search(page = null) {
                 }
             }
 
+            if (response.datas_top20) {
+                $('#statistics_table_body_top20').empty();
+                for (var i = 0; i < response.datas_top20.length; i++) {
+                    var str = "";
+
+                    str = "<tr><td>" + (i + 1) + "</td>" +
+                        "<td>" + response.datas_top20[i]['name'] + "</td>" +
+                        "<td>" + response.datas_top20[i]['date_of_birth'] + "</td>" +
+                        "<td>" + response.datas_top20[i]['gender'] + "</td>" +
+                        "<td>" + response.datas_top20[i]['phone'] + "</td>" +
+                        "<td>" + response.datas_top20[i]['last_visit'] + "</td>" +
+                        "<td>" + numberWithCommas(response.datas_top20[i]['total_amount']) + "</td></tr>";
+
+                    $('#statistics_table_body_top20').append(str);
+                }
+            }
+
 
         },
         error: function (request, status, error) {

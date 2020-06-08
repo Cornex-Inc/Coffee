@@ -101,9 +101,9 @@
                         <li {% if url_name == 'report' %}class="active"{% endif %}><a href="{% url 'Doctor:report'%}">{{ _('Medical Report') }}</a></li>    
                         <li {% if url_name == 'reservation' %}class="active"{% endif %}><a href="{% url 'Receptionist:reservation'%}">{{ _('Reservation') }}</a></li>
                         {% if user.doctor.depart.id == 7%}
+                            <li {% if url_name == 'customer_manage' %}class="active"{% endif %}><a href="{% url 'Manage:customer_manage'%}">{{ _('CRM') }}</a></li>
                             <li {% if url_name == 'audit' %}class="active"{% endif %}><a href="{% url 'Doctor:audit'%}">{{ _('Audit') }}</a></li>
                         {% endif %}
-                    <li {% if url_name == 'customer_manage' %}class="active"{% endif %}><a href="{% url 'Manage:customer_manage'%}">{{ _('CRM') }}</a></li>
                     <li {% if url_name == 'reservation' %}class="active"{% endif %}><a href="{% url 'Receptionist:Documents'%}">{{ _('Documents') }}</a></li>
                     <li {% if url_name == 'pharmacy_index' %}class="active"{% endif %}><a href="{% url 'Pharmacy:pharmacy_index'%}">{{ _('Pharmacy') }}</a></li>
                     {% elif user.is_pharmacy %}

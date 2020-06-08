@@ -25,7 +25,7 @@ $(function () {
     //√Îº“
     $("#cancel").click(function () {
         if ( confirm( gettext('Are you sure you want to cancel writing?') ) ) {
-            location.replace('/manage/board');
+            location.replace('/manage/board_work');
         }
     });
 

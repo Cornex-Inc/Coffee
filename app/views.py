@@ -37,7 +37,7 @@ def home(request):
     #        return redirect('login')
     #else:
     
-
+    
 
     if request.user.is_anonymous:
         return redirect('login')
@@ -59,9 +59,13 @@ def home(request):
             return redirect('/radiation')
         elif request.user.is_physical_therapist():
             return redirect('/physical_therapist')
+        elif request.user.is_marketing():
+            return redirect('/manage/draft')
+        elif request.user.is_account():
+            return redirect('/manage/draft')
         elif request.user.is_admin:
             return redirect('/manage')
-    elif request.META['SERVER_PORT'] == '8888':#경천애인 관리자
+    elif request.META['SERVER_PORT'] == '8888' or request.META['SERVER_PORT'] == '22222':#경천애인 관리자
         request.session['is_KBL'] = True
         if request.user.is_admin:
             return redirect('/KBL')
@@ -76,37 +80,35 @@ def login(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+        user = auth.authenticate(request,username = username)
+        try:
+            temp_user = User.objects.get(user_id = username)
 
-        temp_user = User.objects.get(user_id = username)
+            #아이메디
+            if request.META['SERVER_PORT'] == '9090' or request.META['SERVER_PORT'] == '11111':#테스트서버
+                commcode = COMMCODE.objects.filter(commcode_grp = 'DEPART_CLICINC',commcode = temp_user.depart ).count()
+            elif request.META['SERVER_PORT'] == '8888' or request.META['SERVER_PORT'] == '22222':#경천애인
+                commcode = COMMCODE.objects.filter(commcode_grp = 'DEPART_KBL',commcode = temp_user.depart ).count()
+
+
+            if temp_user.depart == 'ADMIN':
+                commcode = COMMCODE.objects.filter(commcode_grp = 'DEPART_ADMIN',commcode = temp_user.depart ).count()
+
+            user = auth.authenticate(request,username = username, password = password)
+
+            if user is not None:
+                auth.login(request,user)
+
+                return redirect('/')
+            err_msg = _('Please enter a correct user name and password.')
+        except User.DoesNotExist:
+            err_msg = _('Please enter a correct user name and password.')
 
         
 
-
-        #아이메디
-        if request.META['SERVER_PORT'] == '9090' or request.META['SERVER_PORT'] == '11111':#테스트서버
-            commcode = COMMCODE.objects.filter(commcode_grp = 'DEPART_CLICINC',commcode = temp_user.depart ).count()
-        elif request.META['SERVER_PORT'] == '8888':#경천애인
-            commcode = COMMCODE.objects.filter(commcode_grp = 'DEPART_KBL',commcode = temp_user.depart ).count()
-
-
-        if temp_user.depart == 'ADMIN':
-            commcode = COMMCODE.objects.filter(commcode_grp = 'DEPART_ADMIN',commcode = temp_user.depart ).count()
-
-    if commcode == 0:
-        user = None
-    else:
-        user = auth.authenticate(request,username = username, password = password)
-
-    if user is not None:
-        auth.login(request,user)
-
-        return redirect('/')
-    else:
-        err_msg = _('Please enter a correct user name and password.')
-
     if request.META['SERVER_PORT'] == '9090' or request.META['SERVER_PORT'] == '11111':
         url = 'app/login.html'
-    elif request.META['SERVER_PORT'] == '8888':
+    elif request.META['SERVER_PORT'] == '8888' or request.META['SERVER_PORT'] == '22222':
         url = 'app/login_KBL.html'
 
 
@@ -134,11 +136,10 @@ def logout(request):
         res_str = '/'
         if request.user.is_superuser is True:
             res_str = '/admin'
-    elif request.META['SERVER_PORT'] == '8888':
+    elif request.META['SERVER_PORT'] == '8888' or request.META['SERVER_PORT'] == '22222':
         res_str = '/'
 
     auth.logout(request)
-
 
     return redirect(res_str)
 

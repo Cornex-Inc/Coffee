@@ -77,6 +77,10 @@
 #estimate_search{
     width:150px;
 }
+#estimate_status_div, #estimate_in_charge_div {
+    width: 150px;
+}
+
 
 .date_input {
     width: 75px;
@@ -140,7 +144,7 @@
     }
 
     #detail_table th:nth-child(1){width:30px;}
-    #detail_table th:nth-child(2){width:30px;}
+    #detail_table th:nth-child(2){width:0px;overflow:hidden;}
     #detail_table th:nth-child(3){width:100px;}
     #detail_table th:nth-child(4){}
         #detail_table th:nth-child(5) {
@@ -153,6 +157,9 @@
     #detail_table th:nth-child(8){}
         #detail_table th:nth-child(9) {
             width: 85px;
+        }
+        #detail_table td:nth-child(2) {
+            overflow:hidden;
         }
 
     #detail_table .btn{

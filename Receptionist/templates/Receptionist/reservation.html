@@ -125,10 +125,11 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Chart No.</th>
-                                <th>Name</th>
-                                <th>Date of Birth</th>
-                                <th>Phone</th>
+                                <th>{{ _('Chart No.') }}</th>
+                                <th>{{ _('Name') }}</th>
+                                <th>{{ _('Date of Birth') }}</th>
+                                <th>{{ _('Depart') }}</th>
+                                <th>{{ _('Phone') }}</th>
                             </tr>
                         </thead>
                         <tbody id="patient_list_contents">
@@ -333,7 +334,7 @@
         $('.fc-left').html('<div class="reservation_title"><span class="btn btn-danger" style="font-size:16px; height:26.5px; padding-top:1.5px; background:#d2322d;">{{ _('Search')}}</span>' +
             '<b>&emsp;Date</b> : <input type="text" id="reservation_search_date" class="form-control reservation_input" aria-describedby="sizing-addon1">' +
             '&emsp;&emsp;<div class="input-group" style="width:145px; display:inline-table;{% if user.doctor%}display:none{% endif%}"><span class="input-group-addon reception_table_title" id="basic-addon1">{{ _('Depart') }}</span>' +
-            '<select name="depart" id="reservation_search_depart" class="form-control reservation_select" placeholder="" aria-describedby="basic-addon1" >' +
+            '<select name="depart" id="reservation_search_depart" class="form-control reservation_select" aria-describedby="basic-addon1" >' +
             '<option value="">{{ _('All') }}</option>' +
             {% for depart in list_depart%}
                 '<option value="{{ depart.id }}" {% if user.doctor.depart == depart.id %}selected{% endif %}>{{ depart.name }}</option>' +
@@ -409,7 +410,11 @@
             else if (hour > 18)
                 hour = 18;
             picker.startDate.set({ hour: hour, });
-            $('#reservation_date').val(picker.startDate.format('YYYY-MM-DD HH:mm:ss'));
+            if ($("#language").val() == 'vi') {
+                $('#reservation_date').val(picker.startDate.format('HH:mm:ss DD/MM/YYYY'));
+            }else{
+                $('#reservation_date').val(picker.startDate.format('YYYY-MM-DD HH:mm:ss'));
+            }
         });
         $('#reservation_date').on('cancel.daterangepicker', function(ev, picker) {
             $('#reservation_date').val('');
@@ -426,7 +431,11 @@
         });
 
         $('#reservation_date_of_birth').on('apply.daterangepicker', function (ev, picker) {
-            $('#reservation_date_of_birth').val(picker.startDate.format('YYYY-MM-DD'));
+            if ($("#language").val() == 'vi') {
+                $('#reservation_date_of_birth').val(picker.startDate.format('DD/MM/YYYY'));
+            }else{
+                $('#reservation_date_of_birth').val(picker.startDate.format('YYYY-MM-DD'));
+            }
         });
 
         $('#reservation_search_date').daterangepicker({
@@ -439,11 +448,20 @@
             },
         });
         $('#reservation_search_date').on('apply.daterangepicker', function (ev, picker) {
-            $('#reservation_search_date').val(picker.startDate.format('YYYY-MM-DD'));
-            calendar_p.gotoDate( picker.startDate.format('YYYY-MM-DD') )
+            if ($("#language").val() == 'vi') {
+                $('#reservation_search_date').val(picker.startDate.format('DD/MM/YYYY'));
+                calendar_p.gotoDate( picker.startDate.format('YYYY-MM-DD') )
+            }else{
+                $('#reservation_search_date').val(picker.startDate.format('YYYY-MM-DD'));
+                calendar_p.gotoDate( picker.startDate.format('YYYY-MM-DD') )
+            }
+            
 
         });
-        
+        if ($("#language").val() == 'vi') {
+            var today = moment().format('DD[/]MM[/]YYYY');
+            $('#reservation_search_date').val(today);
+        }
 
         
         $('#reservation_search_doctor').empty();
@@ -498,6 +516,7 @@
                                 str += '<tr style="cursor:pointer;" onclick="select_patient(this)"><td>' + response.datas[i].chart + '</td>' +
                                     '<td>' + response.datas[i].name_kor + ' / ' + response.datas[i].name_eng + '</td>' +
                                     '<td>' + response.datas[i].date_of_birth + '</td>' +
+                                    '<td>' + response.datas[i].depart + '</td>' +
                                     '<td>' + response.datas[i].phonenumber + '</td></tr>';
 
                             }
@@ -578,15 +597,22 @@
         //    alert(" {{ _('Memo is necessary! ! ') }} ");
         //    return;
         //}
+
+
         var date_pattern = /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/; 
-
-        if ($('#reservation_date_of_birth').val() != '') {
-
-         if ( !date_pattern.test($('#reservation_date_of_birth').val())){
-            alert("{{ _('Date of birth should be 0000(year)-00(month)-00(day)') }}");
-            return;
-            }
+        var reservation_date = $('#reservation_date').val();
+        var reservation_date_of_birth = $('#reservation_date_of_birth').val();
+        if ($("#language").val() == 'vi') {
+            reservation_date = moment(reservation_date, 'HH:mm:ss DD/MM/YYYY').format('YYYY-MM-DD HH:mm:ss');
+            reservation_date_of_birth = moment(reservation_date_of_birth, 'DD/MM/YYYY').format('YYYY-MM-DD');
         }
+        //if (reservation_date_of_birth != '') {
+        //
+        // if ( !date_pattern.test(reservation_date_of_birth)){
+        //    alert("{{ _('Date of birth should be 0000(year)-00(month)-00(day)') }}");
+        //    return;
+        //    }
+        //}
     
     
 
@@ -597,11 +623,11 @@
             data: {
                 'csrfmiddlewaretoken': $('#csrf').val(),
                 'selected_reservation':$('#selected_reservation').val(),
-                'reservation_date': $('#reservation_date').val(),
+                'reservation_date': reservation_date,
                 'reservation_name': $('#reservation_patient').val(),
                 'reservation_chart':$('#reservation_chart').val(),
                 
-                'reservation_date_of_birth':$('#reservation_date_of_birth').val(),
+                'reservation_date_of_birth':reservation_date_of_birth,
                 'reservation_phone':$('#reservation_phone').val(),
                 'reservation_memo':$('#reservation_memo').val(),
                 'reservation_depart':$('#reservation_depart option:selected').val(),
@@ -652,13 +678,21 @@ function set_reservation(reservation_id = null) {
             },
             dataType: 'Json',
             success: function (response) {
-                
 
-                $('#reservation_date').val(response.reservation_date);
+                if ($("#language").val() == 'vi') {
+                    $('#reservation_date').val(moment(response.reservation_date, 'YYYY-MM-DD HH:mm:ss').format('HH:mm:ss DD/MM/YYYY'));
+                    $('#reservation_date_of_birth').val(moment(response.reservation_date_of_birth,'YYYY-MM-DD').format('DD/MM/YYYY'));
+
+                }else{
+                    $('#reservation_date').val(response.reservation_date);
+                    $('#reservation_date_of_birth').val(response.reservation_date_of_birth);
+                }
+
+                
                 $('#reservation_patient').val(response.reservation_patient);
                 $('#reservation_chart').val(response.reservation_patient_id);
                 $('#reservation_chart_number').val(response.reservation_chart);
-                $('#reservation_date_of_birth').val(response.reservation_date_of_birth);
+               
                 $('#reservation_phone').val(response.reservation_phone);
 
                 $('#reservation_memo').val(response.reservation_memo);
